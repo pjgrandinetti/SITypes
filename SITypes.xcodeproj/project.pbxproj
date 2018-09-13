@@ -35,7 +35,6 @@
 		D4BB4FEF212B58A300E9889B /* libOCTypes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BB4FEE212B58A300E9889B /* libOCTypes.a */; };
 		D4BB4FF0212B58A500E9889B /* libSITypes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4585BF81EEBA255000155FB /* libSITypes.a */; };
 		D4BB4FF5212B597A00E9889B /* libOCTypes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BB4FF4212B597A00E9889B /* libOCTypes.a */; };
-		D4BB5228212DED6C00E9889B /* libJansson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BB5227212DED6C00E9889B /* libJansson.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -97,7 +96,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4BB5228212DED6C00E9889B /* libJansson.a in Frameworks */,
 				D4BB4FF0212B58A500E9889B /* libSITypes.a in Frameworks */,
 				D4BB4FEF212B58A300E9889B /* libOCTypes.a in Frameworks */,
 			);
