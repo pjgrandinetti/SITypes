@@ -1,6 +1,5 @@
-#line 1 "src/SIScalarScanner.c"
 
-#line 3 "src/SIScalarScanner.c"
+#line 2 "lex.sis.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -1218,22 +1217,22 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "src/SIScalarScanner.l"
+#line 1 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 #define YY_NO_INPUT 1
-#line 6 "src/SIScalarScanner.l"
+#line 6 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
     extern  void siserror(char *s, ...);
     #include "SILibrary.h"
     #include "SIScalarParser.h"
     #include "SIScalar.tab.h"
     static double complex temp;
-#line 1229 "src/SIScalarScanner.c"
+#line 1228 "lex.sis.c"
 
 /* exponent */
 /* unit can be constant starting with &
  unit can be constant ending with 0
  unit can be symbol raised to arbitrary power.
  */
-#line 1236 "src/SIScalarScanner.c"
+#line 1235 "lex.sis.c"
 
 #define INITIAL 0
 #define together 1
@@ -1449,9 +1448,9 @@ YY_DECL
 		}
 
 	{
-#line 41 "src/SIScalarScanner.l"
+#line 41 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 
-#line 1454 "src/SIScalarScanner.c"
+#line 1453 "lex.sis.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1509,202 +1508,202 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
-#line 43 "src/SIScalarScanner.l"
+#line 43 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 case 2:
-#line 44 "src/SIScalarScanner.l"
+#line 44 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 case 3:
-#line 45 "src/SIScalarScanner.l"
+#line 45 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 case 4:
-#line 46 "src/SIScalarScanner.l"
+#line 46 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 case 5:
-#line 47 "src/SIScalarScanner.l"
+#line 47 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 case 6:
-#line 48 "src/SIScalarScanner.l"
+#line 48 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 case 7:
-#line 49 "src/SIScalarScanner.l"
+#line 49 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 case 8:
 YY_RULE_SETUP
-#line 49 "src/SIScalarScanner.l"
+#line 49 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {return yytext[0];}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 51 "src/SIScalarScanner.l"
+#line 51 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_acos; return MATH_FUNC;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 52 "src/SIScalarScanner.l"
+#line 52 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_acosh; return MATH_FUNC;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 53 "src/SIScalarScanner.l"
+#line 53 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_asin; return MATH_FUNC;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 54 "src/SIScalarScanner.l"
+#line 54 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_asinh; return MATH_FUNC;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 55 "src/SIScalarScanner.l"
+#line 55 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_atan; return MATH_FUNC;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 56 "src/SIScalarScanner.l"
+#line 56 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_atanh; return MATH_FUNC;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 57 "src/SIScalarScanner.l"
+#line 57 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_cos; return MATH_FUNC;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 58 "src/SIScalarScanner.l"
+#line 58 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_cosh; return MATH_FUNC;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 59 "src/SIScalarScanner.l"
+#line 59 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_sin; return MATH_FUNC;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 60 "src/SIScalarScanner.l"
+#line 60 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_sinh; return MATH_FUNC;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 61 "src/SIScalarScanner.l"
+#line 61 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_tan; return MATH_FUNC;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 62 "src/SIScalarScanner.l"
+#line 62 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_tanh; return MATH_FUNC;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 63 "src/SIScalarScanner.l"
+#line 63 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_erf; return MATH_FUNC;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 64 "src/SIScalarScanner.l"
+#line 64 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_erfc; return MATH_FUNC;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 65 "src/SIScalarScanner.l"
+#line 65 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_exp; return MATH_FUNC;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 66 "src/SIScalarScanner.l"
+#line 66 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_ln; return MATH_FUNC;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 67 "src/SIScalarScanner.l"
+#line 67 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_log; return MATH_FUNC;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 69 "src/SIScalarScanner.l"
+#line 69 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_conj; return MATH_FUNC;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 70 "src/SIScalarScanner.l"
+#line 70 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_creal; return MATH_FUNC;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 71 "src/SIScalarScanner.l"
+#line 71 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_cimag; return MATH_FUNC;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 72 "src/SIScalarScanner.l"
+#line 72 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_carg; return MATH_FUNC;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 73 "src/SIScalarScanner.l"
+#line 73 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_cabs; return MATH_FUNC;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 74 "src/SIScalarScanner.l"
+#line 74 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_sqrt; return MATH_FUNC;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 75 "src/SIScalarScanner.l"
+#line 75 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_cbrt; return MATH_FUNC;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 76 "src/SIScalarScanner.l"
+#line 76 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_qtrt; return MATH_FUNC;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 77 "src/SIScalarScanner.l"
+#line 77 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.math_fn = BM_reduce; return MATH_FUNC;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 79 "src/SIScalarScanner.l"
+#line 79 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.const_fn = BC_AW; return CONST_FUNC;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 80 "src/SIScalarScanner.l"
+#line 80 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.const_fn = BC_FW; return CONST_FUNC;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 81 "src/SIScalarScanner.l"
+#line 81 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.const_fn = BC_Isotope_Abundance; return CONST_FUNC;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 82 "src/SIScalarScanner.l"
+#line 82 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.const_fn = BC_Isotope_Gyromag; return CONST_FUNC;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 83 "src/SIScalarScanner.l"
+#line 83 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.const_fn = BC_Isotope_MagneticDipole; return CONST_FUNC;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 84 "src/SIScalarScanner.l"
+#line 84 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.const_fn = BC_Isotope_ElectricQuadrupole; return CONST_FUNC;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 85 "src/SIScalarScanner.l"
+#line 85 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.const_fn = BC_nmr; return CONST_FUNC;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 86 "src/SIScalarScanner.l"
+#line 86 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.const_fn = BC_Isotope_Spin; return CONST_FUNC;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 87 "src/SIScalarScanner.l"
+#line 87 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {sislval.const_fn = BC_Isotope_HalfLife; return CONST_FUNC;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 89 "src/SIScalarScanner.l"
+#line 89 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {double multiplier = 1;
     SIUnitRef unit = SIUnitForSymbol(STR("ℏ"),&multiplier, &scalarErrorString);
     sislval.d = SIScalarCreateWithDouble(multiplier,unit);
@@ -1712,7 +1711,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 94 "src/SIScalarScanner.l"
+#line 94 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     temp = OCComplexFromCString(yytext);
     sislval.d = SIScalarCreateWithDoubleComplex(temp, NULL);
@@ -1721,7 +1720,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 100 "src/SIScalarScanner.l"
+#line 100 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     temp = OCComplexFromCString(yytext);
     sislval.d = SIScalarCreateWithDoubleComplex(temp, NULL);
@@ -1730,7 +1729,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 106 "src/SIScalarScanner.l"
+#line 106 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     temp = OCComplexFromCString(yytext);
     sislval.d = SIScalarCreateWithDoubleComplex(temp, NULL);
@@ -1739,7 +1738,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 112 "src/SIScalarScanner.l"
+#line 112 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     temp = OCComplexFromCString(yytext);
     sislval.d = SIScalarCreateWithDoubleComplex(temp, NULL);
@@ -1748,7 +1747,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 118 "src/SIScalarScanner.l"
+#line 118 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     temp = OCComplexFromCString(yytext);
     sislval.d = SIScalarCreateWithDoubleComplex(temp, NULL);
@@ -1757,7 +1756,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 124 "src/SIScalarScanner.l"
+#line 124 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     OCStringRef string = OCStringCreateWithCString(yytext);
     double unit_multiplier = 1;
@@ -1772,7 +1771,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 136 "src/SIScalarScanner.l"
+#line 136 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
@@ -1780,7 +1779,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 141 "src/SIScalarScanner.l"
+#line 141 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     sislval.d = NULL;
     return SCALAR;
@@ -1788,7 +1787,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 146 "src/SIScalarScanner.l"
+#line 146 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     sislval.d = NULL;
     return SCALAR;
@@ -1796,7 +1795,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 151 "src/SIScalarScanner.l"
+#line 151 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
@@ -1804,7 +1803,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 156 "src/SIScalarScanner.l"
+#line 156 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
@@ -1812,7 +1811,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 161 "src/SIScalarScanner.l"
+#line 161 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
@@ -1820,7 +1819,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 166 "src/SIScalarScanner.l"
+#line 166 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     OCStringRef string = OCStringCreateWithCString(yytext);
     double unit_multiplier = 1;
@@ -1839,7 +1838,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 181 "src/SIScalarScanner.l"
+#line 181 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     sislval.const_string = OCMutableStringCreateWithCString(yytext);
     return CONST_STRING;
@@ -1847,7 +1846,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 185 "src/SIScalarScanner.l"
+#line 185 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     sislval.d = NULL;
     return SCALAR;
@@ -1855,7 +1854,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 189 "src/SIScalarScanner.l"
+#line 189 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {
     sislval.d = NULL;
     return SCALAR;
@@ -1863,20 +1862,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 193 "src/SIScalarScanner.l"
+#line 193 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 {/* ignore whitespace */}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 194 "src/SIScalarScanner.l"
-{return(yytext[0]);}
+#line 194 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
+{fprintf(stderr, "Unrecognized character: %s\n", yytext); return(yytext[0]);}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 195 "src/SIScalarScanner.l"
+#line 195 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1879 "src/SIScalarScanner.c"
+#line 1878 "lex.sis.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(together):
 	yyterminate();
@@ -2845,6 +2844,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 195 "src/SIScalarScanner.l"
+#line 195 "/Users/philip/Github/Software/SITypes/src/SIScalarScanner.l"
 
 

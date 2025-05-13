@@ -1262,12 +1262,13 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "src/SIUnitScanner.l"
-#line 4 "src/SIUnitScanner.l"
+#define YY_NO_INPUT 1
+#line 6 "src/SIUnitScanner.l"
     #include "SILibrary.h"
     #include "SIUnit.tab.h"
     #include "SIUnitParser.h"
-#line 1269 "src/SIUnitScanner.c"
 #line 1270 "src/SIUnitScanner.c"
+#line 1271 "src/SIUnitScanner.c"
 
 #define INITIAL 0
 
@@ -1327,8 +1328,6 @@ extern int yywrap ( void );
 #endif
 
 #ifndef YY_NO_UNPUT
-    
-    static void yyunput ( int c, char *buf_ptr  );
     
 #endif
 
@@ -1484,9 +1483,9 @@ YY_DECL
 		}
 
 	{
-#line 12 "src/SIUnitScanner.l"
+#line 14 "src/SIUnitScanner.l"
 
-#line 1489 "src/SIUnitScanner.c"
+#line 1488 "src/SIUnitScanner.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1545,7 +1544,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 13 "src/SIUnitScanner.l"
+#line 15 "src/SIUnitScanner.l"
 {
     OCStringRef string = OCStringCreateWithCString(yytext);
     siulval.unit =  SIUnitForUnderivedSymbol(string);
@@ -1555,7 +1554,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 19 "src/SIUnitScanner.l"
+#line 21 "src/SIUnitScanner.l"
 {
     siulval.iVal = atoi(yytext);
     return INTEGER;
@@ -1563,7 +1562,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 23 "src/SIUnitScanner.l"
+#line 25 "src/SIUnitScanner.l"
 {
     OCStringRef string = OCStringCreateWithCString(yytext);
     if(string) {
@@ -1583,27 +1582,27 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 39 "src/SIUnitScanner.l"
+#line 41 "src/SIUnitScanner.l"
 {
     unitError = STR("Unknown unit symbol");
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 42 "src/SIUnitScanner.l"
+#line 44 "src/SIUnitScanner.l"
 { /* ignore whitespace */}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 43 "src/SIUnitScanner.l"
+#line 45 "src/SIUnitScanner.l"
 {return yytext[0];}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 44 "src/SIUnitScanner.l"
+#line 46 "src/SIUnitScanner.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1606 "src/SIUnitScanner.c"
+#line 1605 "src/SIUnitScanner.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1938,43 +1937,6 @@ static int yy_get_next_buffer (void)
 }
 
 #ifndef YY_NO_UNPUT
-
-    static void yyunput (int c, char * yy_bp )
-{
-	char *yy_cp;
-    
-    yy_cp = (yy_c_buf_p);
-
-	/* undo effects of setting up yytext */
-	*yy_cp = (yy_hold_char);
-
-	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-		{ /* need to shift things up to make room */
-		/* +2 for EOB chars. */
-		yy_size_t number_to_move = (yy_n_chars) + 2;
-		char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
-					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
-		char *source =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
-
-		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
-			*--dest = *--source;
-
-		yy_cp += (int) (dest - source);
-		yy_bp += (int) (dest - source);
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			(yy_n_chars) = (int) YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
-
-		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
-
-	*--yy_cp = (char) c;
-
-	(yytext_ptr) = yy_bp;
-	(yy_hold_char) = *yy_cp;
-	(yy_c_buf_p) = yy_cp;
-}
 
 #endif
 
@@ -2608,6 +2570,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 44 "src/SIUnitScanner.l"
+#line 46 "src/SIUnitScanner.l"
 
 

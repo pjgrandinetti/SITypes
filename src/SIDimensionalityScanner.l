@@ -1,5 +1,7 @@
 %option noyywrap nodefault yylineno
 %option prefix = "sid"
+%option nounput
+%option noinput
 %{
     #include "SILibrary.h"
     #include "SIDimensionality.tab.h"

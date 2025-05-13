@@ -6,15 +6,24 @@
 //  Copyright © 2017 PhySy Ltd. All rights reserved.
 //
 
+#ifndef PRINTERROR
 #define PRINTERROR printf("failure: line %d, %s\n",__LINE__,__FUNCTION__)
+#endif
 
-#include "SILibrary.h"
+#include "../src/SILibrary.h" // Updated include path to resolve missing header issue
+#include "octypes_tests.c"
 #include "dimensionality_tests.c"
 #include "unit_tests.c"
 #include "scalar_tests.c"
 
 int main(int argc, const char * argv[]) {
-    OCLibraryInitialize();
+
+    octypesTest1();
+    octypesTest2();
+    octypesTest3();
+    octypesTest4();
+    octypesTest5();
+    octypesTest6();
 
     dimensionalityTest0();
     dimensionalityTest1();
@@ -26,4 +35,5 @@ int main(int argc, const char * argv[]) {
 
     scalarTest1();
     scalarTest2();
+
 }

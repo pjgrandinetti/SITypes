@@ -59,13 +59,13 @@
 #define YYLSP_NEEDED 0
 
 /* Substitute the variable and function names.  */
-#define yyparse sidparse
-#define yylex   sidlex
-#define yyerror siderror
-#define yylval  sidlval
-#define yychar  sidchar
-#define yydebug siddebug
-#define yynerrs sidnerrs
+#define yyparse sisparse
+#define yylex   sislex
+#define yyerror siserror
+#define yylval  sislval
+#define yychar  sischar
+#define yydebug sisdebug
+#define yynerrs sisnerrs
 
 
 /* Tokens.  */
@@ -74,27 +74,35 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     DIMENSIONALITY = 258,
-     INTEGER = 259
+     SCALAR = 258,
+     MATH_FUNC = 259,
+     CONST_FUNC = 260,
+     CONST_STRING = 261,
+     EOL = 262,
+     UMINUS = 263
    };
 #endif
 /* Tokens.  */
-#define DIMENSIONALITY 258
-#define INTEGER 259
+#define SCALAR 258
+#define MATH_FUNC 259
+#define CONST_FUNC 260
+#define CONST_STRING 261
+#define EOL 262
+#define UMINUS 263
 
 
 
 
 /* Copy the first part of user declarations.  */
-#line 1 "src/SIDimensionalityParser.y"
+#line 1 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
 
     #include <stdio.h>
     #include "SILibrary.h"
-    void yyerror(char *s, ...);
-    static SIDimensionalityRef final_dimensionality;
-    OCStringRef dimensionalityError;
-    int sidlex(void);
-    
+    #include "SIScalarParser.h"
+    void siserror(char *s, ...);
+    SIScalarRef result;
+    OCStringRef scalarErrorString;
+    int sislex(void);
     
 
 /* Enabling traces.  */
@@ -117,13 +125,17 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 13 "src/SIDimensionalityParser.y"
+#line 13 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
 {
-    SIDimensionalityRef dimensionality;
-    int    iVal;
+    ScalarNodeRef a;
+    SIScalarRef d;
+    struct symbol *s;
+    builtInMathFunctions math_fn;
+    builtInConstantFunctions const_fn;
+    OCMutableStringRef const_string;
 }
 /* Line 193 of yacc.c.  */
-#line 127 "y.tab.c"
+#line 139 "SIScalarParser.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -136,7 +148,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 140 "y.tab.c"
+#line 152 "SIScalarParser.tab.c"
 
 #ifdef short
 # undef short
@@ -351,20 +363,20 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   20
+#define YYLAST   74
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  10
+#define YYNTOKENS  20
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  3
+#define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  9
+#define YYNRULES  17
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  17
+#define YYNSTATES  34
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   259
+#define YYMAXUTOK   263
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -375,18 +387,16 @@ static const yytype_uint8 yytranslate[] =
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,    14,     2,     2,     2,     2,     2,     2,
+      17,    18,    11,     9,    19,    10,     2,    12,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       8,     9,     5,     2,     2,     2,     2,     6,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     7,     2,     2,     2,     2,     2,
+       2,     8,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    13,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    15,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -397,7 +407,10 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     1,     2,     3,     4
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
+       5,     6,     7,    16
 };
 
 #if YYDEBUG
@@ -405,21 +418,26 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     4,     7,    11,    15,    19,    23,    27
+       0,     0,     3,     4,     8,    12,    16,    20,    24,    28,
+      32,    36,    39,    42,    44,    49,    52,    54
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      11,     0,    -1,    -1,    11,    12,    -1,     8,    12,     9,
-      -1,    12,     5,    12,    -1,    12,     6,    12,    -1,    12,
-       7,     4,    -1,     4,     6,    12,    -1,     3,    -1
+      21,     0,    -1,    -1,    21,    22,     7,    -1,    22,     9,
+      22,    -1,    22,    10,    22,    -1,    22,    11,    22,    -1,
+      22,    12,    22,    -1,    22,    13,    22,    -1,    15,    22,
+      15,    -1,    17,    22,    18,    -1,    10,    22,    -1,    22,
+      14,    -1,     3,    -1,     4,    17,    23,    18,    -1,     5,
+       6,    -1,    22,    -1,    22,    19,    23,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    24,    24,    25,    28,    29,    30,    31,    32,    39
+       0,    40,    40,    41,    47,    48,    49,    50,    51,    52,
+      53,    54,    55,    56,    57,    58,    61,    62
 };
 #endif
 
@@ -428,8 +446,10 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "DIMENSIONALITY", "INTEGER", "'*'",
-  "'/'", "'^'", "'('", "')'", "$accept", "calclist", "exp", 0
+  "$end", "error", "$undefined", "SCALAR", "MATH_FUNC", "CONST_FUNC",
+  "CONST_STRING", "EOL", "'='", "'+'", "'-'", "'*'", "'/'", "'^'", "'!'",
+  "'|'", "UMINUS", "'('", "')'", "','", "$accept", "calclist", "exp",
+  "explist", 0
 };
 #endif
 
@@ -438,20 +458,23 @@ static const char *const yytname[] =
    token YYLEX-NUM.  */
 static const yytype_uint16 yytoknum[] =
 {
-       0,   256,   257,   258,   259,    42,    47,    94,    40,    41
+       0,   256,   257,   258,   259,   260,   261,   262,    61,    43,
+      45,    42,    47,    94,    33,   124,   263,    40,    41,    44
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    10,    11,    11,    12,    12,    12,    12,    12,    12
+       0,    20,    21,    21,    22,    22,    22,    22,    22,    22,
+      22,    22,    22,    22,    22,    22,    23,    23
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     0,     2,     3,     3,     3,     3,     3,     1
+       0,     2,     0,     3,     3,     3,     3,     3,     3,     3,
+       3,     2,     2,     1,     4,     2,     1,     3
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -459,29 +482,33 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       2,     0,     1,     9,     0,     0,     3,     0,     0,     0,
-       0,     0,     8,     4,     5,     6,     7
+       2,     0,     1,    13,     0,     0,     0,     0,     0,     0,
+       0,    15,    11,     0,     0,     3,     0,     0,     0,     0,
+       0,    12,    16,     0,     9,    10,     4,     5,     6,     7,
+       8,     0,    14,    17
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,     6
+      -1,     1,    22,    23
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -3
+#define YYPACT_NINF -19
 static const yytype_int8 yypact[] =
 {
-      -3,     0,    -3,    -3,    -1,    -2,    13,    -2,     8,    -2,
-      -2,     6,     9,    -3,     9,     9,    -3
+     -19,    20,   -19,   -19,    -7,     5,    23,    23,    23,    53,
+      23,   -19,   -19,    59,    43,   -19,    23,    23,    23,    23,
+      23,   -19,    32,    -6,   -19,   -19,   -10,   -10,    -5,    -5,
+      -5,    23,   -19,   -19
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -3,    -3,     2
+     -19,   -19,    -1,   -18
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -491,24 +518,36 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       2,     3,     4,     3,     4,     7,     5,     8,     5,    12,
-      16,    14,    15,     9,    10,    11,    11,    13,     9,    10,
-      11
+       9,    18,    19,    20,    21,    12,    13,    14,    20,    21,
+      10,    11,    32,    33,     0,    26,    27,    28,    29,    30,
+       2,     0,     0,     3,     4,     5,     3,     4,     5,     0,
+       6,     0,     0,     6,     0,     7,     0,     8,     7,     0,
+       8,    16,    17,    18,    19,    20,    21,     0,     0,     0,
+       0,    31,    16,    17,    18,    19,    20,    21,     0,     0,
+      15,    25,    16,    17,    18,    19,    20,    21,    16,    17,
+      18,    19,    20,    21,    24
 };
 
-static const yytype_uint8 yycheck[] =
+static const yytype_int8 yycheck[] =
 {
-       0,     3,     4,     3,     4,     6,     8,     5,     8,     7,
-       4,     9,    10,     5,     6,     7,     7,     9,     5,     6,
-       7
+       1,    11,    12,    13,    14,     6,     7,     8,    13,    14,
+      17,     6,    18,    31,    -1,    16,    17,    18,    19,    20,
+       0,    -1,    -1,     3,     4,     5,     3,     4,     5,    -1,
+      10,    -1,    -1,    10,    -1,    15,    -1,    17,    15,    -1,
+      17,     9,    10,    11,    12,    13,    14,    -1,    -1,    -1,
+      -1,    19,     9,    10,    11,    12,    13,    14,    -1,    -1,
+       7,    18,     9,    10,    11,    12,    13,    14,     9,    10,
+      11,    12,    13,    14,    15
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    11,     0,     3,     4,     8,    12,     6,    12,     5,
-       6,     7,    12,     9,    12,    12,     4
+       0,    21,     0,     3,     4,     5,    10,    15,    17,    22,
+      17,     6,    22,    22,    22,     7,     9,    10,    11,    12,
+      13,    14,    22,    23,    15,    18,    22,    22,    22,    22,
+      22,    19,    18,    23
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1322,50 +1361,82 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 2:
-#line 24 "src/SIDimensionalityParser.y"
-    { (yyval.dimensionality) = NULL; }
-    break;
-
-  case 3:
-#line 25 "src/SIDimensionalityParser.y"
-    {final_dimensionality = (yyvsp[(2) - (2)].dimensionality);}
+        case 3:
+#line 41 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {
+    result = ScalarNodeEvaluate((yyvsp[(2) - (3)].a), &scalarErrorString);
+    if(!ScalarNodeisLeaf((yyvsp[(2) - (3)].a))) ScalarNodeFree((yyvsp[(2) - (3)].a));
+;}
     break;
 
   case 4:
-#line 28 "src/SIDimensionalityParser.y"
-    {(yyval.dimensionality) = (yyvsp[(2) - (3)].dimensionality);}
+#line 47 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateInnerNode('+',(yyvsp[(1) - (3)].a), (yyvsp[(3) - (3)].a));;}
     break;
 
   case 5:
-#line 29 "src/SIDimensionalityParser.y"
-    {(yyval.dimensionality) = SIDimensionalityByMultiplyingWithoutReducing((yyvsp[(1) - (3)].dimensionality),(yyvsp[(3) - (3)].dimensionality),&dimensionalityError);}
+#line 48 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateInnerNode('-',(yyvsp[(1) - (3)].a), (yyvsp[(3) - (3)].a));;}
     break;
 
   case 6:
-#line 30 "src/SIDimensionalityParser.y"
-    {(yyval.dimensionality) = SIDimensionalityByDividingWithoutReducing((yyvsp[(1) - (3)].dimensionality),(yyvsp[(3) - (3)].dimensionality));}
+#line 49 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateInnerNode('*',(yyvsp[(1) - (3)].a), (yyvsp[(3) - (3)].a));;}
     break;
 
   case 7:
-#line 31 "src/SIDimensionalityParser.y"
-    {(yyval.dimensionality) = SIDimensionalityByRaisingToAPowerWithoutReducing((yyvsp[(1) - (3)].dimensionality),(yyvsp[(3) - (3)].iVal),&dimensionalityError);}
+#line 50 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateInnerNode('/',(yyvsp[(1) - (3)].a), (yyvsp[(3) - (3)].a));;}
     break;
 
   case 8:
-#line 32 "src/SIDimensionalityParser.y"
-    {
-    if((yyvsp[(1) - (3)].iVal) == 1) {(yyval.dimensionality) = SIDimensionalityByRaisingToAPowerWithoutReducing((yyvsp[(3) - (3)].dimensionality),-1,&dimensionalityError);}
-    else  {
-        dimensionalityError = STR("Unknown dimensionality symbol");
-        yyerror("Unknown unit symbol");
-    }
-}
+#line 51 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateInnerNode('^',(yyvsp[(1) - (3)].a), (yyvsp[(3) - (3)].a));;}
+    break;
+
+  case 9:
+#line 52 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateInnerNode('|',(yyvsp[(2) - (3)].a), NULL);;}
+    break;
+
+  case 10:
+#line 53 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = (yyvsp[(2) - (3)].a);;}
+    break;
+
+  case 11:
+#line 54 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateInnerNode('M',(yyvsp[(2) - (2)].a), NULL);;}
+    break;
+
+  case 12:
+#line 55 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateInnerNode('!',(yyvsp[(1) - (2)].a), NULL);;}
+    break;
+
+  case 13:
+#line 56 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {if((yyvsp[(1) - (1)].d)==NULL) {YYERROR;} (yyval.a) = ScalarNodeCreateNumberLeaf((yyvsp[(1) - (1)].d));;}
+    break;
+
+  case 14:
+#line 57 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateMathFunction((yyvsp[(1) - (4)].math_fn),(yyvsp[(3) - (4)].a));;}
+    break;
+
+  case 15:
+#line 58 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateConstantFunction((yyvsp[(1) - (2)].const_fn),(yyvsp[(2) - (2)].const_string));;}
+    break;
+
+  case 17:
+#line 62 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
+    {(yyval.a) = ScalarNodeCreateInnerNode('L',(yyvsp[(1) - (3)].a),(yyvsp[(3) - (3)].a));;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1369 "y.tab.c"
+#line 1440 "SIScalarParser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1579,51 +1650,174 @@ yyreturn:
 }
 
 
-#line 42 "src/SIDimensionalityParser.y"
+#line 64 "/Users/philip/Github/Software/SITypes/src/SIScalarParser.y"
 
 
-extern int sid_scan_string(const char *);
-extern void sidlex_destroy(void);
+extern int sis_scan_string(const char *);
+extern void sislex_destroy(void);
+bool sis_syntax_error;
 
-bool sid_syntax_error;
-SIDimensionalityRef SIDimensionalityForSymbol(OCStringRef string, OCStringRef *error)
+SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *errorString)
 {
-    if(error) if(*error) return NULL;
+    if(errorString) if(*errorString) return NULL;
+    if(OCStringCompare(string,kSIQuantityDimensionless,kOCCompareCaseInsensitive) == kOCCompareEqualTo) return NULL;
     
-    OCMutableStringRef  mutString = OCStringCreateMutableCopy(string);
-    OCStringTrimWhitespace(mutString);
+    OCMutableStringRef  mutString = OCStringCreateMutableCopy ( string);
     
-    if(OCStringGetLength(mutString) == 1) {
-        SIDimensionalityRef result = SIDimensionalityWithBaseDimensionSymbol(mutString,error);
-        OCRelease(mutString);
-        return result;
+    OCStringFindAndReplace (mutString,STR("*"), STR("•"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    
+    result = SIScalarCreateWithStringContainingSingleUnitFromLibrary(mutString);
+    if(result) return result;
+    
+    
+    result = NULL;
+    scalarErrorString = NULL;
+    // check for and get the final conversion unit
+    double unit_multiplier = 1.0;
+    SIUnitRef finalUnit = ConversionWithDefinedUnit(mutString, &unit_multiplier, errorString);
+    
+    OCStringFindAndReplace (mutString,STR("•"), STR("*"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("×"), STR("*"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("÷"), STR("/"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("−"), STR("-"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("\n"), STR(""),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("+"), STR("+"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("μ"), STR("µ"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("γ"), STR("𝛾"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("º"), STR("°"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("h_p"), STR("h_P"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("ɣ"), STR("𝛾"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("√"), STR("sqrt"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("∛"), STR("cbrt"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("∜"), STR("qtrt"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR(" "), STR(""),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR(")("), STR(")*("),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    OCStringFindAndReplace (mutString,STR("Ɑ"), STR("α"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    
+    // Replace unit name with unit symbol
+    
+    
+    OCArrayRef sortedUnits = SIUnitGetUnitsSortedByNameLength();
+    for(int64_t index=0;index<OCArrayGetCount(sortedUnits);index++) {
+        SIUnitRef unit = OCArrayGetValueAtIndex(sortedUnits,index);
+        OCStringRef symbol = SIUnitCopySymbol(unit);
+        OCStringRef pluralName = SIUnitCreatePluralName(unit);
+        if(pluralName) {
+            OCStringFindAndReplace(mutString, pluralName, symbol, OCRangeMake(0, OCStringGetLength(mutString)), kOCCompareCaseInsensitive);
+            OCRelease(pluralName);
+        }
+        OCStringRef name = SIUnitCreateName(unit);
+        if(name) {
+            OCStringFindAndReplace (mutString,name, symbol,OCRangeMake(0,OCStringGetLength(mutString)),kOCCompareCaseInsensitive);
+            OCRelease(name);
+        }
+        OCRelease(symbol);
     }
     
-    OCStringFindAndReplace2(mutString,STR("•"),STR("*"));
-    OCStringFindAndReplace2(mutString,STR("ϴ"), STR("@"));
+    // Quick fix for quartertsp
+    OCStringFindAndReplace (mutString,STR("qtertsp"), STR("quartertsp"),OCRangeMake(0,OCStringGetLength(mutString)),kOCCompareCaseInsensitive);
     
-    final_dimensionality = NULL;
-    dimensionalityError = NULL;
-    sid_syntax_error = false;
-    uint64_t length = OCStringGetLength(mutString);
-    if(length) {
-        const char *cString = OCStringGetCString(mutString);
+    OCArrayRef openParentheses = OCStringCreateArrayWithFindResults(mutString,STR("("),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    if(openParentheses) {
+        OCMutableStringRef  mutStringNew = OCStringCreateMutableCopy ( mutString);
+        for(int64_t index = OCArrayGetCount(openParentheses)-1; index>=0;index--) {
+            OCRange *range = (OCRange *) OCArrayGetValueAtIndex(openParentheses,index);
+            if(range->location>0 && range->location<OCStringGetLength(mutString)) {
+                char previousCharacter = OCStringGetCharacterAtIndex(mutString,range->location-1);
+                // Don't insert asterisk if it's a string inside [ ]
+                bool closeSquareBracket = false;
+                bool skipThis = false;
+                for(int64_t j=range->location-1; j>=0;j--) {
+                    char scanChar = OCStringGetCharacterAtIndex(mutString,j);
+                    if(scanChar=='[') {
+                        if(!closeSquareBracket) skipThis = true;
+                    }
+                    if(scanChar==']') closeSquareBracket = true;
+                }
+                
+                if(!skipThis && characterIsDigitOrDecimalPoint(previousCharacter)) OCStringInsert(mutStringNew, range->location, STR("*"));
+            }
+        }
+        OCRelease(mutString);
+        mutString = mutStringNew;
+        OCRelease(openParentheses);
+    }
+    
+    OCArrayRef closeParentheses = OCStringCreateArrayWithFindResults(mutString,STR(")"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    if(closeParentheses) {
+        OCMutableStringRef  mutStringNew = OCStringCreateMutableCopy (mutString);
+        for(int64_t index = OCArrayGetCount(closeParentheses)-1; index>=0;index--) {
+            OCRange *range = (OCRange *) OCArrayGetValueAtIndex(closeParentheses,index);
+            if(range->location<OCStringGetLength(mutString)-1) {
+                char nextCharacter = OCStringGetCharacterAtIndex(mutString,range->location+1);
+                // Don't insert asterisk if it's a string inside [ ]
+                bool openSquareBracket = false;
+                bool skipThis = false;
+                for(int64_t j=range->location+1; j<OCStringGetLength(mutString);j++) {
+                    char scanChar = OCStringGetCharacterAtIndex(mutString,j);
+                    if(scanChar==']') {
+                        if(!openSquareBracket) skipThis = true;
+                    }
+                    if(scanChar=='[') openSquareBracket = true;
+                }
+                if(!skipThis) {
+                    if(nextCharacter !='+' && nextCharacter !='-'
+                    && nextCharacter !='*' && nextCharacter !='/'
+                    && nextCharacter !='^'  && nextCharacter !=')'
+                    && nextCharacter !=8226) OCStringInsert(mutStringNew, range->location+1, STR("*"));
+                }
+                
+            }
+        }
+        OCRelease(mutString);
+        mutString = mutStringNew;
+        OCRelease(closeParentheses);
+    }
+    
+    // Ready to Parse
+    
+    sis_syntax_error = false;
+    char *cString = OCStringGetCString(mutString);
+    if(cString) {
+        sis_scan_string(cString);
+        sisparse();
+        sislex_destroy();
+        OCRelease(mutString);
+    }
+    if(errorString) {
+        if(scalarErrorString) *errorString = scalarErrorString;
+        if(*errorString) {
+            if(result) OCRelease(result);
+            return NULL;
+        }
+    }
+    
+    if(result) {
+        if(finalUnit) {
+            if(!SIScalarConvertToUnit( (SIMutableScalarRef) result, finalUnit, errorString)) {
+                OCRelease(result);
+                return NULL;
+            }
+        }
         
-        sid_scan_string(cString);
-        sidparse();
-        sidlex_destroy();
-        OCRelease(mutString);
+        if(SIScalarIsReal(result)) {
+            SIScalarRef realResult = SIScalarCreateByTakingComplexPart(result,kSIRealPart);
+            OCRelease(result);
+            return realResult;
+        }
     }
-    if(dimensionalityError) *error = dimensionalityError;
+    else {
+        if(errorString) {
+            *errorString = STR("Syntax Error");
+        }
+    }
     
-    return final_dimensionality;
+    return result;
 }
 
-void yyerror(char *s, ...)
+void siserror(char *s, ...)
 {
-    fprintf(stderr, "error: %s\n",s);
-    sid_syntax_error = true;
+    scalarErrorString = STR("Syntax Error");
+    sis_syntax_error = true;
 }
-
-
 

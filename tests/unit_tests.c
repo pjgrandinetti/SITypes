@@ -1,7 +1,9 @@
-#include "SILibrary.h"
+#include "../src/SILibrary.h" // Updated include path to resolve missing header issue
 #include <stdio.h>
 
+#ifndef PRINTERROR
 #define PRINTERROR printf("failure: line %d, %s\n", __LINE__, __FUNCTION__)
+#endif
 
 bool unitTest0(void) {
     fprintf(stderr, "%s begin...\n", __func__);

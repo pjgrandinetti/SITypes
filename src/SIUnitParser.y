@@ -22,7 +22,7 @@
 %left '*' '/'
 %left '^'
 %%
-calclist: /* do nothing */
+calclist: /* do nothing */ { $$ = NULL; }
 | calclist exp {final_unit = $2;}
 ;
 

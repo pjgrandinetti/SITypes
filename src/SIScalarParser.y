@@ -26,7 +26,7 @@
 %token <const_string> CONST_STRING
 %token EOL
 %left '='
-%left  '+' '-'
+%left '+' '-'
 %left '*' '/'
 %right '^'
 %right '!'
@@ -38,7 +38,7 @@
 
 %%
 calclist:   /* do nothing */
-| calclist exp {
+| calclist exp EOL {
     result = ScalarNodeEvaluate($2, &scalarErrorString);
     if(!ScalarNodeisLeaf($2)) ScalarNodeFree($2);
 }
@@ -112,46 +112,13 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *errorStr
         SIUnitRef unit = OCArrayGetValueAtIndex(sortedUnits,index);
         OCStringRef symbol = SIUnitCopySymbol(unit);
         OCStringRef pluralName = SIUnitCreatePluralName(unit);
-        OCRange mutStringRange = OCRangeMake(0,OCStringGetLength(mutString));
         if(pluralName) {
-            OCStringFindAndReplace (mutString,pluralName, symbol,OCRangeMake(0,OCStringGetLength(mutString)),kOCCompareCaseInsensitive);
-            
-            /*
-             OCRange nameRange;
-             while(OCStringFindWithOptions (mutString, pluralName, mutStringRange, kCFCompareCaseInsensitive, &nameRange)) {
-             CFIndex mutStringlength = OCStringGetLength(mutString);
-             if(nameRange.location+nameRange.length<mutStringlength) {
-             UniChar character = OCStringGetCharacterAtIndex(mutString,nameRange.location+nameRange.length);
-             if(characterIsDigitOrDecimalPointOrSpace(character)) {
-             OCStringFindAndReplace (mutString, pluralName, symbol, nameRange,kCFCompareCaseInsensitive);
-             mutStringRange = OCRangeMake(nameRange.location+OCStringGetLength(symbol),OCStringGetLength(mutString));
-             }
-             else mutStringRange = OCRangeMake(nameRange.location+nameRange.length,OCStringGetLength(mutString));
-             }
-             else mutStringRange = OCRangeMake(nameRange.location+nameRange.length,OCStringGetLength(mutString));
-             }
-             */
+            OCStringFindAndReplace(mutString, pluralName, symbol, OCRangeMake(0, OCStringGetLength(mutString)), kOCCompareCaseInsensitive);
             OCRelease(pluralName);
         }
         OCStringRef name = SIUnitCreateName(unit);
-        mutStringRange = OCRangeMake(0,OCStringGetLength(mutString));
         if(name) {
             OCStringFindAndReplace (mutString,name, symbol,OCRangeMake(0,OCStringGetLength(mutString)),kOCCompareCaseInsensitive);
-            /*
-             OCRange nameRange;
-             while(OCStringFindWithOptions (mutString, name, mutStringRange, kCFCompareCaseInsensitive, &nameRange)) {
-             CFIndex mutStringlength = OCStringGetLength(mutString);
-             if(nameRange.location+nameRange.length<mutStringlength) {
-             UniChar character = OCStringGetCharacterAtIndex(mutString,nameRange.location+nameRange.length);
-             if(characterIsDigitOrDecimalPointOrSpace(character)) {
-             OCStringFindAndReplace (mutString, name, symbol, nameRange,kCFCompareCaseInsensitive);
-             mutStringRange = OCRangeMake(nameRange.location+OCStringGetLength(symbol),OCStringGetLength(mutString));
-             }
-             else mutStringRange = OCRangeMake(nameRange.location+nameRange.length,OCStringGetLength(mutString));
-             }
-             else mutStringRange = OCRangeMake(nameRange.location+nameRange.length,OCStringGetLength(mutString));
-             }
-             */
             OCRelease(name);
         }
         OCRelease(symbol);
@@ -204,10 +171,10 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *errorStr
                     if(scanChar=='[') openSquareBracket = true;
                 }
                 if(!skipThis) {
-                    if(nextCharacter !='+' && nextCharacter !='-'
-                    && nextCharacter !='*' && nextCharacter !='/'
-                    && nextCharacter !='^'  && nextCharacter !=')'
-                    && nextCharacter !=8226) OCStringInsert(mutStringNew, range->location+1, STR("*"));
+                    if((int)nextCharacter !='+' && (int)nextCharacter !='-'
+                    && (int)nextCharacter !='*' && (int)nextCharacter !='/'
+                    && (int)nextCharacter !='^'  && (int)nextCharacter !=')'
+                    && (int)nextCharacter !=8226) OCStringInsert(mutStringNew, range->location+1, STR("*"));
                 }
                 
             }
@@ -220,7 +187,7 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *errorStr
     // Ready to Parse
     
     sis_syntax_error = false;
-    char *cString = OCStringGetCString(mutString);
+    const char *cString = OCStringGetCString(mutString);
     if(cString) {
         sis_scan_string(cString);
         sisparse();

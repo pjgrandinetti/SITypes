@@ -1323,7 +1323,12 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 3:
+        case 2:
+#line 25 "src/SIUnitParser.y"
+    { (yyval.unit) = NULL; }
+    break;
+
+  case 3:
 #line 26 "src/SIUnitParser.y"
     {final_unit = (yyvsp[(2) - (2)].unit);}
     break;
@@ -1361,7 +1366,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1365 "y.tab.c"
+#line 1370 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);

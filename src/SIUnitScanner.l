@@ -1,5 +1,7 @@
 %option noyywrap nodefault
 %option prefix = "siu"
+%option nounput
+%option noinput
 %{
     #include "SILibrary.h"
     #include "SIUnit.tab.h"

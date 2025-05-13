@@ -363,7 +363,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   73
+#define YYLAST   74
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  20
@@ -372,7 +372,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  17
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  33
+#define YYNSTATES  34
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -418,19 +418,19 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     4,     7,    11,    15,    19,    23,    27,
-      31,    35,    38,    41,    43,    48,    51,    53
+       0,     0,     3,     4,     8,    12,    16,    20,    24,    28,
+      32,    36,    39,    42,    44,    49,    52,    54
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      21,     0,    -1,    -1,    21,    22,    -1,    22,     9,    22,
-      -1,    22,    10,    22,    -1,    22,    11,    22,    -1,    22,
-      12,    22,    -1,    22,    13,    22,    -1,    15,    22,    15,
-      -1,    17,    22,    18,    -1,    10,    22,    -1,    22,    14,
-      -1,     3,    -1,     4,    17,    23,    18,    -1,     5,     6,
-      -1,    22,    -1,    22,    19,    23,    -1
+      21,     0,    -1,    -1,    21,    22,     7,    -1,    22,     9,
+      22,    -1,    22,    10,    22,    -1,    22,    11,    22,    -1,
+      22,    12,    22,    -1,    22,    13,    22,    -1,    15,    22,
+      15,    -1,    17,    22,    18,    -1,    10,    22,    -1,    22,
+      14,    -1,     3,    -1,     4,    17,    23,    18,    -1,     5,
+       6,    -1,    22,    -1,    22,    19,    23,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
@@ -473,7 +473,7 @@ static const yytype_uint8 yyr1[] =
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     0,     2,     3,     3,     3,     3,     3,     3,
+       0,     2,     0,     3,     3,     3,     3,     3,     3,     3,
        3,     2,     2,     1,     4,     2,     1,     3
 };
 
@@ -482,33 +482,33 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       2,     0,     1,    13,     0,     0,     0,     0,     0,     3,
-       0,    15,    11,     0,     0,     0,     0,     0,     0,     0,
-      12,    16,     0,     9,    10,     4,     5,     6,     7,     8,
-       0,    14,    17
+       2,     0,     1,    13,     0,     0,     0,     0,     0,     0,
+       0,    15,    11,     0,     0,     3,     0,     0,     0,     0,
+       0,    12,    16,     0,     9,    10,     4,     5,     6,     7,
+       8,     0,    14,    17
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,    21,    22
+      -1,     1,    22,    23
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -18
+#define YYPACT_NINF -19
 static const yytype_int8 yypact[] =
 {
-     -18,    19,   -18,   -18,    -7,     5,    22,    22,    22,    59,
-      22,   -18,   -18,    52,    42,    22,    22,    22,    22,    22,
-     -18,    31,    -6,   -18,   -18,   -10,   -10,    -5,    -5,    -5,
-      22,   -18,   -18
+     -19,    20,   -19,   -19,    -7,     5,    23,    23,    23,    53,
+      23,   -19,   -19,    59,    43,   -19,    23,    23,    23,    23,
+      23,   -19,    32,    -6,   -19,   -19,   -10,   -10,    -5,    -5,
+      -5,    23,   -19,   -19
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -18,   -18,    -1,   -17
+     -19,   -19,    -1,   -18
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -518,26 +518,26 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       9,    17,    18,    19,    20,    12,    13,    14,    19,    20,
-      10,    11,    31,    32,    25,    26,    27,    28,    29,     2,
-       0,     0,     3,     4,     5,     3,     4,     5,     0,     6,
-       0,     0,     6,     0,     7,     0,     8,     7,     0,     8,
-      15,    16,    17,    18,    19,    20,     0,     0,     0,     0,
-      30,    15,    16,    17,    18,    19,    20,     0,     0,     0,
-      24,    15,    16,    17,    18,    19,    20,    23,    15,    16,
-      17,    18,    19,    20
+       9,    18,    19,    20,    21,    12,    13,    14,    20,    21,
+      10,    11,    32,    33,     0,    26,    27,    28,    29,    30,
+       2,     0,     0,     3,     4,     5,     3,     4,     5,     0,
+       6,     0,     0,     6,     0,     7,     0,     8,     7,     0,
+       8,    16,    17,    18,    19,    20,    21,     0,     0,     0,
+       0,    31,    16,    17,    18,    19,    20,    21,     0,     0,
+      15,    25,    16,    17,    18,    19,    20,    21,    16,    17,
+      18,    19,    20,    21,    24
 };
 
 static const yytype_int8 yycheck[] =
 {
        1,    11,    12,    13,    14,     6,     7,     8,    13,    14,
-      17,     6,    18,    30,    15,    16,    17,    18,    19,     0,
-      -1,    -1,     3,     4,     5,     3,     4,     5,    -1,    10,
-      -1,    -1,    10,    -1,    15,    -1,    17,    15,    -1,    17,
-       9,    10,    11,    12,    13,    14,    -1,    -1,    -1,    -1,
-      19,     9,    10,    11,    12,    13,    14,    -1,    -1,    -1,
-      18,     9,    10,    11,    12,    13,    14,    15,     9,    10,
-      11,    12,    13,    14
+      17,     6,    18,    31,    -1,    16,    17,    18,    19,    20,
+       0,    -1,    -1,     3,     4,     5,     3,     4,     5,    -1,
+      10,    -1,    -1,    10,    -1,    15,    -1,    17,    15,    -1,
+      17,     9,    10,    11,    12,    13,    14,    -1,    -1,    -1,
+      -1,    19,     9,    10,    11,    12,    13,    14,    -1,    -1,
+       7,    18,     9,    10,    11,    12,    13,    14,     9,    10,
+      11,    12,    13,    14,    15
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -545,9 +545,9 @@ static const yytype_int8 yycheck[] =
 static const yytype_uint8 yystos[] =
 {
        0,    21,     0,     3,     4,     5,    10,    15,    17,    22,
-      17,     6,    22,    22,    22,     9,    10,    11,    12,    13,
-      14,    22,    23,    15,    18,    22,    22,    22,    22,    22,
-      19,    18,    23
+      17,     6,    22,    22,    22,     7,     9,    10,    11,    12,
+      13,    14,    22,    23,    15,    18,    22,    22,    22,    22,
+      22,    19,    18,    23
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1364,8 +1364,8 @@ yyreduce:
         case 3:
 #line 41 "src/SIScalarParser.y"
     {
-    result = ScalarNodeEvaluate((yyvsp[(2) - (2)].a), &scalarErrorString);
-    if(!ScalarNodeisLeaf((yyvsp[(2) - (2)].a))) ScalarNodeFree((yyvsp[(2) - (2)].a));
+    result = ScalarNodeEvaluate((yyvsp[(2) - (3)].a), &scalarErrorString);
+    if(!ScalarNodeisLeaf((yyvsp[(2) - (3)].a))) ScalarNodeFree((yyvsp[(2) - (3)].a));
 }
     break;
 
@@ -1702,46 +1702,13 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *errorStr
         SIUnitRef unit = OCArrayGetValueAtIndex(sortedUnits,index);
         OCStringRef symbol = SIUnitCopySymbol(unit);
         OCStringRef pluralName = SIUnitCreatePluralName(unit);
-        OCRange mutStringRange = OCRangeMake(0,OCStringGetLength(mutString));
         if(pluralName) {
-            OCStringFindAndReplace (mutString,pluralName, symbol,OCRangeMake(0,OCStringGetLength(mutString)),kOCCompareCaseInsensitive);
-            
-            /*
-             OCRange nameRange;
-             while(OCStringFindWithOptions (mutString, pluralName, mutStringRange, kCFCompareCaseInsensitive, &nameRange)) {
-             CFIndex mutStringlength = OCStringGetLength(mutString);
-             if(nameRange.location+nameRange.length<mutStringlength) {
-             UniChar character = OCStringGetCharacterAtIndex(mutString,nameRange.location+nameRange.length);
-             if(characterIsDigitOrDecimalPointOrSpace(character)) {
-             OCStringFindAndReplace (mutString, pluralName, symbol, nameRange,kCFCompareCaseInsensitive);
-             mutStringRange = OCRangeMake(nameRange.location+OCStringGetLength(symbol),OCStringGetLength(mutString));
-             }
-             else mutStringRange = OCRangeMake(nameRange.location+nameRange.length,OCStringGetLength(mutString));
-             }
-             else mutStringRange = OCRangeMake(nameRange.location+nameRange.length,OCStringGetLength(mutString));
-             }
-             */
+            OCStringFindAndReplace(mutString, pluralName, symbol, OCRangeMake(0, OCStringGetLength(mutString)), kOCCompareCaseInsensitive);
             OCRelease(pluralName);
         }
         OCStringRef name = SIUnitCreateName(unit);
-        mutStringRange = OCRangeMake(0,OCStringGetLength(mutString));
         if(name) {
             OCStringFindAndReplace (mutString,name, symbol,OCRangeMake(0,OCStringGetLength(mutString)),kOCCompareCaseInsensitive);
-            /*
-             OCRange nameRange;
-             while(OCStringFindWithOptions (mutString, name, mutStringRange, kCFCompareCaseInsensitive, &nameRange)) {
-             CFIndex mutStringlength = OCStringGetLength(mutString);
-             if(nameRange.location+nameRange.length<mutStringlength) {
-             UniChar character = OCStringGetCharacterAtIndex(mutString,nameRange.location+nameRange.length);
-             if(characterIsDigitOrDecimalPointOrSpace(character)) {
-             OCStringFindAndReplace (mutString, name, symbol, nameRange,kCFCompareCaseInsensitive);
-             mutStringRange = OCRangeMake(nameRange.location+OCStringGetLength(symbol),OCStringGetLength(mutString));
-             }
-             else mutStringRange = OCRangeMake(nameRange.location+nameRange.length,OCStringGetLength(mutString));
-             }
-             else mutStringRange = OCRangeMake(nameRange.location+nameRange.length,OCStringGetLength(mutString));
-             }
-             */
             OCRelease(name);
         }
         OCRelease(symbol);
@@ -1794,10 +1761,10 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *errorStr
                     if(scanChar=='[') openSquareBracket = true;
                 }
                 if(!skipThis) {
-                    if(nextCharacter !='+' && nextCharacter !='-'
-                    && nextCharacter !='*' && nextCharacter !='/'
-                    && nextCharacter !='^'  && nextCharacter !=')'
-                    && nextCharacter !=8226) OCStringInsert(mutStringNew, range->location+1, STR("*"));
+                    if((int)nextCharacter !='+' && (int)nextCharacter !='-'
+                    && (int)nextCharacter !='*' && (int)nextCharacter !='/'
+                    && (int)nextCharacter !='^'  && (int)nextCharacter !=')'
+                    && (int)nextCharacter !=8226) OCStringInsert(mutStringNew, range->location+1, STR("*"));
                 }
                 
             }
@@ -1810,7 +1777,7 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *errorStr
     // Ready to Parse
     
     sis_syntax_error = false;
-    char *cString = OCStringGetCString(mutString);
+    const char *cString = OCStringGetCString(mutString);
     if(cString) {
         sis_scan_string(cString);
         sisparse();

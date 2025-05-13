@@ -1,7 +1,9 @@
 #include "SILibrary.h"
 #include <stdio.h>
 
+#ifndef PRINTERROR
 #define PRINTERROR printf("failure: line %d, %s\n", __LINE__, __FUNCTION__)
+#endif
 
 bool dimensionalityTest0(void) {
 

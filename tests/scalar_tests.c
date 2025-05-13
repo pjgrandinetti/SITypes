@@ -1,7 +1,9 @@
-#include "SILibrary.h"
+#include "../src/SILibrary.h" // Updated include path to resolve missing header issue
 #include <stdio.h>
 
+#ifndef PRINTERROR
 #define PRINTERROR printf("failure: line %d, %s\n", __LINE__, __FUNCTION__)
+#endif
 
 bool scalarTest1(void) {
     fprintf(stderr, "%s begin...\n", __func__);
@@ -19,7 +21,6 @@ bool scalarTest1(void) {
 
 bool scalarTest2(void) {
     fprintf(stderr, "%s begin...\n", __func__);
-    OCStringRef errorString = NULL;
 
     SIScalarRef force = SIScalarCreateWithOCString(STR("500 N"), NULL);
     SIScalarRef acceleration = SIScalarCreateWithOCString(STR("9.8 m/s^2"), NULL);

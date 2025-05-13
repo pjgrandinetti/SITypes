@@ -1,5 +1,7 @@
 %option noyywrap nodefault
 %option prefix = "sis"
+%option nounput
+%option noinput
 %{
     extern  void siserror(char *s, ...);
     #include "SILibrary.h"
@@ -131,43 +133,36 @@ I[ ]*\*[ ]*{REALNUMBER} {
     return SCALAR;
 }
 
-{REALNUMBER}[ ]*/{UNIT} {
+{REALNUMBER}[ ]*\/[ ]*{UNIT} {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
 }
 
-{UNIT}[ ]*/{REALNUMBER} {
+{UNIT}[ ]*\/[ ]*{REALNUMBER} {
     sislval.d = NULL;
     return SCALAR;
 }
 
-{UNIT}[ ]*/{COMPLEXNUMBER} {
+{UNIT}[ ]*\/[ ]*{COMPLEXNUMBER} {
     sislval.d = NULL;
     return SCALAR;
 }
 
-{COMPLEXNUMBER}[ ]*/{UNIT} {
+{COMPLEXNUMBER}[ ]*\/[ ]*{UNIT} {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
 }
 
-{REALNUMBER}[ ]*\*[ ]*I[ ]*/{UNIT} {
+{REALNUMBER}[ ]*\*[ ]*I[ ]*\/[ ]*{UNIT} {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
 }
 
-{REALNUMBER}[ ]*\*[ ]*I[ ]*/{UNIT} {
+I[ ]*\*[ ]*{REALNUMBER}[ ]*\/[ ]*{UNIT} {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
 }
-I[ ]*\*[ ]*{REALNUMBER}[ ]*/{UNIT} {
-    temp = OCComplexFromCString(yytext);
-    BEGIN(together);
-}
-I[ ]*\*[ ]*{REALNUMBER}[ ]*/{UNIT} {
-    temp = OCComplexFromCString(yytext);
-    BEGIN(together);
-}
+
 <together>{UNIT} {
     OCStringRef string = OCStringCreateWithCString(yytext);
     double unit_multiplier = 1;
