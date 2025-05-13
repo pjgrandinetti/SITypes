@@ -1,14 +1,15 @@
 %{
+    #include <stdio.h>
     #include "SILibrary.h"
     
     void yyerror(char *s, ...);
     static SIUnitRef final_unit;
     OCStringRef unitError;
     static double *unit_multiplier_ref;
-    int psulex(void);
+    int siulex(void);
     %}
 
-%name-prefix="psu"
+%name-prefix="siu"
 
 %union {
     SIUnitRef unit;
@@ -41,9 +42,9 @@ exp: '(' exp ')' {$$ = $2;}
 
 %%
 
-extern int psu_scan_string(const char *);
-extern void psulex_destroy(void);
-bool psu_syntax_error;
+extern int siu_scan_string(const char *);
+extern void siulex_destroy(void);
+bool siu_syntax_error;
 
 SIUnitRef SIUnitForParsedSymbol(OCStringRef string, double *unit_multiplier, OCStringRef *error)
 {
@@ -65,13 +66,13 @@ SIUnitRef SIUnitForParsedSymbol(OCStringRef string, double *unit_multiplier, OCS
     final_unit = NULL;
     unitError = NULL;
     unit_multiplier_ref = unit_multiplier;
-    psu_syntax_error = false;
+    siu_syntax_error = false;
     uint64_t length = OCStringGetLength(mutString);
     if(length) {
         const char *cString = OCStringGetCString(mutString);
-        psu_scan_string(cString);
-        psuparse();
-        psulex_destroy();
+        siu_scan_string(cString);
+        siuparse();
+        siulex_destroy();
         OCRelease(mutString);
     }
     if(unitError) *error = unitError;
@@ -81,7 +82,7 @@ SIUnitRef SIUnitForParsedSymbol(OCStringRef string, double *unit_multiplier, OCS
 void yyerror(char *s, ...)
 {
     fprintf(stderr, "error: %s\n",s);
-    psu_syntax_error = true;
+    siu_syntax_error = true;
 }
 
 

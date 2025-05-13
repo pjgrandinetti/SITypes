@@ -1,4 +1,5 @@
 %{
+    #include <stdio.h>
     #include "SILibrary.h"
     void yyerror(char *s, ...);
     static SIDimensionalityRef final_dimensionality;

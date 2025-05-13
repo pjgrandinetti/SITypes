@@ -175,8 +175,8 @@ SIDimensionalityRef SIUnitGetDimensionality(SIUnitRef theUnit);
  @param theUnit The unit.
  @result the integer exponent associated with an SI prefix
  @discussion root unit for length, mass, time, current, temperature, amount, and luminous intensity are
- assigned to index constants kPSLengthIndex, kPSMassIndex, kPSTimeIndex, kPSCurrentIndex,  kPSTemperatureIndex,
- kPSAmountIndex, kPSLuminousIntensityIndex, respectively.
+ assigned to index constants kSILengthIndex, kSIMassIndex, kSITimeIndex, kSICurrentIndex,  kSITemperatureIndex,
+ kSIAmountIndex, kSILuminousIntensityIndex, respectively.
  */
 SIPrefix SIUnitGetNumeratorPrefixAtIndex(SIUnitRef theUnit, const uint8_t index);
 
@@ -186,8 +186,8 @@ SIPrefix SIUnitGetNumeratorPrefixAtIndex(SIUnitRef theUnit, const uint8_t index)
  @param theUnit The unit.
  @result the integer exponent associated with an SI prefix
  @discussion root unit for length, mass, time, current, temperature, amount, and luminous intensity are
- assigned to index constants kPSLengthIndex, kPSMassIndex, kPSTimeIndex, kPSCurrentIndex,  kPSTemperatureIndex,
- kPSAmountIndex, kPSLuminousIntensityIndex, respectively.
+ assigned to index constants kSILengthIndex, kSIMassIndex, kSITimeIndex, kSICurrentIndex,  kSITemperatureIndex,
+ kSIAmountIndex, kSILuminousIntensityIndex, respectively.
  */
 SIPrefix SIUnitGetDenominatorPrefixAtIndex(SIUnitRef theUnit, const uint8_t index);
 

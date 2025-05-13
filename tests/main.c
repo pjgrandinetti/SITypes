@@ -150,46 +150,46 @@ bool dimensionalityTest0(void)
     if(!SIDimensionalityHasSameReducedDimensionality(steradians,radians)) PRINTERROR;
     if(!SIDimensionalityHasSameReducedDimensionality(steradians,dimensionless)) PRINTERROR;
     
-    SIDimensionalityRef lengthQuantity = SIDimensionalityForQuantity(kPSQuantityLength, &errorString);
+    SIDimensionalityRef lengthQuantity = SIDimensionalityForQuantity(kSIQuantityLength, &errorString);
     if(!OCTypeEqual(length, lengthQuantity)) PRINTERROR;
     
-    SIDimensionalityRef massQuantity = SIDimensionalityForQuantity(kPSQuantityMass, &errorString);
+    SIDimensionalityRef massQuantity = SIDimensionalityForQuantity(kSIQuantityMass, &errorString);
     if(!OCTypeEqual(mass, massQuantity)) PRINTERROR;
     
-    SIDimensionalityRef timeQuantity = SIDimensionalityForQuantity(kPSQuantityTime, &errorString);
+    SIDimensionalityRef timeQuantity = SIDimensionalityForQuantity(kSIQuantityTime, &errorString);
     if(!OCTypeEqual(time, timeQuantity)) PRINTERROR;
     
-    SIDimensionalityRef currentQuantity = SIDimensionalityForQuantity(kPSQuantityCurrent, &errorString);
+    SIDimensionalityRef currentQuantity = SIDimensionalityForQuantity(kSIQuantityCurrent, &errorString);
     if(!OCTypeEqual(current, currentQuantity)) PRINTERROR;
     
-    SIDimensionalityRef temperatureQuantity = SIDimensionalityForQuantity(kPSQuantityTemperature, &errorString);
+    SIDimensionalityRef temperatureQuantity = SIDimensionalityForQuantity(kSIQuantityTemperature, &errorString);
     if(!OCTypeEqual(temperature, temperatureQuantity)) PRINTERROR;
     
-    SIDimensionalityRef amountQuantity = SIDimensionalityForQuantity(kPSQuantityAmount, &errorString);
+    SIDimensionalityRef amountQuantity = SIDimensionalityForQuantity(kSIQuantityAmount, &errorString);
     if(!OCTypeEqual(amount, amountQuantity)) PRINTERROR;
     
-    SIDimensionalityRef luminousIntensityQuantity = SIDimensionalityForQuantity(kPSQuantityLuminousIntensity, &errorString);
+    SIDimensionalityRef luminousIntensityQuantity = SIDimensionalityForQuantity(kSIQuantityLuminousIntensity, &errorString);
     if(!OCTypeEqual(luminousIntensity, luminousIntensityQuantity)) PRINTERROR;
     
     // Oh boy!  Someone needs to write tests to make sure all quantity strings return the correct dimensionality.
-    SIDimensionalityRef dimensionlessQuantity = SIDimensionalityForQuantity(kPSQuantityDimensionless, &errorString);
+    SIDimensionalityRef dimensionlessQuantity = SIDimensionalityForQuantity(kSIQuantityDimensionless, &errorString);
     if(!OCTypeEqual(dimensionless, dimensionlessQuantity)) PRINTERROR;
     
-    SIDimensionalityRef forceQuantity = SIDimensionalityForQuantity(kPSQuantityForce, &errorString);
+    SIDimensionalityRef forceQuantity = SIDimensionalityForQuantity(kSIQuantityForce, &errorString);
     if(!OCTypeEqual(force, forceQuantity)) PRINTERROR;
     
-    SIDimensionalityRef radiansQuantity = SIDimensionalityForQuantity(kPSQuantityPlaneAngle, &errorString);
+    SIDimensionalityRef radiansQuantity = SIDimensionalityForQuantity(kSIQuantityPlaneAngle, &errorString);
     if(!OCTypeEqual(radians, radiansQuantity)) PRINTERROR;
     
-    SIDimensionalityRef steradiansQuantity = SIDimensionalityForQuantity(kPSQuantitySolidAngle, &errorString);
+    SIDimensionalityRef steradiansQuantity = SIDimensionalityForQuantity(kSIQuantitySolidAngle, &errorString);
     if(!OCTypeEqual(steradians, steradiansQuantity)) PRINTERROR;
     
     SIDimensionalityRef inverseLength = SIDimensionalityForSymbol(STR("1/L"), &errorString);
-    SIDimensionalityRef inverseLengthQuantity = SIDimensionalityForQuantity(kPSQuantityInverseLength, &errorString);
+    SIDimensionalityRef inverseLengthQuantity = SIDimensionalityForQuantity(kSIQuantityInverseLength, &errorString);
     if(!OCTypeEqual(inverseLength, inverseLengthQuantity)) PRINTERROR;
     
     SIDimensionalityRef inverseMass = SIDimensionalityForSymbol(STR("1/M"), &errorString);
-    SIDimensionalityRef inverseMassQuantity = SIDimensionalityForQuantity(kPSQuantityInverseMass, &errorString);
+    SIDimensionalityRef inverseMassQuantity = SIDimensionalityForQuantity(kSIQuantityInverseMass, &errorString);
     if(!OCTypeEqual(inverseMass, inverseMassQuantity)) PRINTERROR;
 
     fprintf(stderr,"%s end...without problems\n",__func__);
@@ -261,31 +261,31 @@ bool dimensionalityTest2(void)
     fprintf(stderr,"%s begin...\n",__func__);
     OCStringRef errorString = NULL;
     
-    SIDimensionalityRef force = SIDimensionalityForQuantity(kPSQuantityForce, &errorString);
-    SIDimensionalityRef acceleration = SIDimensionalityForQuantity(kPSQuantityAcceleration, &errorString);
+    SIDimensionalityRef force = SIDimensionalityForQuantity(kSIQuantityForce, &errorString);
+    SIDimensionalityRef acceleration = SIDimensionalityForQuantity(kSIQuantityAcceleration, &errorString);
     SIDimensionalityRef dimensionality = SIDimensionalityByDividing(force,acceleration);
-    SIDimensionalityRef mass = SIDimensionalityForQuantity(kPSQuantityMass, &errorString);
+    SIDimensionalityRef mass = SIDimensionalityForQuantity(kSIQuantityMass, &errorString);
     
     if(!SIDimensionalityEqual(dimensionality,mass)) PRINTERROR;
     
-    SIDimensionalityRef distance = SIDimensionalityForQuantity(kPSQuantityLength, &errorString);
-    SIDimensionalityRef work = SIDimensionalityForQuantity(kPSQuantityEnergy, &errorString);
+    SIDimensionalityRef distance = SIDimensionalityForQuantity(kSIQuantityLength, &errorString);
+    SIDimensionalityRef work = SIDimensionalityForQuantity(kSIQuantityEnergy, &errorString);
     dimensionality = SIDimensionalityByMultiplying(force, distance, &errorString);
     if(!SIDimensionalityEqual(dimensionality,work)) PRINTERROR;
     
-    SIDimensionalityRef area = SIDimensionalityForQuantity(kPSQuantityArea, &errorString);
+    SIDimensionalityRef area = SIDimensionalityForQuantity(kSIQuantityArea, &errorString);
     dimensionality = SIDimensionalityByRaisingToAPower(distance, 2,  &errorString);
     if(!SIDimensionalityEqual(dimensionality,area)) PRINTERROR;
     
-    SIDimensionalityRef angle = SIDimensionalityForQuantity(kPSQuantityPlaneAngle, &errorString);
+    SIDimensionalityRef angle = SIDimensionalityForQuantity(kSIQuantityPlaneAngle, &errorString);
     dimensionality = SIDimensionalityByDividingWithoutReducing(distance,distance);
     if(!SIDimensionalityEqual(dimensionality,angle)) PRINTERROR;
     
-    SIDimensionalityRef solidAngle = SIDimensionalityForQuantity(kPSQuantitySolidAngle, &errorString);
+    SIDimensionalityRef solidAngle = SIDimensionalityForQuantity(kSIQuantitySolidAngle, &errorString);
     dimensionality = SIDimensionalityByDividingWithoutReducing(area,area);
     if(!SIDimensionalityEqual(dimensionality,solidAngle)) PRINTERROR;
     
-    SIDimensionalityRef dimensionless = SIDimensionalityForQuantity(kPSQuantityDimensionless, &errorString);
+    SIDimensionalityRef dimensionless = SIDimensionalityForQuantity(kSIQuantityDimensionless, &errorString);
     dimensionality = SIDimensionalityByDividing(distance,distance);
     if(!SIDimensionalityEqual(dimensionality,dimensionless)) PRINTERROR;
     
@@ -447,22 +447,22 @@ bool scalarTest1(void)
     
     // Valid
     errorString = NULL;
-    PSScalarRef scalar = PSScalarCreateWithOCString(STR("4.3 eV"),&errorString);
+    SIScalarRef scalar = SIScalarCreateWithOCString(STR("4.3 eV"),&errorString);
     if(!scalar) return false;
-    PSScalarRef temp = PSScalarCreateWithFloatComplex(4.3, SIUnitForUnderivedSymbol(STR("eV")));
-    if(PSScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
+    SIScalarRef temp = SIScalarCreateWithFloatComplex(4.3, SIUnitForUnderivedSymbol(STR("eV")));
+    if(SIScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
     if(scalar) OCRelease(scalar);
     
     // Valid
     errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3 eV^2"),&errorString);
+    scalar = SIScalarCreateWithOCString(STR("4.3 eV^2"),&errorString);
     if(!scalar) PRINTERROR;
     
     double unit_multiplier = 1;
     errorString = NULL;
     SIUnitRef unit = SIUnitForSymbol(STR("eV^2"),&unit_multiplier, &errorString);
-    temp = PSScalarCreateWithFloatComplex(4.3*unit_multiplier, unit);
-    if(PSScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
+    temp = SIScalarCreateWithFloatComplex(4.3*unit_multiplier, unit);
+    if(SIScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
     if(scalar) OCRelease(scalar);
     
     // Valid
@@ -471,101 +471,101 @@ bool scalarTest1(void)
     unit = SIUnitForSymbol(STR("eV/N"),&unit_multiplier, &errorString);
     
     errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3 Å"),&errorString);
+    scalar = SIScalarCreateWithOCString(STR("4.3 Å"),&errorString);
     if(!scalar) PRINTERROR;
     
     unit_multiplier = 1;
     errorString = NULL;
     unit = SIUnitForSymbol(STR("Å"),&unit_multiplier, &errorString);
-    temp = PSScalarCreateWithFloatComplex(4.3*unit_multiplier, unit);
-    if(PSScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
+    temp = SIScalarCreateWithFloatComplex(4.3*unit_multiplier, unit);
+    if(SIScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
     if(scalar) OCRelease(scalar);
     
     // Invalid, returns NULL
     errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3e"),&errorString);
+    scalar = SIScalarCreateWithOCString(STR("4.3e"),&errorString);
     if(scalar) PRINTERROR;
     if(scalar) OCRelease(scalar);
     
     // Invalid, returns NULL
     errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3e+"),&errorString);
-    if(scalar) PRINTERROR;
-    if(scalar) OCRelease(scalar);
-    
-    // Valid
-    errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3e+3"),&errorString);
-    if(!scalar) PRINTERROR;
-    temp = PSScalarCreateWithFloatComplex(4.3e3, NULL);
-    if(PSScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
-    
-    if(scalar) OCRelease(scalar);
-    
-    // Invalid, returns NULL
-    errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3e+mV"),&errorString);
-    if(scalar) PRINTERROR;
-    if(scalar) OCRelease(scalar);
-    
-    // Invalid, returns NULL
-    errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3eV+"),&errorString);
-    if(scalar) PRINTERROR;
-    if(scalar) OCRelease(scalar);
-    
-    // Invalid, returns NULL
-    errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3e-3*"),&errorString);
+    scalar = SIScalarCreateWithOCString(STR("4.3e+"),&errorString);
     if(scalar) PRINTERROR;
     if(scalar) OCRelease(scalar);
     
     // Valid
     errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3e-3*I"),&errorString);
+    scalar = SIScalarCreateWithOCString(STR("4.3e+3"),&errorString);
     if(!scalar) PRINTERROR;
+    temp = SIScalarCreateWithFloatComplex(4.3e3, NULL);
+    if(SIScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
     
-    if(PSScalarIsReal(scalar)) PRINTERROR;
-    temp = PSScalarCreateWithFloatComplex(4.3e-3*I, NULL);
-    if(PSScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
+    if(scalar) OCRelease(scalar);
+    
+    // Invalid, returns NULL
+    errorString = NULL;
+    scalar = SIScalarCreateWithOCString(STR("4.3e+mV"),&errorString);
+    if(scalar) PRINTERROR;
+    if(scalar) OCRelease(scalar);
+    
+    // Invalid, returns NULL
+    errorString = NULL;
+    scalar = SIScalarCreateWithOCString(STR("4.3eV+"),&errorString);
+    if(scalar) PRINTERROR;
+    if(scalar) OCRelease(scalar);
+    
+    // Invalid, returns NULL
+    errorString = NULL;
+    scalar = SIScalarCreateWithOCString(STR("4.3e-3*"),&errorString);
+    if(scalar) PRINTERROR;
     if(scalar) OCRelease(scalar);
     
     // Valid
     errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3e-3 + 3.4e-3*I"),&errorString);
+    scalar = SIScalarCreateWithOCString(STR("4.3e-3*I"),&errorString);
     if(!scalar) PRINTERROR;
     
-    temp = PSScalarCreateWithFloatComplex(4.3e-3 + 3.4e-3*I, NULL);
-    if(PSScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
+    if(SIScalarIsReal(scalar)) PRINTERROR;
+    temp = SIScalarCreateWithFloatComplex(4.3e-3*I, NULL);
+    if(SIScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
     if(scalar) OCRelease(scalar);
     
     // Valid
     errorString = NULL;
-    scalar = PSScalarCreateWithOCString(STR("4.3e-3*I + 3.4e-3"),&errorString);
+    scalar = SIScalarCreateWithOCString(STR("4.3e-3 + 3.4e-3*I"),&errorString);
     if(!scalar) PRINTERROR;
     
-    temp = PSScalarCreateWithFloatComplex(4.3e-3*I + 3.4e-3, NULL);
-    if(PSScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
+    temp = SIScalarCreateWithFloatComplex(4.3e-3 + 3.4e-3*I, NULL);
+    if(SIScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
+    if(scalar) OCRelease(scalar);
+    
+    // Valid
+    errorString = NULL;
+    scalar = SIScalarCreateWithOCString(STR("4.3e-3*I + 3.4e-3"),&errorString);
+    if(!scalar) PRINTERROR;
+    
+    temp = SIScalarCreateWithFloatComplex(4.3e-3*I + 3.4e-3, NULL);
+    if(SIScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
     if(scalar) OCRelease(scalar);
     
     unit_multiplier = 1;
     errorString = NULL;
-    temp = PSScalarCreateWithFloatComplex((4.3e-3*I + 3.4e-3)*unit_multiplier, SIUnitForSymbol(STR("eV"),&unit_multiplier, &errorString));
-    if(PSScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
+    temp = SIScalarCreateWithFloatComplex((4.3e-3*I + 3.4e-3)*unit_multiplier, SIUnitForSymbol(STR("eV"),&unit_multiplier, &errorString));
+    if(SIScalarCompare(scalar, temp)!=kOCCompareEqualTo) PRINTERROR;
     if(scalar) OCRelease(scalar);
     
     errorString = NULL;
-    PSScalarRef mass = PSScalarCreateWithOCString(STR("42.01 kg"),&errorString);
+    SIScalarRef mass = SIScalarCreateWithOCString(STR("42.01 kg"),&errorString);
     
     errorString = NULL;
-    PSScalarRef acceleration = PSScalarCreateWithOCString(STR("9.8 m/s^2"),&errorString);
-    PSScalarRef force = PSScalarCreateByMultiplying(mass, acceleration,&errorString);
+    SIScalarRef acceleration = SIScalarCreateWithOCString(STR("9.8 m/s^2"),&errorString);
+    SIScalarRef force = SIScalarCreateByMultiplying(mass, acceleration,&errorString);
     
     unit_multiplier = 1;
     errorString = NULL;
     unit = SIUnitForSymbol(STR("N"),&unit_multiplier, &errorString);
-    PSScalarRef newtons = PSScalarCreateByConvertingToUnit(force, unit,NULL);
-    if(!PSScalarEqual(force, newtons)) PRINTERROR;
+    SIScalarRef newtons = SIScalarCreateByConvertingToUnit(force, unit,NULL);
+    if(!SIScalarEqual(force, newtons)) PRINTERROR;
     
     fprintf(stderr,"%s end...without problems\n",__func__);
     return true;
@@ -576,32 +576,32 @@ bool scalarTest2(void)
     fprintf(stderr,"%s begin...\n",__func__);
     OCStringRef errorString = NULL;
     
-    PSScalarRef force = PSScalarCreateWithOCString(STR("500 N"),NULL);
-    PSScalarRef acceleration = PSScalarCreateWithOCString(STR("9.8 m/s^2"),NULL);
-    PSScalarRef mass = PSScalarCreateByDividing(force, acceleration,NULL);
-    PSScalarRef mass2 = PSScalarCreateWithOCString(STR("500 N * 9.8 m/s^2"),NULL);
-    if(!PSScalarCompareReduced(mass, mass2)) PRINTERROR;
+    SIScalarRef force = SIScalarCreateWithOCString(STR("500 N"),NULL);
+    SIScalarRef acceleration = SIScalarCreateWithOCString(STR("9.8 m/s^2"),NULL);
+    SIScalarRef mass = SIScalarCreateByDividing(force, acceleration,NULL);
+    SIScalarRef mass2 = SIScalarCreateWithOCString(STR("500 N * 9.8 m/s^2"),NULL);
+    if(!SIScalarCompareReduced(mass, mass2)) PRINTERROR;
     
-    PSScalarRef n = PSScalarCreateWithOCString(STR("1 mol"),NULL);
-    PSScalarRef T = PSScalarCreateWithOCString(STR("298.15 K"),NULL);
-    PSScalarRef V = PSScalarCreateWithOCString(STR("22.4 L"),NULL);
-    PSScalarRef R = PSScalarCreateWithOCString(STR("8.3144621 J/(K*mol)"),NULL);
+    SIScalarRef n = SIScalarCreateWithOCString(STR("1 mol"),NULL);
+    SIScalarRef T = SIScalarCreateWithOCString(STR("298.15 K"),NULL);
+    SIScalarRef V = SIScalarCreateWithOCString(STR("22.4 L"),NULL);
+    SIScalarRef R = SIScalarCreateWithOCString(STR("8.3144621 J/(K*mol)"),NULL);
     
     double multiplier = 1.;
     SIUnitRef unit = SIUnitForSymbol(STR("L*atm/(K*mol)"), &multiplier, &errorString);
     unit = SIUnitByReducing(unit, &multiplier);
-    PSScalarRef Ratm = PSScalarCreateByConvertingToUnit(R, unit,NULL);
+    SIScalarRef Ratm = SIScalarCreateByConvertingToUnit(R, unit,NULL);
     
-    PSMutableScalarRef p = (PSMutableScalarRef) PSScalarCreateByMultiplying(n, R,&errorString);
-    PSScalarMultiply(p, T,&errorString);
-    PSScalarDivide(p, V,NULL);
+    SIMutableScalarRef p = (SIMutableScalarRef) SIScalarCreateByMultiplying(n, R,&errorString);
+    SIScalarMultiply(p, T,&errorString);
+    SIScalarDivide(p, V,NULL);
     
-    p = (PSMutableScalarRef) PSScalarCreateByMultiplying(n, Ratm,&errorString);
-    PSScalarMultiply(p, T,&errorString);
-    PSScalarDivide(p, V,NULL);
+    p = (SIMutableScalarRef) SIScalarCreateByMultiplying(n, Ratm,&errorString);
+    SIScalarMultiply(p, T,&errorString);
+    SIScalarDivide(p, V,NULL);
     
     SIUnitRef atmospheres = SIUnitFindWithName(STR("atmospheres"));
-    PSScalarConvertToUnit((PSMutableScalarRef) p, atmospheres,NULL);
+    SIScalarConvertToUnit((SIMutableScalarRef) p, atmospheres,NULL);
     
     OCRelease(n);
     OCRelease(T);
@@ -610,26 +610,26 @@ bool scalarTest2(void)
     OCRelease(p);
     
     
-    PSScalarRef Joule = PSScalarCreateWithOCString(STR("1J"),NULL);
-    PSScalarRef eV = PSScalarCreateWithOCString(STR("1eV"),NULL);
+    SIScalarRef Joule = SIScalarCreateWithOCString(STR("1J"),NULL);
+    SIScalarRef eV = SIScalarCreateWithOCString(STR("1eV"),NULL);
     
-    PSScalarRef temp = PSScalarCreateByDividingWithoutReducingUnit(eV,Joule,NULL);
-    PSScalarRef temp2 = PSScalarCreateByReducingUnit(temp);
-    if(PSScalarCompareReduced(temp, temp2)!= kOCCompareEqualTo) return false;
+    SIScalarRef temp = SIScalarCreateByDividingWithoutReducingUnit(eV,Joule,NULL);
+    SIScalarRef temp2 = SIScalarCreateByReducingUnit(temp);
+    if(SIScalarCompareReduced(temp, temp2)!= kOCCompareEqualTo) return false;
     
-    PSScalarRef mm = PSScalarCreateWithOCString(STR("0.01 mm"),NULL);
-    PSScalarRef m = PSScalarCreateWithOCString(STR("1m"),NULL);
+    SIScalarRef mm = SIScalarCreateWithOCString(STR("0.01 mm"),NULL);
+    SIScalarRef m = SIScalarCreateWithOCString(STR("1m"),NULL);
     
-    PSScalarRef ratio = PSScalarCreateByDividingWithoutReducingUnit(mm,m,NULL);
-    PSScalarRef ratio2 = PSScalarCreateByReducingUnit(ratio);
-    if(PSScalarCompareReduced(ratio, ratio2)!= kOCCompareEqualTo) PRINTERROR;
+    SIScalarRef ratio = SIScalarCreateByDividingWithoutReducingUnit(mm,m,NULL);
+    SIScalarRef ratio2 = SIScalarCreateByReducingUnit(ratio);
+    if(SIScalarCompareReduced(ratio, ratio2)!= kOCCompareEqualTo) PRINTERROR;
     
     
-    PSScalarRef speed = PSScalarCreateWithOCString(STR("88 km/h"),NULL);
+    SIScalarRef speed = SIScalarCreateWithOCString(STR("88 km/h"),NULL);
     double unit_multiplier = 1;
     SIUnitRef kph = SIUnitForSymbol(STR("km/h"), &unit_multiplier, NULL);
-    PSScalarRef newSpeed = PSScalarCreateByConvertingToUnit(speed, kph, NULL);
-    if(OCCompareDoubleValues(88, PSScalarDoubleValue(newSpeed))!= kOCCompareEqualTo) PRINTERROR;
+    SIScalarRef newSpeed = SIScalarCreateByConvertingToUnit(speed, kph, NULL);
+    if(OCCompareDoubleValues(88, SIScalarDoubleValue(newSpeed))!= kOCCompareEqualTo) PRINTERROR;
     OCRelease(speed);
     OCRelease(newSpeed);
     

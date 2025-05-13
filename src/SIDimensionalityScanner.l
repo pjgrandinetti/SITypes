@@ -2,8 +2,8 @@
 %option prefix = "sid"
 %{
     #include "SILibrary.h"
-    #include "SIDimensionalityParser.tab.h"
-    #include "SIDimensionalityP.h"
+    #include "SIDimensionality.tab.h"
+    #include "SIDimensionalityParser.h"
 %}
 SYMBOL (L|M|T|I|@|N|J)
 %%

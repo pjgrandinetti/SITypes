@@ -40,504 +40,504 @@ typedef enum {
 
 
 
-/*! @constant kPSQuantityDimensionless */
-#define kPSQuantityDimensionless                        STR("dimensionless")
-
-
-/*! @constant kPSQuantityLength */
-#define kPSQuantityLength                               STR("length")
-/*! @constant kPSQuantityInverseLength */
-#define kPSQuantityInverseLength                        STR("inverse length")
-/*! @constant kPSQuantityWavenumber */
-#define kPSQuantityWavenumber                           STR("wavenumber")
-/*! @constant kPSQuantityLengthRatio */
-#define kPSQuantityLengthRatio                          STR("length ratio")
-/*! @constant kPSQuantityPlaneAngle */
-#define kPSQuantityPlaneAngle                           STR("plane angle")
-
-
-/*! @constant kPSQuantityMass */
-#define kPSQuantityMass                                 STR("mass")
-/*! @constant kPSQuantityInverseMass */
-#define kPSQuantityInverseMass                          STR("inverse mass")
-/*! @constant kPSQuantityMassRatio */
-#define kPSQuantityMassRatio                            STR("mass ratio")
-
+/*! @constant kSIQuantityDimensionless */
+#define kSIQuantityDimensionless                        STR("dimensionless")
+
+
+/*! @constant kSIQuantityLength */
+#define kSIQuantityLength                               STR("length")
+/*! @constant kSIQuantityInverseLength */
+#define kSIQuantityInverseLength                        STR("inverse length")
+/*! @constant kSIQuantityWavenumber */
+#define kSIQuantityWavenumber                           STR("wavenumber")
+/*! @constant kSIQuantityLengthRatio */
+#define kSIQuantityLengthRatio                          STR("length ratio")
+/*! @constant kSIQuantityPlaneAngle */
+#define kSIQuantityPlaneAngle                           STR("plane angle")
+
+
+/*! @constant kSIQuantityMass */
+#define kSIQuantityMass                                 STR("mass")
+/*! @constant kSIQuantityInverseMass */
+#define kSIQuantityInverseMass                          STR("inverse mass")
+/*! @constant kSIQuantityMassRatio */
+#define kSIQuantityMassRatio                            STR("mass ratio")
+
 
-/*! @constant kPSQuantityTime */
-#define kPSQuantityTime                                 STR("time")
-/*! @constant kPSQuantityInverseTime */
-#define kPSQuantityInverseTime                          STR("inverse time")
-/*! @constant kPSQuantityFrequency */
-#define kPSQuantityFrequency                            STR("frequency")
-/*! @constant kPSQuantityRadioactivity */
-#define kPSQuantityRadioactivity                        STR("radioactivity")
-/*! @constant kPSQuantityTimeRatio */
-#define kPSQuantityTimeRatio                            STR("time ratio")
-/*! @constant kPSQuantityFrequencyRatio */
-#define kPSQuantityFrequencyRatio                       STR("frequency ratio")
+/*! @constant kSIQuantityTime */
+#define kSIQuantityTime                                 STR("time")
+/*! @constant kSIQuantityInverseTime */
+#define kSIQuantityInverseTime                          STR("inverse time")
+/*! @constant kSIQuantityFrequency */
+#define kSIQuantityFrequency                            STR("frequency")
+/*! @constant kSIQuantityRadioactivity */
+#define kSIQuantityRadioactivity                        STR("radioactivity")
+/*! @constant kSIQuantityTimeRatio */
+#define kSIQuantityTimeRatio                            STR("time ratio")
+/*! @constant kSIQuantityFrequencyRatio */
+#define kSIQuantityFrequencyRatio                       STR("frequency ratio")
 
-/*! @constant kPSQuantityInverseTimeSquared */
-#define kPSQuantityInverseTimeSquared                   STR("inverse time squared")
+/*! @constant kSIQuantityInverseTimeSquared */
+#define kSIQuantityInverseTimeSquared                   STR("inverse time squared")
 
 
-/*! @constant kPSQuantityCurrent */
-#define kPSQuantityCurrent                              STR("current")
-/*! @constant kPSQuantityInverseCurrent */
-#define kPSQuantityInverseCurrent                       STR("inverse current")
-/*! @constant kPSQuantityCurrentRatio */
-#define kPSQuantityCurrentRatio                         STR("current ratio")
+/*! @constant kSIQuantityCurrent */
+#define kSIQuantityCurrent                              STR("current")
+/*! @constant kSIQuantityInverseCurrent */
+#define kSIQuantityInverseCurrent                       STR("inverse current")
+/*! @constant kSIQuantityCurrentRatio */
+#define kSIQuantityCurrentRatio                         STR("current ratio")
 
 
-/*! @constant kPSQuantityTemperature */
-#define kPSQuantityTemperature                          STR("temperature")
-/*! @constant kPSQuantityInverseTemperature */
-#define kPSQuantityInverseTemperature                   STR("inverse temperature")
-/*! @constant kPSQuantityTemperatureRatio */
-#define kPSQuantityTemperatureRatio                     STR("temperature ratio")
+/*! @constant kSIQuantityTemperature */
+#define kSIQuantityTemperature                          STR("temperature")
+/*! @constant kSIQuantityInverseTemperature */
+#define kSIQuantityInverseTemperature                   STR("inverse temperature")
+/*! @constant kSIQuantityTemperatureRatio */
+#define kSIQuantityTemperatureRatio                     STR("temperature ratio")
 
-/*! @constant kPSQuantityTemperatureGradient */
-#define kPSQuantityTemperatureGradient                  STR("temperature gradient")
+/*! @constant kSIQuantityTemperatureGradient */
+#define kSIQuantityTemperatureGradient                  STR("temperature gradient")
 
 
-/*! @constant kPSQuantityAmount */
-#define kPSQuantityAmount                               STR("amount")
-/*! @constant kPSQuantityInverseAmount */
-#define kPSQuantityInverseAmount                        STR("inverse amount")
-/*! @constant kPSQuantityAmountRatio */
-#define kPSQuantityAmountRatio                          STR("amount ratio")
+/*! @constant kSIQuantityAmount */
+#define kSIQuantityAmount                               STR("amount")
+/*! @constant kSIQuantityInverseAmount */
+#define kSIQuantityInverseAmount                        STR("inverse amount")
+/*! @constant kSIQuantityAmountRatio */
+#define kSIQuantityAmountRatio                          STR("amount ratio")
 
 
-/*! @constant kPSQuantityLuminousIntensity */
-#define kPSQuantityLuminousIntensity                    STR("luminous intensity")
-/*! @constant kPSQuantityInverseLuminousIntensity */
-#define kPSQuantityInverseLuminousIntensity             STR("inverse luminous intensity")
-/*! @constant kPSQuantityLuminousIntensityRatio */
-#define kPSQuantityLuminousIntensityRatio               STR("luminous intensity ratio")
+/*! @constant kSIQuantityLuminousIntensity */
+#define kSIQuantityLuminousIntensity                    STR("luminous intensity")
+/*! @constant kSIQuantityInverseLuminousIntensity */
+#define kSIQuantityInverseLuminousIntensity             STR("inverse luminous intensity")
+/*! @constant kSIQuantityLuminousIntensityRatio */
+#define kSIQuantityLuminousIntensityRatio               STR("luminous intensity ratio")
 
 
-/*! @constant kPSQuantityArea */
-#define kPSQuantityArea                                 STR("area")
-/*! @constant kPSQuantityInverseArea */
-#define kPSQuantityInverseArea                          STR("inverse area")
-/*! @constant kPSQuantityAreaRatio */
-#define kPSQuantityAreaRatio                            STR("area ratio")
-/*! @constant kPSQuantitySolidAngle */
-#define kPSQuantitySolidAngle                           STR("solid angle")
+/*! @constant kSIQuantityArea */
+#define kSIQuantityArea                                 STR("area")
+/*! @constant kSIQuantityInverseArea */
+#define kSIQuantityInverseArea                          STR("inverse area")
+/*! @constant kSIQuantityAreaRatio */
+#define kSIQuantityAreaRatio                            STR("area ratio")
+/*! @constant kSIQuantitySolidAngle */
+#define kSIQuantitySolidAngle                           STR("solid angle")
 
 
-/*! @constant kPSQuantityVolume */
-#define kPSQuantityVolume                               STR("volume")
-/*! @constant kPSQuantityInverseVolume */
-#define kPSQuantityInverseVolume                        STR("inverse volume")
-/*! @constant kPSQuantityVolumeRatio */
-#define kPSQuantityVolumeRatio                          STR("volume ratio")
+/*! @constant kSIQuantityVolume */
+#define kSIQuantityVolume                               STR("volume")
+/*! @constant kSIQuantityInverseVolume */
+#define kSIQuantityInverseVolume                        STR("inverse volume")
+/*! @constant kSIQuantityVolumeRatio */
+#define kSIQuantityVolumeRatio                          STR("volume ratio")
 
 
-/*! @constant kPSQuantitySpeed */
-#define kPSQuantitySpeed                                STR("speed")
-/*! @constant kPSQuantityVelocity */
-#define kPSQuantityVelocity                             STR("velocity")
+/*! @constant kSIQuantitySpeed */
+#define kSIQuantitySpeed                                STR("speed")
+/*! @constant kSIQuantityVelocity */
+#define kSIQuantityVelocity                             STR("velocity")
 
-/*! @constant kPSQuantityLinearMomentum */
-#define kPSQuantityLinearMomentum                       STR("linear momentum")
+/*! @constant kSIQuantityLinearMomentum */
+#define kSIQuantityLinearMomentum                       STR("linear momentum")
 
-/*! @constant kPSQuantityAngularMomentum */
-#define kPSQuantityAngularMomentum                      STR("angular momentum")
+/*! @constant kSIQuantityAngularMomentum */
+#define kSIQuantityAngularMomentum                      STR("angular momentum")
 
-/*! @constant kPSQuantityMomentOfInertia */
-#define kPSQuantityMomentOfInertia                      STR("moment of inertia")
+/*! @constant kSIQuantityMomentOfInertia */
+#define kSIQuantityMomentOfInertia                      STR("moment of inertia")
 
-/*! @constant kPSQuantityAcceleration */
-#define kPSQuantityAcceleration                         STR("acceleration")
+/*! @constant kSIQuantityAcceleration */
+#define kSIQuantityAcceleration                         STR("acceleration")
 
-/*! @constant kPSQuantityMassFlowRate */
-#define kPSQuantityMassFlowRate                         STR("mass flow rate")
+/*! @constant kSIQuantityMassFlowRate */
+#define kSIQuantityMassFlowRate                         STR("mass flow rate")
 
-/*! @constant kPSQuantityMassFlux */
-#define kPSQuantityMassFlux                             STR("mass flux")
+/*! @constant kSIQuantityMassFlux */
+#define kSIQuantityMassFlux                             STR("mass flux")
 
-/*! @constant kPSQuantityDensity */
-#define kPSQuantityDensity                              STR("density")
+/*! @constant kSIQuantityDensity */
+#define kSIQuantityDensity                              STR("density")
 
-/*! @constant kPSQuantitySpecificGravity */
-#define kPSQuantitySpecificGravity                      STR("specific gravity")
+/*! @constant kSIQuantitySpecificGravity */
+#define kSIQuantitySpecificGravity                      STR("specific gravity")
 
-/*! @constant kPSQuantitySpecificSurfaceArea */
-#define kPSQuantitySpecificSurfaceArea                  STR("specific surface area")
+/*! @constant kSIQuantitySpecificSurfaceArea */
+#define kSIQuantitySpecificSurfaceArea                  STR("specific surface area")
 
-/*! @constant kPSQuantitySurfaceAreaToVolumeRatio */
-#define kPSQuantitySurfaceAreaToVolumeRatio             STR("surface area to volume ratio")
+/*! @constant kSIQuantitySurfaceAreaToVolumeRatio */
+#define kSIQuantitySurfaceAreaToVolumeRatio             STR("surface area to volume ratio")
 
-/*! @constant kPSQuantitySurfaceDensity */
-#define kPSQuantitySurfaceDensity                       STR("surface density")
+/*! @constant kSIQuantitySurfaceDensity */
+#define kSIQuantitySurfaceDensity                       STR("surface density")
 
-/*! @constant kPSQuantitySpecificVolume */
-#define kPSQuantitySpecificVolume                       STR("specific volume")
+/*! @constant kSIQuantitySpecificVolume */
+#define kSIQuantitySpecificVolume                       STR("specific volume")
 
-/*! @constant kPSQuantityCurrentDensity */
-#define kPSQuantityCurrentDensity                       STR("current density")
+/*! @constant kSIQuantityCurrentDensity */
+#define kSIQuantityCurrentDensity                       STR("current density")
 
-/*! @constant kPSQuantityMagneticFieldStrength */
-#define kPSQuantityMagneticFieldStrength                STR("magnetic field strength")
+/*! @constant kSIQuantityMagneticFieldStrength */
+#define kSIQuantityMagneticFieldStrength                STR("magnetic field strength")
 
-/*! @constant kPSQuantityLuminance */
-#define kPSQuantityLuminance                            STR("luminance")
+/*! @constant kSIQuantityLuminance */
+#define kSIQuantityLuminance                            STR("luminance")
 
-/*! @constant kPSQuantityRefractiveIndex */
-#define kPSQuantityRefractiveIndex                      STR("refractive index")
+/*! @constant kSIQuantityRefractiveIndex */
+#define kSIQuantityRefractiveIndex                      STR("refractive index")
 
-/*! @constant kPSQuantityFluidity */
-#define kPSQuantityFluidity                             STR("fluidity")
+/*! @constant kSIQuantityFluidity */
+#define kSIQuantityFluidity                             STR("fluidity")
 
-/*! @constant kPSQuantityMomentOfForce */
-#define kPSQuantityMomentOfForce                        STR("moment of force")
+/*! @constant kSIQuantityMomentOfForce */
+#define kSIQuantityMomentOfForce                        STR("moment of force")
 
-/*! @constant kPSQuantitySurfaceTension */
-#define kPSQuantitySurfaceTension                       STR("surface tension")
+/*! @constant kSIQuantitySurfaceTension */
+#define kSIQuantitySurfaceTension                       STR("surface tension")
 
-/*! @constant kPSQuantitySurfaceEnergy */
-#define kPSQuantitySurfaceEnergy                        STR("surface energy")
+/*! @constant kSIQuantitySurfaceEnergy */
+#define kSIQuantitySurfaceEnergy                        STR("surface energy")
 
-/*! @constant kPSQuantityAngularSpeed */
-#define kPSQuantityAngularSpeed                         STR("angular speed")
+/*! @constant kSIQuantityAngularSpeed */
+#define kSIQuantityAngularSpeed                         STR("angular speed")
 
-/*! @constant kPSQuantityAngularVelocity */
-#define kPSQuantityAngularVelocity                      STR("angular velocity")
+/*! @constant kSIQuantityAngularVelocity */
+#define kSIQuantityAngularVelocity                      STR("angular velocity")
 
-/*! @constant kPSQuantityAngularAcceleration */
-#define kPSQuantityAngularAcceleration                  STR("angular acceleration")
+/*! @constant kSIQuantityAngularAcceleration */
+#define kSIQuantityAngularAcceleration                  STR("angular acceleration")
 
-/*! @constant kPSQuantityHeatFluxDensity */
-#define kPSQuantityHeatFluxDensity                      STR("heat flux density")
+/*! @constant kSIQuantityHeatFluxDensity */
+#define kSIQuantityHeatFluxDensity                      STR("heat flux density")
 
-/*! @constant kPSQuantityIrradiance */
-#define kPSQuantityIrradiance                           STR("irradiance")
+/*! @constant kSIQuantityIrradiance */
+#define kSIQuantityIrradiance                           STR("irradiance")
 
-/*! @constant kPSQuantitySpectralRadiantFluxDensity */
-#define kPSQuantitySpectralRadiantFluxDensity           STR("spectral radiant flux density")
+/*! @constant kSIQuantitySpectralRadiantFluxDensity */
+#define kSIQuantitySpectralRadiantFluxDensity           STR("spectral radiant flux density")
 
-/*! @constant kPSQuantityHeatCapacity */
-#define kPSQuantityHeatCapacity                         STR("heat capacity")
-/*! @constant kPSQuantityEntropy */
-#define kPSQuantityEntropy                              STR("entropy")
+/*! @constant kSIQuantityHeatCapacity */
+#define kSIQuantityHeatCapacity                         STR("heat capacity")
+/*! @constant kSIQuantityEntropy */
+#define kSIQuantityEntropy                              STR("entropy")
 
-/*! @constant kPSQuantitySpecificHeatCapacity */
-#define kPSQuantitySpecificHeatCapacity                 STR("specific heat capacity")
-/*! @constant kPSQuantitySpecificEntropy */
-#define kPSQuantitySpecificEntropy                      STR("specific entropy")
+/*! @constant kSIQuantitySpecificHeatCapacity */
+#define kSIQuantitySpecificHeatCapacity                 STR("specific heat capacity")
+/*! @constant kSIQuantitySpecificEntropy */
+#define kSIQuantitySpecificEntropy                      STR("specific entropy")
 
-/*! @constant kPSQuantitySpecificEnergy */
-#define kPSQuantitySpecificEnergy                       STR("specific energy")
+/*! @constant kSIQuantitySpecificEnergy */
+#define kSIQuantitySpecificEnergy                       STR("specific energy")
 
-/*! @constant kPSQuantityThermalConductance */
-#define kPSQuantityThermalConductance                  STR("thermal conductance")
+/*! @constant kSIQuantityThermalConductance */
+#define kSIQuantityThermalConductance                  STR("thermal conductance")
 
-/*! @constant kPSQuantityThermalConductivity */
-#define kPSQuantityThermalConductivity                  STR("thermal conductivity")
+/*! @constant kSIQuantityThermalConductivity */
+#define kSIQuantityThermalConductivity                  STR("thermal conductivity")
 
-/*! @constant kPSQuantityEnergyDensity */
-#define kPSQuantityEnergyDensity                        STR("energy density")
+/*! @constant kSIQuantityEnergyDensity */
+#define kSIQuantityEnergyDensity                        STR("energy density")
 
-/*! @constant kPSQuantityElectricFieldStrength */
-#define kPSQuantityElectricFieldStrength                STR("electric field strength")
+/*! @constant kSIQuantityElectricFieldStrength */
+#define kSIQuantityElectricFieldStrength                STR("electric field strength")
 
-/*! @constant kPSQuantityElectricFieldGradient */
-#define kPSQuantityElectricFieldGradient                STR("electric field gradient")
+/*! @constant kSIQuantityElectricFieldGradient */
+#define kSIQuantityElectricFieldGradient                STR("electric field gradient")
 
-/*! @constant kPSQuantityElectricChargeDensity */
-#define kPSQuantityElectricChargeDensity                STR("electric charge density")
+/*! @constant kSIQuantityElectricChargeDensity */
+#define kSIQuantityElectricChargeDensity                STR("electric charge density")
 
-/*! @constant kPSQuantitySurfaceChargeDensity */
-#define kPSQuantitySurfaceChargeDensity                 STR("surface charge density")
+/*! @constant kSIQuantitySurfaceChargeDensity */
+#define kSIQuantitySurfaceChargeDensity                 STR("surface charge density")
 
-/*! @constant kPSQuantityElectricFlux */
-#define kPSQuantityElectricFlux                         STR("electric flux")
+/*! @constant kSIQuantityElectricFlux */
+#define kSIQuantityElectricFlux                         STR("electric flux")
 
-/*! @constant kPSQuantityElectricFluxDensity */
-#define kPSQuantityElectricFluxDensity                  STR("electric flux density")
+/*! @constant kSIQuantityElectricFluxDensity */
+#define kSIQuantityElectricFluxDensity                  STR("electric flux density")
 
-/*! @constant kPSQuantityElectricDisplacement */
-#define kPSQuantityElectricDisplacement                 STR("electric displacement")
+/*! @constant kSIQuantityElectricDisplacement */
+#define kSIQuantityElectricDisplacement                 STR("electric displacement")
 
-/*! @constant kPSQuantityPermittivity */
-#define kPSQuantityPermittivity                         STR("permittivity")
+/*! @constant kSIQuantityPermittivity */
+#define kSIQuantityPermittivity                         STR("permittivity")
 
-/*! @constant kPSQuantityPermeability */
-#define kPSQuantityPermeability                         STR("permeability")
+/*! @constant kSIQuantityPermeability */
+#define kSIQuantityPermeability                         STR("permeability")
 
-/*! @constant kPSQuantityMolarEnergy */
-#define kPSQuantityMolarEnergy                          STR("molar energy")
+/*! @constant kSIQuantityMolarEnergy */
+#define kSIQuantityMolarEnergy                          STR("molar energy")
 
-/*! @constant kPSQuantityMolarEntropy */
-#define kPSQuantityMolarEntropy                         STR("molar entropy")
+/*! @constant kSIQuantityMolarEntropy */
+#define kSIQuantityMolarEntropy                         STR("molar entropy")
 
-/*! @constant kPSQuantityMolarHeatCapacity */
-#define kPSQuantityMolarHeatCapacity                    STR("molar heat capacity")
+/*! @constant kSIQuantityMolarHeatCapacity */
+#define kSIQuantityMolarHeatCapacity                    STR("molar heat capacity")
 
-/*! @constant kPSQuantityMolarMass */
-#define kPSQuantityMolarMass                            STR("molar mass")
+/*! @constant kSIQuantityMolarMass */
+#define kSIQuantityMolarMass                            STR("molar mass")
 
-/*! @constant kPSQuantityMolality */
-#define kPSQuantityMolality                             STR("molality")
+/*! @constant kSIQuantityMolality */
+#define kSIQuantityMolality                             STR("molality")
 
-/*! @constant kPSQuantityDiffusionFlux */
-#define kPSQuantityDiffusionFlux                        STR("diffusion flux")
+/*! @constant kSIQuantityDiffusionFlux */
+#define kSIQuantityDiffusionFlux                        STR("diffusion flux")
 
-/*! @constant kPSQuantityMassToChargeRatio */
-#define kPSQuantityMassToChargeRatio                    STR("mass to charge ratio")
+/*! @constant kSIQuantityMassToChargeRatio */
+#define kSIQuantityMassToChargeRatio                    STR("mass to charge ratio")
 
-/*! @constant kPSQuantityChargeToMassRatio */
-#define kPSQuantityChargeToMassRatio                    STR("charge to mass ratio")
+/*! @constant kSIQuantityChargeToMassRatio */
+#define kSIQuantityChargeToMassRatio                    STR("charge to mass ratio")
 
-/*! @constant kPSQuantityRadiationExposure */
-#define kPSQuantityRadiationExposure                    STR("radiation exposure")
+/*! @constant kSIQuantityRadiationExposure */
+#define kSIQuantityRadiationExposure                    STR("radiation exposure")
 
-/*! @constant kPSQuantityAbsorbedDoseRate */
-#define kPSQuantityAbsorbedDoseRate                     STR("absorbed dose rate")
+/*! @constant kSIQuantityAbsorbedDoseRate */
+#define kSIQuantityAbsorbedDoseRate                     STR("absorbed dose rate")
 
-/*! @constant kPSQuantityRadiantIntensity */
-#define kPSQuantityRadiantIntensity                     STR("radiant intensity")
+/*! @constant kSIQuantityRadiantIntensity */
+#define kSIQuantityRadiantIntensity                     STR("radiant intensity")
 
-/*! @constant kPSQuantitySpectralRadiantIntensity */
-#define kPSQuantitySpectralRadiantIntensity             STR("spectral radiant intensity")
+/*! @constant kSIQuantitySpectralRadiantIntensity */
+#define kSIQuantitySpectralRadiantIntensity             STR("spectral radiant intensity")
 
-/*! @constant kPSQuantityRadiance */
-#define kPSQuantityRadiance                             STR("radiance")
+/*! @constant kSIQuantityRadiance */
+#define kSIQuantityRadiance                             STR("radiance")
 
-/*! @constant kPSQuantitySpectralRadiance */
-#define kPSQuantitySpectralRadiance                     STR("spectral radiance")
+/*! @constant kSIQuantitySpectralRadiance */
+#define kSIQuantitySpectralRadiance                     STR("spectral radiance")
 
-/*! @constant kPSQuantityPorosity */
-#define kPSQuantityPorosity                             STR("porosity")
+/*! @constant kSIQuantityPorosity */
+#define kSIQuantityPorosity                             STR("porosity")
 
-/*! @constant kPSQuantityAngularFrequency */
-#define kPSQuantityAngularFrequency                     STR("angular frequency")
+/*! @constant kSIQuantityAngularFrequency */
+#define kSIQuantityAngularFrequency                     STR("angular frequency")
 
-/*! @constant kPSQuantityForce */
-#define kPSQuantityForce                                STR("force")
+/*! @constant kSIQuantityForce */
+#define kSIQuantityForce                                STR("force")
 
-/*! @constant kPSQuantityTorque */
-#define kPSQuantityTorque                               STR("torque")
+/*! @constant kSIQuantityTorque */
+#define kSIQuantityTorque                               STR("torque")
 
-/*! @constant kPSQuantityPressure */
-#define kPSQuantityPressure                             STR("pressure")
-/*! @constant kPSQuantityStress */
-#define kPSQuantityStress                               STR("stress")
-/*! @constant kPSQuantityElasticModulus */
-#define kPSQuantityElasticModulus                       STR("elastic modulus")
+/*! @constant kSIQuantityPressure */
+#define kSIQuantityPressure                             STR("pressure")
+/*! @constant kSIQuantityStress */
+#define kSIQuantityStress                               STR("stress")
+/*! @constant kSIQuantityElasticModulus */
+#define kSIQuantityElasticModulus                       STR("elastic modulus")
 
-/*! @constant kPSQuantityCompressibility */
-#define kPSQuantityCompressibility                      STR("compressibility")
-/*! @constant kPSQuantityStressOpticCoefficient */
-#define kPSQuantityStressOpticCoefficient               STR("stress-optic coefficient")
+/*! @constant kSIQuantityCompressibility */
+#define kSIQuantityCompressibility                      STR("compressibility")
+/*! @constant kSIQuantityStressOpticCoefficient */
+#define kSIQuantityStressOpticCoefficient               STR("stress-optic coefficient")
 
-/*! @constant kPSQuantityPressureGradient */
-#define kPSQuantityPressureGradient                     STR("pressure gradient")
+/*! @constant kSIQuantityPressureGradient */
+#define kSIQuantityPressureGradient                     STR("pressure gradient")
 
-/*! @constant kPSQuantityEnergy */
-#define kPSQuantityEnergy                               STR("energy")
+/*! @constant kSIQuantityEnergy */
+#define kSIQuantityEnergy                               STR("energy")
 
-/*! @constant kPSQuantitySpectralRadiantEnergy */
-#define kPSQuantitySpectralRadiantEnergy                STR("spectral radiant energy")
+/*! @constant kSIQuantitySpectralRadiantEnergy */
+#define kSIQuantitySpectralRadiantEnergy                STR("spectral radiant energy")
 
-/*! @constant kPSQuantityPower */
-#define kPSQuantityPower                                STR("power")
+/*! @constant kSIQuantityPower */
+#define kSIQuantityPower                                STR("power")
 
-/*! @constant kPSQuantitySpectralPower */
-#define kPSQuantitySpectralPower                        STR("spectral power")
+/*! @constant kSIQuantitySpectralPower */
+#define kSIQuantitySpectralPower                        STR("spectral power")
 
-/*! @constant kPSQuantityVolumePowerDensity */
-#define kPSQuantityVolumePowerDensity                   STR("volume power density")
+/*! @constant kSIQuantityVolumePowerDensity */
+#define kSIQuantityVolumePowerDensity                   STR("volume power density")
 
-/*! @constant kPSQuantitySpecificPower */
-#define kPSQuantitySpecificPower                        STR("specific power")
+/*! @constant kSIQuantitySpecificPower */
+#define kSIQuantitySpecificPower                        STR("specific power")
 
-/*! @constant kPSQuantityRadiantFlux */
-#define kPSQuantityRadiantFlux                          STR("radiant flux")
+/*! @constant kSIQuantityRadiantFlux */
+#define kSIQuantityRadiantFlux                          STR("radiant flux")
 
-/*! @constant kPSQuantityElectricCharge */
-#define kPSQuantityElectricCharge                       STR("electric charge")
+/*! @constant kSIQuantityElectricCharge */
+#define kSIQuantityElectricCharge                       STR("electric charge")
 
-/*! @constant kPSQuantityAmountOfElectricity */
-#define kPSQuantityAmountOfElectricity                  STR("amount of electricity")
+/*! @constant kSIQuantityAmountOfElectricity */
+#define kSIQuantityAmountOfElectricity                  STR("amount of electricity")
 
-/*! @constant kPSQuantityElectricPotentialDifference */
-#define kPSQuantityElectricPotentialDifference          STR("electric potential difference")
+/*! @constant kSIQuantityElectricPotentialDifference */
+#define kSIQuantityElectricPotentialDifference          STR("electric potential difference")
 
-/*! @constant kPSQuantityElectromotiveForce */
-#define kPSQuantityElectromotiveForce                   STR("electromotive force")
+/*! @constant kSIQuantityElectromotiveForce */
+#define kSIQuantityElectromotiveForce                   STR("electromotive force")
 
-/*! @constant kPSQuantityElectricPolarizability */
-#define kPSQuantityElectricPolarizability                 STR("electric polarizability")
+/*! @constant kSIQuantityElectricPolarizability */
+#define kSIQuantityElectricPolarizability                 STR("electric polarizability")
 
-/*! @constant kPSQuantityElectricDipoleMoment */
-#define kPSQuantityElectricDipoleMoment                 STR("electric dipole moment")
+/*! @constant kSIQuantityElectricDipoleMoment */
+#define kSIQuantityElectricDipoleMoment                 STR("electric dipole moment")
 
-/*! @constant kPSQuantityVoltage */
-#define kPSQuantityVoltage                              STR("voltage")
+/*! @constant kSIQuantityVoltage */
+#define kSIQuantityVoltage                              STR("voltage")
 
-/*! @constant kPSQuantityCapacitance */
-#define kPSQuantityCapacitance                          STR("capacitance")
+/*! @constant kSIQuantityCapacitance */
+#define kSIQuantityCapacitance                          STR("capacitance")
 
-/*! @constant kPSQuantityElectricResistance */
-#define kPSQuantityElectricResistance                   STR("electric resistance")
+/*! @constant kSIQuantityElectricResistance */
+#define kSIQuantityElectricResistance                   STR("electric resistance")
 
-/*! @constant kPSQuantityElectricResistancePerLength */
-#define kPSQuantityElectricResistancePerLength          STR("electric resistance per length")
+/*! @constant kSIQuantityElectricResistancePerLength */
+#define kSIQuantityElectricResistancePerLength          STR("electric resistance per length")
 
-/*! @constant kPSQuantityElectricResistivity */
-#define kPSQuantityElectricResistivity                  STR("electric resistivity")
+/*! @constant kSIQuantityElectricResistivity */
+#define kSIQuantityElectricResistivity                  STR("electric resistivity")
 
-/*! @constant kPSQuantityElectricConductance */
-#define kPSQuantityElectricConductance                  STR("electric conductance")
+/*! @constant kSIQuantityElectricConductance */
+#define kSIQuantityElectricConductance                  STR("electric conductance")
 
-/*! @constant kPSQuantityElectricConductivity */
-#define kPSQuantityElectricConductivity                 STR("electric conductivity")
+/*! @constant kSIQuantityElectricConductivity */
+#define kSIQuantityElectricConductivity                 STR("electric conductivity")
 
-/*! @constant kPSQuantityElectricalMobility */
-#define kPSQuantityElectricalMobility                   STR("electrical mobility")
+/*! @constant kSIQuantityElectricalMobility */
+#define kSIQuantityElectricalMobility                   STR("electrical mobility")
 
-/*! @constant kPSQuantityMolarConductivity */
-#define kPSQuantityMolarConductivity                    STR("molar conductivity")
+/*! @constant kSIQuantityMolarConductivity */
+#define kSIQuantityMolarConductivity                    STR("molar conductivity")
 
-/*! @constant kPSQuantityMagneticDipoleMoment */
-#define kPSQuantityMagneticDipoleMoment                 STR("magnetic dipole moment")
+/*! @constant kSIQuantityMagneticDipoleMoment */
+#define kSIQuantityMagneticDipoleMoment                 STR("magnetic dipole moment")
 
-/*! @constant kPSQuantityMagneticDipoleMomentRatio */
-#define kPSQuantityMagneticDipoleMomentRatio            STR("magnetic dipole moment ratio")
+/*! @constant kSIQuantityMagneticDipoleMomentRatio */
+#define kSIQuantityMagneticDipoleMomentRatio            STR("magnetic dipole moment ratio")
 
-/*! @constant kPSQuantityMagneticFlux */
-#define kPSQuantityMagneticFlux                         STR("magnetic flux")
+/*! @constant kSIQuantityMagneticFlux */
+#define kSIQuantityMagneticFlux                         STR("magnetic flux")
 
-/*! @constant kPSQuantityMagneticFluxDensity */
-#define kPSQuantityMagneticFluxDensity                  STR("magnetic flux density")
+/*! @constant kSIQuantityMagneticFluxDensity */
+#define kSIQuantityMagneticFluxDensity                  STR("magnetic flux density")
 
-/*! @constant kPSQuantityMolarMagneticSusceptibility */
-#define kPSQuantityMolarMagneticSusceptibility          STR("molar magnetic susceptibility")
+/*! @constant kSIQuantityMolarMagneticSusceptibility */
+#define kSIQuantityMolarMagneticSusceptibility          STR("molar magnetic susceptibility")
 
-/*! @constant kPSQuantityInverseMagneticFluxDensity */
-#define kPSQuantityInverseMagneticFluxDensity           STR("inverse magnetic flux density")
+/*! @constant kSIQuantityInverseMagneticFluxDensity */
+#define kSIQuantityInverseMagneticFluxDensity           STR("inverse magnetic flux density")
 
-/*! @constant kPSQuantityMagneticFieldGradient */
-#define kPSQuantityMagneticFieldGradient                STR("magnetic field gradient")
+/*! @constant kSIQuantityMagneticFieldGradient */
+#define kSIQuantityMagneticFieldGradient                STR("magnetic field gradient")
 
-/*! @constant kPSQuantityInductance */
-#define kPSQuantityInductance                           STR("inductance")
+/*! @constant kSIQuantityInductance */
+#define kSIQuantityInductance                           STR("inductance")
 
-/*! @constant kPSQuantityLuminousFlux */
-#define kPSQuantityLuminousFlux                         STR("luminous flux")
+/*! @constant kSIQuantityLuminousFlux */
+#define kSIQuantityLuminousFlux                         STR("luminous flux")
 
-/*! @constant kPSQuantityLuminousFluxDensity */
-#define kPSQuantityLuminousFluxDensity                  STR("luminous flux density")
+/*! @constant kSIQuantityLuminousFluxDensity */
+#define kSIQuantityLuminousFluxDensity                  STR("luminous flux density")
 
-/*! @constant kPSQuantityLuminousEnergy */
-#define kPSQuantityLuminousEnergy                       STR("luminous energy")
+/*! @constant kSIQuantityLuminousEnergy */
+#define kSIQuantityLuminousEnergy                       STR("luminous energy")
 
-/*! @constant kPSQuantityIlluminance */
-#define kPSQuantityIlluminance                          STR("illuminance")
+/*! @constant kSIQuantityIlluminance */
+#define kSIQuantityIlluminance                          STR("illuminance")
 
-/*! @constant kPSQuantityAbsorbedDose */
-#define kPSQuantityAbsorbedDose                         STR("absorbed dose")
+/*! @constant kSIQuantityAbsorbedDose */
+#define kSIQuantityAbsorbedDose                         STR("absorbed dose")
 
-/*! @constant kPSQuantityDoseEquivalent */
-#define kPSQuantityDoseEquivalent                       STR("dose equivalent")
+/*! @constant kSIQuantityDoseEquivalent */
+#define kSIQuantityDoseEquivalent                       STR("dose equivalent")
 
-/*! @constant kPSQuantityCatalyticActivity */
-#define kPSQuantityCatalyticActivity                    STR("catalytic activity")
+/*! @constant kSIQuantityCatalyticActivity */
+#define kSIQuantityCatalyticActivity                    STR("catalytic activity")
 
-/*! @constant kPSQuantityCatalyticActivityConcentration */
-#define kPSQuantityCatalyticActivityConcentration       STR("catalytic activity concentration")
+/*! @constant kSIQuantityCatalyticActivityConcentration */
+#define kSIQuantityCatalyticActivityConcentration       STR("catalytic activity concentration")
 
-/*! @constant kPSQuantityCatalyticActivityContent */
-#define kPSQuantityCatalyticActivityContent             STR("catalytic activity content")
+/*! @constant kSIQuantityCatalyticActivityContent */
+#define kSIQuantityCatalyticActivityContent             STR("catalytic activity content")
 
-/*! @constant kPSQuantityAction */
-#define kPSQuantityAction                               STR("action")
+/*! @constant kSIQuantityAction */
+#define kSIQuantityAction                               STR("action")
 
-/*! @constant kPSQuantityReducedAction */
-#define kPSQuantityReducedAction                        STR("reduced action")
+/*! @constant kSIQuantityReducedAction */
+#define kSIQuantityReducedAction                        STR("reduced action")
 
-/*! @constant kPSQuantityKinematicViscosity */
-#define kPSQuantityKinematicViscosity                   STR("kinematic viscosity")
+/*! @constant kSIQuantityKinematicViscosity */
+#define kSIQuantityKinematicViscosity                   STR("kinematic viscosity")
 
-/*! @constant kPSQuantityDiffusionCoefficient */
-#define kPSQuantityDiffusionCoefficient                 STR("diffusion coefficient")
+/*! @constant kSIQuantityDiffusionCoefficient */
+#define kSIQuantityDiffusionCoefficient                 STR("diffusion coefficient")
 
-/*! @constant kPSQuantityCirculation */
-#define kPSQuantityCirculation                          STR("circulation")
+/*! @constant kSIQuantityCirculation */
+#define kSIQuantityCirculation                          STR("circulation")
 
-/*! @constant kPSQuantityDynamicViscosity */
-#define kPSQuantityDynamicViscosity                     STR("dynamic viscosity")
+/*! @constant kSIQuantityDynamicViscosity */
+#define kSIQuantityDynamicViscosity                     STR("dynamic viscosity")
 
-/*! @constant kPSQuantityAmountConcentration */
-#define kPSQuantityAmountConcentration                  STR("amount concentration")
+/*! @constant kSIQuantityAmountConcentration */
+#define kSIQuantityAmountConcentration                  STR("amount concentration")
 
-/*! @constant kPSQuantityMassConcentration */
-#define kPSQuantityMassConcentration                    STR("mass concentration")
+/*! @constant kSIQuantityMassConcentration */
+#define kSIQuantityMassConcentration                    STR("mass concentration")
 
-/*! @constant kPSQuantityChargePerAmount */
-#define kPSQuantityChargePerAmount                      STR("charge per amount")
+/*! @constant kSIQuantityChargePerAmount */
+#define kSIQuantityChargePerAmount                      STR("charge per amount")
 
-/*! @constant kPSQuantityGravitationalConstant */
-#define kPSQuantityGravitationalConstant                STR("gravitational constant")
+/*! @constant kSIQuantityGravitationalConstant */
+#define kSIQuantityGravitationalConstant                STR("gravitational constant")
 
-/*! @constant kPSQuantityLengthPerVolume */
-#define kPSQuantityLengthPerVolume                      STR("distance per volume")
+/*! @constant kSIQuantityLengthPerVolume */
+#define kSIQuantityLengthPerVolume                      STR("distance per volume")
 
-/*! @constant kPSQuantityVolumePerLength */
-#define kPSQuantityVolumePerLength                      STR("volume per length")
+/*! @constant kSIQuantityVolumePerLength */
+#define kSIQuantityVolumePerLength                      STR("volume per length")
 
-/*! @constant kPSQuantityVolumetricFlowRate */
-#define kPSQuantityVolumetricFlowRate                   STR("volumetric flow rate")
+/*! @constant kSIQuantityVolumetricFlowRate */
+#define kSIQuantityVolumetricFlowRate                   STR("volumetric flow rate")
 
-/*! @constant kPSQuantityFrequencyPerMagneticFluxDensity */
-#define kPSQuantityFrequencyPerMagneticFluxDensity      STR("frequency per magnetic flux density")
+/*! @constant kSIQuantityFrequencyPerMagneticFluxDensity */
+#define kSIQuantityFrequencyPerMagneticFluxDensity      STR("frequency per magnetic flux density")
 
-/*! @constant kPSQuantityPowerPerLuminousFlux */
-#define kPSQuantityPowerPerLuminousFlux                 STR("power per luminous flux")
+/*! @constant kSIQuantityPowerPerLuminousFlux */
+#define kSIQuantityPowerPerLuminousFlux                 STR("power per luminous flux")
 
-/*! @constant kPSQuantityLuminousEfficacy */
-#define kPSQuantityLuminousEfficacy                     STR("luminous efficacy")
+/*! @constant kSIQuantityLuminousEfficacy */
+#define kSIQuantityLuminousEfficacy                     STR("luminous efficacy")
 
-/*! @constant kPSQuantityRockPermeability */
-#define kPSQuantityRockPermeability                     STR("rock permeability")
+/*! @constant kSIQuantityRockPermeability */
+#define kSIQuantityRockPermeability                     STR("rock permeability")
 
-/*! @constant kPSQuantityGyromagneticRatio */
-#define kPSQuantityGyromagneticRatio                    STR("gyromagnetic ratio")
+/*! @constant kSIQuantityGyromagneticRatio */
+#define kSIQuantityGyromagneticRatio                    STR("gyromagnetic ratio")
 
-/*! @constant kPSQuantityHeatTransferCoefficient */
-#define kPSQuantityHeatTransferCoefficient              STR("heat transfer coefficient")
+/*! @constant kSIQuantityHeatTransferCoefficient */
+#define kSIQuantityHeatTransferCoefficient              STR("heat transfer coefficient")
 
-/*! @constant kPSQuantityGasPermeance */
-#define kPSQuantityGasPermeance                         STR("gas permeance")
+/*! @constant kSIQuantityGasPermeance */
+#define kSIQuantityGasPermeance                         STR("gas permeance")
 
-/*! @constant kPSQuantityPowerPerAreaPerTemperatureToFourthPower */
-#define kPSQuantityPowerPerAreaPerTemperatureToFourthPower        STR("stefan-boltzmann constant")
+/*! @constant kSIQuantityPowerPerAreaPerTemperatureToFourthPower */
+#define kSIQuantityPowerPerAreaPerTemperatureToFourthPower        STR("stefan-boltzmann constant")
 
-/*! @constant kPSQuantityFirstHyperPolarizability */
-#define kPSQuantityFirstHyperPolarizability                 STR("first hyperpolarizability")
+/*! @constant kSIQuantityFirstHyperPolarizability */
+#define kSIQuantityFirstHyperPolarizability                 STR("first hyperpolarizability")
 
-/*! @constant kPSQuantitySecondHyperPolarizability */
-#define kPSQuantitySecondHyperPolarizability                STR("second hyperpolarizability")
+/*! @constant kSIQuantitySecondHyperPolarizability */
+#define kSIQuantitySecondHyperPolarizability                STR("second hyperpolarizability")
 
-/*! @constant kPSQuantityElectricQuadrupoleMoment */
-#define kPSQuantityElectricQuadrupoleMoment                 STR("electric quadrupole moment")
+/*! @constant kSIQuantityElectricQuadrupoleMoment */
+#define kSIQuantityElectricQuadrupoleMoment                 STR("electric quadrupole moment")
 
-/*! @constant kPSQuantityMagnetizability */
-#define kPSQuantityMagnetizability                          STR("magnetizability")
+/*! @constant kSIQuantityMagnetizability */
+#define kSIQuantityMagnetizability                          STR("magnetizability")
 
-/*! @constant kPSQuantitySecondRadiationConstant */
-#define kPSQuantitySecondRadiationConstant                  STR("second radiation constant")
+/*! @constant kSIQuantitySecondRadiationConstant */
+#define kSIQuantitySecondRadiationConstant                  STR("second radiation constant")
 
-/*! @constant kPSQuantityWavelengthDisplacementConstant */
-#define kPSQuantityWavelengthDisplacementConstant           STR("wavelength displacement constant")
+/*! @constant kSIQuantityWavelengthDisplacementConstant */
+#define kSIQuantityWavelengthDisplacementConstant           STR("wavelength displacement constant")
 
-/*! @constant kPSQuantityFineStructureConstant */
-#define kPSQuantityFineStructureConstant                    STR("fine structure constant")
+/*! @constant kSIQuantityFineStructureConstant */
+#define kSIQuantityFineStructureConstant                    STR("fine structure constant")
 
-/*! @constant kPSQuantityRatePerAmountConcentrationPerTime */
-#define kPSQuantityRatePerAmountConcentrationPerTime        STR("inverse amount concentration inverse time")
+/*! @constant kSIQuantityRatePerAmountConcentrationPerTime */
+#define kSIQuantityRatePerAmountConcentrationPerTime        STR("inverse amount concentration inverse time")
 
 
 /*!

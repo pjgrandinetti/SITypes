@@ -7,6 +7,9 @@
 //
 
 #include "SILibrary.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
 static OCTypeID kSIDimensionalityID = _kOCNotATypeID;
 
@@ -814,668 +817,668 @@ static void DimensionalityLibraryBuild()
     
     // ***** Dimensionless **********************************************************************************************************************************
     // ******************************************************************************************************************************************************
-#pragma mark kPSQuantityDimensionless
+#pragma mark kSIQuantityDimensionless
     // Dimensionless                           length     mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityDimensionless,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityDimensionless,dimensionality);
     
     
     // ***** Length *****************************************************************************************************************************************
     // ******************************************************************************************************************************************************
-#pragma mark kPSQuantityLength
+#pragma mark kSIQuantityLength
     // Length                                   length     mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(1,0,       0,0,        0,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLength,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLength,dimensionality);
     
     // Wavenumber, Inverse Length
     dimensionality  = AddDimensionalityToLibrary(0,1,       0,0,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityWavenumber,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseLength,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityWavenumber,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseLength,dimensionality);
     
     // Plane Angle, Length Ratio
     dimensionality  = AddDimensionalityToLibrary(1,1,       0,0,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityPlaneAngle,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLengthRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityPlaneAngle,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLengthRatio,dimensionality);
     
     
     // ***** Mass *******************************************************************************************************************************************
     // ******************************************************************************************************************************************************
-#pragma mark kPSQuantityMass
+#pragma mark kSIQuantityMass
     // Mass                                     length      mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,        1,0,        0,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMass,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMass,dimensionality);
     
     // Inverse Mass                                     length      mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,        0,1,        0,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseMass,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseMass,dimensionality);
     
     // Mass Ratio                               length      mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,        1,1,        0,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMassRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMassRatio,dimensionality);
     
     
     // ***** Time *******************************************************************************************************************************************
     // ******************************************************************************************************************************************************
-#pragma mark kPSQuantityTime
+#pragma mark kSIQuantityTime
     // Time                                     length      mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,        0,0,        1,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityTime,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityTime,dimensionality);
     
     // Inverse Time, Frequency, Radioactivity
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,        0,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityFrequency,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityRadioactivity,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseTime,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityFrequency,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityRadioactivity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseTime,dimensionality);
     
     // Time, Frequency Ratio
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,        1,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityTimeRatio,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityFrequencyRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityTimeRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityFrequencyRatio,dimensionality);
     
     // Inverse Time Squared
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseTimeSquared,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseTimeSquared,dimensionality);
     
     // ***** Current ****************************************************************************************************************************************
     // ******************************************************************************************************************************************************
-#pragma mark kPSQuantityCurrent
+#pragma mark kSIQuantityCurrent
     // Current                                  length     mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        1,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityCurrent,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityCurrent,dimensionality);
     
     // Inverse Current                          length     mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        0,1,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseCurrent,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseCurrent,dimensionality);
     
     // Current Ratio                            length     mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        1,1,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityCurrentRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityCurrentRatio,dimensionality);
     
     
     // ***** Thermodynamic Temperature **********************************************************************************************************************
     // ******************************************************************************************************************************************************
-#pragma mark kPSQuantityTemperature
+#pragma mark kSIQuantityTemperature
     // Temperature                              length     mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        0,0,        1,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityTemperature,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityTemperature,dimensionality);
     
     // Inverse Temperature                      length     mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        0,0,        0,1,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseTemperature,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseTemperature,dimensionality);
     
     // Temperature Ratio                        length     mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        0,0,        1,1,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityTemperatureRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityTemperatureRatio,dimensionality);
     
     // ***** Amount *****************************************************************************************************************************************
     // ******************************************************************************************************************************************************
-#pragma mark kPSQuantityAmount
+#pragma mark kSIQuantityAmount
     // Amount                                   length     mass        time        current     temperature     amount      luminous intensity
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        0,0,        0,0,            1,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAmount,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAmount,dimensionality);
     
     // inverse amount
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,       0,0,         0,0,        0,0,            0,1,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseAmount,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseAmount,dimensionality);
     
     // amount ratio
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,       0,0,         0,0,        0,0,            1,1,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAmountRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAmountRatio,dimensionality);
     
     // ***** Luminous Intensity *****************************************************************************************************************************
     // ******************************************************************************************************************************************************
-#pragma mark kPSQuantityLuminousIntensity
+#pragma mark kSIQuantityLuminousIntensity
     // Luminous Intensity                       length     mass        time        current     temperature     amount      luminous intensity
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        0,0,        0,0,            0,0,        1,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLuminousIntensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLuminousIntensity,dimensionality);
     
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        0,0,        0,0,            0,0,        0,1);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseLuminousIntensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseLuminousIntensity,dimensionality);
     
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,        0,0,        0,0,        0,0,            0,0,        1,1);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLuminousIntensityRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLuminousIntensityRatio,dimensionality);
     
     
     // ***** Area *******************************************************************************************************************************************
     // ******************************************************************************************************************************************************
-#pragma mark kPSQuantityArea
+#pragma mark kSIQuantityArea
     // Area
     dimensionality  = AddDimensionalityToLibrary(2,0,       0,0,        0,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityArea,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityRockPermeability,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityArea,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityRockPermeability,dimensionality);
     
     // Inverse Area
     dimensionality  = AddDimensionalityToLibrary(0,2,       0,0,        0,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseArea,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseArea,dimensionality);
     
     // Area Ratio, Solid Angle
     dimensionality  = AddDimensionalityToLibrary(2,2,       0,0,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAreaRatio,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySolidAngle,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAreaRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySolidAngle,dimensionality);
     
     // ***** Volume *******************************************************************************************************************************************
     // ******************************************************************************************************************************************************
-#pragma mark kPSQuantityVolume
+#pragma mark kSIQuantityVolume
     // Volume
     dimensionality  = AddDimensionalityToLibrary(3,0,       0,0,        0,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityVolume,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityVolume,dimensionality);
     
     // Inverse Volume
     dimensionality  = AddDimensionalityToLibrary(0,3,       0,0,        0,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseVolume,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseVolume,dimensionality);
     
     // Volume Ratio
     dimensionality  = AddDimensionalityToLibrary(3,3,       0,0,        0,0,        0,0,        0,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityVolumeRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityVolumeRatio,dimensionality);
     
     
     // Temperature Gradient                    length     mass        time        current     temperature     amount      luminous intensity
     dimensionality = AddDimensionalityToLibrary(0,1,       0,0,        0,0,        0,0,        1,0,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityTemperatureGradient,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityTemperatureGradient,dimensionality);
     
     // Coherent Units with no Unit name - Table 2
     
     // Speed, Velocity
     dimensionality  = AddDimensionalityToLibrary(1,0,       0,0,        0,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpeed,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityVelocity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpeed,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityVelocity,dimensionality);
     
     // Linear Momentum                          length     mass        time        current     temperature     amount      luminous intensity
     dimensionality  = AddDimensionalityToLibrary(1,0,       1,0,        0,1,       0,0,       0,0,              0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLinearMomentum,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLinearMomentum,dimensionality);
     
     // Acceleration
     dimensionality  = AddDimensionalityToLibrary(1,0,       0,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAcceleration,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAcceleration,dimensionality);
     
     // Moment of Inertia
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMomentOfInertia,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMomentOfInertia,dimensionality);
     
     // Mass Flow Rate
     dimensionality  = AddDimensionalityToLibrary(0,0,       1,0,        0,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMassFlowRate,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMassFlowRate,dimensionality);
     
     // Mass Flux
     dimensionality  = AddDimensionalityToLibrary(0,2,       1,0,        0,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMassFlux,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMassFlux,dimensionality);
     
     // Diffusion Flux
     dimensionality  = AddDimensionalityToLibrary(0,2,       0,0,        0,1,       0,0,       0,0,       1,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityDiffusionFlux,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityDiffusionFlux,dimensionality);
     
     // Density
     dimensionality  = AddDimensionalityToLibrary(0,3,       1,0,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityDensity,dimensionality);
     
     // Specific Gravity
     dimensionality  = AddDimensionalityToLibrary(3,3,       1,1,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpecificGravity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpecificGravity,dimensionality);
     
     // Surface Density
     dimensionality  = AddDimensionalityToLibrary(0,2,       1,0,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySurfaceDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySurfaceDensity,dimensionality);
     
     // Specific Surface Area
     dimensionality  = AddDimensionalityToLibrary(2,0,       0,1,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpecificSurfaceArea,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpecificSurfaceArea,dimensionality);
     
     // Surface Area to Volume Ratio
     dimensionality  = AddDimensionalityToLibrary(2,3,       0,0,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySurfaceAreaToVolumeRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySurfaceAreaToVolumeRatio,dimensionality);
     
     // Specific Volume
     dimensionality  = AddDimensionalityToLibrary(3,0,       0,1,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpecificVolume,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpecificVolume,dimensionality);
     
     // Current Density
     dimensionality  = AddDimensionalityToLibrary(0,2,       0,0,        0,0,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityCurrentDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityCurrentDensity,dimensionality);
     
     
     // Magnetic Field Strength
     dimensionality  = AddDimensionalityToLibrary(0,1,       0,0,        0,0,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMagneticFieldStrength,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMagneticFieldStrength,dimensionality);
     
     
     // Luminance
     dimensionality  = AddDimensionalityToLibrary(0,2,       0,0,        0,0,       0,0,       0,0,       0,0,       1,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLuminance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLuminance,dimensionality);
     
     
     // Refractive Index
     dimensionality  = AddDimensionalityToLibrary(1,1,       0,0,        1,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityRefractiveIndex,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityRefractiveIndex,dimensionality);
     
     
     // More Coherent Units with no Symbols - Table 4
     
     // Dynamic Viscosity
     dimensionality  = AddDimensionalityToLibrary(0,1,       1,0,        0,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityDynamicViscosity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityDynamicViscosity,dimensionality);
     
     // Fluidity (inverse dynamic viscosity)
     dimensionality  = AddDimensionalityToLibrary(1,0,       0,1,        1,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityFluidity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityFluidity,dimensionality);
     
     // Moment of Force
     dimensionality  = AddDimensionalityToLibrary(2,0,       2,1,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMomentOfForce,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMomentOfForce,dimensionality);
     
     // Surface Tension
     dimensionality  = AddDimensionalityToLibrary(0,0,       1,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySurfaceTension,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySurfaceTension,dimensionality);
     
     // Surface Energy                           length     mass        time        current     temperature     amount      luminous intensity
     dimensionality  = AddDimensionalityToLibrary(2,2,       1,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySurfaceEnergy,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySurfaceEnergy,dimensionality);
     
     // Angular Velocity
     dimensionality  = AddDimensionalityToLibrary(1,1,       0,0,        0,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAngularVelocity,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAngularSpeed,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAngularFrequency,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAngularVelocity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAngularSpeed,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAngularFrequency,dimensionality);
     
     // Angular Acceleration
     dimensionality  = AddDimensionalityToLibrary(1,1,       0,0,       0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAngularAcceleration,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAngularAcceleration,dimensionality);
     
     
     // Heat Flux Density, Irradiance
     dimensionality  = AddDimensionalityToLibrary(2,2,       1,0,        0,3,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityHeatFluxDensity,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityIrradiance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityHeatFluxDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityIrradiance,dimensionality);
     
     // Spectral Radiant Flux Density
     dimensionality  = AddDimensionalityToLibrary(0,1,       1,0,        0,3,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpectralRadiantFluxDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpectralRadiantFluxDensity,dimensionality);
     
     // Heat Capacity, Entropy
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,        0,2,       0,0,       0,1,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityHeatCapacity,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityEntropy,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityHeatCapacity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityEntropy,dimensionality);
     
     
     // Specific Heat Capacity, Specific Entropy
     dimensionality  = AddDimensionalityToLibrary(2,0,       0,0,        0,2,       0,0,       0,1,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpecificHeatCapacity,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpecificEntropy,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpecificHeatCapacity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpecificEntropy,dimensionality);
     
     
     // Specific Energy
     dimensionality  = AddDimensionalityToLibrary(2,0,       0,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpecificEnergy,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpecificEnergy,dimensionality);
     
     
     // Thermal Conductance                      length      mass        time        current     temperature     amount      luminous intensity
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,        0,3,        0,0,        0,1,            0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityThermalConductance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityThermalConductance,dimensionality);
     
     // Thermal Conductivity
     dimensionality  = AddDimensionalityToLibrary(1,0,       1,0,        0,3,       0,0,       0,1,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityThermalConductivity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityThermalConductivity,dimensionality);
     
     
     // Electric Field Strength
     dimensionality  = AddDimensionalityToLibrary(1,0,       1,0,        0,3,       0,1,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricFieldStrength,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricFieldStrength,dimensionality);
     
     // Electric Charge Density
     dimensionality  = AddDimensionalityToLibrary(0,3,       0,0,        1,0,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricChargeDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricChargeDensity,dimensionality);
     
     //  Electric Flux                           length     mass        time        current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(3,0,       1,0,        0,1,       0,1,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricFlux,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricFlux,dimensionality);
     
     // Surface Charge Density, Electric Flux Density, Electric Displacement
     dimensionality  = AddDimensionalityToLibrary(0,2,       0,0,        1,0,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySurfaceChargeDensity,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricFluxDensity,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricDisplacement,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySurfaceChargeDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricFluxDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricDisplacement,dimensionality);
     
     // Electric Polarizability
     dimensionality  = AddDimensionalityToLibrary(2,2,       0,1,        4,0,       2,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricPolarizability,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricPolarizability,dimensionality);
     
     // Electric Quadrupole Moment
     dimensionality  = AddDimensionalityToLibrary(2,0,       0,0,        1,0,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricQuadrupoleMoment,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricQuadrupoleMoment,dimensionality);
     
     
     //  Magnetizability                        length     mass        time        current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,2,        4,2,       2,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMagnetizability,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMagnetizability,dimensionality);
     
     
     
     
     // Permittivity
     dimensionality  = AddDimensionalityToLibrary(0,3,       0,1,        4,0,       2,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityPermittivity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityPermittivity,dimensionality);
     
     //  Permeability                    length     mass        time        current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(1,0,       1,0,        0,2,       0,2,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityPermeability,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityPermeability,dimensionality);
     
     // Molar Energy
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,        0,2,       0,0,       0,0,       0,1,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMolarEnergy,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMolarEnergy,dimensionality);
     
     // Molar Entropy, Molar Heat Capacity
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,        0,2,       0,0,       0,1,       0,1,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMolarEntropy,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMolarHeatCapacity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMolarEntropy,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMolarHeatCapacity,dimensionality);
     
     
     // Absorbed Dose Rate
     dimensionality  = AddDimensionalityToLibrary(2,0,       0,0,        0,3,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAbsorbedDoseRate,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAbsorbedDoseRate,dimensionality);
     
     
     // Radiant Intensity
     dimensionality  = AddDimensionalityToLibrary(4,2,       1,0,        0,3,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityRadiantIntensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityRadiantIntensity,dimensionality);
     
     // Spectral Radiant Intensity
     dimensionality  = AddDimensionalityToLibrary(4,3,       1,0,        0,3,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpectralRadiantIntensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpectralRadiantIntensity,dimensionality);
     
     // Radiance
     dimensionality  = AddDimensionalityToLibrary(4,4,       1,0,        0,3,        0,0,        0,0,        0,0,        0,0);
     
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityRadiance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityRadiance,dimensionality);
     
     // Spectral Radiance
     dimensionality  = AddDimensionalityToLibrary(4,5,       1,0,        0,3,        0,0,        0,0,        0,0,        0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpectralRadiance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpectralRadiance,dimensionality);
     
     
     // Special Names and Symbols for Coherent Derived Units - Table 3
     
     // Porosity
     dimensionality  = AddDimensionalityToLibrary(3,3,       0,0,        0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityPorosity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityPorosity,dimensionality);
     
     // Force
     dimensionality  = AddDimensionalityToLibrary(1,0,       1,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityForce,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityForce,dimensionality);
     
     // Pressure, Stress, Energy Density
     dimensionality  = AddDimensionalityToLibrary(0,1,       1,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityPressure,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityStress,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityEnergyDensity,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElasticModulus,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityPressure,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityStress,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityEnergyDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElasticModulus,dimensionality);
     
     // Compressibility : Inverse Pressure
     dimensionality  = AddDimensionalityToLibrary(1,0,       0,1,        2,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityCompressibility,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityStressOpticCoefficient,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityCompressibility,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityStressOpticCoefficient,dimensionality);
     
     // Pressure Gradient                       length     mass        time        current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(0,2,       1,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityPressureGradient,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityPressureGradient,dimensionality);
     
     // Energy, Work, Heat
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityEnergy,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityEnergy,dimensionality);
     
     // Spectral radiant energy
     dimensionality  = AddDimensionalityToLibrary(2,1,       1,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpectralRadiantEnergy,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpectralRadiantEnergy,dimensionality);
     
     // Torque
     dimensionality  = AddDimensionalityToLibrary(3,1,       1,0,        0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityTorque,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityTorque,dimensionality);
     
     // Power, Radiant Flux
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,       0,3,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityPower,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityRadiantFlux,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityPower,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityRadiantFlux,dimensionality);
     
     // Spectral Power
     dimensionality  = AddDimensionalityToLibrary(2,1,       1,0,       0,3,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpectralPower,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpectralPower,dimensionality);
     
     // Volume Power Density
     dimensionality  = AddDimensionalityToLibrary(2,3,       1,0,       0,3,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityVolumePowerDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityVolumePowerDensity,dimensionality);
     
     // Specific Power
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,1,       0,3,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySpecificPower,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySpecificPower,dimensionality);
     
     // Electric Charge, Amount of Electricity
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,       1,0,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricCharge,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAmountOfElectricity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricCharge,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAmountOfElectricity,dimensionality);
     
     //  Electric Dipole Moment                  length     mass        time        current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(1,0,       0,0,       1,0,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricDipoleMoment,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricDipoleMoment,dimensionality);
     
     //  Gyromagnetic Ratio                      length     mass        time        current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(1,1,       0,1,       2,1,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityGyromagneticRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityGyromagneticRatio,dimensionality);
     
     // Electric Potential Difference, Electromotive Force
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,       0,3,       0,1,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricPotentialDifference,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectromotiveForce,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityVoltage,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricPotentialDifference,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectromotiveForce,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityVoltage,dimensionality);
     
     // Electrical Mobility
     dimensionality  = AddDimensionalityToLibrary(2,2,       0,1,       3,1,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricalMobility,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricalMobility,dimensionality);
     
     // Electric Field Gradient
     dimensionality  = AddDimensionalityToLibrary(2,2,       1,0,       0,3,       0,1,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricFieldGradient,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricFieldGradient,dimensionality);
     
     // Capacitance
     dimensionality  = AddDimensionalityToLibrary(0,2,       0,1,       4,0,       2,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityCapacitance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityCapacitance,dimensionality);
     
     // Electric Resistance
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,       0,3,       0,2,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricResistance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricResistance,dimensionality);
     
     // Electric Resistance per length
     dimensionality  = AddDimensionalityToLibrary(2,1,       1,0,       0,3,       0,2,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricResistancePerLength,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricResistancePerLength,dimensionality);
     
     // Electric Resistivity
     dimensionality  = AddDimensionalityToLibrary(3,0,       1,0,       0,3,       0,2,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricResistivity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricResistivity,dimensionality);
     
     // Electric Conductance
     dimensionality  = AddDimensionalityToLibrary(0,2,       0,1,       3,0,       2,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricConductance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricConductance,dimensionality);
     
     // Electric Conductivity
     dimensionality  = AddDimensionalityToLibrary(0,3,       0,1,       3,0,       2,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityElectricConductivity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityElectricConductivity,dimensionality);
     
     // Molar Conductivity
     dimensionality  = AddDimensionalityToLibrary(2,2,       0,1,       3,0,       2,0,       0,0,       0,1,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMolarConductivity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMolarConductivity,dimensionality);
     
     //  Magnetic Dipole Moment                  length     mass        time        current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(2,0,       0,0,       0,0,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMagneticDipoleMoment,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMagneticDipoleMoment,dimensionality);
     
     //  Magnetic Dipole Moment Ratio             length     mass        time        current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(2,2,       0,0,       0,0,       1,1,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMagneticDipoleMomentRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMagneticDipoleMomentRatio,dimensionality);
     
     // Magnetic Flux
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,       0,2,       0,1,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMagneticFlux,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMagneticFlux,dimensionality);
     
     // Magnetic Flux Density
     dimensionality  = AddDimensionalityToLibrary(0,0,       1,0,       0,2,       0,1,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMagneticFluxDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMagneticFluxDensity,dimensionality);
     
     // Inverse Magnetic Flux Density
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,1,       2,0,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInverseMagneticFluxDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInverseMagneticFluxDensity,dimensionality);
     
     // Frequency per Magnetic Flux Density, Charge to Mass Ratio, Radiation Exposure (x- and gamma-rays)
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,1,       1,0,       1,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityRadiationExposure,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityChargeToMassRatio,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityFrequencyPerMagneticFluxDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityRadiationExposure,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityChargeToMassRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityFrequencyPerMagneticFluxDensity,dimensionality);
     
     // Mass to Charge Ratio                     length     mass       time      current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(0,0,       1,0,       0,1,       0,1,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMassToChargeRatio,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMassToChargeRatio,dimensionality);
     
     // Magnetic Field Gradient                  length     mass        time        current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(0,1,       1,0,       0,2,       0,1,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMagneticFieldGradient,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMagneticFieldGradient,dimensionality);
     
     // Inductance
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,       0,2,       0,2,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityInductance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityInductance,dimensionality);
     
     // Luminous Flux
     dimensionality  = AddDimensionalityToLibrary(2,2,       0,0,       0,0,       0,0,       0,0,       0,0,       1,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLuminousFlux,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLuminousFlux,dimensionality);
     
     // Luminous Flux Density
     dimensionality  = AddDimensionalityToLibrary(2,4,       0,0,       0,0,       0,0,       0,0,       0,0,       1,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLuminousFluxDensity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLuminousFluxDensity,dimensionality);
     
     // Luminous Energy
     dimensionality  = AddDimensionalityToLibrary(2,2,       0,0,       1,0,       0,0,       0,0,       0,0,       1,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLuminousEnergy,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLuminousEnergy,dimensionality);
     
     // Illuminance
     dimensionality  = AddDimensionalityToLibrary(2,4,       0,0,       0,0,       0,0,       0,0,       0,0,       1,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityIlluminance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityIlluminance,dimensionality);
     
     
     // Absorbed dose, Dose equivalent
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,1,       0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAbsorbedDose,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityDoseEquivalent,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAbsorbedDose,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityDoseEquivalent,dimensionality);
     
     // Catalytic Activity
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,       0,1,       0,0,       0,0,       1,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityCatalyticActivity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityCatalyticActivity,dimensionality);
     
     // Catalytic Activity Concentration
     dimensionality  = AddDimensionalityToLibrary(0,3,       0,0,       0,1,       0,0,       0,0,       1,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityCatalyticActivityConcentration,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityCatalyticActivityConcentration,dimensionality);
     
     // Catalytic Activity Content
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,1,       0,1,       0,0,       0,0,       1,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityCatalyticActivityContent,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityCatalyticActivityContent,dimensionality);
     
     // Table 6 - Non-SI units but SI accepted
     
     // Reduced Action
     dimensionality  = AddDimensionalityToLibrary(3,1,       1,0,       0,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityReducedAction,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityReducedAction,dimensionality);
     
     // Action, Angular Momentum
     dimensionality  = AddDimensionalityToLibrary(2,0,       1,0,       0,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAction,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAngularMomentum,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAction,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAngularMomentum,dimensionality);
     
     // Kinematic Viscosity
     dimensionality  = AddDimensionalityToLibrary(2,0,       0,0,       0,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityKinematicViscosity,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityDiffusionCoefficient,dimensionality);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityCirculation,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityKinematicViscosity,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityDiffusionCoefficient,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityCirculation,dimensionality);
     
     // amount concentration                     length     mass       time      current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(0,3,       0,0,       0,0,       0,0,       0,0,       1,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityAmountConcentration,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityAmountConcentration,dimensionality);
     
     // mass concentration
     dimensionality  = AddDimensionalityToLibrary(0,3,       1,0,       0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMassConcentration,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMassConcentration,dimensionality);
     
     // molar mass
     dimensionality  = AddDimensionalityToLibrary(0,0,       1,0,       0,0,       0,0,       0,0,       0,1,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMolarMass,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMolarMass,dimensionality);
     
     // molality
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,1,       0,0,       0,0,       0,0,       1,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMolality,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMolality,dimensionality);
     
     // molar magnetic susceptibility
     dimensionality  = AddDimensionalityToLibrary(3,0,       0,0,       0,0,       0,0,       0,0,       0,1,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityMolarMagneticSusceptibility,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityMolarMagneticSusceptibility,dimensionality);
     
     // coulomb per mole
     dimensionality  = AddDimensionalityToLibrary(0,0,       0,0,       1,0,       1,0,       0,0,       0,1,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityChargePerAmount,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityChargePerAmount,dimensionality);
     
     // cubic meters per kilogram second (Gravitational Constant)
     dimensionality  = AddDimensionalityToLibrary(3,0,       0,1,       0,2,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityGravitationalConstant,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityGravitationalConstant,dimensionality);
     
     // distance per volume
     dimensionality  = AddDimensionalityToLibrary(1,3,       0,0,       0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLengthPerVolume,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLengthPerVolume,dimensionality);
     
     // volume per distance
     dimensionality  = AddDimensionalityToLibrary(3,1,       0,0,       0,0,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityVolumePerLength,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityVolumePerLength,dimensionality);
     
     // volume per time
     dimensionality  = AddDimensionalityToLibrary(3,0,       0,0,       0,1,       0,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityVolumetricFlowRate,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityVolumetricFlowRate,dimensionality);
     
     // power per luminous flux
     dimensionality  = AddDimensionalityToLibrary(3,1,       1,0,       0,3,       0,0,       0,0,       0,0,       0,1);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityPowerPerLuminousFlux,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityPowerPerLuminousFlux,dimensionality);
     
     // luminous efficacy
     dimensionality  = AddDimensionalityToLibrary(0,2,       0,1,       3,0,       0,0,       0,0,       0,0,       1,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityLuminousEfficacy,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityLuminousEfficacy,dimensionality);
     
     // Heat Transfer Coefficient                length     mass       time      current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(0,0,       1,0,       0,3,       0,0,       0,1,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityHeatTransferCoefficient,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityHeatTransferCoefficient,dimensionality);
     
     // Stefan Boltzman constant dimensionality  length     mass       time      current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(2,2,       1,0,       0,3,       0,0,       0,4,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityPowerPerAreaPerTemperatureToFourthPower,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityPowerPerAreaPerTemperatureToFourthPower,dimensionality);
     
     // Gas Permeance
     dimensionality  = AddDimensionalityToLibrary(1,2,       0,1,        2,1,       0,0,       0,0,       1,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityGasPermeance,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityGasPermeance,dimensionality);
     
     
-    // kPSQuantityFirstHyperPolarizability
+    // kSIQuantityFirstHyperPolarizability
     dimensionality  = AddDimensionalityToLibrary(3,4,       0,2,        7,0,       3,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityFirstHyperPolarizability,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityFirstHyperPolarizability,dimensionality);
     
-    // kPSQuantitySecondHyperPolarizability
+    // kSIQuantitySecondHyperPolarizability
     dimensionality  = AddDimensionalityToLibrary(4,6,       0,3,        10,0,       4,0,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySecondHyperPolarizability,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySecondHyperPolarizability,dimensionality);
     
     // Second Radiation Constant                length     mass       time      current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(3,2,       1,1,        2,2,       0,0,       1,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantitySecondRadiationConstant,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantitySecondRadiationConstant,dimensionality);
     
     
     // Wien Wavelength Displacement Constant    length     mass       time      current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(1,0,       0,0,        0,0,       0,0,       1,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityWavelengthDisplacementConstant,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityWavelengthDisplacementConstant,dimensionality);
     
     
     // Fine Structure Constant                  length     mass       time      current   temperature  amount    luminous intensity
     dimensionality  = AddDimensionalityToLibrary(5,5,       1,1,        4,4,       2,2,       0,0,       0,0,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityFineStructureConstant,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityFineStructureConstant,dimensionality);
     
-    // 1/(N•T)  kPSQuantityRatePerAmountConcentrationPerTime
+    // 1/(N•T)  kSIQuantityRatePerAmountConcentrationPerTime
     dimensionality  = AddDimensionalityToLibrary(3,0,       0,0,        0,1,       0,0,       0,0,       0,1,       0,0);
-    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kPSQuantityRatePerAmountConcentrationPerTime,dimensionality);
+    OCDictionaryAddValue(dimensionalityQuantitiesLibrary,kSIQuantityRatePerAmountConcentrationPerTime,dimensionality);
 }
 
 /*
