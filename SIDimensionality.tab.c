@@ -1581,36 +1581,60 @@ extern int sid_scan_string(const char *);
 extern void sidlex_destroy(void);
 
 bool sid_syntax_error;
-SIDimensionalityRef SIDimensionalityForSymbol(OCStringRef string, OCStringRef *error)
-{
-    if(error) if(*error) return NULL;
+
+SIDimensionalityRef SIDimensionalityForSymbol(OCStringRef input, OCStringRef *error) {
+    // 1) clear any old error
+    if(error) *error = NULL;
     
-    OCMutableStringRef  mutString = OCStringCreateMutableCopy(string);
-    OCStringTrimWhitespace(mutString);
-    
-    if(OCStringGetLength(mutString) == 1) {
-        SIDimensionalityRef result = SIDimensionalityWithBaseDimensionSymbol(mutString,error);
-        OCRelease(mutString);
-        return result;
+    // 2) guard against NULL input
+    if(input == NULL) {
+        if(error) *error = STR("Input string was NULL");
+        return NULL;
     }
-    
-    OCStringFindAndReplace2(mutString,STR("•"),STR("*"));
-    OCStringFindAndReplace2(mutString,STR("ϴ"), STR("@"));
-    
+
+    // 3) copy & trim
+    OCMutableStringRef mut = OCStringCreateMutableCopy(input);
+    if(mut == NULL) {
+        if(error) *error = STR("Out of memory");
+        return NULL;
+    }
+    OCStringTrimWhitespace(mut);
+    uint64_t len = OCStringGetLength(mut);
+
+    // 4) zero‐length → dimensionless
+    if(len == 0) {
+        OCRelease(mut);
+        return SIDimensionalityDimensionless();
+    }
+
+    // 5) single character → base‐dimension
+    if(len == 1) {
+        SIDimensionalityRef r = SIDimensionalityWithBaseDimensionSymbol(mut, error);
+        OCRelease(mut);
+        return r;
+    }
+
+    // 6) normalize bullet + Theta
+    OCStringFindAndReplace2(mut, STR("•"), STR("*"));
+    OCStringFindAndReplace2(mut, STR("ϴ"), STR("@"));
+
+    // 7) reset parser globals
     final_dimensionality = NULL;
-    dimensionalityError = NULL;
-    sid_syntax_error = false;
-    uint64_t length = OCStringGetLength(mutString);
-    if(length) {
-        const char *cString = OCStringGetCString(mutString);
-        
-        sid_scan_string(cString);
-        sidparse();
-        sidlex_destroy();
-        OCRelease(mutString);
+    dimensionalityError     = NULL;
+    sid_syntax_error        = false;
+
+    // 8) run the scanner/parser
+    const char *cstr = OCStringGetCString(mut);
+    sid_scan_string(cstr);
+    sidparse();
+    sidlex_destroy();
+    OCRelease(mut);
+
+    // 9) propagate any parse‐error
+    if(dimensionalityError && error) {
+        *error = dimensionalityError;
     }
-    if(dimensionalityError) *error = dimensionalityError;
-    
+
     return final_dimensionality;
 }
 
