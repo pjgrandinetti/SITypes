@@ -19,6 +19,7 @@ static OCTypeID kSIDimensionalityID = _kOCNotATypeID;
 struct __SIDimensionality
 {
     OCBase _base;
+    bool staticInstance;
 
     // SIDimensionality Type attributes  - order of declaration is essential
     uint8_t numerator_exponent[BASE_DIMENSION_COUNT];
@@ -53,7 +54,10 @@ void __SIDimensionalityFinalize(const void *theType)
     if (NULL == theType)
         return;
     SIDimensionalityRef theDimensionality = (SIDimensionalityRef)theType;
-    free((void *)theDimensionality);
+    if(!theDimensionality->staticInstance) {
+        free((void *)theDimensionality);
+    }
+
 }
 
 static OCStringRef __SIDimensionalityCopyFormattingDescription(OCTypeRef theType)
@@ -245,6 +249,7 @@ static SIDimensionalityRef SIDimensionalityCreate(uint8_t length_numerator_expon
     struct __SIDimensionality *theDimensionality = SIDimensionalityAllocate();
     if (NULL == theDimensionality)
         return NULL;
+    theDimensionality->staticInstance = false;
 
     //  setup attributes
     theDimensionality->numerator_exponent[kSILengthIndex] = length_numerator_exponent;
@@ -325,8 +330,9 @@ static SIDimensionalityRef SIDimensionalityWithExponents(uint8_t length_numerato
         return existingDimensionality;
     }
 
-    struct __SIDimensionality *temp = (struct __SIDimensionality *)newDimensionality;
-    temp->_base.retainCount = 0;
+    struct __SIDimensionality *dim = (struct __SIDimensionality *)newDimensionality;
+    dim->staticInstance = true;
+
     OCDictionaryAddValue(dimensionalityLibrary, newDimensionality->symbol, newDimensionality);
     OCRelease(newDimensionality);
     return newDimensionality;
@@ -860,8 +866,8 @@ static SIDimensionalityRef AddDimensionalityToLibrary(uint8_t length_numerator_e
                                                                 amount_numerator_exponent, amount_denominator_exponent,
                                                                 luminous_intensity_numerator_exponent, luminous_intensity_denominator_exponent);
 
-    struct __SIDimensionality *temp = (struct __SIDimensionality *)dimensionality;
-    temp->_base.retainCount = 0;
+    struct __SIDimensionality *dim = (struct __SIDimensionality *)dimensionality;
+    dim->staticInstance = true;
     OCDictionaryAddValue(dimensionalityLibrary, dimensionality->symbol, dimensionality);
     OCRelease(dimensionality);
     return dimensionality;
