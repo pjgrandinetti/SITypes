@@ -56,7 +56,7 @@ OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_BIN     := libOCTypes-headers.zip
 OCT_HEADERS_ARCHIVE := third_party/$(OCT_HEADERS_BIN)
 
-.PHONY: all octypes clean clean-objects test test-debug test-asan docs clean-docs prepare
+.PHONY: all octypes clean clean-objects test test-debug test-asan docs docs-setup clean-docs prepare
 
 # Ensure OCTypes is downloaded & extracted
 octypes: $(OCT_HEADERS_ARCHIVE) $(OCT_LIB_ARCHIVE) \
@@ -141,19 +141,30 @@ test-asan: libSITypes.a $(TEST_OBJ)
 	@./runTests.asan
 
 # Documentation
+# Build API docs (Doxygen XML + Sphinx HTML)
 docs:
 	@echo "Generating Doxygen XML output…"
 	@mkdir -p docs/doxygen/xml
-	@cd docs && doxygen Doxyfile
+	@doxygen Doxyfile
 	@echo "Building Sphinx documentation…"
-	@cd docs && sphinx-build -E -v -b html . _build
+	@cd docs && sphinx-build -E -v -b html . _build/html
+
+# Install Python doc requirements
+docs-setup:
+	@echo "Installing Python doc requirements…"
+	@pip install -r docs/requirements.txt
+
+# Clean documentation
+clean-docs:
+	@rm -rf docs/doxygen docs/_build
 
 clean-objects:
 	rm -f $(OBJ) $(TEST_OBJ)
 
 clean:
-	rm -f libSITypes.a $(GEN_C) $(GEN_H) runTests \
-	      runTests.debug runTests.asan *.dSYM -rf
+	rm -f libSITypes.a $(OBJ) $(GEN_C) $(GEN_H) runTests runTests.debug runTests.asan *.dSYM core *.core
+	rm -f *.tab.c *.tab.h *Scanner.c *Scanner.o *.o
+	rm -rf docs/doxygen docs/_build
 
 clean-docs:
 	@rm -rf docs/doxygen docs/_build

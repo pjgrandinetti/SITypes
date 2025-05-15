@@ -26,6 +26,7 @@ bool imperialVolumes = false;
 // SIUnit Opaque Type
 struct __SIUnit {
     OCBase _base;
+    bool static_instance;
 
     // SIUnit Type attributes
     // Attributes needed to describe all Derived SI Units, including
@@ -325,7 +326,10 @@ void __SIUnitFinalize(const void * theType)
 {
     if(NULL == theType) return;
     SIUnitRef theUnit = (SIUnitRef) theType;
-    free((void *)theUnit);
+
+    if(!theUnit->static_instance) {
+        free((void *)theUnit);
+    }
 }
 
 static OCStringRef __SIUnitCopyFormattingDescription(OCTypeRef theType)
@@ -924,8 +928,9 @@ static SIUnitRef AddUnitForQuantityToLibrary(OCStringRef quantity,
     }
     OCDictionaryAddValue(unitsLibrary, unit->symbol, unit);
     
+
     struct __SIUnit * temp = (struct __SIUnit *) unit;
-    temp->_base.retainCount = 0;
+    temp->static_instance = true;
     
     // Append unit to mutable array value associated with quantity key inside quanity library dictionary
     {

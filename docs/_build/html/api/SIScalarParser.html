@@ -1,0 +1,489 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIScalarParser &mdash; SITypes 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SIUnit" href="SIUnit.html" />
+    <link rel="prev" title="SIScalarConstants" href="SIScalarConstants.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SITypes
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="SIDimensionality.html">SIDimensionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SIDimensionalityParser.html">SIDimensionalityParser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SILibrary.html">SILibrary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SIQuantity.html">SIQuantity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SIScalar.html">SIScalar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SIScalarConstants.html">SIScalarConstants</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SIScalarParser</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeRef"><code class="docutils literal notranslate"><span class="pre">ScalarNodeRef</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.NumberRef"><code class="docutils literal notranslate"><span class="pre">NumberRef</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeMathFunctionRef"><code class="docutils literal notranslate"><span class="pre">ScalarNodeMathFunctionRef</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeConstantFunctionRef"><code class="docutils literal notranslate"><span class="pre">ScalarNodeConstantFunctionRef</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeSymbolRef"><code class="docutils literal notranslate"><span class="pre">ScalarNodeSymbolRef</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeAssignmentRef"><code class="docutils literal notranslate"><span class="pre">ScalarNodeAssignmentRef</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SymbolRef"><code class="docutils literal notranslate"><span class="pre">SymbolRef</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.builtInMathFunctions"><code class="docutils literal notranslate"><span class="pre">builtInMathFunctions</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_reduce"><code class="docutils literal notranslate"><span class="pre">BM_reduce</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_sqrt"><code class="docutils literal notranslate"><span class="pre">BM_sqrt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_cbrt"><code class="docutils literal notranslate"><span class="pre">BM_cbrt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_qtrt"><code class="docutils literal notranslate"><span class="pre">BM_qtrt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_erf"><code class="docutils literal notranslate"><span class="pre">BM_erf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_erfc"><code class="docutils literal notranslate"><span class="pre">BM_erfc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_exp"><code class="docutils literal notranslate"><span class="pre">BM_exp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_ln"><code class="docutils literal notranslate"><span class="pre">BM_ln</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_log"><code class="docutils literal notranslate"><span class="pre">BM_log</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_acos"><code class="docutils literal notranslate"><span class="pre">BM_acos</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_acosh"><code class="docutils literal notranslate"><span class="pre">BM_acosh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_asin"><code class="docutils literal notranslate"><span class="pre">BM_asin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_asinh"><code class="docutils literal notranslate"><span class="pre">BM_asinh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_atan"><code class="docutils literal notranslate"><span class="pre">BM_atan</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_atanh"><code class="docutils literal notranslate"><span class="pre">BM_atanh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_cos"><code class="docutils literal notranslate"><span class="pre">BM_cos</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_cosh"><code class="docutils literal notranslate"><span class="pre">BM_cosh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_sin"><code class="docutils literal notranslate"><span class="pre">BM_sin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_sinh"><code class="docutils literal notranslate"><span class="pre">BM_sinh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_tan"><code class="docutils literal notranslate"><span class="pre">BM_tan</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_tanh"><code class="docutils literal notranslate"><span class="pre">BM_tanh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_conj"><code class="docutils literal notranslate"><span class="pre">BM_conj</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_creal"><code class="docutils literal notranslate"><span class="pre">BM_creal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_cimag"><code class="docutils literal notranslate"><span class="pre">BM_cimag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_carg"><code class="docutils literal notranslate"><span class="pre">BM_carg</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInMathFunctions.BM_cabs"><code class="docutils literal notranslate"><span class="pre">BM_cabs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#c.builtInConstantFunctions"><code class="docutils literal notranslate"><span class="pre">builtInConstantFunctions</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInConstantFunctions.BC_AW"><code class="docutils literal notranslate"><span class="pre">BC_AW</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInConstantFunctions.BC_FW"><code class="docutils literal notranslate"><span class="pre">BC_FW</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInConstantFunctions.BC_Isotope_Abundance"><code class="docutils literal notranslate"><span class="pre">BC_Isotope_Abundance</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInConstantFunctions.BC_Isotope_Spin"><code class="docutils literal notranslate"><span class="pre">BC_Isotope_Spin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInConstantFunctions.BC_Isotope_HalfLife"><code class="docutils literal notranslate"><span class="pre">BC_Isotope_HalfLife</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInConstantFunctions.BC_Isotope_Gyromag"><code class="docutils literal notranslate"><span class="pre">BC_Isotope_Gyromag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInConstantFunctions.BC_Isotope_MagneticDipole"><code class="docutils literal notranslate"><span class="pre">BC_Isotope_MagneticDipole</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInConstantFunctions.BC_Isotope_ElectricQuadrupole"><code class="docutils literal notranslate"><span class="pre">BC_Isotope_ElectricQuadrupole</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.builtInConstantFunctions.BC_nmr"><code class="docutils literal notranslate"><span class="pre">BC_nmr</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeCreateInnerNode"><code class="docutils literal notranslate"><span class="pre">ScalarNodeCreateInnerNode()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeCreateNumberLeaf"><code class="docutils literal notranslate"><span class="pre">ScalarNodeCreateNumberLeaf()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeCreateMathFunction"><code class="docutils literal notranslate"><span class="pre">ScalarNodeCreateMathFunction()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeCreateConstantFunction"><code class="docutils literal notranslate"><span class="pre">ScalarNodeCreateConstantFunction()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.NodeCreateImaginaryUnitLeaf"><code class="docutils literal notranslate"><span class="pre">NodeCreateImaginaryUnitLeaf()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeEvaluate"><code class="docutils literal notranslate"><span class="pre">ScalarNodeEvaluate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.builtInMathFunction"><code class="docutils literal notranslate"><span class="pre">builtInMathFunction()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.builtInConstantFunction"><code class="docutils literal notranslate"><span class="pre">builtInConstantFunction()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeisLeaf"><code class="docutils literal notranslate"><span class="pre">ScalarNodeisLeaf()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeGetType"><code class="docutils literal notranslate"><span class="pre">ScalarNodeGetType()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ScalarNodeFree"><code class="docutils literal notranslate"><span class="pre">ScalarNodeFree()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.ConversionWithDefinedUnit"><code class="docutils literal notranslate"><span class="pre">ConversionWithDefinedUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.scalarErrorString"><code class="docutils literal notranslate"><span class="pre">scalarErrorString</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="SIUnit.html">SIUnit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SIUnitParser.html">SIUnitParser</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SITypes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">SIScalarParser</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/SIScalarParser.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="siscalarparser">
+<h1>SIScalarParser<a class="headerlink" href="#siscalarparser" title="Link to this heading"></a></h1>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="c type">
+<dt class="sig sig-object c" id="c.ScalarNodeRef">
+<span class="target" id="_s_i_scalar_parser_8h_1ab0dabaf586bf422fa83539657f06c095"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">__scalarNode</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeRef</span></span></span><a class="headerlink" href="#c.ScalarNodeRef" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c" id="c.NumberRef">
+<span class="target" id="_s_i_scalar_parser_8h_1aad2e24c2d75dff7811f270695cb00b07"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">__scalarValue</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">NumberRef</span></span></span><a class="headerlink" href="#c.NumberRef" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c" id="c.ScalarNodeMathFunctionRef">
+<span class="target" id="_s_i_scalar_parser_8h_1a8ca70f25a613598adad2e9eff113a621"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">__scalarNodeMathFunction</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeMathFunctionRef</span></span></span><a class="headerlink" href="#c.ScalarNodeMathFunctionRef" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c" id="c.ScalarNodeConstantFunctionRef">
+<span class="target" id="_s_i_scalar_parser_8h_1a6455822241e740d63e0c3854da6b3d96"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">__scalarNodeConstantFunction</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeConstantFunctionRef</span></span></span><a class="headerlink" href="#c.ScalarNodeConstantFunctionRef" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c" id="c.ScalarNodeSymbolRef">
+<span class="target" id="_s_i_scalar_parser_8h_1a2f7cffdbad318ea9ec253c8763993a39"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">__scalarNodeSymbol</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeSymbolRef</span></span></span><a class="headerlink" href="#c.ScalarNodeSymbolRef" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c" id="c.ScalarNodeAssignmentRef">
+<span class="target" id="_s_i_scalar_parser_8h_1a9cbf60e0a315b5537fd73fbf335dc4b2"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">__scalarNodeAssignment</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeAssignmentRef</span></span></span><a class="headerlink" href="#c.ScalarNodeAssignmentRef" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c" id="c.SymbolRef">
+<span class="target" id="_s_i_scalar_parser_8h_1ae7063844c3d36db44d825fbac44bd319"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">__symbol</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">SymbolRef</span></span></span><a class="headerlink" href="#c.SymbolRef" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c">
+<span class="target" id="_s_i_scalar_parser_8h_1a53e735f20f6f243fc02aef98c3fdb0e4"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#c.builtInMathFunctions" title="builtInMathFunctions"><span class="n"><span class="pre">builtInMathFunctions</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">builtInMathFunctions</span></span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c">
+<span class="target" id="_s_i_scalar_parser_8h_1a1d1301f6873da176a92d2a807238ae4c"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#c.builtInConstantFunctions" title="builtInConstantFunctions"><span class="n"><span class="pre">builtInConstantFunctions</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">builtInConstantFunctions</span></span></span><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="c enum">
+<dt class="sig sig-object c" id="c.builtInMathFunctions">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">builtInMathFunctions</span></span></span><a class="headerlink" href="#c.builtInMathFunctions" title="Link to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_reduce">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8ad27344a9bf14293b3f890b4fed7e5946"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_reduce</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_reduce" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_sqrt">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8ab09e8da52d70cc309ac1c24c41c528b2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_sqrt</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_sqrt" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_cbrt">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a4577db25dcd76eb54c91fe02d04ab479"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_cbrt</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_cbrt" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_qtrt">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a063c98cf405b79c2909bfc5e0ca55adc"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_qtrt</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_qtrt" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_erf">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a899530b9fb014a2168723692316d77e9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_erf</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_erf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_erfc">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8ad791ea63375029e4a1a141d05ca99f97"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_erfc</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_erfc" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_exp">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8aefc54f6aa72fcfd38782ccc5a32e0097"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_exp</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_exp" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_ln">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8aff3f268acaabc5e69b44bfd762a7c0be"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_ln</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_ln" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_log">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a5c502404218eb14cb1810a4ee9a3ce0c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_log</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_log" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_acos">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a174063edbcf74521630bbddb66af46a3"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_acos</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_acos" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_acosh">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8ad37f8bc63f263cdc7a72758158305c94"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_acosh</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_acosh" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_asin">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a57021f2a92117c0dcdcd32bdba4dd46e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_asin</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_asin" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_asinh">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a8c8d97595ad79ca159862136dd9276d1"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_asinh</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_asinh" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_atan">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8aaaf035796887dad3ac2e5ff017b9d132"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_atan</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_atan" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_atanh">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a00e53b4bc94bb6b28eddf471dea8e386"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_atanh</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_atanh" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_cos">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8af6fad739d21104eee8404b65246f1220"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_cos</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_cos" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_cosh">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a9a44c2f214c89627ac3795307762e18a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_cosh</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_cosh" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_sin">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a657371037c950137b490622f307f806b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_sin</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_sin" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_sinh">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8ac4162dc24588b8deb637fe9623fc4f52"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_sinh</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_sinh" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_tan">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a54cb464905c7e66320d8ea965e96791a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_tan</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_tan" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_tanh">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a6165d808a5dea869d71582868f85628d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_tanh</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_tanh" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_conj">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8aa1ead148d2e74560816c20ade806970e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_conj</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_conj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_creal">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a1ea364eec13d0220efdc4d933c12e6b0"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_creal</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_creal" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_cimag">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8aef51652cd09d044d95858018cc99725e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_cimag</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_cimag" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_carg">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a9348346b4466146d4fe8f3696c73dc36"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_carg</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_carg" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInMathFunctions.BM_cabs">
+<span class="target" id="_s_i_scalar_parser_8h_1af03ad556fb76081812e9aa1bb81798d8a744f848570adcdc9e6729001d3709431"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BM_cabs</span></span></span><a class="headerlink" href="#c.builtInMathFunctions.BM_cabs" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="c enum">
+<dt class="sig sig-object c" id="c.builtInConstantFunctions">
+<span class="target" id="_s_i_scalar_parser_8h_1a52f9febfacd7fef25441ef857995af62"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">builtInConstantFunctions</span></span></span><a class="headerlink" href="#c.builtInConstantFunctions" title="Link to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInConstantFunctions.BC_AW">
+<span class="target" id="_s_i_scalar_parser_8h_1a52f9febfacd7fef25441ef857995af62a97e0e129ec95d4dd12f10b37fa2c476d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BC_AW</span></span></span><a class="headerlink" href="#c.builtInConstantFunctions.BC_AW" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInConstantFunctions.BC_FW">
+<span class="target" id="_s_i_scalar_parser_8h_1a52f9febfacd7fef25441ef857995af62a472008b08af36af0795fe11d45a50870"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BC_FW</span></span></span><a class="headerlink" href="#c.builtInConstantFunctions.BC_FW" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInConstantFunctions.BC_Isotope_Abundance">
+<span class="target" id="_s_i_scalar_parser_8h_1a52f9febfacd7fef25441ef857995af62a7ca5c3c846ba2603115c16e1b4dcaac1"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BC_Isotope_Abundance</span></span></span><a class="headerlink" href="#c.builtInConstantFunctions.BC_Isotope_Abundance" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInConstantFunctions.BC_Isotope_Spin">
+<span class="target" id="_s_i_scalar_parser_8h_1a52f9febfacd7fef25441ef857995af62a5c5d9e5a7b14c9d25dd6d9b84909182a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BC_Isotope_Spin</span></span></span><a class="headerlink" href="#c.builtInConstantFunctions.BC_Isotope_Spin" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInConstantFunctions.BC_Isotope_HalfLife">
+<span class="target" id="_s_i_scalar_parser_8h_1a52f9febfacd7fef25441ef857995af62ada113ae2ec9b360a86dcf03dafba3b6d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BC_Isotope_HalfLife</span></span></span><a class="headerlink" href="#c.builtInConstantFunctions.BC_Isotope_HalfLife" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInConstantFunctions.BC_Isotope_Gyromag">
+<span class="target" id="_s_i_scalar_parser_8h_1a52f9febfacd7fef25441ef857995af62a79f812086da00c64b8f9f05bfee4bbdf"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BC_Isotope_Gyromag</span></span></span><a class="headerlink" href="#c.builtInConstantFunctions.BC_Isotope_Gyromag" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInConstantFunctions.BC_Isotope_MagneticDipole">
+<span class="target" id="_s_i_scalar_parser_8h_1a52f9febfacd7fef25441ef857995af62ad947ef96facefe30f8eff3dfd5b87dfa"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BC_Isotope_MagneticDipole</span></span></span><a class="headerlink" href="#c.builtInConstantFunctions.BC_Isotope_MagneticDipole" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInConstantFunctions.BC_Isotope_ElectricQuadrupole">
+<span class="target" id="_s_i_scalar_parser_8h_1a52f9febfacd7fef25441ef857995af62a7ccbc5dd4a290e699ea778a8f927d8f6"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BC_Isotope_ElectricQuadrupole</span></span></span><a class="headerlink" href="#c.builtInConstantFunctions.BC_Isotope_ElectricQuadrupole" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.builtInConstantFunctions.BC_nmr">
+<span class="target" id="_s_i_scalar_parser_8h_1a52f9febfacd7fef25441ef857995af62abfcd235744ac61db7a58045e2aa66e65"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BC_nmr</span></span></span><a class="headerlink" href="#c.builtInConstantFunctions.BC_nmr" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.ScalarNodeCreateInnerNode">
+<span class="target" id="_s_i_scalar_parser_8h_1ac476c2f2f231b49efa28bd830ecc4148"></span><a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeCreateInnerNode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">nodeType</span></span>, <a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">left</span></span>, <a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">right</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ScalarNodeCreateInnerNode" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.ScalarNodeCreateNumberLeaf">
+<span class="target" id="_s_i_scalar_parser_8h_1ad0523a0940e95dd5c1ce6b91b81a826f"></span><a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeCreateNumberLeaf</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="SIScalar.html#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">number</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ScalarNodeCreateNumberLeaf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.ScalarNodeCreateMathFunction">
+<span class="target" id="_s_i_scalar_parser_8h_1abfbc8c8e46f15cf13ba2fee9268d7caf"></span><a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeCreateMathFunction</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.builtInMathFunctions" title="builtInMathFunctions"><span class="n"><span class="pre">builtInMathFunctions</span></span></a><span class="w"> </span><span class="n"><span class="pre">funcType</span></span>, <a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">left</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ScalarNodeCreateMathFunction" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.ScalarNodeCreateConstantFunction">
+<span class="target" id="_s_i_scalar_parser_8h_1a356a7fa484ee2e84797375e9fcd5b675"></span><a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeCreateConstantFunction</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.builtInConstantFunctions" title="builtInConstantFunctions"><span class="n"><span class="pre">builtInConstantFunctions</span></span></a><span class="w"> </span><span class="n"><span class="pre">funcType</span></span>, <span class="n"><span class="pre">OCMutableStringRef</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ScalarNodeCreateConstantFunction" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.NodeCreateImaginaryUnitLeaf">
+<span class="target" id="_s_i_scalar_parser_8h_1a00a982a30f87aec4ada18a98f869a397"></span><a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">NodeCreateImaginaryUnitLeaf</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="SIScalar.html#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">number</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.NodeCreateImaginaryUnitLeaf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.ScalarNodeEvaluate">
+<span class="target" id="_s_i_scalar_parser_8h_1af7af61583675039ee0a63fba0fa36b66"></span><a class="reference internal" href="SIScalar.html#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeEvaluate</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">tree</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">errorString</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ScalarNodeEvaluate" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.builtInMathFunction">
+<span class="target" id="_s_i_scalar_parser_8h_1ac57259796f8f44cc406adb7b0366503a"></span><a class="reference internal" href="SIScalar.html#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">builtInMathFunction</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.ScalarNodeMathFunctionRef" title="ScalarNodeMathFunctionRef"><span class="n"><span class="pre">ScalarNodeMathFunctionRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">func</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">errorString</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.builtInMathFunction" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.builtInConstantFunction">
+<span class="target" id="_s_i_scalar_parser_8h_1a2581f2b416f2f11f824a4b9860b355b0"></span><a class="reference internal" href="SIScalar.html#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">builtInConstantFunction</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.ScalarNodeConstantFunctionRef" title="ScalarNodeConstantFunctionRef"><span class="n"><span class="pre">ScalarNodeConstantFunctionRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">func</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">errorString</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.builtInConstantFunction" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.ScalarNodeisLeaf">
+<span class="target" id="_s_i_scalar_parser_8h_1aee07450a462e032c5425b6718949b257"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeisLeaf</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">node</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ScalarNodeisLeaf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.ScalarNodeGetType">
+<span class="target" id="_s_i_scalar_parser_8h_1a83665c0d3b200688c589e9252c966639"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeGetType</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">node</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ScalarNodeGetType" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.ScalarNodeFree">
+<span class="target" id="_s_i_scalar_parser_8h_1aaced63ed7ba5112ee77667b1d0a3c6d8"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarNodeFree</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.ScalarNodeRef" title="ScalarNodeRef"><span class="n"><span class="pre">ScalarNodeRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">node</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ScalarNodeFree" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.ConversionWithDefinedUnit">
+<span class="target" id="_s_i_scalar_parser_8h_1afe3434795cbf44f154191be3b17167af"></span><a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ConversionWithDefinedUnit</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">OCMutableStringRef</span></span><span class="w"> </span><span class="n"><span class="pre">mutString</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">unit_multiplier</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">errorString</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ConversionWithDefinedUnit" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="c var">
+<dt class="sig sig-object c" id="c.scalarErrorString">
+<span class="target" id="_s_i_scalar_parser_8h_1afa4b511ec2e0365cecd78f4d6c74b72b"></span><span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">scalarErrorString</span></span></span><a class="headerlink" href="#c.scalarErrorString" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SIScalarConstants.html" class="btn btn-neutral float-left" title="SIScalarConstants" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SIUnit.html" class="btn btn-neutral float-right" title="SIUnit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -21,7 +21,7 @@ PROJECT_BRIEF          = "A library for SI Units in C"
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path 
 # into which the generated documentation will be written. If non-existent, it
 # will be created.
-OUTPUT_DIRECTORY       = doxygen
+OUTPUT_DIRECTORY       = docs/doxygen
 
 # The CREATE_SUBDIRS tag can be used to have doxygen generate 
 # subdirectories in the output directory that match the namespace, 

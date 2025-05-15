@@ -1,0 +1,5 @@
+SIDimensionality
+================
+
+.. doxygenfile:: SIDimensionality.h
+

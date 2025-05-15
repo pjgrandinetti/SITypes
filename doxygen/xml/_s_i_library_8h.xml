@@ -1,0 +1,258 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+  <compounddef id="_s_i_library_8h" kind="file" language="C++">
+    <compoundname>SILibrary.h</compoundname>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">OCTypes/OCLibrary.h</includes>
+    <includes refid="_s_i_dimensionality_8h" local="yes">SIDimensionality.h</includes>
+    <includes refid="_s_i_dimensionality_parser_8h" local="yes">SIDimensionalityParser.h</includes>
+    <includes refid="_s_i_unit_8h" local="yes">SIUnit.h</includes>
+    <includes refid="_s_i_unit_parser_8h" local="yes">SIUnitParser.h</includes>
+    <includes refid="_s_i_quantity_8h" local="yes">SIQuantity.h</includes>
+    <includes refid="_s_i_scalar_8h" local="yes">SIScalar.h</includes>
+    <includes refid="_s_i_scalar_constants_8h" local="yes">SIScalarConstants.h</includes>
+    <includedby refid="_s_i_dimensionality_8c" local="yes">SIDimensionality.c</includedby>
+    <includedby refid="_s_i_dimensionality_scanner_8c" local="yes">SIDimensionalityScanner.c</includedby>
+    <includedby refid="_s_i_dimensionality_scanner_8l" local="yes">SIDimensionalityScanner.l</includedby>
+    <includedby refid="_s_i_formula_mass_parser_8c" local="yes">SIFormulaMassParser.c</includedby>
+    <includedby refid="_s_i_quantity_8c" local="yes">SIQuantity.c</includedby>
+    <includedby refid="_s_i_quantity_8h" local="yes">SIQuantity.h</includedby>
+    <includedby refid="_s_i_scalar_8c" local="yes">SIScalar.c</includedby>
+    <includedby refid="_s_i_scalar_8h" local="yes">SIScalar.h</includedby>
+    <includedby refid="_s_i_scalar_constants_8c" local="yes">SIScalarConstants.c</includedby>
+    <includedby refid="_s_i_scalar_parser_8c" local="yes">SIScalarParser.c</includedby>
+    <includedby refid="_s_i_scalar_scanner_8c" local="yes">SIScalarScanner.c</includedby>
+    <includedby refid="_s_i_scalar_scanner_8l" local="yes">SIScalarScanner.l</includedby>
+    <includedby refid="_s_i_unit_8c" local="yes">SIUnit.c</includedby>
+    <includedby refid="_s_i_unit_8h" local="yes">SIUnit.h</includedby>
+    <includedby refid="_s_i_unit_scanner_8c" local="yes">SIUnitScanner.c</includedby>
+    <includedby refid="_s_i_unit_scanner_8l" local="yes">SIUnitScanner.l</includedby>
+    <incdepgraph>
+      <node id="4">
+        <label>SIDimensionality.h</label>
+        <link refid="_s_i_dimensionality_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>SIDimensionalityParser.h</label>
+        <link refid="_s_i_dimensionality_parser_8h_source"/>
+      </node>
+      <node id="1">
+        <label>SILibrary.h</label>
+        <link refid="_s_i_library_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>SIQuantity.h</label>
+        <link refid="_s_i_quantity_8h"/>
+        <childnode refid="1" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>SIScalar.h</label>
+        <link refid="_s_i_scalar_8h"/>
+        <childnode refid="1" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>SIScalarConstants.h</label>
+        <link refid="_s_i_scalar_constants_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>SIUnit.h</label>
+        <link refid="_s_i_unit_8h"/>
+        <childnode refid="1" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>SIUnitParser.h</label>
+        <link refid="_s_i_unit_parser_8h_source"/>
+      </node>
+      <node id="3">
+        <label>OCTypes/OCLibrary.h</label>
+      </node>
+      <node id="5">
+        <label>stdbool.h</label>
+      </node>
+      <node id="6">
+        <label>stdint.h</label>
+      </node>
+      <node id="2">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>SIDimensionality.c</label>
+        <link refid="_s_i_dimensionality_8c_source"/>
+      </node>
+      <node id="3">
+        <label>SIDimensionalityScanner.c</label>
+        <link refid="_s_i_dimensionality_scanner_8c_source"/>
+      </node>
+      <node id="4">
+        <label>SIDimensionalityScanner.l</label>
+        <link refid="_s_i_dimensionality_scanner_8l_source"/>
+      </node>
+      <node id="5">
+        <label>SIFormulaMassParser.c</label>
+        <link refid="_s_i_formula_mass_parser_8c_source"/>
+      </node>
+      <node id="1">
+        <label>SILibrary.h</label>
+        <link refid="_s_i_library_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>SIQuantity.c</label>
+        <link refid="_s_i_quantity_8c_source"/>
+      </node>
+      <node id="7">
+        <label>SIQuantity.h</label>
+        <link refid="_s_i_quantity_8h"/>
+        <childnode refid="1" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>SIScalar.c</label>
+        <link refid="_s_i_scalar_8c_source"/>
+      </node>
+      <node id="9">
+        <label>SIScalar.h</label>
+        <link refid="_s_i_scalar_8h"/>
+        <childnode refid="1" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>SIScalarConstants.c</label>
+        <link refid="_s_i_scalar_constants_8c_source"/>
+      </node>
+      <node id="11">
+        <label>SIScalarParser.c</label>
+        <link refid="_s_i_scalar_parser_8c_source"/>
+      </node>
+      <node id="12">
+        <label>SIScalarScanner.c</label>
+        <link refid="_s_i_scalar_scanner_8c_source"/>
+      </node>
+      <node id="13">
+        <label>SIScalarScanner.l</label>
+        <link refid="_s_i_scalar_scanner_8l_source"/>
+      </node>
+      <node id="14">
+        <label>SIUnit.c</label>
+        <link refid="_s_i_unit_8c_source"/>
+      </node>
+      <node id="15">
+        <label>SIUnit.h</label>
+        <link refid="_s_i_unit_8h"/>
+        <childnode refid="1" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>SIUnitScanner.c</label>
+        <link refid="_s_i_unit_scanner_8c_source"/>
+      </node>
+      <node id="17">
+        <label>SIUnitScanner.l</label>
+        <link refid="_s_i_unit_scanner_8l_source"/>
+      </node>
+    </invincdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>SILibrary.h</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>SITypes</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Created<sp/>by<sp/>Philip<sp/>Grandinetti<sp/>on<sp/>6/13/17.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>©<sp/>2017<sp/>PhySy<sp/>Ltd.<sp/>All<sp/>rights<sp/>reserved.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>SILibrary_h</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SILibrary_h</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">//<sp/>For<sp/>printf<sp/>used<sp/>in<sp/>macros</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;OCTypes/OCLibrary.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_s_i_dimensionality_8h" kindref="compound">SIDimensionality.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;SIDimensionalityParser.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_s_i_unit_8h" kindref="compound">SIUnit.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;SIUnitParser.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_s_i_quantity_8h" kindref="compound">SIQuantity.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_s_i_scalar_8h" kindref="compound">SIScalar.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_s_i_scalar_constants_8h" kindref="compound">SIScalarConstants.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IF_NO_OBJECT_EXISTS_RETURN(OBJECT,<sp/>X)<sp/>\</highlight></codeline>
+<codeline lineno="25"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>if<sp/>(NULL<sp/>==<sp/>OBJECT)<sp/>{<sp/>\</highlight></codeline>
+<codeline lineno="26"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(&quot;***<sp/>WARNING<sp/>-<sp/>%s<sp/>-<sp/>object<sp/>doesn&apos;t<sp/>exist.\n&quot;,<sp/>__func__);<sp/>\</highlight></codeline>
+<codeline lineno="27"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>X;<sp/>\</highlight></codeline>
+<codeline lineno="28"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">/*<sp/>SILibrary_h<sp/>*/</highlight><highlight class="preprocessor"></highlight></codeline>
+    </programlisting>
+    <location file="SILibrary.h"/>
+  </compounddef>
+</doxygen>

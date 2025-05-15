@@ -1,3 +1,18 @@
+/**
+ * @file SIQuantity.h
+ * @brief Declares the SIQuantity interface for representing and manipulating physical quantities.
+ *
+ * SIQuantity provides an abstract interface for physical quantities, associating a value (of a specific element type) with a unit and dimensionality.
+ * The API is CoreFoundation-style, with explicit memory management and reference counting.
+ *
+ * SIQuantity objects are immutable by default; use SIMutableQuantityRef for mutable variants.
+ *
+ * This interface supports querying and manipulating the unit, dimensionality, and element type of a quantity, as well as type and dimensionality comparisons.
+ *
+ * @author Philip Grandinetti
+ * @copyright PhySy Ltd.
+ */
+
 //
 //  SIQuantity.h
 //  SITypes
@@ -11,182 +26,151 @@
 
 #include "SILibrary.h"
 
-/*!
- @enum complexPart
- @constant kSIRealPart real part of complex number.
- @constant kSIImaginaryPart imaginary part of complex number.
- @constant kSIMagnitudePart magnitude part of complex number.
- @constant kSIArgumentPart argument part of complex number.
+/**
+ * @enum complexPart
+ * @brief Parts of a complex number.
+ * @var kSIRealPart Real part of complex number.
+ * @var kSIImaginaryPart Imaginary part of complex number.
+ * @var kSIMagnitudePart Magnitude part of complex number.
+ * @var kSIArgumentPart Argument part of complex number.
  */
 typedef enum complexPart {
-    kSIRealPart,
-    kSIImaginaryPart,
-    kSIMagnitudePart,
-    kSIArgumentPart,
+    kSIRealPart,        /**< Real part of complex number. */
+    kSIImaginaryPart,   /**< Imaginary part of complex number. */
+    kSIMagnitudePart,   /**< Magnitude part of complex number. */
+    kSIArgumentPart,    /**< Argument part of complex number. */
 } complexPart;
 
-
-/*!
- @typedef SIQuantityRef
- This is the type of a reference to a SIQuantity.
+/**
+ * @typedef SIQuantityRef
+ * @brief Reference to a SIQuantity object.
  */
 typedef const struct __SIQuantity * SIQuantityRef;
 
-/*!
- @typedef SIMutableQuantity
- This is the type of a reference to mutable SIQuantity.
+/**
+ * @typedef SIMutableQuantityRef
+ * @brief Reference to a mutable SIQuantity object.
  */
 typedef struct __SIQuantity * SIMutableQuantityRef;
 
-/*!
- @header SIQuantity
- SIQuantity represents a physical quantity and has two attributes: a element type and a unit.
- SIQuantity is an abstract type.
- 
- @copyright PhySy Ltd
- */
-
-#pragma mark Accessors
-/*!
- @functiongroup Accessors
- */
-
-/*!
- @function SIQuantityGetUnit
- @abstract Returns the quantity's unit.
- @param quantity The quantity.
- @result a SIUnit object
+/**
+ * @brief Returns the quantity's unit.
+ * @param quantity The quantity.
+ * @return A SIUnit object.
  */
 SIUnitRef SIQuantityGetUnit(SIQuantityRef quantity);
 
-/*!
- @function SIQuantitySetUnit
- @abstract Set the quantity's unit.
- @param quantity The quantity.
- @param unit The unit.
+/**
+ * @brief Sets the quantity's unit.
+ * @param quantity The quantity.
+ * @param unit The unit.
  */
 void SIQuantitySetUnit(SIMutableQuantityRef quantity, SIUnitRef unit);
 
-/*!
- @function SIQuantityGetUnitDimensionality
- @abstract Returns the quantity's dimensionality.
- @param quantity The quantity.
- @result a SIDimensionality object
+/**
+ * @brief Returns the quantity's dimensionality.
+ * @param quantity The quantity.
+ * @return A SIDimensionality object.
  */
 SIDimensionalityRef SIQuantityGetUnitDimensionality(SIQuantityRef quantity);
 
-/*!
- @function SIQuantityGetElementType
- @abstract Returns the type used by a quantity to store its values.
- @param quantity The quantity.
- @result the element type.  Possible values are kOCNumberFloatType, kOCNumberDoubleType, kOCNumberFloatComplexType, and kOCNumberDoubleComplexType.
+/**
+ * @brief Returns the type used by a quantity to store its values.
+ * @param quantity The quantity.
+ * @return The element type. Possible values are kOCNumberFloatType, kOCNumberDoubleType, kOCNumberFloatComplexType, and kOCNumberDoubleComplexType.
  */
 numberType SIQuantityGetElementType(SIQuantityRef quantity);
 
-/*!
- @function SIQuantityElementSize
- @abstract Returns size (in bytes) of a quantity element.
- @param quantity The quantity.
- @result the size
+/**
+ * @brief Returns size (in bytes) of a quantity element.
+ * @param quantity The quantity.
+ * @return The size.
  */
 int SIQuantityElementSize(SIQuantityRef quantity);
 
-#pragma mark Tests
-/*!
- @functiongroup Tests
- */
-
-/*!
- @function SIQuantityHasElementType
- @abstract Tests if quantity has a specific element type.
- @param quantity The quantity.
- @param elementType The element type.
- @result true or false.
+/**
+ * @brief Tests if quantity has a specific element type.
+ * @param quantity The quantity.
+ * @param elementType The element type.
+ * @return True or false.
  */
 bool SIQuantityHasElementType(SIQuantityRef quantity, numberType elementType);
 
-/*!
- @function SIQuantityIsComplexType
- @abstract Tests if quantity has a complex element type.
- @param theQuantity The quantity.
- @result true or false.
+/**
+ * @brief Tests if quantity has a complex element type.
+ * @param theQuantity The quantity.
+ * @return True or false.
  */
 bool SIQuantityIsComplexType(SIQuantityRef theQuantity);
 
-/*!
- @function SIQuantityHasDimensionality
- @abstract Tests if quantity has a specific dimensionality.
- @param quantity The quantity.
- @param theDimensionality The dimensionality.
- @result true or false.
+/**
+ * @brief Tests if quantity has a specific dimensionality.
+ * @param quantity The quantity.
+ * @param theDimensionality The dimensionality.
+ * @return True or false.
  */
 bool SIQuantityHasDimensionality(SIQuantityRef quantity, SIDimensionalityRef theDimensionality);
 
-/*!
- @function SIQuantityHasSameDimensionality
- @abstract Determines if two quantities have the same dimensionality exponents,
- @param input1 The first quantity.
- @param input2 The second quantity.
- @result true or false.
+/**
+ * @brief Determines if two quantities have the same dimensionality exponents.
+ * @param input1 The first quantity.
+ * @param input2 The second quantity.
+ * @return True or false.
  */
 bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2);
 
-/*!
- @function SIQuantityHasSameReducedDimensionality
- @abstract Determines if two quantities have the same reduced dimensionality exponents,
- @param input1 The first quantity.
- @param input2 The second quantity.
- @result true or false.
+/**
+ * @brief Determines if two quantities have the same reduced dimensionality exponents.
+ * @param input1 The first quantity.
+ * @param input2 The second quantity.
+ * @return True or false.
  */
 bool SIQuantityHasSameReducedDimensionality(SIQuantityRef input1, SIQuantityRef input2);
 
-/*!
- @function SIQuantityLargerElementType
- @abstract Returns larger element type for the two input quantities.
- @param input1 The first numberType.
- @param input2 The second numberType.
- @result the larger numberType of the two quantities
+/**
+ * @brief Returns larger element type for the two input quantities.
+ * @param input1 The first numberType.
+ * @param input2 The second numberType.
+ * @return The larger numberType of the two quantities.
  */
-numberType SIQuantityLargerElementType(SIQuantityRef input1,SIQuantityRef input2);
+numberType SIQuantityLargerElementType(SIQuantityRef input1, SIQuantityRef input2);
 
-/*!
- @function SIQuantitySmallerElementType
- @abstract Returns smaller element type for the two input quantities.
- @param input1 The first numberType.
- @param input2 The second numberType.
- @result the smaller numberType of the two quantities
+/**
+ * @brief Returns smaller element type for the two input quantities.
+ * @param input1 The first numberType.
+ * @param input2 The second numberType.
+ * @return The smaller numberType of the two quantities.
  */
 numberType SIQuantitySmallerElementType(SIQuantityRef input1, SIQuantityRef input2);
 
-/*!
- @function SIQuantityBestElementType
- @abstract Returns the best element type for the two input quantities.
- @param input1 The first numberType.
- @param input2 The second numberType.
- @result the best numberType from the two quantities
- @discussion Returns the best element type for the two input quantities which loses no precision
- when the quantities are combined in any way: add, subtract, multiply, divide.  Input element
- types and outputs are:
- 
- (float and float) => float
- 
- (float and double) => double
- 
- (float and float complex) => float complex
- 
- (float and double complex) => double complex
- 
- (double and double) => double
- 
- (double and float complex) => double complex
- 
- (double and double complex) => double complex
- 
- (float complex and float complex) => float complex
- 
- (float complex and double complex) => double complex
- 
- (double complex and double complex) => double complex
+/**
+ * @brief Returns the best element type for the two input quantities.
+ * @param input1 The first numberType.
+ * @param input2 The second numberType.
+ * @return The best numberType from the two quantities.
+ * @details Returns the best element type for the two input quantities which loses no precision
+ * when the quantities are combined in any way: add, subtract, multiply, divide. Input element
+ * types and outputs are:
+ *
+ * (float and float) => float
+ *
+ * (float and double) => double
+ *
+ * (float and float complex) => float complex
+ *
+ * (float and double complex) => double complex
+ *
+ * (double and double) => double
+ *
+ * (double and float complex) => double complex
+ *
+ * (double and double complex) => double complex
+ *
+ * (float complex and float complex) => float complex
+ *
+ * (float complex and double complex) => double complex
+ *
+ * (double complex and double complex) => double complex
  */
 numberType SIQuantityBestElementType(SIQuantityRef input1, SIQuantityRef input2);
 

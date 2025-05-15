@@ -1,0 +1,3386 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+  <compounddef id="group___s_i_dimensionality" kind="group">
+    <compoundname>SIDimensionality</compoundname>
+    <title>SIDimensionality</title>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="group___s_i_dimensionality_1gaf16c075270d30feda2956629de32fd1a" prot="public" static="no" strong="no">
+        <type></type>
+        <name>SIBaseDimensionIndex</name>
+        <enumvalue id="group___s_i_dimensionality_1ggaf16c075270d30feda2956629de32fd1aaae8c2820687e6bc8b7a0df55925b5039" prot="public">
+          <name>kSILengthIndex</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group___s_i_dimensionality_1ggaf16c075270d30feda2956629de32fd1aa0de5c47f5f3df758ac13e13a2b4e393d" prot="public">
+          <name>kSIMassIndex</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group___s_i_dimensionality_1ggaf16c075270d30feda2956629de32fd1aaf75f92f26ff679dfaf64b2e5340ba37d" prot="public">
+          <name>kSITimeIndex</name>
+          <initializer>= 2</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group___s_i_dimensionality_1ggaf16c075270d30feda2956629de32fd1aadf0a233737188bc305bea77cd988dd3f" prot="public">
+          <name>kSICurrentIndex</name>
+          <initializer>= 3</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group___s_i_dimensionality_1ggaf16c075270d30feda2956629de32fd1aa79f99a186e6646dc29a03bf3cd7c878f" prot="public">
+          <name>kSITemperatureIndex</name>
+          <initializer>= 4</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group___s_i_dimensionality_1ggaf16c075270d30feda2956629de32fd1aaef9f51bf7ee8add76d6bb5b7a4da07e2" prot="public">
+          <name>kSIAmountIndex</name>
+          <initializer>= 5</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group___s_i_dimensionality_1ggaf16c075270d30feda2956629de32fd1aa40415d6d0ec1ce64cfe517fe90c6d2e5" prot="public">
+          <name>kSILuminousIntensityIndex</name>
+          <initializer>= 6</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Index constants for the seven SI base dimensions. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="55" column="1" bodyfile="SIDimensionality.h" bodystart="55" bodyend="63"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" prot="public" static="no">
+        <type>const struct <ref refid="struct_____s_i_dimensionality" kindref="compound">__SIDimensionality</ref> *</type>
+        <definition>typedef const struct __SIDimensionality* SIDimensionalityRef</definition>
+        <argsstring></argsstring>
+        <name>SIDimensionalityRef</name>
+        <briefdescription>
+<para>This is the type of a reference to immutable SIDimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A NULL reference represents a dimensionless and underived dimensionality. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="42" column="40" bodyfile="SIDimensionality.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="group___s_i_dimensionality_1ga6ec88a29a7160f829893551b62786ea5" prot="public" static="no" extern="yes" mutable="no">
+        <type>OCMutableDictionaryRef</type>
+        <definition>OCMutableDictionaryRef dimensionalityLibrary</definition>
+        <argsstring></argsstring>
+        <name>dimensionalityLibrary</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="256" column="31" bodyfile="SIDimensionality.c" bodystart="134" bodyend="-1" declfile="SIDimensionality.h" declline="256" declcolumn="31"/>
+      </memberdef>
+      <memberdef kind="variable" id="group___s_i_dimensionality_1ga413229711f92562b351164fad09155cc" prot="public" static="no" extern="yes" mutable="no">
+        <type>OCMutableDictionaryRef</type>
+        <definition>OCMutableDictionaryRef dimensionalityQuantitiesLibrary</definition>
+        <argsstring></argsstring>
+        <name>dimensionalityQuantitiesLibrary</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="257" column="31" bodyfile="SIDimensionality.c" bodystart="135" bodyend="-1" declfile="SIDimensionality.h" declline="257" declcolumn="31"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga91c8a81458920ef3e16669069a7d4bca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityForSymbol</definition>
+        <argsstring>(OCStringRef theString, OCStringRef *error)</argsstring>
+        <name>SIDimensionalityForSymbol</name>
+        <param>
+          <type>OCStringRef</type>
+          <declname>theString</declname>
+        </param>
+        <param>
+          <type>OCStringRef *</type>
+          <declname>error</declname>
+        </param>
+        <briefdescription>
+<para>Parses the string and returns the dimensionality for the symbol. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theString</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The string with the dimensionality symbol. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>error</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A pointer to a CFError. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The dimensionality.</para>
+</simplesect>
+Symbols for the seven base dimensions, length, mass, time, current, temperature, amount, and luminous intensity are L, M, T, I, ϴ, N, and J, respectively. The input symbol can be in the general form: L^l * M^m * T^t * I^i * ϴ^q * N^n * J^j / (L^l&apos; * M^m&apos; * T^t&apos; * I^i&apos; * ϴ^q&apos; * N^n&apos; * J^j&apos;), where the lower case exponents are replaced with integer values and any combination of symbols in the numerator or denominator can be omitted. This method is intelligent enough to handle any valid combination of the base dimension symbols multiplied, divided, and raised to arbitrary signed integer powers. The symbol for temperature, &quot;ϴ&quot;, does not exist as a valid ASCII character, so, if needed, the symbol &quot;@&quot; can be substituted for &quot;ϴ&quot; in this parser. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="254" column="21" declfile="SIDimensionality.h" declline="254" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga9bd55e3edc9937e2181b34d12bdc8ce5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>OCTypeID</type>
+        <definition>OCTypeID SIDimensionalityGetTypeID</definition>
+        <argsstring>(void)</argsstring>
+        <name>SIDimensionalityGetTypeID</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+<para>SIDimensionality represents the dimensionality of a physical quantity. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Seven physical quantities serve as fundamental reference quantities from which all other physical quantities can be derived. These reference quantities are:<itemizedlist>
+<listitem><para>Length</para>
+</listitem><listitem><para>Mass</para>
+</listitem><listitem><para>Time</para>
+</listitem><listitem><para>Electric current</para>
+</listitem><listitem><para>Thermodynamic temperature (the absolute measure of temperature)</para>
+</listitem><listitem><para>Amount of substance</para>
+</listitem><listitem><para>Luminous intensity</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="copyright"><para>PhySy</para>
+</simplesect>
+Accessor functions for SIDimensionality.</para>
+<para>Returns the type ID for SIDimensionality. <simplesect kind="return"><para>The type ID. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="298" column="10" bodyfile="SIDimensionality.c" bodystart="69" bodyend="74" declfile="SIDimensionality.h" declline="298" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gaf8467c4a5b37e321daaf27a8aadabf78" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>OCStringRef</type>
+        <definition>OCStringRef SIDimensionalityGetSymbol</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityGetSymbol</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Returns the symbol for the dimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A string containing the symbol. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="305" column="13" bodyfile="SIDimensionality.c" bodystart="277" bodyend="280" declfile="SIDimensionality.h" declline="305" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gae39cfe5e699809cf849ef56c2a957f21" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint8_t</type>
+        <definition>uint8_t SIDimensionalityGetNumeratorExponentAtIndex</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality, SIBaseDimensionIndex index)</argsstring>
+        <name>SIDimensionalityGetNumeratorExponentAtIndex</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1gaf16c075270d30feda2956629de32fd1a" kindref="member">SIBaseDimensionIndex</ref></type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+<para>Gets the numerator exponent for the dimension at index. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimension index constant. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The integer numerator exponent.</para>
+</simplesect>
+Base units length, mass, time, current, temperature, amount, and luminous intensity are assigned to index constants kSILengthIndex, kSIMassIndex, kSITimeIndex, kSICurrentIndex, kSITemperatureIndex, kSIAmountIndex, kSILuminousIntensityIndex, respectively. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="314" column="9" bodyfile="SIDimensionality.c" bodystart="123" bodyend="126" declfile="SIDimensionality.h" declline="314" declcolumn="9"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gae3e03cd1d4c4afc373f9823047b82451" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint8_t</type>
+        <definition>uint8_t SIDimensionalityGetDenominatorExponentAtIndex</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality, SIBaseDimensionIndex index)</argsstring>
+        <name>SIDimensionalityGetDenominatorExponentAtIndex</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1gaf16c075270d30feda2956629de32fd1a" kindref="member">SIBaseDimensionIndex</ref></type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+<para>Gets the denominator exponent for the dimension at index. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimension index constant. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The integer denominator exponent.</para>
+</simplesect>
+Base units length, mass, time, current, temperature, amount, and luminous intensity are assigned to index constants kSILengthIndex, kSIMassIndex, kSITimeIndex, kSICurrentIndex, kSITemperatureIndex, kSIAmountIndex, kSILuminousIntensityIndex, respectively. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="323" column="9" bodyfile="SIDimensionality.c" bodystart="128" bodyend="131" declfile="SIDimensionality.h" declline="323" declcolumn="9"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga59ca37bb4eed0ec359cf7c7b4e634e3f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int8_t</type>
+        <definition>int8_t SIDimensionalityReducedExponentAtIndex</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality, SIBaseDimensionIndex index)</argsstring>
+        <name>SIDimensionalityReducedExponentAtIndex</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1gaf16c075270d30feda2956629de32fd1a" kindref="member">SIBaseDimensionIndex</ref></type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+<para>Returns the exponent for the dimension at index. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimension index constant. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The integer exponent (numerator-denominator).</para>
+</simplesect>
+Base units length, mass, time, current, temperature, amount, and luminous intensity are assigned to index constants kSILengthIndex, kSIMassIndex, kSITimeIndex, kSICurrentIndex, kSITemperatureIndex, kSIAmountIndex, kSILuminousIntensityIndex, respectively. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="332" column="8" bodyfile="SIDimensionality.c" bodystart="291" bodyend="298" declfile="SIDimensionality.h" declline="332" declcolumn="8"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga3945c654215dc7cbec5f13bdc3bdbb5a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SIDimensionalityEqual</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2)</argsstring>
+        <name>SIDimensionalityEqual</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality1</declname>
+        </param>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality2</declname>
+        </param>
+        <briefdescription>
+<para>Test functions for SIDimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Determines if the two dimensionalities are equal. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>theDimensionality2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The second dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if equal, false otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="345" column="6" bodyfile="SIDimensionality.c" bodystart="1614" bodyend="1636" declfile="SIDimensionality.h" declline="345" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gad652c4912d23f176ce8a40c11bc807bb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SIDimensionalityIsDimensionless</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityIsDimensionless</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Determines if the dimensionality is dimensionless. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if dimensionless, false otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="352" column="6" bodyfile="SIDimensionality.c" bodystart="1638" bodyend="1649" declfile="SIDimensionality.h" declline="352" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga7aa32a7ad94793df12f48316c36307d2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SIDimensionalityIsDerived</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityIsDerived</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Determines if the dimensionality is derived from at least one of seven base dimensions. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if derived, false otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="359" column="6" bodyfile="SIDimensionality.c" bodystart="1697" bodyend="1705" declfile="SIDimensionality.h" declline="359" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga22b158506bb409f69c35a673043132e0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SIDimensionalityIsDimensionlessAndNotDerived</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityIsDimensionlessAndNotDerived</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Determines if the dimensionality is dimensionless but not derived. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if dimensionless and not derived, false otherwise.</para>
+</simplesect>
+Determines if the dimensionality is dimensionless but not derived, that is, it may be a counting dimensionality. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="367" column="6" bodyfile="SIDimensionality.c" bodystart="1651" bodyend="1663" declfile="SIDimensionality.h" declline="367" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga5d945e09d90432678947949c9a48de91" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SIDimensionalityIsDimensionlessAndDerived</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityIsDimensionlessAndDerived</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Determines if the dimensionality is dimensionless and derived. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if dimensionless and derived, false otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="374" column="6" bodyfile="SIDimensionality.c" bodystart="1665" bodyend="1672" declfile="SIDimensionality.h" declline="374" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gaadc24d995343751a31b0ee3a917de454" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SIDimensionalityIsBaseDimensionality</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityIsBaseDimensionality</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Determines if the dimensionality is one of the seven base dimensionalities. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if base dimensionality, false otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="381" column="6" bodyfile="SIDimensionality.c" bodystart="1674" bodyend="1695" declfile="SIDimensionality.h" declline="381" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga271ac435fe756290875d1e8eefe32352" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SIDimensionalityHasSameReducedDimensionality</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2)</argsstring>
+        <name>SIDimensionalityHasSameReducedDimensionality</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality1</declname>
+        </param>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality2</declname>
+        </param>
+        <briefdescription>
+<para>Determines if the two dimensionalities have the same reduced dimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>theDimensionality2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The second dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if same reduced dimensionality, false otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="389" column="6" bodyfile="SIDimensionality.c" bodystart="1707" bodyend="1722" declfile="SIDimensionality.h" declline="389" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga6efb882760bbfd395a99138c92fe0de7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SIDimensionalityHasReducedExponents</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality, int8_t length_exponent, int8_t mass_exponent, int8_t time_exponent, int8_t current_exponent, int8_t temperature_exponent, int8_t amount_exponent, int8_t luminous_intensity_exponent)</argsstring>
+        <name>SIDimensionalityHasReducedExponents</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <param>
+          <type>int8_t</type>
+          <declname>length_exponent</declname>
+        </param>
+        <param>
+          <type>int8_t</type>
+          <declname>mass_exponent</declname>
+        </param>
+        <param>
+          <type>int8_t</type>
+          <declname>time_exponent</declname>
+        </param>
+        <param>
+          <type>int8_t</type>
+          <declname>current_exponent</declname>
+        </param>
+        <param>
+          <type>int8_t</type>
+          <declname>temperature_exponent</declname>
+        </param>
+        <param>
+          <type>int8_t</type>
+          <declname>amount_exponent</declname>
+        </param>
+        <param>
+          <type>int8_t</type>
+          <declname>luminous_intensity_exponent</declname>
+        </param>
+        <briefdescription>
+<para>Determines if the dimensionality has the same seven base dimension exponents. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>length_exponent</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The length exponent. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>mass_exponent</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The mass exponent. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>time_exponent</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The time exponent. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>current_exponent</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current exponent. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>temperature_exponent</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The temperature exponent. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>amount_exponent</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The amount exponent. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>luminous_intensity_exponent</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The luminous intensity exponent. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if same reduced exponents, false otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="403" column="6" bodyfile="SIDimensionality.c" bodystart="1768" bodyend="1794" declfile="SIDimensionality.h" declline="403" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gad62bf5847260e548f63b21d290e55c6a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityDimensionless</definition>
+        <argsstring>(void)</argsstring>
+        <name>SIDimensionalityDimensionless</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+<para>Operations for SIDimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Returns the dimensionality where all exponents are zero. <simplesect kind="return"><para>The dimensionless dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="421" column="21" bodyfile="SIDimensionality.c" bodystart="341" bodyend="344" declfile="SIDimensionality.h" declline="421" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gac6b7ef52d246b85977344dff2115e46a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityForBaseDimensionIndex</definition>
+        <argsstring>(SIBaseDimensionIndex index)</argsstring>
+        <name>SIDimensionalityForBaseDimensionIndex</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1gaf16c075270d30feda2956629de32fd1a" kindref="member">SIBaseDimensionIndex</ref></type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality associated with the base dimension index. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The base dimension index. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="428" column="21" bodyfile="SIDimensionality.c" bodystart="346" bodyend="373" declfile="SIDimensionality.h" declline="428" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga308062dcb262570d80b5873644262352" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityWithBaseDimensionSymbol</definition>
+        <argsstring>(OCStringRef theString, OCStringRef *error)</argsstring>
+        <name>SIDimensionalityWithBaseDimensionSymbol</name>
+        <param>
+          <type>OCStringRef</type>
+          <declname>theString</declname>
+        </param>
+        <param>
+          <type>OCStringRef *</type>
+          <declname>error</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality associated with the base dimension symbol. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theString</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The base dimension symbol. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>error</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A pointer to a CFError. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The dimensionality.</para>
+</simplesect>
+Base dimension symbols are L, M, T, I, ϴ, N, and J. The symbol for temperature, &quot;ϴ&quot;, does not exist as a valid ASCII character, so, if needed, the symbol &quot;@&quot; can be substituted for &quot;ϴ&quot; in this method. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="437" column="21" bodyfile="SIDimensionality.c" bodystart="375" bodyend="411" declfile="SIDimensionality.h" declline="437" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gade42e49ab05ef82824b272e64759256a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityForQuantity</definition>
+        <argsstring>(OCStringRef quantity, OCStringRef *error)</argsstring>
+        <name>SIDimensionalityForQuantity</name>
+        <param>
+          <type>OCStringRef</type>
+          <declname>quantity</declname>
+        </param>
+        <param>
+          <type>OCStringRef *</type>
+          <declname>error</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality for the quantity. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>quantity</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The quantity. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>error</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A pointer to a CFError. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="459" column="21" bodyfile="SIDimensionality.c" bodystart="1539" bodyend="1566" declfile="SIDimensionality.h" declline="459" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga53aaa84834d64a2ea2d552156a8643be" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityByReducing</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityByReducing</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality by reducing the numerator and denominator exponents to their lowest values. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The dimensionality with reduced numerator and denominator exponents. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="466" column="21" bodyfile="SIDimensionality.c" bodystart="413" bodyend="443" declfile="SIDimensionality.h" declline="466" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gabc4980cbf8f70032d53f605069805ce2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityByTakingNthRoot</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality, uint8_t root, OCStringRef *error)</argsstring>
+        <name>SIDimensionalityByTakingNthRoot</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>root</declname>
+        </param>
+        <param>
+          <type>OCStringRef *</type>
+          <declname>error</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality by dividing the numerator and denominator exponents by an integer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>root</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The integer root. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>error</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A pointer to a CFError. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The nth root dimensionality.</para>
+</simplesect>
+The numerator and denominator exponents in a valid dimensionality can only take on integer values. If this function cannot return a valid dimensionality then it will return NULL. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="477" column="21" bodyfile="SIDimensionality.c" bodystart="445" bodyend="479" declfile="SIDimensionality.h" declline="477" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gaf099b4f146a3bccb2a61ccb87aa62aa0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityByMultiplying</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2, OCStringRef *error)</argsstring>
+        <name>SIDimensionalityByMultiplying</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality1</declname>
+        </param>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality2</declname>
+        </param>
+        <param>
+          <type>OCStringRef *</type>
+          <declname>error</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality after multiplying two dimensionalities and reducing the dimensionality numerator and denominator exponents to their lowest integer values. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>theDimensionality2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The second dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>error</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A pointer to a CFError. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The new dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="486" column="21" bodyfile="SIDimensionality.c" bodystart="606" bodyend="612" declfile="SIDimensionality.h" declline="486" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gaabd87553cb8eb5d11d533267c2b8685e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityByMultiplyingWithoutReducing</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2, OCStringRef *error)</argsstring>
+        <name>SIDimensionalityByMultiplyingWithoutReducing</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality1</declname>
+        </param>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality2</declname>
+        </param>
+        <param>
+          <type>OCStringRef *</type>
+          <declname>error</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality after multiplying two dimensionalities. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>theDimensionality2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The second dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>error</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A pointer to a CFError. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The new dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="495" column="21" bodyfile="SIDimensionality.c" bodystart="575" bodyend="604" declfile="SIDimensionality.h" declline="495" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga3a597f84df6766416d6a1a0c0cfe450f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityByDividing</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2)</argsstring>
+        <name>SIDimensionalityByDividing</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality1</declname>
+        </param>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality2</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality after dividing theDimensionality1 by theDimensionality2 and reducing the dimensionality numerator and denominator exponents to their lowest integer values. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>theDimensionality2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The second dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The new dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="503" column="21" bodyfile="SIDimensionality.c" bodystart="507" bodyend="510" declfile="SIDimensionality.h" declline="503" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gad34cb4fdd1b728dc79182c16f222321d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityByDividingWithoutReducing</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2)</argsstring>
+        <name>SIDimensionalityByDividingWithoutReducing</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality1</declname>
+        </param>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality2</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality after dividing theDimensionality1 by theDimensionality2. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>theDimensionality2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The second dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The new dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="511" column="21" bodyfile="SIDimensionality.c" bodystart="481" bodyend="505" declfile="SIDimensionality.h" declline="511" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gaf96bb7956a855d10b4800201237c133b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityByRaisingToAPower</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality, double power, OCStringRef *error)</argsstring>
+        <name>SIDimensionalityByRaisingToAPower</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>power</declname>
+        </param>
+        <param>
+          <type>OCStringRef *</type>
+          <declname>error</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality after raising a dimensionality to a power and reducing the dimensionality numerator and denominator exponents to their lowest integer values. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>power</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The power. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>error</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A pointer to a CFError. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The new dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="520" column="21" bodyfile="SIDimensionality.c" bodystart="567" bodyend="573" declfile="SIDimensionality.h" declline="520" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga4bc023dcc2d8cbae3bf42cc88bed955b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+        <definition>SIDimensionalityRef SIDimensionalityByRaisingToAPowerWithoutReducing</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality, double power, OCStringRef *error)</argsstring>
+        <name>SIDimensionalityByRaisingToAPowerWithoutReducing</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>power</declname>
+        </param>
+        <param>
+          <type>OCStringRef *</type>
+          <declname>error</declname>
+        </param>
+        <briefdescription>
+<para>Returns the dimensionality after raising a dimensionality to a power. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>power</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The power. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>error</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A pointer to a CFError. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The new dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="529" column="21" bodyfile="SIDimensionality.c" bodystart="512" bodyend="565" declfile="SIDimensionality.h" declline="529" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga112f7c86cf28d39629d1502f7cca37ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>OCArrayRef</type>
+        <definition>OCArrayRef SIDimensionalityCreateArrayOfQuantities</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityCreateArrayOfQuantities</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Creates an array of physical quantity names for the dimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>An OCArray of strings with all the physical quantity names having this dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="536" column="12" bodyfile="SIDimensionality.c" bodystart="614" bodyend="643" declfile="SIDimensionality.h" declline="536" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gab2736858c938bb994d134c9cbe93584d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>OCArrayRef</type>
+        <definition>OCArrayRef SIDimensionalityCreateArrayOfQuantitiesWithSameReducedDimensionality</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityCreateArrayOfQuantitiesWithSameReducedDimensionality</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Creates an array of physical quantity names with the same reduced dimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>An OCArray of strings with all the physical quantity names having the same reduced dimensionality. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="543" column="12" bodyfile="SIDimensionality.c" bodystart="772" bodyend="788" declfile="SIDimensionality.h" declline="543" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gae5b9ab76071db847d344c29538cd402d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>OCArrayRef</type>
+        <definition>OCArrayRef SIDimensionalityCreateArrayWithSameReducedDimensionality</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityCreateArrayWithSameReducedDimensionality</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Creates an array of dimensionalities with the same reduced dimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>An OCArray of dimensionalities with all dimensionalities having the same reduced dimensionality as input.</para>
+</simplesect>
+The routine returns all the dimensionalities starting with the largest exponent (numerator or denominator) down to the reduced dimensionality. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="551" column="12" bodyfile="SIDimensionality.c" bodystart="645" bodyend="770" declfile="SIDimensionality.h" declline="551" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga66e4ea2558ca098330efc37777bba1fa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SIDimensionalityShow</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityShow</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>String and archiving functions for SIDimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Shows a short descriptor of the dimensionality. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="562" column="6" bodyfile="SIDimensionality.c" bodystart="792" bodyend="797" declfile="SIDimensionality.h" declline="562" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gae37cb35b5c7201c7c84322ebb259beaf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SIDimensionalityShowFull</definition>
+        <argsstring>(SIDimensionalityRef theDimensionality)</argsstring>
+        <name>SIDimensionalityShowFull</name>
+        <param>
+          <type><ref refid="group___s_i_dimensionality_1ga94c2d8ce9b424f5110e01ac8f3479586" kindref="member">SIDimensionalityRef</ref></type>
+          <declname>theDimensionality</declname>
+        </param>
+        <briefdescription>
+<para>Shows a long descriptor of the dimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>theDimensionality</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dimensionality. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="568" column="6" bodyfile="SIDimensionality.c" bodystart="799" bodyend="849" declfile="SIDimensionality.h" declline="568" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga31124a57a4e0619fcece4813d7ce4141" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>OCMutableDictionaryRef</type>
+        <definition>OCMutableDictionaryRef SIDimensionalityGetLibrary</definition>
+        <argsstring>(void)</argsstring>
+        <name>SIDimensionalityGetLibrary</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+<para>Library functions for SIDimensionality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Gets a copy of the library of dimensionalities. <simplesect kind="return"><para>An OCMutableDictionary containing the dimensionalities. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="579" column="24" bodyfile="SIDimensionality.c" bodystart="1578" bodyend="1583" declfile="SIDimensionality.h" declline="579" declcolumn="24"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1ga70c38c6eb40b0ffe1864356fbd26cf3a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>OCArrayRef</type>
+        <definition>OCArrayRef SIDimensionalityLibraryCreateArrayOfAllQuantities</definition>
+        <argsstring>(void)</argsstring>
+        <name>SIDimensionalityLibraryCreateArrayOfAllQuantities</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+<para>Creates an alphabetically sorted array of all quantity names. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>An OCArray of all quantity names. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="585" column="12" declfile="SIDimensionality.h" declline="585" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="group___s_i_dimensionality_1gac8a384be88d0ff4a95c2a1e01ba29dac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SIDimensionalitySetLibrary</definition>
+        <argsstring>(OCMutableDictionaryRef newDimensionalityLibrary)</argsstring>
+        <name>SIDimensionalitySetLibrary</name>
+        <param>
+          <type>OCMutableDictionaryRef</type>
+          <declname>newDimensionalityLibrary</declname>
+        </param>
+        <briefdescription>
+<para>Sets the library of dimensionalities. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>newDimensionalityLibrary</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The new dimensionality library. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="591" column="6" bodyfile="SIDimensionality.c" bodystart="1585" bodyend="1595" declfile="SIDimensionality.h" declline="591" declcolumn="6"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga4224ac3f486532985d3cfb6a2b0cb46d" prot="public" static="no">
+        <name>kSIQuantityDimensionless</name>
+        <initializer>STR(&quot;dimensionless&quot;)</initializer>
+        <briefdescription>
+<para>Dimensionality constants for various physical quantities. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="68" column="9" bodyfile="SIDimensionality.h" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga13ad6a751e400b46f638caba4a69e119" prot="public" static="no">
+        <name>kSIQuantityLength</name>
+        <initializer>STR(&quot;length&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="69" column="9" bodyfile="SIDimensionality.h" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga23b81ef1d5fc5004a6d9ac358266bafd" prot="public" static="no">
+        <name>kSIQuantityInverseLength</name>
+        <initializer>STR(&quot;inverse length&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="70" column="9" bodyfile="SIDimensionality.h" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga0b07f04b8cd0e6d19e611fdac68934bd" prot="public" static="no">
+        <name>kSIQuantityWavenumber</name>
+        <initializer>STR(&quot;wavenumber&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="71" column="9" bodyfile="SIDimensionality.h" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gab484382855618c2afde1f2cc968eb660" prot="public" static="no">
+        <name>kSIQuantityLengthRatio</name>
+        <initializer>STR(&quot;length ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="72" column="9" bodyfile="SIDimensionality.h" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga5c8161752698a19bde157835c23b3993" prot="public" static="no">
+        <name>kSIQuantityPlaneAngle</name>
+        <initializer>STR(&quot;plane angle&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="73" column="9" bodyfile="SIDimensionality.h" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga7f7272b1f5efbf459f2a2bed18818f38" prot="public" static="no">
+        <name>kSIQuantityMass</name>
+        <initializer>STR(&quot;mass&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="74" column="9" bodyfile="SIDimensionality.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga9369fdc50e0c6f28d3281f4feb28ba6d" prot="public" static="no">
+        <name>kSIQuantityInverseMass</name>
+        <initializer>STR(&quot;inverse mass&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="75" column="9" bodyfile="SIDimensionality.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga1cffcb8cc218f0f769dae870515f52ec" prot="public" static="no">
+        <name>kSIQuantityMassRatio</name>
+        <initializer>STR(&quot;mass ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="76" column="9" bodyfile="SIDimensionality.h" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaa11c8b33dd72dffadbe73a3472bde947" prot="public" static="no">
+        <name>kSIQuantityTime</name>
+        <initializer>STR(&quot;time&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="77" column="9" bodyfile="SIDimensionality.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaa0d87d2e3a458ce10bc37c8c35b8d96b" prot="public" static="no">
+        <name>kSIQuantityInverseTime</name>
+        <initializer>STR(&quot;inverse time&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="78" column="9" bodyfile="SIDimensionality.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga5843b80e155d755655f7fb28a1cc0851" prot="public" static="no">
+        <name>kSIQuantityFrequency</name>
+        <initializer>STR(&quot;frequency&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="79" column="9" bodyfile="SIDimensionality.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gad2b77593744db98949302764ba2139ac" prot="public" static="no">
+        <name>kSIQuantityRadioactivity</name>
+        <initializer>STR(&quot;radioactivity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="80" column="9" bodyfile="SIDimensionality.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga3473b96bcd0b16aba0c1ea82bd7bac94" prot="public" static="no">
+        <name>kSIQuantityTimeRatio</name>
+        <initializer>STR(&quot;time ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="81" column="9" bodyfile="SIDimensionality.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gabd0380ad36688384f42f401b5a68957e" prot="public" static="no">
+        <name>kSIQuantityFrequencyRatio</name>
+        <initializer>STR(&quot;frequency ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="82" column="9" bodyfile="SIDimensionality.h" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga7c98e03bd82588f22e7669b16885c735" prot="public" static="no">
+        <name>kSIQuantityInverseTimeSquared</name>
+        <initializer>STR(&quot;inverse time squared&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="83" column="9" bodyfile="SIDimensionality.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga1b72e38486dd359b7c5b207d197094d3" prot="public" static="no">
+        <name>kSIQuantityCurrent</name>
+        <initializer>STR(&quot;current&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="84" column="9" bodyfile="SIDimensionality.h" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gafa24f3046880da96a3e0946f57e3ff39" prot="public" static="no">
+        <name>kSIQuantityInverseCurrent</name>
+        <initializer>STR(&quot;inverse current&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="85" column="9" bodyfile="SIDimensionality.h" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaf1c36b2025f6ac9afd4d6084ea790585" prot="public" static="no">
+        <name>kSIQuantityCurrentRatio</name>
+        <initializer>STR(&quot;current ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="86" column="9" bodyfile="SIDimensionality.h" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga36e8ac40699121366c88eb90592f66c1" prot="public" static="no">
+        <name>kSIQuantityTemperature</name>
+        <initializer>STR(&quot;temperature&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="87" column="9" bodyfile="SIDimensionality.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga03daaaea665154d3d495377622c6b22a" prot="public" static="no">
+        <name>kSIQuantityInverseTemperature</name>
+        <initializer>STR(&quot;inverse temperature&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="88" column="9" bodyfile="SIDimensionality.h" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga2ffedfc0f3e8ea39a5c19721669d6c53" prot="public" static="no">
+        <name>kSIQuantityTemperatureRatio</name>
+        <initializer>STR(&quot;temperature ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="89" column="9" bodyfile="SIDimensionality.h" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gacf0d8193f653477ec4966dd2c714ffe4" prot="public" static="no">
+        <name>kSIQuantityTemperatureGradient</name>
+        <initializer>STR(&quot;temperature gradient&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="90" column="9" bodyfile="SIDimensionality.h" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga74e30667fb2172f5b5001d0dd9292c16" prot="public" static="no">
+        <name>kSIQuantityAmount</name>
+        <initializer>STR(&quot;amount&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="91" column="9" bodyfile="SIDimensionality.h" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gab88d4fd809dcb450921fe3b309cb359a" prot="public" static="no">
+        <name>kSIQuantityInverseAmount</name>
+        <initializer>STR(&quot;inverse amount&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="92" column="9" bodyfile="SIDimensionality.h" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga7feafe9bc7e83ba0e7eef0ab247b56d0" prot="public" static="no">
+        <name>kSIQuantityAmountRatio</name>
+        <initializer>STR(&quot;amount ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="93" column="9" bodyfile="SIDimensionality.h" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga54119b56a4403ee095155ffc27f68550" prot="public" static="no">
+        <name>kSIQuantityLuminousIntensity</name>
+        <initializer>STR(&quot;luminous intensity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="94" column="9" bodyfile="SIDimensionality.h" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga24a21adf55e88c96f9b15790d9da06d7" prot="public" static="no">
+        <name>kSIQuantityInverseLuminousIntensity</name>
+        <initializer>STR(&quot;inverse luminous intensity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="95" column="9" bodyfile="SIDimensionality.h" bodystart="95" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga497943c9ffe4148695a60416f2b86daa" prot="public" static="no">
+        <name>kSIQuantityLuminousIntensityRatio</name>
+        <initializer>STR(&quot;luminous intensity ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="96" column="9" bodyfile="SIDimensionality.h" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga6f1687e8853e6390843a560ef779c472" prot="public" static="no">
+        <name>kSIQuantityArea</name>
+        <initializer>STR(&quot;area&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="97" column="9" bodyfile="SIDimensionality.h" bodystart="97" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga6667334a49842b3f4967463dde19b7d4" prot="public" static="no">
+        <name>kSIQuantityInverseArea</name>
+        <initializer>STR(&quot;inverse area&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="98" column="9" bodyfile="SIDimensionality.h" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaa9ccfef8cb240f85ff1aab231d5675cf" prot="public" static="no">
+        <name>kSIQuantityAreaRatio</name>
+        <initializer>STR(&quot;area ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="99" column="9" bodyfile="SIDimensionality.h" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaa126990188633919d29f3a6bac76686d" prot="public" static="no">
+        <name>kSIQuantitySolidAngle</name>
+        <initializer>STR(&quot;solid angle&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="100" column="9" bodyfile="SIDimensionality.h" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gae94467f909059f7998a4962b2778ba2c" prot="public" static="no">
+        <name>kSIQuantityVolume</name>
+        <initializer>STR(&quot;volume&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="101" column="9" bodyfile="SIDimensionality.h" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga00bdc9746d11e9269f92be2dbdd8fbe6" prot="public" static="no">
+        <name>kSIQuantityInverseVolume</name>
+        <initializer>STR(&quot;inverse volume&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="102" column="9" bodyfile="SIDimensionality.h" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga47d6c37a6ab0ae395aafd7c46dece856" prot="public" static="no">
+        <name>kSIQuantityVolumeRatio</name>
+        <initializer>STR(&quot;volume ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="103" column="9" bodyfile="SIDimensionality.h" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga22b6cb5141185ade4b682b1c588e56d8" prot="public" static="no">
+        <name>kSIQuantitySpeed</name>
+        <initializer>STR(&quot;speed&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="104" column="9" bodyfile="SIDimensionality.h" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gac5404d90fececdcbdbc8e185b8c3e7c7" prot="public" static="no">
+        <name>kSIQuantityVelocity</name>
+        <initializer>STR(&quot;velocity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="105" column="9" bodyfile="SIDimensionality.h" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga3166c2e60be27425f84128b26cf6b8df" prot="public" static="no">
+        <name>kSIQuantityLinearMomentum</name>
+        <initializer>STR(&quot;linear momentum&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="106" column="9" bodyfile="SIDimensionality.h" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga4658418c6607e1bfe7482898219680ae" prot="public" static="no">
+        <name>kSIQuantityAngularMomentum</name>
+        <initializer>STR(&quot;angular momentum&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="107" column="9" bodyfile="SIDimensionality.h" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga4e79edb0b2cc128810df16fe3ac0c916" prot="public" static="no">
+        <name>kSIQuantityMomentOfInertia</name>
+        <initializer>STR(&quot;moment of inertia&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="108" column="9" bodyfile="SIDimensionality.h" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga1c1235f2dc565b527d82456dc1124e88" prot="public" static="no">
+        <name>kSIQuantityAcceleration</name>
+        <initializer>STR(&quot;acceleration&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="109" column="9" bodyfile="SIDimensionality.h" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaef00c7f18ca9fc2e80bd646e31d361a4" prot="public" static="no">
+        <name>kSIQuantityMassFlowRate</name>
+        <initializer>STR(&quot;mass flow rate&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="110" column="9" bodyfile="SIDimensionality.h" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga98020ce3c1025b5594a55b55016eca25" prot="public" static="no">
+        <name>kSIQuantityMassFlux</name>
+        <initializer>STR(&quot;mass flux&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="111" column="9" bodyfile="SIDimensionality.h" bodystart="111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga208ae7b7e211d6b1eaffd24a310bc9ea" prot="public" static="no">
+        <name>kSIQuantityDensity</name>
+        <initializer>STR(&quot;density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="112" column="9" bodyfile="SIDimensionality.h" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gae80624d6f21b520e19d66dec90acf421" prot="public" static="no">
+        <name>kSIQuantitySpecificGravity</name>
+        <initializer>STR(&quot;specific gravity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="113" column="9" bodyfile="SIDimensionality.h" bodystart="113" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga9a2c928a649a4e3d04fa8537b53eed5d" prot="public" static="no">
+        <name>kSIQuantitySpecificSurfaceArea</name>
+        <initializer>STR(&quot;specific surface area&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="114" column="9" bodyfile="SIDimensionality.h" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga10eb175bf4445760597b48c6ac5f542f" prot="public" static="no">
+        <name>kSIQuantitySurfaceAreaToVolumeRatio</name>
+        <initializer>STR(&quot;surface area to volume ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="115" column="9" bodyfile="SIDimensionality.h" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga8de23b0d451c5a6a4925689342f1f744" prot="public" static="no">
+        <name>kSIQuantitySurfaceDensity</name>
+        <initializer>STR(&quot;surface density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="116" column="9" bodyfile="SIDimensionality.h" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaffb385eb306b0b822d203ddf4b63b05c" prot="public" static="no">
+        <name>kSIQuantitySpecificVolume</name>
+        <initializer>STR(&quot;specific volume&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="117" column="9" bodyfile="SIDimensionality.h" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga10c1102b9e99e08833338e64346134fa" prot="public" static="no">
+        <name>kSIQuantityCurrentDensity</name>
+        <initializer>STR(&quot;current density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="118" column="9" bodyfile="SIDimensionality.h" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gab8efcb3813d51653ba46db48a5082f70" prot="public" static="no">
+        <name>kSIQuantityMagneticFieldStrength</name>
+        <initializer>STR(&quot;magnetic field strength&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="119" column="9" bodyfile="SIDimensionality.h" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gace6fb2a3eb257ce8d050ad0a4b6dbe5d" prot="public" static="no">
+        <name>kSIQuantityLuminance</name>
+        <initializer>STR(&quot;luminance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="120" column="9" bodyfile="SIDimensionality.h" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gadad714eff4be8af4ce3dcbff9a2e34bf" prot="public" static="no">
+        <name>kSIQuantityRefractiveIndex</name>
+        <initializer>STR(&quot;refractive index&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="121" column="9" bodyfile="SIDimensionality.h" bodystart="121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaac29a86b18ae3f29ddf4f1f8c3b5df76" prot="public" static="no">
+        <name>kSIQuantityFluidity</name>
+        <initializer>STR(&quot;fluidity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="122" column="9" bodyfile="SIDimensionality.h" bodystart="122" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga7b11fc2e13efc9df3eee556335281f34" prot="public" static="no">
+        <name>kSIQuantityMomentOfForce</name>
+        <initializer>STR(&quot;moment of force&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="123" column="9" bodyfile="SIDimensionality.h" bodystart="123" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga01eedcc79bad8207298bcc410a9fa9a0" prot="public" static="no">
+        <name>kSIQuantitySurfaceTension</name>
+        <initializer>STR(&quot;surface tension&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="124" column="9" bodyfile="SIDimensionality.h" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga5fe1172b7919b9215b6089fe882f1974" prot="public" static="no">
+        <name>kSIQuantitySurfaceEnergy</name>
+        <initializer>STR(&quot;surface energy&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="125" column="9" bodyfile="SIDimensionality.h" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga64bdbf4cec6cc4b20b6fa9d1b7b56286" prot="public" static="no">
+        <name>kSIQuantityAngularSpeed</name>
+        <initializer>STR(&quot;angular speed&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="126" column="9" bodyfile="SIDimensionality.h" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga484de076056a8a080d2615ee53226857" prot="public" static="no">
+        <name>kSIQuantityAngularVelocity</name>
+        <initializer>STR(&quot;angular velocity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="127" column="9" bodyfile="SIDimensionality.h" bodystart="127" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gae54914a687aa592a34df21c50ef1f2dd" prot="public" static="no">
+        <name>kSIQuantityAngularAcceleration</name>
+        <initializer>STR(&quot;angular acceleration&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="128" column="9" bodyfile="SIDimensionality.h" bodystart="128" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga313a30d2e0619561f37edb519e849211" prot="public" static="no">
+        <name>kSIQuantityHeatFluxDensity</name>
+        <initializer>STR(&quot;heat flux density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="129" column="9" bodyfile="SIDimensionality.h" bodystart="129" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga307182c9db20d3b96dd77314db85b76a" prot="public" static="no">
+        <name>kSIQuantityIrradiance</name>
+        <initializer>STR(&quot;irradiance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="130" column="9" bodyfile="SIDimensionality.h" bodystart="130" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga2e82486e6069616e4e9cf2da279be2cf" prot="public" static="no">
+        <name>kSIQuantitySpectralRadiantFluxDensity</name>
+        <initializer>STR(&quot;spectral radiant flux density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="131" column="9" bodyfile="SIDimensionality.h" bodystart="131" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga957911b2548e85c840c53958c4b38279" prot="public" static="no">
+        <name>kSIQuantityHeatCapacity</name>
+        <initializer>STR(&quot;heat capacity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="132" column="9" bodyfile="SIDimensionality.h" bodystart="132" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gae17c6855e4febcc5b3e1b102d16c6173" prot="public" static="no">
+        <name>kSIQuantityEntropy</name>
+        <initializer>STR(&quot;entropy&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="133" column="9" bodyfile="SIDimensionality.h" bodystart="133" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga33f7659f96a03960b92f93af6cc74ae9" prot="public" static="no">
+        <name>kSIQuantitySpecificHeatCapacity</name>
+        <initializer>STR(&quot;specific heat capacity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="134" column="9" bodyfile="SIDimensionality.h" bodystart="134" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga9a9acc63b58079e528ea7469c7709c96" prot="public" static="no">
+        <name>kSIQuantitySpecificEntropy</name>
+        <initializer>STR(&quot;specific entropy&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="135" column="9" bodyfile="SIDimensionality.h" bodystart="135" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaa1a8da65274b11e692971be27d933e26" prot="public" static="no">
+        <name>kSIQuantitySpecificEnergy</name>
+        <initializer>STR(&quot;specific energy&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="136" column="9" bodyfile="SIDimensionality.h" bodystart="136" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaae9f897f9fd5c6fe2deff5d327b57fc5" prot="public" static="no">
+        <name>kSIQuantityThermalConductance</name>
+        <initializer>STR(&quot;thermal conductance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="137" column="9" bodyfile="SIDimensionality.h" bodystart="137" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gadb61180f73704efe3ffdeebdfa5e3566" prot="public" static="no">
+        <name>kSIQuantityThermalConductivity</name>
+        <initializer>STR(&quot;thermal conductivity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="138" column="9" bodyfile="SIDimensionality.h" bodystart="138" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga142cfe08cc6afec8f152628e9443a332" prot="public" static="no">
+        <name>kSIQuantityEnergyDensity</name>
+        <initializer>STR(&quot;energy density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="139" column="9" bodyfile="SIDimensionality.h" bodystart="139" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga24ca40dafad44df265b41633d48f3765" prot="public" static="no">
+        <name>kSIQuantityElectricFieldStrength</name>
+        <initializer>STR(&quot;electric field strength&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="140" column="9" bodyfile="SIDimensionality.h" bodystart="140" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga42d5cf06c6970e99fa851851e89fda06" prot="public" static="no">
+        <name>kSIQuantityElectricFieldGradient</name>
+        <initializer>STR(&quot;electric field gradient&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="141" column="9" bodyfile="SIDimensionality.h" bodystart="141" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaa25864fa40f2678cee0c02aaaa108e16" prot="public" static="no">
+        <name>kSIQuantityElectricChargeDensity</name>
+        <initializer>STR(&quot;electric charge density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="142" column="9" bodyfile="SIDimensionality.h" bodystart="142" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gab05f8ef02a76d052efdec3cfd7c9dba4" prot="public" static="no">
+        <name>kSIQuantitySurfaceChargeDensity</name>
+        <initializer>STR(&quot;surface charge density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="143" column="9" bodyfile="SIDimensionality.h" bodystart="143" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gad765f6dda24f36fb57abd5768543fd9d" prot="public" static="no">
+        <name>kSIQuantityElectricFlux</name>
+        <initializer>STR(&quot;electric flux&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="144" column="9" bodyfile="SIDimensionality.h" bodystart="144" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga38dd039143c34e37a4cbddc6f6326d1b" prot="public" static="no">
+        <name>kSIQuantityElectricFluxDensity</name>
+        <initializer>STR(&quot;electric flux density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="145" column="9" bodyfile="SIDimensionality.h" bodystart="145" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga535ac7e7a7e08c72e16638d28f2d7b0d" prot="public" static="no">
+        <name>kSIQuantityElectricDisplacement</name>
+        <initializer>STR(&quot;electric displacement&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="146" column="9" bodyfile="SIDimensionality.h" bodystart="146" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gadfa30682a073e8392c8b5f098d19771c" prot="public" static="no">
+        <name>kSIQuantityPermittivity</name>
+        <initializer>STR(&quot;permittivity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="147" column="9" bodyfile="SIDimensionality.h" bodystart="147" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga36853f05fbfcb0e68a30aba48b8cf429" prot="public" static="no">
+        <name>kSIQuantityPermeability</name>
+        <initializer>STR(&quot;permeability&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="148" column="9" bodyfile="SIDimensionality.h" bodystart="148" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gabbb9cb63b18e05b8fb8711fc206f877a" prot="public" static="no">
+        <name>kSIQuantityMolarEnergy</name>
+        <initializer>STR(&quot;molar energy&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="149" column="9" bodyfile="SIDimensionality.h" bodystart="149" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga419bb8141eb6083c30d550f51ee5e3a0" prot="public" static="no">
+        <name>kSIQuantityMolarEntropy</name>
+        <initializer>STR(&quot;molar entropy&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="150" column="9" bodyfile="SIDimensionality.h" bodystart="150" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga6363ffa6e963ca60221fb3038b590ec8" prot="public" static="no">
+        <name>kSIQuantityMolarHeatCapacity</name>
+        <initializer>STR(&quot;molar heat capacity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="151" column="9" bodyfile="SIDimensionality.h" bodystart="151" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga5c294680960b5fc26a917314b63cffc0" prot="public" static="no">
+        <name>kSIQuantityMolarMass</name>
+        <initializer>STR(&quot;molar mass&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="152" column="9" bodyfile="SIDimensionality.h" bodystart="152" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaeb2eb816b0048ba48158b780ff721e8f" prot="public" static="no">
+        <name>kSIQuantityMolality</name>
+        <initializer>STR(&quot;molality&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="153" column="9" bodyfile="SIDimensionality.h" bodystart="153" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga7eafb58795809f9649f3105fc367876a" prot="public" static="no">
+        <name>kSIQuantityDiffusionFlux</name>
+        <initializer>STR(&quot;diffusion flux&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="154" column="9" bodyfile="SIDimensionality.h" bodystart="154" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaec787bfc673a1561755877284448d3fb" prot="public" static="no">
+        <name>kSIQuantityMassToChargeRatio</name>
+        <initializer>STR(&quot;mass to charge ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="155" column="9" bodyfile="SIDimensionality.h" bodystart="155" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga69c0a7fd16d6e3528cd1b5cb8e0f13aa" prot="public" static="no">
+        <name>kSIQuantityChargeToMassRatio</name>
+        <initializer>STR(&quot;charge to mass ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="156" column="9" bodyfile="SIDimensionality.h" bodystart="156" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga01ba146888a368ce4d7f2762df811708" prot="public" static="no">
+        <name>kSIQuantityRadiationExposure</name>
+        <initializer>STR(&quot;radiation exposure&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="157" column="9" bodyfile="SIDimensionality.h" bodystart="157" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga7c2695a3a74a15eaef4371c0232a4b54" prot="public" static="no">
+        <name>kSIQuantityAbsorbedDoseRate</name>
+        <initializer>STR(&quot;absorbed dose rate&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="158" column="9" bodyfile="SIDimensionality.h" bodystart="158" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga09b8bbb41e0b0dd44dca671a32244e1e" prot="public" static="no">
+        <name>kSIQuantityRadiantIntensity</name>
+        <initializer>STR(&quot;radiant intensity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="159" column="9" bodyfile="SIDimensionality.h" bodystart="159" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga8f77b83a3297b4c55580438897089c28" prot="public" static="no">
+        <name>kSIQuantitySpectralRadiantIntensity</name>
+        <initializer>STR(&quot;spectral radiant intensity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="160" column="9" bodyfile="SIDimensionality.h" bodystart="160" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga9dbb49326fb8045318f86709f2eaeaef" prot="public" static="no">
+        <name>kSIQuantityRadiance</name>
+        <initializer>STR(&quot;radiance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="161" column="9" bodyfile="SIDimensionality.h" bodystart="161" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gabb1363c40ec7ec170e586d5aada50d57" prot="public" static="no">
+        <name>kSIQuantitySpectralRadiance</name>
+        <initializer>STR(&quot;spectral radiance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="162" column="9" bodyfile="SIDimensionality.h" bodystart="162" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga5d153308f139d06eb1186e4eddc518ee" prot="public" static="no">
+        <name>kSIQuantityPorosity</name>
+        <initializer>STR(&quot;porosity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="163" column="9" bodyfile="SIDimensionality.h" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga9343c1d0ce5b1856247449c5c7c7ff4b" prot="public" static="no">
+        <name>kSIQuantityAngularFrequency</name>
+        <initializer>STR(&quot;angular frequency&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="164" column="9" bodyfile="SIDimensionality.h" bodystart="164" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga1ffc540d9095ed243553ac3691be1dee" prot="public" static="no">
+        <name>kSIQuantityForce</name>
+        <initializer>STR(&quot;force&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="165" column="9" bodyfile="SIDimensionality.h" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga9e769e3e553965a37e083fec2ccdb457" prot="public" static="no">
+        <name>kSIQuantityTorque</name>
+        <initializer>STR(&quot;torque&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="166" column="9" bodyfile="SIDimensionality.h" bodystart="166" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga7ec4985a9a344c5e0d22014e9ae18182" prot="public" static="no">
+        <name>kSIQuantityPressure</name>
+        <initializer>STR(&quot;pressure&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="167" column="9" bodyfile="SIDimensionality.h" bodystart="167" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga161c1791e0f21572f6e4f89a3a37f01c" prot="public" static="no">
+        <name>kSIQuantityStress</name>
+        <initializer>STR(&quot;stress&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="168" column="9" bodyfile="SIDimensionality.h" bodystart="168" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga0f1912aaa4630021a5aed603b39110b3" prot="public" static="no">
+        <name>kSIQuantityElasticModulus</name>
+        <initializer>STR(&quot;elastic modulus&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="169" column="9" bodyfile="SIDimensionality.h" bodystart="169" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga1c521cac24b648f04e09fbbbe3bb2d7f" prot="public" static="no">
+        <name>kSIQuantityCompressibility</name>
+        <initializer>STR(&quot;compressibility&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="170" column="9" bodyfile="SIDimensionality.h" bodystart="170" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gab3ed687f797dd683dd9cfc50ea2434dd" prot="public" static="no">
+        <name>kSIQuantityStressOpticCoefficient</name>
+        <initializer>STR(&quot;stress-optic coefficient&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="171" column="9" bodyfile="SIDimensionality.h" bodystart="171" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaabb55ee5206636eaa97ac0fa5141e720" prot="public" static="no">
+        <name>kSIQuantityPressureGradient</name>
+        <initializer>STR(&quot;pressure gradient&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="172" column="9" bodyfile="SIDimensionality.h" bodystart="172" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaa4baed995eeb39084c2cf5ad4b1370bc" prot="public" static="no">
+        <name>kSIQuantityEnergy</name>
+        <initializer>STR(&quot;energy&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="173" column="9" bodyfile="SIDimensionality.h" bodystart="173" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaa393dec091cd44cd27ee2039d9da70b8" prot="public" static="no">
+        <name>kSIQuantitySpectralRadiantEnergy</name>
+        <initializer>STR(&quot;spectral radiant energy&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="174" column="9" bodyfile="SIDimensionality.h" bodystart="174" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaf17be18a57685c0e86380109ee9c7995" prot="public" static="no">
+        <name>kSIQuantityPower</name>
+        <initializer>STR(&quot;power&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="175" column="9" bodyfile="SIDimensionality.h" bodystart="175" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga780f6220a1a7d69abaaeb1e2254cd09b" prot="public" static="no">
+        <name>kSIQuantitySpectralPower</name>
+        <initializer>STR(&quot;spectral power&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="176" column="9" bodyfile="SIDimensionality.h" bodystart="176" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga89f3f996e9ab0249e4aba416ac888476" prot="public" static="no">
+        <name>kSIQuantityVolumePowerDensity</name>
+        <initializer>STR(&quot;volume power density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="177" column="9" bodyfile="SIDimensionality.h" bodystart="177" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga130f1485952b126d1bbdebeead71a8f3" prot="public" static="no">
+        <name>kSIQuantitySpecificPower</name>
+        <initializer>STR(&quot;specific power&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="178" column="9" bodyfile="SIDimensionality.h" bodystart="178" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaff706e4e063860301fbea227c2bae3d1" prot="public" static="no">
+        <name>kSIQuantityRadiantFlux</name>
+        <initializer>STR(&quot;radiant flux&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="179" column="9" bodyfile="SIDimensionality.h" bodystart="179" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gae8852689e9f3a1381173b253b1927c27" prot="public" static="no">
+        <name>kSIQuantityElectricCharge</name>
+        <initializer>STR(&quot;electric charge&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="180" column="9" bodyfile="SIDimensionality.h" bodystart="180" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga381db2ef984028233a2c84b748a406a9" prot="public" static="no">
+        <name>kSIQuantityAmountOfElectricity</name>
+        <initializer>STR(&quot;amount of electricity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="181" column="9" bodyfile="SIDimensionality.h" bodystart="181" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaa3bc8ceb11cdc04d265cb69aef39ed18" prot="public" static="no">
+        <name>kSIQuantityElectricPotentialDifference</name>
+        <initializer>STR(&quot;electric potential difference&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="182" column="9" bodyfile="SIDimensionality.h" bodystart="182" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaff9ce381531328dbd745b9843e4139dd" prot="public" static="no">
+        <name>kSIQuantityElectromotiveForce</name>
+        <initializer>STR(&quot;electromotive force&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="183" column="9" bodyfile="SIDimensionality.h" bodystart="183" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga40f770329e57834c6181a985234f2450" prot="public" static="no">
+        <name>kSIQuantityElectricPolarizability</name>
+        <initializer>STR(&quot;electric polarizability&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="184" column="9" bodyfile="SIDimensionality.h" bodystart="184" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga84e83e21391f79205b61e3d60fc52b21" prot="public" static="no">
+        <name>kSIQuantityElectricDipoleMoment</name>
+        <initializer>STR(&quot;electric dipole moment&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="185" column="9" bodyfile="SIDimensionality.h" bodystart="185" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga77fe859eb36886c4529289b9fa4962e5" prot="public" static="no">
+        <name>kSIQuantityVoltage</name>
+        <initializer>STR(&quot;voltage&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="186" column="9" bodyfile="SIDimensionality.h" bodystart="186" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gae89e5e8f0c994ae29d2ae2d0ea834935" prot="public" static="no">
+        <name>kSIQuantityCapacitance</name>
+        <initializer>STR(&quot;capacitance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="187" column="9" bodyfile="SIDimensionality.h" bodystart="187" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga80eba1f4d65d750eff713ffaf73e457d" prot="public" static="no">
+        <name>kSIQuantityElectricResistance</name>
+        <initializer>STR(&quot;electric resistance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="188" column="9" bodyfile="SIDimensionality.h" bodystart="188" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gacf89aa226f48bfc48c1bd4955ec4f1cb" prot="public" static="no">
+        <name>kSIQuantityElectricResistancePerLength</name>
+        <initializer>STR(&quot;electric resistance per length&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="189" column="9" bodyfile="SIDimensionality.h" bodystart="189" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gad6fe3db7c0fdeb5292ab21af6c87f01e" prot="public" static="no">
+        <name>kSIQuantityElectricResistivity</name>
+        <initializer>STR(&quot;electric resistivity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="190" column="9" bodyfile="SIDimensionality.h" bodystart="190" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gafe82b6891d921f0e2820ce589ac657c6" prot="public" static="no">
+        <name>kSIQuantityElectricConductance</name>
+        <initializer>STR(&quot;electric conductance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="191" column="9" bodyfile="SIDimensionality.h" bodystart="191" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gad5670db85408e7615063a58afb917960" prot="public" static="no">
+        <name>kSIQuantityElectricConductivity</name>
+        <initializer>STR(&quot;electric conductivity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="192" column="9" bodyfile="SIDimensionality.h" bodystart="192" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga9c203710ea4592bdbfb14b8dc759b6a4" prot="public" static="no">
+        <name>kSIQuantityElectricalMobility</name>
+        <initializer>STR(&quot;electrical mobility&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="193" column="9" bodyfile="SIDimensionality.h" bodystart="193" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaa5b91a35887e7f3dc41ebf745bc3cf94" prot="public" static="no">
+        <name>kSIQuantityMolarConductivity</name>
+        <initializer>STR(&quot;molar conductivity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="194" column="9" bodyfile="SIDimensionality.h" bodystart="194" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga88d778d18519f1cf3b87fe7020049290" prot="public" static="no">
+        <name>kSIQuantityMagneticDipoleMoment</name>
+        <initializer>STR(&quot;magnetic dipole moment&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="195" column="9" bodyfile="SIDimensionality.h" bodystart="195" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaae8e2fbb1e29fe5849e9a806ab270ff9" prot="public" static="no">
+        <name>kSIQuantityMagneticDipoleMomentRatio</name>
+        <initializer>STR(&quot;magnetic dipole moment ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="196" column="9" bodyfile="SIDimensionality.h" bodystart="196" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaaceb1ea26729cb43d14de1f8851840d3" prot="public" static="no">
+        <name>kSIQuantityMagneticFlux</name>
+        <initializer>STR(&quot;magnetic flux&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="197" column="9" bodyfile="SIDimensionality.h" bodystart="197" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga46e61a5876d84afd95fb9b52c0cd655e" prot="public" static="no">
+        <name>kSIQuantityMagneticFluxDensity</name>
+        <initializer>STR(&quot;magnetic flux density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="198" column="9" bodyfile="SIDimensionality.h" bodystart="198" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga5d59a8589606daac847c25d9f262ed2d" prot="public" static="no">
+        <name>kSIQuantityMolarMagneticSusceptibility</name>
+        <initializer>STR(&quot;molar magnetic susceptibility&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="199" column="9" bodyfile="SIDimensionality.h" bodystart="199" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gad5c5d36cb89c43bf302d4186035b92d0" prot="public" static="no">
+        <name>kSIQuantityInverseMagneticFluxDensity</name>
+        <initializer>STR(&quot;inverse magnetic flux density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="200" column="9" bodyfile="SIDimensionality.h" bodystart="200" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaf1678688d6d0f017bb826068e10159b4" prot="public" static="no">
+        <name>kSIQuantityMagneticFieldGradient</name>
+        <initializer>STR(&quot;magnetic field gradient&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="201" column="9" bodyfile="SIDimensionality.h" bodystart="201" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga3eddfa7129bc1472a3366e3f54a9f105" prot="public" static="no">
+        <name>kSIQuantityInductance</name>
+        <initializer>STR(&quot;inductance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="202" column="9" bodyfile="SIDimensionality.h" bodystart="202" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga3d92bad30d99dc528d25bf5f85eed04e" prot="public" static="no">
+        <name>kSIQuantityLuminousFlux</name>
+        <initializer>STR(&quot;luminous flux&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="203" column="9" bodyfile="SIDimensionality.h" bodystart="203" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gab36a47b0f0ff04cf5cd7bfe1a46c2a34" prot="public" static="no">
+        <name>kSIQuantityLuminousFluxDensity</name>
+        <initializer>STR(&quot;luminous flux density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="204" column="9" bodyfile="SIDimensionality.h" bodystart="204" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga7a4a28532ebdadf36d2a938704ee2381" prot="public" static="no">
+        <name>kSIQuantityLuminousEnergy</name>
+        <initializer>STR(&quot;luminous energy&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="205" column="9" bodyfile="SIDimensionality.h" bodystart="205" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gab039d6afc652e421746eaf9380f8c9e9" prot="public" static="no">
+        <name>kSIQuantityIlluminance</name>
+        <initializer>STR(&quot;illuminance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="206" column="9" bodyfile="SIDimensionality.h" bodystart="206" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga07c297b0a881c75186a7a9b725e7d868" prot="public" static="no">
+        <name>kSIQuantityAbsorbedDose</name>
+        <initializer>STR(&quot;absorbed dose&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="207" column="9" bodyfile="SIDimensionality.h" bodystart="207" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga3d581c9f718102346dfd3cbb95d26a4e" prot="public" static="no">
+        <name>kSIQuantityDoseEquivalent</name>
+        <initializer>STR(&quot;dose equivalent&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="208" column="9" bodyfile="SIDimensionality.h" bodystart="208" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga5a2454e8edef94418a825ed76c972150" prot="public" static="no">
+        <name>kSIQuantityCatalyticActivity</name>
+        <initializer>STR(&quot;catalytic activity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="209" column="9" bodyfile="SIDimensionality.h" bodystart="209" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga59569bc49b7c4b735f54f514bce183f6" prot="public" static="no">
+        <name>kSIQuantityCatalyticActivityConcentration</name>
+        <initializer>STR(&quot;catalytic activity concentration&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="210" column="9" bodyfile="SIDimensionality.h" bodystart="210" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gadfcc527c408c2c8ece6cc2668bea80ac" prot="public" static="no">
+        <name>kSIQuantityCatalyticActivityContent</name>
+        <initializer>STR(&quot;catalytic activity content&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="211" column="9" bodyfile="SIDimensionality.h" bodystart="211" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga11db0883b307048dd030015540e0b8f0" prot="public" static="no">
+        <name>kSIQuantityAction</name>
+        <initializer>STR(&quot;action&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="212" column="9" bodyfile="SIDimensionality.h" bodystart="212" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaef187cbecea9bb5389888dc7adf5faa6" prot="public" static="no">
+        <name>kSIQuantityReducedAction</name>
+        <initializer>STR(&quot;reduced action&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="213" column="9" bodyfile="SIDimensionality.h" bodystart="213" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga3f866b893fb0039e7fbd2a91d23a6fc2" prot="public" static="no">
+        <name>kSIQuantityKinematicViscosity</name>
+        <initializer>STR(&quot;kinematic viscosity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="214" column="9" bodyfile="SIDimensionality.h" bodystart="214" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga4f6967b6c1f03ffd2dcfbdc91d41b16b" prot="public" static="no">
+        <name>kSIQuantityDiffusionCoefficient</name>
+        <initializer>STR(&quot;diffusion coefficient&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="215" column="9" bodyfile="SIDimensionality.h" bodystart="215" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaf253982601213c0fbffadda48eec7c36" prot="public" static="no">
+        <name>kSIQuantityCirculation</name>
+        <initializer>STR(&quot;circulation&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="216" column="9" bodyfile="SIDimensionality.h" bodystart="216" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga926cbfeb5e4d17e6a21a9b4ba759db30" prot="public" static="no">
+        <name>kSIQuantityDynamicViscosity</name>
+        <initializer>STR(&quot;dynamic viscosity&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="217" column="9" bodyfile="SIDimensionality.h" bodystart="217" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga4d2b7bfaadd9a92e1d8bc96e3487c55d" prot="public" static="no">
+        <name>kSIQuantityAmountConcentration</name>
+        <initializer>STR(&quot;amount concentration&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="218" column="9" bodyfile="SIDimensionality.h" bodystart="218" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga3b176b8ad5984c39e54d892e052400ec" prot="public" static="no">
+        <name>kSIQuantityMassConcentration</name>
+        <initializer>STR(&quot;mass concentration&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="219" column="9" bodyfile="SIDimensionality.h" bodystart="219" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga113909af52bfc94d5cc67fca67d94d75" prot="public" static="no">
+        <name>kSIQuantityChargePerAmount</name>
+        <initializer>STR(&quot;charge per amount&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="220" column="9" bodyfile="SIDimensionality.h" bodystart="220" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga90ddd0cd90c8430785295289fa57f639" prot="public" static="no">
+        <name>kSIQuantityGravitationalConstant</name>
+        <initializer>STR(&quot;gravitational constant&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="221" column="9" bodyfile="SIDimensionality.h" bodystart="221" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga5ef8af34e9c472d9289773b56916d8fa" prot="public" static="no">
+        <name>kSIQuantityLengthPerVolume</name>
+        <initializer>STR(&quot;distance per volume&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="222" column="9" bodyfile="SIDimensionality.h" bodystart="222" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga1233a1def371589a7789753a9bb3a932" prot="public" static="no">
+        <name>kSIQuantityVolumePerLength</name>
+        <initializer>STR(&quot;volume per length&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="223" column="9" bodyfile="SIDimensionality.h" bodystart="223" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga60e9d3edb693aa37e3ecf68cebe410cb" prot="public" static="no">
+        <name>kSIQuantityVolumetricFlowRate</name>
+        <initializer>STR(&quot;volumetric flow rate&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="224" column="9" bodyfile="SIDimensionality.h" bodystart="224" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga4e4571071bfa5148d9ba71b98807cb95" prot="public" static="no">
+        <name>kSIQuantityFrequencyPerMagneticFluxDensity</name>
+        <initializer>STR(&quot;frequency per magnetic flux density&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="225" column="9" bodyfile="SIDimensionality.h" bodystart="225" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga23b178d905c586f620c1d0aa4a39789e" prot="public" static="no">
+        <name>kSIQuantityPowerPerLuminousFlux</name>
+        <initializer>STR(&quot;power per luminous flux&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="226" column="9" bodyfile="SIDimensionality.h" bodystart="226" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gac21528a5e7a75cc208babacd0b34289e" prot="public" static="no">
+        <name>kSIQuantityLuminousEfficacy</name>
+        <initializer>STR(&quot;luminous efficacy&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="227" column="9" bodyfile="SIDimensionality.h" bodystart="227" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga4112fef66b869ff9ca312aa9415efe16" prot="public" static="no">
+        <name>kSIQuantityRockPermeability</name>
+        <initializer>STR(&quot;rock permeability&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="228" column="9" bodyfile="SIDimensionality.h" bodystart="228" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga06df0c0385335bafc951c4fd2a4a6321" prot="public" static="no">
+        <name>kSIQuantityGyromagneticRatio</name>
+        <initializer>STR(&quot;gyromagnetic ratio&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="229" column="9" bodyfile="SIDimensionality.h" bodystart="229" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga5b81c40d2c5a2ffc7ce6e60d2db3b846" prot="public" static="no">
+        <name>kSIQuantityHeatTransferCoefficient</name>
+        <initializer>STR(&quot;heat transfer coefficient&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="230" column="9" bodyfile="SIDimensionality.h" bodystart="230" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga4e731762b91484dfdf95150850aba856" prot="public" static="no">
+        <name>kSIQuantityGasPermeance</name>
+        <initializer>STR(&quot;gas permeance&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="231" column="9" bodyfile="SIDimensionality.h" bodystart="231" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga2de833bf993d106794df9ce0b933cbde" prot="public" static="no">
+        <name>kSIQuantityPowerPerAreaPerTemperatureToFourthPower</name>
+        <initializer>STR(&quot;stefan-boltzmann constant&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="232" column="9" bodyfile="SIDimensionality.h" bodystart="232" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gacbe9ae25192beeb67c86e8007288488b" prot="public" static="no">
+        <name>kSIQuantityFirstHyperPolarizability</name>
+        <initializer>STR(&quot;first hyperpolarizability&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="233" column="9" bodyfile="SIDimensionality.h" bodystart="233" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga31d0a6bcc28fc672378259c68354e494" prot="public" static="no">
+        <name>kSIQuantitySecondHyperPolarizability</name>
+        <initializer>STR(&quot;second hyperpolarizability&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="234" column="9" bodyfile="SIDimensionality.h" bodystart="234" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga145dbebbf7e97365cce07256ee77751d" prot="public" static="no">
+        <name>kSIQuantityElectricQuadrupoleMoment</name>
+        <initializer>STR(&quot;electric quadrupole moment&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="235" column="9" bodyfile="SIDimensionality.h" bodystart="235" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga8d698861f363ddb4955b513a0b092a11" prot="public" static="no">
+        <name>kSIQuantityMagnetizability</name>
+        <initializer>STR(&quot;magnetizability&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="236" column="9" bodyfile="SIDimensionality.h" bodystart="236" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga8aeb622dcc20f6fb34932bc70346399d" prot="public" static="no">
+        <name>kSIQuantitySecondRadiationConstant</name>
+        <initializer>STR(&quot;second radiation constant&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="237" column="9" bodyfile="SIDimensionality.h" bodystart="237" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaff6966ae6012db0848cb739bb5f9504b" prot="public" static="no">
+        <name>kSIQuantityWavelengthDisplacementConstant</name>
+        <initializer>STR(&quot;wavelength displacement constant&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="238" column="9" bodyfile="SIDimensionality.h" bodystart="238" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga20a70e75519d9f72246bb24325b7930f" prot="public" static="no">
+        <name>kSIQuantityFineStructureConstant</name>
+        <initializer>STR(&quot;fine structure constant&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="239" column="9" bodyfile="SIDimensionality.h" bodystart="239" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1gaefdc80f42764a8f57c93a24398843e85" prot="public" static="no">
+        <name>kSIQuantityRatePerAmountConcentrationPerTime</name>
+        <initializer>STR(&quot;inverse amount concentration inverse time&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="240" column="9" bodyfile="SIDimensionality.h" bodystart="240" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga2ca4034ac810e49eea1633a8e7d692de" prot="public" static="no">
+        <name>IF_UNEQUAL_DIMENSIONALITIES</name>
+        <param><defname>DIM1</defname></param>
+        <param><defname>DIM2</defname></param>
+        <param><defname>RESULT</defname></param>
+        <initializer>if(!<ref refid="group___s_i_dimensionality_1ga3945c654215dc7cbec5f13bdc3bdbb5a" kindref="member">SIDimensionalityEqual</ref>(DIM1,DIM2)) { \
+fprintf(stderr, &quot;%s : Unequal dimensionalities:  &quot;,__FUNCTION__); \
+OCStringShow(<ref refid="group___s_i_dimensionality_1gaf8467c4a5b37e321daaf27a8aadabf78" kindref="member">SIDimensionalityGetSymbol</ref>(DIM1)); \
+fprintf(stderr, &quot; and &quot;); \
+OCStringShow(<ref refid="group___s_i_dimensionality_1gaf8467c4a5b37e321daaf27a8aadabf78" kindref="member">SIDimensionalityGetSymbol</ref>(DIM2)); \
+fprintf(stderr, &quot;\n&quot;); \
+return RESULT;}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="259" column="9" bodyfile="SIDimensionality.h" bodystart="259" bodyend="265"/>
+      </memberdef>
+      <memberdef kind="define" id="group___s_i_dimensionality_1ga7611f0ee6c72915c65009aae73921a13" prot="public" static="no">
+        <name>IF_INCOMPATIBLE_DIMENSIONALITIES</name>
+        <param><defname>DIM1</defname></param>
+        <param><defname>DIM2</defname></param>
+        <param><defname>RESULT</defname></param>
+        <initializer>if(!<ref refid="group___s_i_dimensionality_1ga271ac435fe756290875d1e8eefe32352" kindref="member">SIDimensionalityHasSameReducedDimensionality</ref>(DIM1,DIM2)) { \
+fprintf(stderr, &quot;%s : Incompatible dimensionalities:  &quot;,__FUNCTION__); \
+OCStringShow(<ref refid="group___s_i_dimensionality_1gaf8467c4a5b37e321daaf27a8aadabf78" kindref="member">SIDimensionalityGetSymbol</ref>(DIM1)); \
+fprintf(stderr, &quot; and &quot;); \
+OCStringShow(<ref refid="group___s_i_dimensionality_1gaf8467c4a5b37e321daaf27a8aadabf78" kindref="member">SIDimensionalityGetSymbol</ref>(DIM2)); \
+fprintf(stderr, &quot;\n&quot;); \
+return RESULT;}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIDimensionality.h" line="267" column="9" bodyfile="SIDimensionality.h" bodystart="267" bodyend="273"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Dimensionality types and operations in SITypes. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

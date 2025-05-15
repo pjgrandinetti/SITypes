@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+  <compounddef id="_s_i_unit_scanner_8l" kind="file" language="Lex">
+    <compoundname>SIUnitScanner.l</compoundname>
+    <includes refid="_s_i_library_8h" local="yes">SILibrary.h</includes>
+    <includes local="yes">SIUnit.tab.h</includes>
+    <includes refid="_s_i_unit_parser_8h" local="yes">SIUnitParser.h</includes>
+    <incdepgraph>
+      <node id="5">
+        <label>SIDimensionality.h</label>
+        <link refid="_s_i_dimensionality_8h"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>SIDimensionalityParser.h</label>
+        <link refid="_s_i_dimensionality_parser_8h_source"/>
+      </node>
+      <node id="2">
+        <label>SILibrary.h</label>
+        <link refid="_s_i_library_8h_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>SIQuantity.h</label>
+        <link refid="_s_i_quantity_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>SIScalar.h</label>
+        <link refid="_s_i_scalar_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>SIScalarConstants.h</label>
+        <link refid="_s_i_scalar_constants_8h"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>SIUnit.h</label>
+        <link refid="_s_i_unit_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>SIUnitParser.h</label>
+        <link refid="_s_i_unit_parser_8h_source"/>
+      </node>
+      <node id="1">
+        <label>SIUnitScanner.l</label>
+        <link refid="_s_i_unit_scanner_8l"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>OCTypes/OCLibrary.h</label>
+      </node>
+      <node id="14">
+        <label>SIUnit.tab.h</label>
+      </node>
+      <node id="6">
+        <label>stdbool.h</label>
+      </node>
+      <node id="7">
+        <label>stdint.h</label>
+      </node>
+      <node id="3">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="_s_i_unit_scanner_8l_1a6649ae9e4bf4fddc36f21ca92e35ab6e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int siulex</definition>
+        <argsstring>(void)</argsstring>
+        <name>siulex</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIUnitScanner.l" line="14" column="5" bodyfile="SIUnitScanner.l" bodystart="14" bodyend="46"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal">%option<sp/>noyywrap<sp/>nodefault</highlight></codeline>
+<codeline lineno="2"><highlight class="normal">%option<sp/>prefix<sp/>=<sp/>&quot;siu&quot;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal">%option<sp/>nounput</highlight></codeline>
+<codeline lineno="4"><highlight class="normal">%option<sp/>noinput</highlight></codeline>
+<codeline lineno="5"><highlight class="normal">%{</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#include<sp/>&quot;SILibrary.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#include<sp/>&quot;SIUnit.tab.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#include<sp/>&quot;SIUnitParser.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal">%}</highlight></codeline>
+<codeline lineno="10"><highlight class="normal">SYMBOL1<sp/>(EF|zsb|PSv|kGy|yph|EG|MS|csr|TSt|EH|zph|MT|dsr|yPa|mGy|GΩ|zPa|daWb|Yg|nGy|MV|EJ|as|EK|TSv|MW|Ykat|fsr|EL|at|TeV|pGy|dasb|aMx|ppq|hsr|cmol|YSt|EN|cMx|ZSt|dMx|Ym|YeV|EP|ksr|YSv|ZeV|fMx|ppt|ZSv|µGy|ES|msr|Zkat|ET|dyn|hMx|nsr|zΩ|Eha|dmol|daSt|Ys|mrad|EV|Yt|psr|EW|Gha|yGy|aSt|kMx|zGy|pA|aeV|cSt|mMx|pC|aSv|dSt|Mg|nMx|ceV|daSv|µsr|deV|cSv|fSt|pF|pMx|dSv|nrad|Mha|pG|feV|pH|hSt|fSv|Ω|Mm|ysr|pJ|heV|Pha|pK|zsr|hSv|kSt|µMx|pL|hA|keV|pN|fmol|nΩ|hC|mSt|kSv|Eg|Tha|Ms|Erad|pP|meV|nSt|Mt|yMx|Ydyn|neV|mSv|hF|pSt|zMx|dA|nSv|hG|pS|daha|hH|peV|pT|dC|Mx|pSv|Em|Yha|hJ|EBq|pV|Zha|hK|pW|prad|dF|hL|µSt|GBq|dG|Zdyn|dH|hN|µeV|fΩ|abar|µSv|Es|dJ|hP|Et|dK|ySt|dL|zSt|yeV|hS|aha|hmol|dN|daΩ|zeV|ySv|Grad|MBq|hT|aerg|zSv|cha|hV|dP|dha|hW|PBq|dS|fha|dT|pg|dV|hha|lb|TBq|dasr|dW|ph|TA|cbar|kha|ZΩ|TC|ha|pm|ℏ|mha|YBq|nha|TF|ZBq|PA|TG|TH|cerg|pha|PC|hg|TJ|ps|lm|dbar|TK|pt|PF|TL|akat|PG|PH|TN|µha|kmol|daHz|aBq|dg|hm|PJ|EHz|derg|PK|TP|cBq|PL|dBq|GHz|TS|yha|PN|TT|EWb|zha|fBq|lx|dm|hs|TV|PP|GWb|ht|TW|hBq|µrad|PS|PT|MHz|fbar|kBq|ds|PV|daPa|dt|PW|ckat|mBq|PHz|MWb|nBq|mmol|ferg|pBq|PWb|THz|dkat|TWb|Pa|Tg|nmol|µBq|Mrad|YHz|ZHz|adyn|hbar|yBq|yΩ|YWb|Pg|Tm|zBq|ZWb|Emol|herg|atm|µΩ|aHz|Pm|Ts|mmHg|Tt|cHz|dHz|kA|aWb|fkat|pmol|kC|fHz|cWb|yrad|Da|Ps|dWb|Pt|hHz|cdyn|kF|fWb|kG|kH|Ecd|mΩ|kHz|hWb|kJ|darad|damol|kK|Gmol|Gcd|mHz|Prad|kL|zrad|cA|nHz|kWb|ddyn|kN|cC|kbar|m_µ|µ_µ|ƛ_C|‰|‱|ftm|li|ch|rod|fur)</highlight></codeline>
+<codeline lineno="11"><highlight class="normal">SYMBOL2<sp/>(pHz|mWb|dalm|kP|nWb|hkat|cF|Mcd|cG|kS|pWb|cH|kT|kerg|µHz|cJ|Pcd|kV|sb|cK|Hz|kW|cL|daeV|µWb|cN|aΩ|yHz|Tcd|zHz|cP|yWb|fdyn|cS|zWb|mbar|cT|dabar|Ycd|cV|Zcd|cW|merg|YΩ|sr|kg|nbar|kkat|acd|µmol|ccd|Trad|km|nerg|dcd|kn|hdyn|dacd|cd|Ebar|fcd|daph|cg|hcd|ks|kt|Elm|GA|dalx|Eerg|kcd|MΩ|GC|Glm|pbar|cm|mcd|ncd|GF|mkat|GG|pcd|Mmol|GH|dadyn|perg|GJ|cs|Mlm|Wb|GK|EOe|ct|GL|Gbar|GOe|%|zA|µcd|Plm|nkat|EΩ|GN|zC|GP|zF|Gerg|ycd|Tlm|GS|kdyn|zG|zcd|zH|GT|Elx|MOe|GV|zJ|Ekat|Glx|zK|GW|POe|zL|ymol|Ylm|Oe|Zlm|zN|zP|TOe|A|Mlx|nA|pkat|C|zS|zT|zmol|Pmol|dakat|F|Yrad|nC|Plx|H|zV|alm|St|G|YOe|zW|J|nF|K|mdyn|ZOe|L|Sv|clm|M|nG|N|nH|dlm|pΩ|Tlx|P|Gg|daA|Gkat|nJ|R|flm|nK|S|min|T|nL|Zrad|fA|V|daC|hlm|W|nN|ndyn|aOe|fC|Ylx|µbar|Gm|nP|Zlx|klm|cOe|fF|erg|dOe|daF|fG|nS|mlm|fH|nT|hΩ|nlm|b|daG|fOe|d|Gs|zg|fJ|nV|daH|Gt|fK|plm|nW|g|µerg|h|fL|Edyn|hOe|alx|fN|daJ|dΩ|kOe|m|mol|clx|Gy|zm|daK|fP|dlx|µlm|mOe|daL|ZA|s|pdyn|fS|t|flx|nOe|u|fT|Mbar|ZC|pOe|daN|hlx|ylm|zs|fV|zt|zlm|ZF|fW|Tmol|ZG|klx|daGy|ZH|daP|Merg|µOe|Gdyn|ng|ZJ|mlx|ZK|nlx|ZL|daS|µkat|plx|ZN|yOe|daT|zOe|nm|ZP|daV|ybar|ZS|µlx|ZT|TΩ|daW|fg|ns|ZV|nt|ZW|ylx|EDa|yerg|zlx|PΩ|zbar|Pbar|GDa|fm|Mkat|zerg|Perg|fs|ft|MDa|°|PDa|daOe|Zg|arad|yA|µdyn|TDa|yC|Zm|ykat|yF|µA|Ymol|yG|dag|yH|YDa|µC|ZDa|Å|Zs|yJ|Zt|yK|µF|yL|µG|zkat|Pkat|µH|yN|Zmol|crad|µJ|yP|µK|aDa|µL|Mdyn|Esb|mA|dam|Tbar|yS|rad|Eph|µN|yT|cDa|mC|daDa|Gsb|dDa|st|ly)</highlight></codeline>
+<codeline lineno="12"><highlight class="normal">SYMBOL3<sp/>(EPa|µP|yV|Gph|yW|mF|fDa|drad|GPa|mG|µS|Terg|bar|mH|µT|hDa|mJ|Msb|µV|mK|µW|Mph|das|mL|kDa|MPa|dat|mN|Psb|kΩ|mDa|Pph|nDa|mP|ydyn|PPa|pDa|aA|Tsb|EGy|mS|daMx|mT|Tph|aC|GGy|yg|ua|TPa|kat|mV|frad|mW|aF|µDa|aG|Ysb|zdyn|Pdyn|Bq|aH|Zsb|cΩ|Yph|Zph|µg|ym|aJ|YPa|aK|Tkat|MGy|yDa|ZPa|Esr|aL|YA|zDa|aN|Gsr|YC|PGy|daBq|µm|ys|eV|aP|asb|yt|YF|aph|EMx|YG|aS|csb|YH|TGy|aT|aPa|daerg|dsb|cph|GMx|YJ|Msr|hrad|µs|aV|YK|cPa|µt|aW|mg|YL|dPa|fsb|fph|dph|Ybar|Psr|hsb|YN|YGy|fPa|ppb|hph|ZGy|mm|YP|MMx|hPa|ksb|Tsr|MA|ESt|YS|kph|Yerg|msb|YT|MC|kPa|nsb|EeV|GSt|mph|Zbar|PMx|ms|ESv|YV|nph|mt|mPa|GeV|YW|aGy|MF|nPa|Ysr|GSv|psb|pph|TMx|MH|Zsr|MG|cGy|amol|in|pPa|dGy|ag|MJ|Zerg|MSt|MK|Tdyn|µsb|ML|fGy|EA|MeV|µph|YMx|MN|MSv|EC|hGy|PSt|µPa|ZMx|am|MP|ppm|asr|PeV|ysb|krad|mi|yd|π|k_B|q_e|c_0|m_e|&amp;R|E_h|ε_0|µ_0|N_A|&amp;F|m_p|m_n|lbf|psi|oz|ton|gal|qt|cup|floz|tbsp|tsp|wk|yr|ac|cup|month|hp|°F|°C|h_P|g_0|&amp;G|D|mD|µD|nD|µ_N|µ_B|µ_p|µ_n|µ_e|Φ_0|σ|Λ_0|b_λ|R_∞|α|g_e|g_p|g_n|a_0|floz|R_∞|lea)</highlight></codeline>
+<codeline lineno="13"><highlight class="normal">UNIT<sp/>{SYMBOL1}|{SYMBOL2}|{SYMBOL3}</highlight></codeline>
+<codeline lineno="14"><highlight class="normal">%%</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="stringliteral">{UNIT}</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/>OCStringRef<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>=<sp/>OCStringCreateWithCString(yytext);</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>siulval.unit<sp/>=<sp/><sp/>SIUnitForUnderivedSymbol(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>OCRelease(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>UNIT;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="stringliteral">[+-]?[0-9]+</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>siulval.iVal<sp/>=<sp/>atoi(yytext);</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>INTEGER;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="stringliteral">\([+-]?[0-9]+\)</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>OCStringRef<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>=<sp/>OCStringCreateWithCString(yytext);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>OCMutableStringRef<sp/>mutString<sp/>=<sp/>OCStringCreateMutableCopy(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutString)<sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>OCStringTrimMatchingParentheses(mutString);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*cString<sp/>=<sp/>OCStringGetCString(mutString);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(cString)<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>siulval.iVal<sp/>=<sp/>atoi(cString);</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>OCRelease(mutString);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>OCRelease(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>INTEGER;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="stringliteral">[a-zA-Z]+</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>unitError<sp/>=<sp/>STR(</highlight><highlight class="stringliteral">&quot;Unknown<sp/>unit<sp/>symbol&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="stringliteral">[\t<sp/>]+</highlight><highlight class="normal"><sp/><sp/>{<sp/></highlight><highlight class="comment">/*<sp/>ignore<sp/>whitespace<sp/>*/</highlight><highlight class="normal">}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="stringliteral">.</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>yytext[0];}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal">%%</highlight></codeline>
+    </programlisting>
+    <location file="SIUnitScanner.l"/>
+  </compounddef>
+</doxygen>

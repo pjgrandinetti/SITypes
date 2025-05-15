@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+  <compounddef id="struct____scalar_value" kind="struct" language="C++" prot="public">
+    <compoundname>__scalarValue</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct____scalar_value_1a8332be8df287f40247c6e10e3e1c39b9" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int __scalarValue::nodeType</definition>
+        <argsstring></argsstring>
+        <name>nodeType</name>
+        <qualifiedname>__scalarValue::nodeType</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIScalarParser.c" line="30" column="9" bodyfile="SIScalarParser.c" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct____scalar_value_1a61962ded15bfae5cf757f38f6d1e2752" prot="public" static="no" mutable="no">
+        <type><ref refid="_s_i_scalar_8h_1a4221ae12f7f1db415579efd3a1c3cdda" kindref="member">SIScalarRef</ref></type>
+        <definition>SIScalarRef __scalarValue::number</definition>
+        <argsstring></argsstring>
+        <name>number</name>
+        <qualifiedname>__scalarValue::number</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="SIScalarParser.c" line="31" column="17" bodyfile="SIScalarParser.c" bodystart="31" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="4">
+        <label>__SIDimensionality</label>
+        <link refid="struct_____s_i_dimensionality"/>
+      </node>
+      <node id="5">
+        <label>__SINumber</label>
+        <link refid="union_____s_i_number"/>
+      </node>
+      <node id="2">
+        <label>__SIScalar</label>
+        <link refid="struct_____s_i_scalar"/>
+        <childnode refid="3" relation="usage">
+          <edgelabel>unit</edgelabel>
+        </childnode>
+        <childnode refid="5" relation="usage">
+          <edgelabel>value</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>__SIUnit</label>
+        <link refid="struct_____s_i_unit"/>
+        <childnode refid="4" relation="usage">
+          <edgelabel>dimensionality</edgelabel>
+        </childnode>
+      </node>
+      <node id="1">
+        <label>__scalarValue</label>
+        <link refid="struct____scalar_value"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>number</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="SIScalarParser.c" line="29" column="1" bodyfile="SIScalarParser.c" bodystart="29" bodyend="32"/>
+    <listofallmembers>
+      <member refid="struct____scalar_value_1a8332be8df287f40247c6e10e3e1c39b9" prot="public" virt="non-virtual"><scope>__scalarValue</scope><name>nodeType</name></member>
+      <member refid="struct____scalar_value_1a61962ded15bfae5cf757f38f6d1e2752" prot="public" virt="non-virtual"><scope>__scalarValue</scope><name>number</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

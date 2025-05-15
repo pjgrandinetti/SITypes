@@ -19,7 +19,7 @@ static OCTypeID kSIDimensionalityID = _kOCNotATypeID;
 struct __SIDimensionality
 {
     OCBase _base;
-    bool staticInstance;
+    bool static_instance;
 
     // SIDimensionality Type attributes  - order of declaration is essential
     uint8_t numerator_exponent[BASE_DIMENSION_COUNT];
@@ -54,7 +54,7 @@ void __SIDimensionalityFinalize(const void *theType)
     if (NULL == theType)
         return;
     SIDimensionalityRef theDimensionality = (SIDimensionalityRef)theType;
-    if(!theDimensionality->staticInstance) {
+    if(!theDimensionality->static_instance) {
         free((void *)theDimensionality);
     }
 
@@ -249,7 +249,7 @@ static SIDimensionalityRef SIDimensionalityCreate(uint8_t length_numerator_expon
     struct __SIDimensionality *theDimensionality = SIDimensionalityAllocate();
     if (NULL == theDimensionality)
         return NULL;
-    theDimensionality->staticInstance = false;
+    theDimensionality->static_instance = false;
 
     //  setup attributes
     theDimensionality->numerator_exponent[kSILengthIndex] = length_numerator_exponent;
@@ -331,7 +331,7 @@ static SIDimensionalityRef SIDimensionalityWithExponents(uint8_t length_numerato
     }
 
     struct __SIDimensionality *dim = (struct __SIDimensionality *)newDimensionality;
-    dim->staticInstance = true;
+    dim->static_instance = true;
 
     OCDictionaryAddValue(dimensionalityLibrary, newDimensionality->symbol, newDimensionality);
     OCRelease(newDimensionality);
@@ -867,7 +867,7 @@ static SIDimensionalityRef AddDimensionalityToLibrary(uint8_t length_numerator_e
                                                                 luminous_intensity_numerator_exponent, luminous_intensity_denominator_exponent);
 
     struct __SIDimensionality *dim = (struct __SIDimensionality *)dimensionality;
-    dim->staticInstance = true;
+    dim->static_instance = true;
     OCDictionaryAddValue(dimensionalityLibrary, dimensionality->symbol, dimensionality);
     OCRelease(dimensionality);
     return dimensionality;

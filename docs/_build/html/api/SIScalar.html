@@ -1,0 +1,1820 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIScalar &mdash; SITypes 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SIScalarConstants" href="SIScalarConstants.html" />
+    <link rel="prev" title="SIQuantity" href="SIQuantity.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SITypes
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../background.html">Background</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="SIDimensionality.html">SIDimensionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SILibrary.html">SILibrary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SIQuantity.html">SIQuantity</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SIScalar</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#c.__SINumber"><code class="docutils literal notranslate"><span class="pre">__SINumber</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarRef"><code class="docutils literal notranslate"><span class="pre">SIScalarRef</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIMutableScalarRef"><code class="docutils literal notranslate"><span class="pre">SIMutableScalarRef</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarGetTypeID"><code class="docutils literal notranslate"><span class="pre">SIScalarGetTypeID()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateCopy"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateCopy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateMutableCopy"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateMutableCopy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateWithFloat"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateWithFloat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateMutableWithFloat"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateMutableWithFloat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateWithDouble"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateWithDouble()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateMutableWithDouble"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateMutableWithDouble()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateWithFloatComplex"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateWithFloatComplex()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateMutableWithFloatComplex"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateMutableWithFloatComplex()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateWithDoubleComplex"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateWithDoubleComplex()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateMutableWithDoubleComplex"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateMutableWithDoubleComplex()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateWithStringContainingSingleUnitFromLibrary"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateWithStringContainingSingleUnitFromLibrary()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarGetValue"><code class="docutils literal notranslate"><span class="pre">SIScalarGetValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarSetFloatValue"><code class="docutils literal notranslate"><span class="pre">SIScalarSetFloatValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarSetDoubleValue"><code class="docutils literal notranslate"><span class="pre">SIScalarSetDoubleValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarSetFloatComplexValue"><code class="docutils literal notranslate"><span class="pre">SIScalarSetFloatComplexValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarSetDoubleComplexValue"><code class="docutils literal notranslate"><span class="pre">SIScalarSetDoubleComplexValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarSetElementType"><code class="docutils literal notranslate"><span class="pre">SIScalarSetElementType()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarFloatValue"><code class="docutils literal notranslate"><span class="pre">SIScalarFloatValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarDoubleValue"><code class="docutils literal notranslate"><span class="pre">SIScalarDoubleValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarFloatComplexValue"><code class="docutils literal notranslate"><span class="pre">SIScalarFloatComplexValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarDoubleComplexValue"><code class="docutils literal notranslate"><span class="pre">SIScalarDoubleComplexValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarMagnitudeValue"><code class="docutils literal notranslate"><span class="pre">SIScalarMagnitudeValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarArgumentValue"><code class="docutils literal notranslate"><span class="pre">SIScalarArgumentValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarFloatValueInUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarFloatValueInUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarDoubleValueInUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarDoubleValueInUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarFloatComplexValueInUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarFloatComplexValueInUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarDoubleComplexValueInUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarDoubleComplexValueInUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarFloatValueInCoherentUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarFloatValueInCoherentUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarDoubleValueInCoherentUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarDoubleValueInCoherentUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarFloatComplexValueInCoherentUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarFloatComplexValueInCoherentUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarDoubleComplexValueInCoherentUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarDoubleComplexValueInCoherentUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByConvertingToNumberType"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByConvertingToNumberType()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarTakeComplexPart"><code class="docutils literal notranslate"><span class="pre">SIScalarTakeComplexPart()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByTakingComplexPart"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByTakingComplexPart()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateWithOCString"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateWithOCString()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByReducingUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByReducingUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarReduceUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarReduceUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarConvertToUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarConvertToUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByConvertingToUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByConvertingToUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarConvertToCoherentUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarConvertToCoherentUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByConvertingToCoherentUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByConvertingToCoherentUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByAdding"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByAdding()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarAdd"><code class="docutils literal notranslate"><span class="pre">SIScalarAdd()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateBySubtracting"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateBySubtracting()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarSubtract"><code class="docutils literal notranslate"><span class="pre">SIScalarSubtract()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByMultiplyingWithoutReducingUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByMultiplyingWithoutReducingUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarMultiplyWithoutReducingUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarMultiplyWithoutReducingUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByMultiplying"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByMultiplying()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarMultiply"><code class="docutils literal notranslate"><span class="pre">SIScalarMultiply()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByDividingWithoutReducingUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByDividingWithoutReducingUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarDivideWithoutReducingUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarDivideWithoutReducingUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByDividing"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByDividing()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarDivide"><code class="docutils literal notranslate"><span class="pre">SIScalarDivide()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByRaisingToAPowerWithoutReducingUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByRaisingToAPowerWithoutReducingUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarRaiseToAPowerWithoutReducingUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarRaiseToAPowerWithoutReducingUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByRaisingToAPower"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByRaisingToAPower()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarRaiseToAPower"><code class="docutils literal notranslate"><span class="pre">SIScalarRaiseToAPower()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByTakingAbsoluteValue"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByTakingAbsoluteValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarTakeAbsoluteValue"><code class="docutils literal notranslate"><span class="pre">SIScalarTakeAbsoluteValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByGammaFunctionWithoutReducingUnit"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByGammaFunctionWithoutReducingUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByTakingNthRoot"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByTakingNthRoot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarTakeNthRoot"><code class="docutils literal notranslate"><span class="pre">SIScalarTakeNthRoot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarTakeLog10"><code class="docutils literal notranslate"><span class="pre">SIScalarTakeLog10()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByZeroingPart"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByZeroingPart()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarZeroPart"><code class="docutils literal notranslate"><span class="pre">SIScalarZeroPart()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarMultiplyByDimensionlessRealConstant"><code class="docutils literal notranslate"><span class="pre">SIScalarMultiplyByDimensionlessRealConstant()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByMultiplyingByDimensionlessRealConstant"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByMultiplyingByDimensionlessRealConstant()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByMultiplyingByDimensionlessComplexConstant"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByMultiplyingByDimensionlessComplexConstant()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarMultiplyByDimensionlessComplexConstant"><code class="docutils literal notranslate"><span class="pre">SIScalarMultiplyByDimensionlessComplexConstant()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateByConjugation"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateByConjugation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarConjugate"><code class="docutils literal notranslate"><span class="pre">SIScalarConjugate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarShow"><code class="docutils literal notranslate"><span class="pre">SIScalarShow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateStringValue"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateStringValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateNumericStringValue"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateNumericStringValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateStringValueForPart"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateStringValueForPart()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateUnitString"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateUnitString()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateStringValueWithFormat"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateStringValueWithFormat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCreateNumericStringValueWithFormat"><code class="docutils literal notranslate"><span class="pre">SIScalarCreateNumericStringValueWithFormat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarAddToArrayAsStringValue"><code class="docutils literal notranslate"><span class="pre">SIScalarAddToArrayAsStringValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarIsReal"><code class="docutils literal notranslate"><span class="pre">SIScalarIsReal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarIsImaginary"><code class="docutils literal notranslate"><span class="pre">SIScalarIsImaginary()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarIsComplex"><code class="docutils literal notranslate"><span class="pre">SIScalarIsComplex()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarIsZero"><code class="docutils literal notranslate"><span class="pre">SIScalarIsZero()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarIsInfinite"><code class="docutils literal notranslate"><span class="pre">SIScalarIsInfinite()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarIsRealNonNegativeInteger"><code class="docutils literal notranslate"><span class="pre">SIScalarIsRealNonNegativeInteger()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarValidateProposedStringValue"><code class="docutils literal notranslate"><span class="pre">SIScalarValidateProposedStringValue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarEqual"><code class="docutils literal notranslate"><span class="pre">SIScalarEqual()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCompare"><code class="docutils literal notranslate"><span class="pre">SIScalarCompare()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCompareReduced"><code class="docutils literal notranslate"><span class="pre">SIScalarCompareReduced()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIScalarCompareLoose"><code class="docutils literal notranslate"><span class="pre">SIScalarCompareLoose()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.__SINumber.floatValue"><code class="docutils literal notranslate"><span class="pre">floatValue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.__SINumber.doubleValue"><code class="docutils literal notranslate"><span class="pre">doubleValue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.__SINumber.floatComplexValue"><code class="docutils literal notranslate"><span class="pre">floatComplexValue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.__SINumber.doubleComplexValue"><code class="docutils literal notranslate"><span class="pre">doubleComplexValue</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="SIScalarConstants.html">SIScalarConstants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SIUnit.html">SIUnit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SITypes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">SIScalar</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/SIScalar.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="siscalar">
+<h1>SIScalar<a class="headerlink" href="#siscalar" title="Link to this heading"></a></h1>
+<p>Declares the SIScalar interface for representing and manipulating scalar values in the SI system. </p>
+<p>SIScalar provides an interface for scalar values, supporting arithmetic operations, type queries, and conversions. The API is CoreFoundation-style, with explicit memory management and reference counting.</p>
+<p>SIScalar objects are immutable by default; use <a class="reference internal" href="#_s_i_scalar_8h_1ae920fb2cd07c07b91f1fb602a0c04fcf"><span class="std std-ref">SIMutableScalarRef</span></a> for mutable variants.</p>
+<p>This interface supports querying the value, type, and conversions of a scalar, as well as arithmetic and comparison operations.</p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Philip Grandinetti </p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>PhySy Ltd. </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="c type">
+<dt class="sig sig-object c" id="c.__SINumber">
+<span class="target" id="_s_i_scalar_8h_1abfa6458317d41ba318d2ef65cb6e636e"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">union</span></span><span class="w"> </span><a class="reference internal" href="#c.__SINumber" title="__SINumber"><span class="n"><span class="pre">__SINumber</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">__SINumber</span></span></span><a class="headerlink" href="#c.__SINumber" title="Link to this definition"></a><br /></dt>
+<dd><p>SIScalar represents a scalar physical quantity. It is a concrete subtype of SIQuantity. It has three essential attributes: a unit, an elementType, and a numerical value. SIScalar supports four elementTypes: float, double, float complex, and double complex. </p>
+<p>For additional details visit <a class="reference external" href="http://www.PhySy.org">http://www.PhySy.org</a></p>
+</dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c" id="c.SIScalarRef">
+<span class="target" id="_s_i_scalar_8h_1a4221ae12f7f1db415579efd3a1c3cdda"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">__SIScalar</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarRef</span></span></span><a class="headerlink" href="#c.SIScalarRef" title="Link to this definition"></a><br /></dt>
+<dd><p>This is the type of a reference to immutable SIScalar. </p>
+</dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c" id="c.SIMutableScalarRef">
+<span class="target" id="_s_i_scalar_8h_1ae920fb2cd07c07b91f1fb602a0c04fcf"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">__SIScalar</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">SIMutableScalarRef</span></span></span><a class="headerlink" href="#c.SIMutableScalarRef" title="Link to this definition"></a><br /></dt>
+<dd><p>This is the type of a reference to mutable SIScalar. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarGetTypeID">
+<span class="target" id="_s_i_scalar_8h_1ae73ca7ef4537227256f6ee2ae9a6aee0"></span><span class="n"><span class="pre">OCTypeID</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarGetTypeID</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarGetTypeID" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the type ID for SIScalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The type ID. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateCopy">
+<span class="target" id="_s_i_scalar_8h_1af6ad9941f221e08b720cf78d258469ec"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateCopy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateCopy" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a copy of a scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy of the scalar. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateMutableCopy">
+<span class="target" id="_s_i_scalar_8h_1a5a4eae72c05f0cd99d3f28e4a8e362ee"></span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateMutableCopy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateMutableCopy" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a mutable copy of a scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A mutable copy of the scalar. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateWithFloat">
+<span class="target" id="_s_i_scalar_8h_1ae51f925cba2fa406727411c6f9333c08"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateWithFloat</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n"><span class="pre">input_value</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateWithFloat" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar from float value and unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_value</strong> – The float value. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateMutableWithFloat">
+<span class="target" id="_s_i_scalar_8h_1a45e2f5d6f6dea3e55bf20c5ad61442b7"></span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateMutableWithFloat</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n"><span class="pre">input_value</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateMutableWithFloat" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a mutable scalar from float value and unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_value</strong> – The float value. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIMutableScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateWithDouble">
+<span class="target" id="_s_i_scalar_8h_1a2371d11d3cb75ffaab47817ccda03d7e"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateWithDouble</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">input_value</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateWithDouble" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar from double value and unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_value</strong> – The double value. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateMutableWithDouble">
+<span class="target" id="_s_i_scalar_8h_1a687b82fc021bf7b637cf62affb5931bc"></span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateMutableWithDouble</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">input_value</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateMutableWithDouble" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a mutable scalar from double value and unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_value</strong> – The double value. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIMutableScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateWithFloatComplex">
+<span class="target" id="_s_i_scalar_8h_1aed59f1dfb9a2fa1c5df27082f816595a"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateWithFloatComplex</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="n"><span class="pre">input_value</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateWithFloatComplex" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar from float complex value and unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_value</strong> – The float complex value. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateMutableWithFloatComplex">
+<span class="target" id="_s_i_scalar_8h_1af8f30169fd64ac27af25a9f77a396ca4"></span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateMutableWithFloatComplex</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="n"><span class="pre">input_value</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateMutableWithFloatComplex" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a mutable scalar from float complex value and unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_value</strong> – The float complex value. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIMutableScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateWithDoubleComplex">
+<span class="target" id="_s_i_scalar_8h_1a2f2aebbf0c3110cdec18654e6cb174fd"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateWithDoubleComplex</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="n"><span class="pre">input_value</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateWithDoubleComplex" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar from double complex value and unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_value</strong> – The double complex value. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateMutableWithDoubleComplex">
+<span class="target" id="_s_i_scalar_8h_1a824aa42d425169ea96d4197f87dca776"></span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateMutableWithDoubleComplex</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="n"><span class="pre">input_value</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateMutableWithDoubleComplex" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a mutable scalar from double complex value and unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_value</strong> – The double complex value. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIMutableScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateWithStringContainingSingleUnitFromLibrary">
+<span class="target" id="_s_i_scalar_8h_1aa2e50aa931bd4fbf0082e61179077e75"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateWithStringContainingSingleUnitFromLibrary</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="n"><span class="pre">theString</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateWithStringContainingSingleUnitFromLibrary" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a new SIScalar object from a string containing a single unit name from the unit library. </p>
+<p>This function parses the provided OCStringRef, which should contain a single valid unit name (e.g., “m”, “kg”, “s”). It returns a new immutable <a class="reference internal" href="#_s_i_scalar_8h_1a4221ae12f7f1db415579efd3a1c3cdda"><span class="std std-ref">SIScalarRef</span></a> representing the parsed unit with a value of 1.0, or NULL if the string is invalid or the unit is not found.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The caller is responsible for releasing the returned <a class="reference internal" href="#_s_i_scalar_8h_1a4221ae12f7f1db415579efd3a1c3cdda"><span class="std std-ref">SIScalarRef</span></a>. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function does not support parsing compound units or expressions; only single unit names are accepted. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theString</strong> – An OCStringRef containing the name or symbol of a single unit to look up in the unit library. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new <a class="reference internal" href="#_s_i_scalar_8h_1a4221ae12f7f1db415579efd3a1c3cdda"><span class="std std-ref">SIScalarRef</span></a> representing the unit with value 1.0, or NULL if the string is invalid or the unit is not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarGetValue">
+<span class="target" id="_s_i_scalar_8h_1acb83c99dcbadf14906601e2ac6d16ab1"></span><a class="reference internal" href="#c.__SINumber" title="__SINumber"><span class="n"><span class="pre">__SINumber</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarGetValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarGetValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the value of a scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the scalar. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarSetFloatValue">
+<span class="target" id="_s_i_scalar_8h_1aee93f8a43574ca584073e24185b4ef3f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarSetFloatValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarSetFloatValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the float value of a mutable scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The mutable scalar. </p></li>
+<li><p><strong>value</strong> – The float value. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarSetDoubleValue">
+<span class="target" id="_s_i_scalar_8h_1a2c82abbde15f38a49f84d72bb0105d65"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarSetDoubleValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarSetDoubleValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the double value of a mutable scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The mutable scalar. </p></li>
+<li><p><strong>value</strong> – The double value. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarSetFloatComplexValue">
+<span class="target" id="_s_i_scalar_8h_1a37709d874b4f8935a428d13e8c772a91"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarSetFloatComplexValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarSetFloatComplexValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the float complex value of a mutable scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The mutable scalar. </p></li>
+<li><p><strong>value</strong> – The float complex value. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarSetDoubleComplexValue">
+<span class="target" id="_s_i_scalar_8h_1a697d8dc166fd17e955ec42ea2f18332d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarSetDoubleComplexValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarSetDoubleComplexValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the double complex value of a mutable scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The mutable scalar. </p></li>
+<li><p><strong>value</strong> – The double complex value. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarSetElementType">
+<span class="target" id="_s_i_scalar_8h_1a1f82a304e43c692d7cd6e838d58ca065"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarSetElementType</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">numberType</span></span><span class="w"> </span><span class="n"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarSetElementType" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the element type of a mutable scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The mutable scalar. </p></li>
+<li><p><strong>elementType</strong> – The element type. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarFloatValue">
+<span class="target" id="_s_i_scalar_8h_1afd86f58aa4ac3338cebf0b5381fb8e5d"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarFloatValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarFloatValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a float value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A float value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarDoubleValue">
+<span class="target" id="_s_i_scalar_8h_1aef133da263cd2e705deb20078f7db309"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarDoubleValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarDoubleValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a double value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A double value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarFloatComplexValue">
+<span class="target" id="_s_i_scalar_8h_1adac3474927153359307977461f1968c3"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarFloatComplexValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarFloatComplexValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a float complex value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A float complex value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarDoubleComplexValue">
+<span class="target" id="_s_i_scalar_8h_1a4a72448bde735398fe52b1b41bfe9357"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarDoubleComplexValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarDoubleComplexValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a double complex value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A double complex value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarMagnitudeValue">
+<span class="target" id="_s_i_scalar_8h_1ae18f03fc24864a424e5b85b63b37400b"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarMagnitudeValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarMagnitudeValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates and returns magnitude. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A double value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarArgumentValue">
+<span class="target" id="_s_i_scalar_8h_1a8beeac762a9466e5c81959feed0b51c2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarArgumentValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarArgumentValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the argument value of scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The argument. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarFloatValueInUnit">
+<span class="target" id="_s_i_scalar_8h_1a09dfb1b3a8c488c64e38f7d04b83c138"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarFloatValueInUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">success</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarFloatValueInUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates and returns float value after converting to unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+<li><p><strong>success</strong> – Pointer to boolean that returns true if operation was successful. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A float value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarDoubleValueInUnit">
+<span class="target" id="_s_i_scalar_8h_1a15e42e708d9530fe3691ab8bb4f807b1"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarDoubleValueInUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">success</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarDoubleValueInUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates and returns double value after converting to unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+<li><p><strong>success</strong> – Pointer to boolean that returns true if operation was successful. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A double value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarFloatComplexValueInUnit">
+<span class="target" id="_s_i_scalar_8h_1a08973dd70fd31016cd096132e40607f0"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarFloatComplexValueInUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">success</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarFloatComplexValueInUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates and returns float complex value after converting to unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+<li><p><strong>success</strong> – Pointer to boolean that returns true if operation was successful. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A float complex value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarDoubleComplexValueInUnit">
+<span class="target" id="_s_i_scalar_8h_1a25ee1924e146f0d2e149c62876d68984"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarDoubleComplexValueInUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">success</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarDoubleComplexValueInUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates and returns double complex value after converting to unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+<li><p><strong>success</strong> – Pointer to boolean that returns true if operation was successful. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A double complex value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarFloatValueInCoherentUnit">
+<span class="target" id="_s_i_scalar_8h_1a26066eae739cb00d411f8db68ea24009"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarFloatValueInCoherentUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarFloatValueInCoherentUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates and returns float value after converting to its coherent SI unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A float value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarDoubleValueInCoherentUnit">
+<span class="target" id="_s_i_scalar_8h_1a96a0168dab04f04cde0369eee709d2c2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarDoubleValueInCoherentUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarDoubleValueInCoherentUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates and returns double value after converting to its coherent SI unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A double value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarFloatComplexValueInCoherentUnit">
+<span class="target" id="_s_i_scalar_8h_1aef06532677e4ef24bec545f21ae69e87"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarFloatComplexValueInCoherentUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarFloatComplexValueInCoherentUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates and returns float complex value after converting to its coherent SI unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A float complex value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarDoubleComplexValueInCoherentUnit">
+<span class="target" id="_s_i_scalar_8h_1aa956a5675cc052badc3d98d31ef652df"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarDoubleComplexValueInCoherentUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarDoubleComplexValueInCoherentUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates and returns double complex value after converting to its coherent SI unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A double complex value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByConvertingToNumberType">
+<span class="target" id="_s_i_scalar_8h_1ab52ef39219c2374d068d1ff6126b0c33"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByConvertingToNumberType</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">numberType</span></span><span class="w"> </span><span class="n"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByConvertingToNumberType" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a copy of a scalar as elementType. </p>
+<p>
+Note that down conversion from double to float loses precision and down conversion from complex to real loses the imaginary part of the quantity. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>elementType</strong> – The element type. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy of the scalar.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarTakeComplexPart">
+<span class="target" id="_s_i_scalar_8h_1a72be073d1d7d847db53326244e4c7db7"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarTakeComplexPart</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIQuantity.html#c.complexPart" title="complexPart"><span class="n"><span class="pre">complexPart</span></span></a><span class="w"> </span><span class="n"><span class="pre">part</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarTakeComplexPart" title="Link to this definition"></a><br /></dt>
+<dd><p>Takes the complex number part of a scalar. </p>
+<p>
+Complex number parts are kSIRealPart, kSIImaginaryPart, kSIMagnitudePart, and kSIArgumentPart. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>part</strong> – The complex number part. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if successful, false otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByTakingComplexPart">
+<span class="target" id="_s_i_scalar_8h_1aa84b2b2d1077869403ad6206c7542c77"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByTakingComplexPart</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIQuantity.html#c.complexPart" title="complexPart"><span class="n"><span class="pre">complexPart</span></span></a><span class="w"> </span><span class="n"><span class="pre">part</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByTakingComplexPart" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar from complex number part. </p>
+<p>
+Complex number parts are kSIRealPart, kSIImaginaryPart, kSIMagnitudePart, and kSIArgumentPart. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>part</strong> – The complex number part. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateWithOCString">
+<span class="target" id="_s_i_scalar_8h_1a5d54f1cba04975059e42d78c6fb4b10c"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateWithOCString</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateWithOCString" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by parsing string of number with unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> – The string. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if string cannot be parsed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByReducingUnit">
+<span class="target" id="_s_i_scalar_8h_1abac2ae228535f3d26163282e0b65ba81"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByReducingUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByReducingUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by reducing its unit to the numerator and denominator exponents to their lowest integer values. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The input scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarReduceUnit">
+<span class="target" id="_s_i_scalar_8h_1a3677eb2468ac84a15844cd25151399c5"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarReduceUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarReduceUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Reduces the unit’s numerator and denominator exponents to their lowest integer values. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The input scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if successful, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarConvertToUnit">
+<span class="target" id="_s_i_scalar_8h_1a5b786161f6d7945b49265a2044cf4687"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarConvertToUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarConvertToUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts a scalar to another unit of the same dimensionality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The input scalar. </p></li>
+<li><p><strong>unit</strong> – The new unit. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if successful, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByConvertingToUnit">
+<span class="target" id="_s_i_scalar_8h_1accae31270079adac1d12c1f1176cac74"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByConvertingToUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByConvertingToUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by converting to another unit of the same dimensionality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The input scalar. </p></li>
+<li><p><strong>unit</strong> – The new unit. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if conversion cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarConvertToCoherentUnit">
+<span class="target" id="_s_i_scalar_8h_1a48d501564d32aa25564096a01d71442f"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarConvertToCoherentUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarConvertToCoherentUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts a scalar to a coherent SI unit of the same dimensionality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The input scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if successful, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByConvertingToCoherentUnit">
+<span class="target" id="_s_i_scalar_8h_1ae1afd60d765f3527f3e23ce056090855"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByConvertingToCoherentUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByConvertingToCoherentUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by converting to a coherent SI unit of the same dimensionality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The input scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if conversion cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByAdding">
+<span class="target" id="_s_i_scalar_8h_1a60819e4dc3b1446d560a67e44102b261"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByAdding</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByAdding" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by adding two scalars of the same dimensionality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The first scalar. </p></li>
+<li><p><strong>input2</strong> – The second scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarAdd">
+<span class="target" id="_s_i_scalar_8h_1aba05d6673cc9e3297badeecfcff311ab"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarAdd</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarAdd" title="Link to this definition"></a><br /></dt>
+<dd><p>Adds a scalar of the same dimensionality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – The mutable scalar. </p></li>
+<li><p><strong>input2</strong> – The scalar to be added. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateBySubtracting">
+<span class="target" id="_s_i_scalar_8h_1a0fc57dfa64cf9ec1b97e523964d62d1c"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateBySubtracting</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateBySubtracting" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by subtracting two scalars of the same dimensionality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The subtracted scalar. </p></li>
+<li><p><strong>input2</strong> – The subtracting scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarSubtract">
+<span class="target" id="_s_i_scalar_8h_1af86021ed84856607473dceabffb5bc49"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarSubtract</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarSubtract" title="Link to this definition"></a><br /></dt>
+<dd><p>Subtracts a scalar of the same dimensionality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – The mutable scalar. </p></li>
+<li><p><strong>input2</strong> – The scalar to be subtracted. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByMultiplyingWithoutReducingUnit">
+<span class="target" id="_s_i_scalar_8h_1ac5ebd466101d33c39529032e8166be61"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByMultiplyingWithoutReducingUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByMultiplyingWithoutReducingUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by multiplying two scalars without reducing unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The first scalar. </p></li>
+<li><p><strong>input2</strong> – The second scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarMultiplyWithoutReducingUnit">
+<span class="target" id="_s_i_scalar_8h_1a351aaadedc33399a02e239abe9090b7e"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarMultiplyWithoutReducingUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarMultiplyWithoutReducingUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Multiplies by a scalar without reducing unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – The mutable scalar. </p></li>
+<li><p><strong>input2</strong> – The scalar to be multiplied. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByMultiplying">
+<span class="target" id="_s_i_scalar_8h_1a5383911a73021f9c8c7d6194c102d6d7"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByMultiplying</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByMultiplying" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by multiplying two scalars. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The first scalar. </p></li>
+<li><p><strong>input2</strong> – The second scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarMultiply">
+<span class="target" id="_s_i_scalar_8h_1acf385da2dd8cd404fe0ec612dd1883d4"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarMultiply</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarMultiply" title="Link to this definition"></a><br /></dt>
+<dd><p>Multiplies by a scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – The mutable scalar. </p></li>
+<li><p><strong>input2</strong> – The scalar to be multiplied. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByDividingWithoutReducingUnit">
+<span class="target" id="_s_i_scalar_8h_1a10524a64224b828383921a8242143f49"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByDividingWithoutReducingUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByDividingWithoutReducingUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by dividing two scalars without reducing unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The numerator scalar. </p></li>
+<li><p><strong>input2</strong> – The denominator scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarDivideWithoutReducingUnit">
+<span class="target" id="_s_i_scalar_8h_1a191f41282c2325d4f6fe546fd21c72b4"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarDivideWithoutReducingUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarDivideWithoutReducingUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Divides by a scalar without reducing unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – The mutable scalar. </p></li>
+<li><p><strong>input2</strong> – The scalar to be divided by. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByDividing">
+<span class="target" id="_s_i_scalar_8h_1ab0b7351461dcc0ff7ad993dfdb931f32"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByDividing</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByDividing" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by dividing two scalars. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The numerator scalar. </p></li>
+<li><p><strong>input2</strong> – The denominator scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarDivide">
+<span class="target" id="_s_i_scalar_8h_1a7e783c56f337e132d2619d3a39d74214"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarDivide</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarDivide" title="Link to this definition"></a><br /></dt>
+<dd><p>Divides by a scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – The mutable scalar. </p></li>
+<li><p><strong>input2</strong> – The scalar to be divided by. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByRaisingToAPowerWithoutReducingUnit">
+<span class="target" id="_s_i_scalar_8h_1a325f89b6d438e8ba3c4e94abf9f6026d"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByRaisingToAPowerWithoutReducingUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">power</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByRaisingToAPowerWithoutReducingUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by raising to an integer power without reducing unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>power</strong> – The integer power. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarRaiseToAPowerWithoutReducingUnit">
+<span class="target" id="_s_i_scalar_8h_1a0b1bc4c9406666f375e344859e9fb491"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarRaiseToAPowerWithoutReducingUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">power</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarRaiseToAPowerWithoutReducingUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Raises a scalar to an integer power without reducing unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>power</strong> – The integer power. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByRaisingToAPower">
+<span class="target" id="_s_i_scalar_8h_1a2eec1e13d0a6d0d53760ef6472bd11d9"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByRaisingToAPower</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">power</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByRaisingToAPower" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by raising to an integer power. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>power</strong> – The integer power. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarRaiseToAPower">
+<span class="target" id="_s_i_scalar_8h_1aad38100b32c7aa4fa64e37275a05ee59"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarRaiseToAPower</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">power</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarRaiseToAPower" title="Link to this definition"></a><br /></dt>
+<dd><p>Raises a scalar to an integer power. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>power</strong> – The integer power. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByTakingAbsoluteValue">
+<span class="target" id="_s_i_scalar_8h_1aa89d55a244d3c180427f58774dda6cc7"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByTakingAbsoluteValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByTakingAbsoluteValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by taking absolute values. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarTakeAbsoluteValue">
+<span class="target" id="_s_i_scalar_8h_1aac11e962df7fb17aa14ba7caf7668185"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarTakeAbsoluteValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarTakeAbsoluteValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Takes absolute values of a scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByGammaFunctionWithoutReducingUnit">
+<span class="target" id="_s_i_scalar_8h_1a74576e95b0c04077b9c5f46ddf31d684"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByGammaFunctionWithoutReducingUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByGammaFunctionWithoutReducingUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar with Gamma function without reducing unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByTakingNthRoot">
+<span class="target" id="_s_i_scalar_8h_1a2454cac46d96483479031f31e7c85b1d"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByTakingNthRoot</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">root</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByTakingNthRoot" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by taking the Nth root. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>root</strong> – The integer root. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object, or NULL if operation cannot be done. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarTakeNthRoot">
+<span class="target" id="_s_i_scalar_8h_1a6698d80aeea7be6c019e29ab990489da"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarTakeNthRoot</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">root</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarTakeNthRoot" title="Link to this definition"></a><br /></dt>
+<dd><p>Takes the Nth root of the scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>root</strong> – The integer root. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarTakeLog10">
+<span class="target" id="_s_i_scalar_8h_1ada2d52caaaf6fb58818c359a7a542ad7"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarTakeLog10</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarTakeLog10" title="Link to this definition"></a><br /></dt>
+<dd><p>Takes the log10 of the scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>error</strong> – An OCString describing the error. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByZeroingPart">
+<span class="target" id="_s_i_scalar_8h_1a833180590058cdec360e3f19e185d772"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByZeroingPart</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIQuantity.html#c.complexPart" title="complexPart"><span class="n"><span class="pre">complexPart</span></span></a><span class="w"> </span><span class="n"><span class="pre">part</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByZeroingPart" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by zeroing part of its value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>part</strong> – The part to zero. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarZeroPart">
+<span class="target" id="_s_i_scalar_8h_1afe1f8d80b837b328b4145ddce02e4c2f"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarZeroPart</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIQuantity.html#c.complexPart" title="complexPart"><span class="n"><span class="pre">complexPart</span></span></a><span class="w"> </span><span class="n"><span class="pre">part</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarZeroPart" title="Link to this definition"></a><br /></dt>
+<dd><p>Zero part of the scalar’s value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>part</strong> – The part to zero. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarMultiplyByDimensionlessRealConstant">
+<span class="target" id="_s_i_scalar_8h_1ab73c0766cd0fbd00f0a8db08ca65d878"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarMultiplyByDimensionlessRealConstant</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">constant</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarMultiplyByDimensionlessRealConstant" title="Link to this definition"></a><br /></dt>
+<dd><p>Multiplies a scalar by a dimensionless real constant. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>constant</strong> – The dimensionless constant. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByMultiplyingByDimensionlessRealConstant">
+<span class="target" id="_s_i_scalar_8h_1a1d47a6ec624ebf9f6aa9c1b725ae9467"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByMultiplyingByDimensionlessRealConstant</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">constant</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByMultiplyingByDimensionlessRealConstant" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by multiplying by a dimensionless real constant. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>constant</strong> – The dimensionless real constant. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByMultiplyingByDimensionlessComplexConstant">
+<span class="target" id="_s_i_scalar_8h_1ab21479f3800a5f8987efe8cd9f8e6e35"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByMultiplyingByDimensionlessComplexConstant</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="n"><span class="pre">constant</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByMultiplyingByDimensionlessComplexConstant" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by multiplying by a dimensionless complex constant. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>constant</strong> – The dimensionless complex constant. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarMultiplyByDimensionlessComplexConstant">
+<span class="target" id="_s_i_scalar_8h_1a4f64b199974397daed9f9077f13faec5"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarMultiplyByDimensionlessComplexConstant</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="n"><span class="pre">constant</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarMultiplyByDimensionlessComplexConstant" title="Link to this definition"></a><br /></dt>
+<dd><p>Multiplies a scalar by a dimensionless complex constant. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>constant</strong> – The dimensionless constant. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateByConjugation">
+<span class="target" id="_s_i_scalar_8h_1ad525807959f529cf2e377144a9c6bee0"></span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateByConjugation</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateByConjugation" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a scalar by conjugation. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIScalar object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarConjugate">
+<span class="target" id="_s_i_scalar_8h_1a8a4239f31de8e502c21b90874e8f026d"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarConjugate</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIMutableScalarRef" title="SIMutableScalarRef"><span class="n"><span class="pre">SIMutableScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarConjugate" title="Link to this definition"></a><br /></dt>
+<dd><p>Conjugates a scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false, indicating success of operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarShow">
+<span class="target" id="_s_i_scalar_8h_1a2a34dd5cb7346f5c67781f92c9770898"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarShow</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarShow" title="Link to this definition"></a><br /></dt>
+<dd><p>Prints a short descriptor of the scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateStringValue">
+<span class="target" id="_s_i_scalar_8h_1a13d59fede000af553c063ed16d691d04"></span><span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateStringValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateStringValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a string value representation of the scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An OCString object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateNumericStringValue">
+<span class="target" id="_s_i_scalar_8h_1affca2a0f2c0796fa9c9c9aaaccf55e80"></span><span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateNumericStringValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateNumericStringValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a string value representation of the numeric part of the scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An OCString object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateStringValueForPart">
+<span class="target" id="_s_i_scalar_8h_1ae30b1f110e453f8c77e776a7436f69a0"></span><span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateStringValueForPart</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="SIQuantity.html#c.complexPart" title="complexPart"><span class="n"><span class="pre">complexPart</span></span></a><span class="w"> </span><span class="n"><span class="pre">thePart</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateStringValueForPart" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a string value representation for the part of the scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>thePart</strong> – The part of the scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An OCString object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateUnitString">
+<span class="target" id="_s_i_scalar_8h_1a1171ae9900d4eb072b3c3177ad99869a"></span><span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateUnitString</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateUnitString" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a string value representation of the unit of the scalar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An OCString object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateStringValueWithFormat">
+<span class="target" id="_s_i_scalar_8h_1a3e3321d48da28c9f91db264a78ce18cd"></span><span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateStringValueWithFormat</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="n"><span class="pre">format</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateStringValueWithFormat" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a string value representation of the scalar using format. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>format</strong> – The format. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An OCString object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCreateNumericStringValueWithFormat">
+<span class="target" id="_s_i_scalar_8h_1a7a2723bef925a3c95053bb603182d669"></span><span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCreateNumericStringValueWithFormat</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="n"><span class="pre">format</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCreateNumericStringValueWithFormat" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a string value representation of the numeric part of the scalar using format. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>format</strong> – The format. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An OCString object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarAddToArrayAsStringValue">
+<span class="target" id="_s_i_scalar_8h_1a02f00b56378b057972c26e8ea821b2a2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarAddToArrayAsStringValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">OCMutableArrayRef</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarAddToArrayAsStringValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Adds the scalar to an array as a string value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>array</strong> – The array. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarIsReal">
+<span class="target" id="_s_i_scalar_8h_1a91df1367c29fbf1e4fefd17fe319f201"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarIsReal</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarIsReal" title="Link to this definition"></a><br /></dt>
+<dd><p>Tests if scalar is real. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarIsImaginary">
+<span class="target" id="_s_i_scalar_8h_1ac7808439acd27c23c80f1ad58b6a8ae3"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarIsImaginary</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarIsImaginary" title="Link to this definition"></a><br /></dt>
+<dd><p>Tests if scalar is purely imaginary. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarIsComplex">
+<span class="target" id="_s_i_scalar_8h_1a99cf86a454d157cc31ad81ea5112163f"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarIsComplex</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarIsComplex" title="Link to this definition"></a><br /></dt>
+<dd><p>Tests if scalar is complex. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarIsZero">
+<span class="target" id="_s_i_scalar_8h_1a78cc0116b408eac1226b0c318f1f6de6"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarIsZero</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarIsZero" title="Link to this definition"></a><br /></dt>
+<dd><p>Tests if scalar is zero. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarIsInfinite">
+<span class="target" id="_s_i_scalar_8h_1a1b9cffc79ff27fe72e1d56ecae9d0e08"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarIsInfinite</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarIsInfinite" title="Link to this definition"></a><br /></dt>
+<dd><p>Tests if scalar is infinite. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarIsRealNonNegativeInteger">
+<span class="target" id="_s_i_scalar_8h_1a032a7852c3087bf821021113e4918cf5"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarIsRealNonNegativeInteger</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarIsRealNonNegativeInteger" title="Link to this definition"></a><br /></dt>
+<dd><p>Tests if scalar is real and a non-negative integer. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarValidateProposedStringValue">
+<span class="target" id="_s_i_scalar_8h_1adb14dd9e28cd1cda832d64f53eb2033c"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarValidateProposedStringValue</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="n"><span class="pre">proposedStringValue</span></span>, <span class="n"><span class="pre">OCStringRef</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarValidateProposedStringValue" title="Link to this definition"></a><br /></dt>
+<dd><p>Validates whether a proposed string contains a scalar quantity with the same dimensionality as the scalar. </p>
+<p>
+It is the responsibility of the calling method to release the CFError object. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The scalar. </p></li>
+<li><p><strong>proposedStringValue</strong> – Proposed string containing a quantity. </p></li>
+<li><p><strong>error</strong> – Pointer to error message. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean indicating true or false.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarEqual">
+<span class="target" id="_s_i_scalar_8h_1a8520d2fe3bb1dfed954a6ee4a37455d5"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarEqual</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarEqual" title="Link to this definition"></a><br /></dt>
+<dd><p>Determines if the two scalars are equal in every attribute. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The first scalar. </p></li>
+<li><p><strong>input2</strong> – The second scalar. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCompare">
+<span class="target" id="_s_i_scalar_8h_1af0ccf17cf50a58678feb583faecb1b8e"></span><span class="n"><span class="pre">OCComparisonResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCompare</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">scalar</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">otherScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCompare" title="Link to this definition"></a><br /></dt>
+<dd><p>Compares two scalars and returns a comparison result. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scalar</strong> – The first scalar object to compare. </p></li>
+<li><p><strong>otherScalar</strong> – The second scalar object to compare. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A OCComparisonResult constant that indicates whether number is equal to, less than, or greater than otherNumber. Possible values are kOCCompareLessThan, kOCCompareEqualTo, kOCCompareGreaterThan, or kOCCompareUnequalDimensionalities. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCompareReduced">
+<span class="target" id="_s_i_scalar_8h_1aff44cf1ff8c5b5cac231cbf287aec9da"></span><span class="n"><span class="pre">OCComparisonResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCompareReduced</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theOtherScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCompareReduced" title="Link to this definition"></a><br /></dt>
+<dd><p>Compares two scalars in reduced units and returns a comparison result. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The first scalar object to compare. </p></li>
+<li><p><strong>theOtherScalar</strong> – The second scalar object to compare. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A OCComparisonResult constant that indicates whether number is equal to, less than, or greater than otherNumber. Possible values are kOCCompareLessThan, kOCCompareEqualTo, kOCCompareGreaterThan, or kOCCompareUnequalDimensionalities. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIScalarCompareLoose">
+<span class="target" id="_s_i_scalar_8h_1aa27de8bd2878818d18b4b33d5d0e09a6"></span><span class="n"><span class="pre">OCComparisonResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIScalarCompareLoose</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theScalar</span></span>, <a class="reference internal" href="#c.SIScalarRef" title="SIScalarRef"><span class="n"><span class="pre">SIScalarRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theOtherScalar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIScalarCompareLoose" title="Link to this definition"></a><br /></dt>
+<dd><p>Compares two scalars loosely and returns a comparison result. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theScalar</strong> – The first scalar object to compare. </p></li>
+<li><p><strong>theOtherScalar</strong> – The second scalar object to compare. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A OCComparisonResult constant that indicates whether number is equal to, less than, or greater than otherNumber. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<dl class="c union">
+<dt class="sig sig-object c">
+<span class="target" id="union_____s_i_number"></span><span class="k"><span class="pre">union</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">__SINumber</span></span></span><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;SIScalar.h&gt;</em></div>
+<p>SIScalar represents a scalar physical quantity. It is a concrete subtype of SIQuantity. It has three essential attributes: a unit, an elementType, and a numerical value. SIScalar supports four elementTypes: float, double, float complex, and double complex. </p>
+<p>For additional details visit <a class="reference external" href="http://www.PhySy.org">http://www.PhySy.org</a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="c var">
+<dt class="sig sig-object c" id="c.__SINumber.floatValue">
+<span class="target" id="union_____s_i_number_1af8c5fdb7944a48c58e2457e580050579"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">floatValue</span></span></span><a class="headerlink" href="#c.__SINumber.floatValue" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.__SINumber.doubleValue">
+<span class="target" id="union_____s_i_number_1ae2263a21b6c8ea08819bdc418bd63139"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">doubleValue</span></span></span><a class="headerlink" href="#c.__SINumber.doubleValue" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.__SINumber.floatComplexValue">
+<span class="target" id="union_____s_i_number_1a0a24170890d11b206b2f143391c66b0e"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">floatComplexValue</span></span></span><a class="headerlink" href="#c.__SINumber.floatComplexValue" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.__SINumber.doubleComplexValue">
+<span class="target" id="union_____s_i_number_1aa754a8769622971de0ac42891746ac6b"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="kt"><span class="pre">_Complex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">doubleComplexValue</span></span></span><a class="headerlink" href="#c.__SINumber.doubleComplexValue" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SIQuantity.html" class="btn btn-neutral float-left" title="SIQuantity" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SIScalarConstants.html" class="btn btn-neutral float-right" title="SIScalarConstants" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

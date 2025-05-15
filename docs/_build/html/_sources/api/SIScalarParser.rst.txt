@@ -1,0 +1,4 @@
+SIScalarParser
+==============
+
+.. doxygenfile:: SIScalarParser.h

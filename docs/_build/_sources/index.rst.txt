@@ -1,0 +1,22 @@
+SITypes 
+=======
+
+A lightweight library for using physical quantities in C.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Background
+
+   background
+
+.. doxygenfile:: _s_i_dimensionality_8h.xml
+.. doxygenfile:: _s_i_quantity_8h.xml
+.. doxygenfile:: _s_i_scalar_8h.xml
+.. doxygenfile:: _s_i_unit_8h.xml
+.. doxygenfile:: _s_i_scalar_constants_8h.xml
+
+Indices and Tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`

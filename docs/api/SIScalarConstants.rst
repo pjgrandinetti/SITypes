@@ -1,0 +1,4 @@
+SIScalarConstants
+=================
+
+.. doxygenfile:: SIScalarConstants.h
