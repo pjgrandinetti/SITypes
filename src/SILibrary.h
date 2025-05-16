@@ -1,15 +1,25 @@
-//
-//  SILibrary.h
-//  SITypes
-//
-//  Created by Philip Grandinetti on 6/13/17.
-//  Copyright © 2017 PhySy Ltd. All rights reserved.
-//
+/**
+ * @file SILibrary.h
+ * @brief Core definitions, macros, and types for the SITypes library.
+ *
+ * This header centralizes the core types and helper macros used throughout
+ * the SITypes framework, and then includes all the public SITypes APIs.
+ */
 
 #ifndef SILibrary_h
 #define SILibrary_h
 
-#include <stdio.h> // For printf used in macros
+#include <stdio.h> 
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+// Forward declarations for all opaque struct types
+struct __SIDimensionality;
+struct __SIUnit;
+struct __SIQuantity;
+struct __SIScalar;
+
 #include <OCTypes/OCLibrary.h>
 
 #include "SIDimensionality.h"

@@ -193,7 +193,7 @@ void SIScalarSetDoubleComplexValue(SIMutableScalarRef theScalar, double complex 
  * @param theScalar The mutable scalar.
  * @param elementType The element type.
  */
-void SIScalarSetElementType(SIMutableScalarRef theScalar, numberType elementType);
+void SIScalarSetElementType(SIMutableScalarRef theScalar, SINumberType elementType);
 
 /**
  * @brief Returns a float value.
@@ -311,7 +311,7 @@ double complex SIScalarDoubleComplexValueInCoherentUnit(SIScalarRef theScalar);
  * and down conversion from complex to real loses the imaginary part
  * of the quantity.
  */
-SIScalarRef SIScalarCreateByConvertingToNumberType(SIScalarRef theScalar, numberType elementType);
+SIScalarRef SIScalarCreateByConvertingToNumberType(SIScalarRef theScalar, SINumberType elementType);
 
 /**
  * @brief Takes the complex number part of a scalar.

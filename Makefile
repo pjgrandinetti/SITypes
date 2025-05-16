@@ -19,7 +19,8 @@ OCT_LIBDIR   := $(OCTYPES_DIR)/lib
 
 # Compiler flags (ensure OCT_INCLUDE is set here)
 CFLAGS  := -I . -I src -I$(OCT_INCLUDE) -O3 -Wall -Wextra \
-           -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers
+           -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers \
+           -Wno-unused-function
 
 # Flex/Bison inputs (only *Parser.y)
 LEX_SRC  := $(wildcard $(SRC_DIR)/*.l)
@@ -140,22 +141,16 @@ test-asan: libSITypes.a $(TEST_OBJ)
 	@echo "Running AddressSanitizer build…"
 	@./runTests.asan
 
-# Documentation
-# Build API docs (Doxygen XML + Sphinx HTML)
+# Documentation targets
 docs:
 	@echo "Generating Doxygen XML output…"
 	@mkdir -p docs/doxygen/xml
-	@doxygen Doxyfile
+	@cd docs && doxygen Doxyfile
 	@echo "Building Sphinx documentation…"
-	@cd docs && sphinx-build -E -v -b html . _build/html
+	@cd docs && sphinx-build -E -v -b html . _build
 
-# Install Python doc requirements
-docs-setup:
-	@echo "Installing Python doc requirements…"
-	@pip install -r docs/requirements.txt
-
-# Clean documentation
 clean-docs:
+	@echo "Cleaning documentation…"
 	@rm -rf docs/doxygen docs/_build
 
 clean-objects:

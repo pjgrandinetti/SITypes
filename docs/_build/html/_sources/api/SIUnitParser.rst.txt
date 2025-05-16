@@ -1,4 +1,0 @@
-SIUnitParser
-============
-
-.. doxygenfile:: SIUnitParser.h

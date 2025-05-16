@@ -29,7 +29,7 @@ extensions = [
 templates_path = ['_templates']
 
 # List of patterns, relative to source directory, that match files to ignore.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = []
 
 # -- Breathe configuration --------------------------------------------------
 
@@ -48,17 +48,6 @@ html_theme = 'sphinx_rtd_theme'
 
 # If you have no static files at all (you removed _static), clear this:
 html_static_path = []
-
-# -- HTML sidebar configuration (to match OCTypes style) --
-
-html_sidebars = {
-    '**': [
-        'globaltoc.html',
-        'relations.html',  # next/prev links
-        'sourcelink.html',
-        'searchbox.html',
-    ]
-}
 
 # ——— Breathe/C domain fixes ———
 # Ensure that C files and headers use the C domain in Sphinx/breathe

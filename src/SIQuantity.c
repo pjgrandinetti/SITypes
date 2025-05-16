@@ -15,7 +15,7 @@ struct __SIQuantity {
 
     // __SIQuantity Type attributes
     SIUnitRef       unit;
-    numberType      type;
+    SINumberType    type;
 };
 
 SIUnitRef SIQuantityGetUnit(SIQuantityRef quantity)
@@ -39,14 +39,14 @@ SIDimensionalityRef SIQuantityGetUnitDimensionality(SIQuantityRef quantity)
     return SIUnitGetDimensionality(theQuantity->unit);
 }
 
-numberType SIQuantityGetElementType(SIQuantityRef quantity)
+SINumberType SIQuantityGetElementType(SIQuantityRef quantity)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(quantity,kOCNumberFloat32Type);
+    IF_NO_OBJECT_EXISTS_RETURN(quantity,kSINumberFloat32Type);
     SIQuantityRef theQuantity = (SIQuantityRef) quantity;
     return theQuantity->type;
 }
 
-bool SIQuantityHasElementType(SIQuantityRef quantity, numberType elementType)
+bool SIQuantityHasElementType(SIQuantityRef quantity, SINumberType elementType)
 {
     IF_NO_OBJECT_EXISTS_RETURN(quantity,NULL);
     SIQuantityRef theQuantity = (SIQuantityRef) quantity;
@@ -57,7 +57,7 @@ bool SIQuantityHasElementType(SIQuantityRef quantity, numberType elementType)
 bool SIQuantityIsComplexType(SIQuantityRef theQuantity)
 {
     IF_NO_OBJECT_EXISTS_RETURN(theQuantity,false);
-    if(theQuantity->type==kOCNumberFloat32ComplexType || theQuantity->type==kOCNumberFloat64ComplexType) return true;
+    if(theQuantity->type==kSINumberFloat32ComplexType || theQuantity->type==kSINumberFloat64ComplexType) return true;
     return false;
 }
 
@@ -95,61 +95,61 @@ bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2)
     return SIDimensionalityEqual(SIQuantityGetUnitDimensionality(quantity1), SIQuantityGetUnitDimensionality(quantity2));
 }
 
-numberType SIQuantityBestElementType(SIQuantityRef input1, SIQuantityRef input2)
+SINumberType SIQuantityBestElementType(SIQuantityRef input1, SIQuantityRef input2)
 {
     SIQuantityRef quantity1 = (SIQuantityRef) input1;
     SIQuantityRef quantity2 = (SIQuantityRef) input2;
     switch (quantity1->type) {
-        case kOCNumberFloat32Type: {
+        case kSINumberFloat32Type: {
             switch (quantity2->type) {
-                case kOCNumberFloat32Type:
-                    return kOCNumberFloat32Type;
-                case kOCNumberFloat64Type:
-                    return kOCNumberFloat64Type;
-                case kOCNumberFloat32ComplexType:
-                    return kOCNumberFloat32ComplexType;
-                case kOCNumberFloat64ComplexType:
-                    return kOCNumberFloat64ComplexType;
+                case kSINumberFloat32Type:
+                    return kSINumberFloat32Type;
+                case kSINumberFloat64Type:
+                    return kSINumberFloat64Type;
+                case kSINumberFloat32ComplexType:
+                    return kSINumberFloat32ComplexType;
+                case kSINumberFloat64ComplexType:
+                    return kSINumberFloat64ComplexType;
             }
         }
-        case kOCNumberFloat64Type: {
+        case kSINumberFloat64Type: {
             switch (quantity2->type) {
-                case kOCNumberFloat32Type:
-                    return kOCNumberFloat64Type;
-                case kOCNumberFloat64Type:
-                    return kOCNumberFloat64Type;
-                    return kOCNumberFloat64ComplexType;
-                case kOCNumberFloat32ComplexType:
-                    return kOCNumberFloat64ComplexType;
-                case kOCNumberFloat64ComplexType:
-                    return kOCNumberFloat64ComplexType;
+                case kSINumberFloat32Type:
+                    return kSINumberFloat64Type;
+                case kSINumberFloat64Type:
+                    return kSINumberFloat64Type;
+                    return kSINumberFloat64ComplexType;
+                case kSINumberFloat32ComplexType:
+                    return kSINumberFloat64ComplexType;
+                case kSINumberFloat64ComplexType:
+                    return kSINumberFloat64ComplexType;
             }
         }
-        case kOCNumberFloat32ComplexType: {
+        case kSINumberFloat32ComplexType: {
             switch (quantity2->type) {
-                case kOCNumberFloat32Type:
-                    return kOCNumberFloat32ComplexType;
-                case kOCNumberFloat64Type:
-                    return kOCNumberFloat64ComplexType;
-                case kOCNumberFloat32ComplexType:
-                    return kOCNumberFloat32ComplexType;
-                case kOCNumberFloat64ComplexType:
-                    return kOCNumberFloat64ComplexType;
+                case kSINumberFloat32Type:
+                    return kSINumberFloat32ComplexType;
+                case kSINumberFloat64Type:
+                    return kSINumberFloat64ComplexType;
+                case kSINumberFloat32ComplexType:
+                    return kSINumberFloat32ComplexType;
+                case kSINumberFloat64ComplexType:
+                    return kSINumberFloat64ComplexType;
             }
         }
-        case kOCNumberFloat64ComplexType:
-            return kOCNumberFloat64ComplexType;
+        case kSINumberFloat64ComplexType:
+            return kSINumberFloat64ComplexType;
     }
 }
 
-numberType SIQuantityLargerElementType(SIQuantityRef input1, SIQuantityRef input2)
+SINumberType SIQuantityLargerElementType(SIQuantityRef input1, SIQuantityRef input2)
 {
     SIQuantityRef quantity1 = (SIQuantityRef) input1;
     SIQuantityRef quantity2 = (SIQuantityRef) input2;
     return (quantity1->type > quantity2->type) ? quantity1->type: quantity2->type;
 }
 
-numberType SIQuantitySmallerElementType(SIQuantityRef input1, SIQuantityRef input2)
+SINumberType SIQuantitySmallerElementType(SIQuantityRef input1, SIQuantityRef input2)
 {
     SIQuantityRef quantity1 = (SIQuantityRef) input1;
     SIQuantityRef quantity2 = (SIQuantityRef) input2;

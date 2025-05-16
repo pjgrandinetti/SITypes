@@ -1,4 +1,0 @@
-SIDimensionalityParser
-======================
-
-.. doxygenfile:: SIDimensionalityParser.h

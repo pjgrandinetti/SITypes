@@ -1,0 +1,457 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIQuantity &mdash; SITypes 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SIScalar" href="SIScalar.html" />
+    <link rel="prev" title="SILibrary" href="SILibrary.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SITypes
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../background.html">Background</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="SIDimensionality.html">SIDimensionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SILibrary.html">SILibrary</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SIQuantity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityRef"><code class="docutils literal notranslate"><span class="pre">SIQuantityRef</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.complexPart"><code class="docutils literal notranslate"><span class="pre">complexPart</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#c.complexPart.kSIRealPart"><code class="docutils literal notranslate"><span class="pre">kSIRealPart</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.complexPart.kSIImaginaryPart"><code class="docutils literal notranslate"><span class="pre">kSIImaginaryPart</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.complexPart.kSIMagnitudePart"><code class="docutils literal notranslate"><span class="pre">kSIMagnitudePart</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.complexPart.kSIArgumentPart"><code class="docutils literal notranslate"><span class="pre">kSIArgumentPart</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SINumberType"><code class="docutils literal notranslate"><span class="pre">SINumberType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#c.SINumberType.kSINumberFloat32Type"><code class="docutils literal notranslate"><span class="pre">kSINumberFloat32Type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.SINumberType.kSINumberFloat64Type"><code class="docutils literal notranslate"><span class="pre">kSINumberFloat64Type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.SINumberType.kSINumberFloat32ComplexType"><code class="docutils literal notranslate"><span class="pre">kSINumberFloat32ComplexType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.SINumberType.kSINumberFloat64ComplexType"><code class="docutils literal notranslate"><span class="pre">kSINumberFloat64ComplexType</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityGetUnit"><code class="docutils literal notranslate"><span class="pre">SIQuantityGetUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantitySetUnit"><code class="docutils literal notranslate"><span class="pre">SIQuantitySetUnit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityGetUnitDimensionality"><code class="docutils literal notranslate"><span class="pre">SIQuantityGetUnitDimensionality()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityGetElementType"><code class="docutils literal notranslate"><span class="pre">SIQuantityGetElementType()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityElementSize"><code class="docutils literal notranslate"><span class="pre">SIQuantityElementSize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityHasElementType"><code class="docutils literal notranslate"><span class="pre">SIQuantityHasElementType()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityIsComplexType"><code class="docutils literal notranslate"><span class="pre">SIQuantityIsComplexType()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityHasDimensionality"><code class="docutils literal notranslate"><span class="pre">SIQuantityHasDimensionality()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityHasSameDimensionality"><code class="docutils literal notranslate"><span class="pre">SIQuantityHasSameDimensionality()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityHasSameReducedDimensionality"><code class="docutils literal notranslate"><span class="pre">SIQuantityHasSameReducedDimensionality()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityLargerElementType"><code class="docutils literal notranslate"><span class="pre">SIQuantityLargerElementType()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantitySmallerElementType"><code class="docutils literal notranslate"><span class="pre">SIQuantitySmallerElementType()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c.SIQuantityBestElementType"><code class="docutils literal notranslate"><span class="pre">SIQuantityBestElementType()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="SIScalar.html">SIScalar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SIScalarConstants.html">SIScalarConstants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SIUnit.html">SIUnit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SITypes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">SIQuantity</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/SIQuantity.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="siquantity">
+<h1>SIQuantity<a class="headerlink" href="#siquantity" title="Link to this heading"></a></h1>
+<p>Declares the SIQuantity interface for representing and manipulating physical quantities. </p>
+<p>SIQuantity provides an abstract interface for physical quantities, associating a value (of a specific element type) with a unit and dimensionality. The API is CoreFoundation-style, with explicit memory management and reference counting.</p>
+<p>SIQuantity objects are immutable by default; use SIMutableQuantityRef for mutable variants.</p>
+<p>This interface supports querying and manipulating the unit, dimensionality, and element type of a quantity, as well as type and dimensionality comparisons.</p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Philip Grandinetti </p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>PhySy Ltd. </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="c type">
+<dt class="sig sig-object c" id="c.SIQuantityRef">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a8c892c252798bedbc27e72c50ab8ae3f"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">__SIQuantity</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityRef</span></span></span><a class="headerlink" href="#c.SIQuantityRef" title="Link to this definition"></a><br /></dt>
+<dd><p>Reference to a SIQuantity object. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="c enum">
+<dt class="sig sig-object c" id="c.complexPart">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a5983127ddf9bb6c2e0569779bb8f5528"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">complexPart</span></span></span><a class="headerlink" href="#c.complexPart" title="Link to this definition"></a><br /></dt>
+<dd><p>Parts of a complex number. </p>
+<p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.complexPart.kSIRealPart">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a5983127ddf9bb6c2e0569779bb8f5528af1cd678e8ab634f3088f20c5fadb572e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kSIRealPart</span></span></span><a class="headerlink" href="#c.complexPart.kSIRealPart" title="Link to this definition"></a><br /></dt>
+<dd><p>Real part of complex number. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.complexPart.kSIImaginaryPart">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a5983127ddf9bb6c2e0569779bb8f5528a267d6b1901571f5e9371c1888360bc77"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kSIImaginaryPart</span></span></span><a class="headerlink" href="#c.complexPart.kSIImaginaryPart" title="Link to this definition"></a><br /></dt>
+<dd><p>Imaginary part of complex number. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.complexPart.kSIMagnitudePart">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a5983127ddf9bb6c2e0569779bb8f5528ab6a1f5970ae3e770c5c1336ff7580f2e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kSIMagnitudePart</span></span></span><a class="headerlink" href="#c.complexPart.kSIMagnitudePart" title="Link to this definition"></a><br /></dt>
+<dd><p>Magnitude part of complex number. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.complexPart.kSIArgumentPart">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a5983127ddf9bb6c2e0569779bb8f5528a2a2103627466109bc19992cc4fe87b95"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kSIArgumentPart</span></span></span><a class="headerlink" href="#c.complexPart.kSIArgumentPart" title="Link to this definition"></a><br /></dt>
+<dd><p>Argument part of complex number. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="c enum">
+<dt class="sig sig-object c" id="c.SINumberType">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a82ebdcacb679f14f5c4fc95a9523df82"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SINumberType</span></span></span><a class="headerlink" href="#c.SINumberType" title="Link to this definition"></a><br /></dt>
+<dd><p>valid number types for SIQuantity. </p>
+<p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.SINumberType.kSINumberFloat32Type">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a82ebdcacb679f14f5c4fc95a9523df82ac0cf832d8b3d36ae5b7efe8e3113481c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kSINumberFloat32Type</span></span></span><a class="headerlink" href="#c.SINumberType.kSINumberFloat32Type" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.SINumberType.kSINumberFloat64Type">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a82ebdcacb679f14f5c4fc95a9523df82a3ae9fd78dca457cb76ffcaea81726fbf"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kSINumberFloat64Type</span></span></span><a class="headerlink" href="#c.SINumberType.kSINumberFloat64Type" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.SINumberType.kSINumberFloat32ComplexType">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a82ebdcacb679f14f5c4fc95a9523df82a1771910edbb2f3e537d106dad71f9470"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kSINumberFloat32ComplexType</span></span></span><a class="headerlink" href="#c.SINumberType.kSINumberFloat32ComplexType" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.SINumberType.kSINumberFloat64ComplexType">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a82ebdcacb679f14f5c4fc95a9523df82a71bdd717f16806a852e3944242193ee2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kSINumberFloat64ComplexType</span></span></span><a class="headerlink" href="#c.SINumberType.kSINumberFloat64ComplexType" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityGetUnit">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a85fe1c490d173650857b2fc886312ea5"></span><a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityGetUnit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">quantity</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityGetUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the quantity’s unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantity</strong> – The quantity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIUnit object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantitySetUnit">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a0a20ece39efbee914e6c6c82ffa4924e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantitySetUnit</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SIMutableQuantityRef</span></span><span class="w"> </span><span class="n"><span class="pre">quantity</span></span>, <a class="reference internal" href="SIUnit.html#c.SIUnitRef" title="SIUnitRef"><span class="n"><span class="pre">SIUnitRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantitySetUnit" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the quantity’s unit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantity</strong> – The quantity. </p></li>
+<li><p><strong>unit</strong> – The unit. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityGetUnitDimensionality">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a14643fee1abd13f28f5cafc21cc07d9b"></span><span class="n"><span class="pre">SIDimensionalityRef</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityGetUnitDimensionality</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">quantity</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityGetUnitDimensionality" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the quantity’s dimensionality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantity</strong> – The quantity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SIDimensionality object. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityGetElementType">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a884001a98b7661a3f99c5d24a7b97b88"></span><a class="reference internal" href="#c.SINumberType" title="SINumberType"><span class="n"><span class="pre">SINumberType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityGetElementType</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">quantity</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityGetElementType" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the type used by a quantity to store its values. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantity</strong> – The quantity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The element type. Possible values are kSINumberFloatType, kSINumberDoubleType, kSINumberFloatComplexType, and kSINumberDoubleComplexType. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityElementSize">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1acb54e838e6fbd487ce564f9bf7fa7148"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityElementSize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">quantity</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityElementSize" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns size (in bytes) of a quantity element. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantity</strong> – The quantity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The size. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityHasElementType">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a10f0d3b4ac115882698171999f91ad63"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityHasElementType</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">quantity</span></span>, <a class="reference internal" href="#c.SINumberType" title="SINumberType"><span class="n"><span class="pre">SINumberType</span></span></a><span class="w"> </span><span class="n"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityHasElementType" title="Link to this definition"></a><br /></dt>
+<dd><p>Tests if quantity has a specific element type. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantity</strong> – The quantity. </p></li>
+<li><p><strong>elementType</strong> – The element type. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityIsComplexType">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1adc45929ee8d43f12f9157b95891768b7"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityIsComplexType</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">theQuantity</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityIsComplexType" title="Link to this definition"></a><br /></dt>
+<dd><p>Tests if quantity has a complex element type. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theQuantity</strong> – The quantity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityHasDimensionality">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1aaa984eafb9fb5df373a9c82a1f379e96"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityHasDimensionality</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">quantity</span></span>, <span class="n"><span class="pre">SIDimensionalityRef</span></span><span class="w"> </span><span class="n"><span class="pre">theDimensionality</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityHasDimensionality" title="Link to this definition"></a><br /></dt>
+<dd><p>Tests if quantity has a specific dimensionality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantity</strong> – The quantity. </p></li>
+<li><p><strong>theDimensionality</strong> – The dimensionality. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityHasSameDimensionality">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a3d1672e8e55ae838803b1ff4b2a57272"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityHasSameDimensionality</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityHasSameDimensionality" title="Link to this definition"></a><br /></dt>
+<dd><p>Determines if two quantities have the same dimensionality exponents. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The first quantity. </p></li>
+<li><p><strong>input2</strong> – The second quantity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityHasSameReducedDimensionality">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a86e3702ac5155ce4e89dd3107ecb3d82"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityHasSameReducedDimensionality</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityHasSameReducedDimensionality" title="Link to this definition"></a><br /></dt>
+<dd><p>Determines if two quantities have the same reduced dimensionality exponents. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The first quantity. </p></li>
+<li><p><strong>input2</strong> – The second quantity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True or false. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityLargerElementType">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a324a301ea6f8b7fd1a59b294f50f33d1"></span><a class="reference internal" href="#c.SINumberType" title="SINumberType"><span class="n"><span class="pre">SINumberType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityLargerElementType</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityLargerElementType" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns larger element type for the two input quantities. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The first SIQuantity. </p></li>
+<li><p><strong>input2</strong> – The second SIQuantity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The larger <a class="reference internal" href="#d3/d80/_s_i_quantity_8h_1a82ebdcacb679f14f5c4fc95a9523df82"><span class="std std-ref">SINumberType</span></a> of the two quantities. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantitySmallerElementType">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1a48cb9951bb313d4523f469a2ec5bae07"></span><a class="reference internal" href="#c.SINumberType" title="SINumberType"><span class="n"><span class="pre">SINumberType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantitySmallerElementType</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantitySmallerElementType" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns smaller element type for the two input quantities. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The first SIQuantity. </p></li>
+<li><p><strong>input2</strong> – The second SIQuantity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The smaller <a class="reference internal" href="#d3/d80/_s_i_quantity_8h_1a82ebdcacb679f14f5c4fc95a9523df82"><span class="std std-ref">SINumberType</span></a> of the two quantities. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.SIQuantityBestElementType">
+<span class="target" id="d3/d80/_s_i_quantity_8h_1abb263779266ba63a920d7ebb141684ee"></span><a class="reference internal" href="#c.SINumberType" title="SINumberType"><span class="n"><span class="pre">SINumberType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SIQuantityBestElementType</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input1</span></span>, <a class="reference internal" href="#c.SIQuantityRef" title="SIQuantityRef"><span class="n"><span class="pre">SIQuantityRef</span></span></a><span class="w"> </span><span class="n"><span class="pre">input2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.SIQuantityBestElementType" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the best element type for the two input quantities. </p>
+<p>
+Returns the best element type for the two input quantities which loses no precision when the quantities are combined in any way: add, subtract, multiply, divide. Input element types and outputs are:</p>
+<p>(float and float) =&gt; float</p>
+<p>(float and double) =&gt; double</p>
+<p>(float and float complex) =&gt; float complex</p>
+<p>(float and double complex) =&gt; double complex</p>
+<p>(double and double) =&gt; double</p>
+<p>(double and float complex) =&gt; double complex</p>
+<p>(double and double complex) =&gt; double complex</p>
+<p>(float complex and float complex) =&gt; float complex</p>
+<p>(float complex and double complex) =&gt; double complex</p>
+<p>(double complex and double complex) =&gt; double complex </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input1</strong> – The first SIQuantity. </p></li>
+<li><p><strong>input2</strong> – The second SIQuantity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The best <a class="reference internal" href="#d3/d80/_s_i_quantity_8h_1a82ebdcacb679f14f5c4fc95a9523df82"><span class="std std-ref">SINumberType</span></a> from the two quantities.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SILibrary.html" class="btn btn-neutral float-left" title="SILibrary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SIScalar.html" class="btn btn-neutral float-right" title="SIScalar" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
