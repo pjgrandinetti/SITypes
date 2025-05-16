@@ -26,9 +26,16 @@ Makefile.cmake
 CTestTestfile.cmake
 
 # Flex/Bison generated files
-OCComplexScanner.c
-OCComplexParser.tab.c
-OCComplexParser.tab.h
+lex.sis.c
+SIScalarScanner.c
+SIScalarParser.tab.c
+SIScalarParser.tab.h
+SIUnitScanner.c
+SIUnitParser.tab.c
+SIUnitParser.tab.h
+SIDimensionalityScanner.c
+SIDimensionalityParser.tab.c
+SIDimensionalityParser.tab.h
 
 # Xcode project files and workspace settings
 *.xcworkspace
