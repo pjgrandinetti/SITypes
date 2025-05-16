@@ -32,8 +32,12 @@ int main(int argc, const char * argv[]) {
     unitTest0();
     unitTest1();
     unitTest3();
+    unitTest4();
+    unitTest5();
+    unitTest6();
 
     scalarTest1();
     scalarTest2();
+    scalarTest3();
 
 }

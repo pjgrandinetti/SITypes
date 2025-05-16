@@ -1,4 +1,0 @@
-SIScalar
-========
-
-.. doxygenfile:: SIScalar.h

@@ -1,4 +1,0 @@
-SIQuantity
-==========
-
-.. doxygenfile:: SIQuantity.h

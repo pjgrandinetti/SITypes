@@ -1663,13 +1663,13 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *errorStr
     if(OCStringCompare(string,kSIQuantityDimensionless,kOCCompareCaseInsensitive) == kOCCompareEqualTo) return NULL;
     
     OCMutableStringRef  mutString = OCStringCreateMutableCopy ( string);
-    
+
     OCStringFindAndReplace (mutString,STR("*"), STR("•"),OCRangeMake(0,OCStringGetLength(mutString)),0);
-    
+
     result = SIScalarCreateWithStringContainingSingleUnitFromLibrary(mutString);
     if(result) return result;
     
-    
+
     result = NULL;
     scalarErrorString = NULL;
     // check for and get the final conversion unit

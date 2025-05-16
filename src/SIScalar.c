@@ -1002,7 +1002,7 @@ bool SIScalarSubtract(SIMutableScalarRef target, SIScalarRef input2, OCStringRef
     }
     
     switch(input2->type) {
-        case kOCNumberFloat32Type: {
+        case kSINumberFloat32Type: {
             float value = SIScalarFloatValueInUnit(input2, target->unit, NULL);
             switch (target->type) {
                 case kOCNumberFloat32Type: {
@@ -1963,6 +1963,7 @@ SIScalarRef SIScalarCreateByZeroingPart(SIScalarRef theScalar, complexPart part)
 
 SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef theString)
 {
+
     OCMutableStringRef  mutString = OCStringCreateMutableCopy (theString);
     OCStringFindAndReplace2 (mutString,STR("×"), STR("*"));
     OCStringFindAndReplace2 (mutString,STR("÷"), STR("/"));
@@ -1988,7 +1989,7 @@ SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef 
     // See how many unit symbols are in the string
     // For ones that are found, save their values, range, and determine the largest length symbol present
     OCMutableArrayRef unitsFound = OCArrayCreateMutable(0,&kOCTypeArrayCallBacks);
-    OCMutableArrayRef ranges = OCArrayCreateMutable(0,&kOCTypeArrayCallBacks);
+    OCMutableArrayRef ranges = OCArrayCreateMutable(0,NULL);
     uint64_t maximumLength = 0;
     OCRange fullRange = OCRangeMake(0, length);
     
@@ -2034,6 +2035,7 @@ SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef 
         return NULL;
     }
     
+
     // some unit symbols found.  Which one and how many are the largest
     uint64_t largestSymbols = 0;
     uint64_t largestSymbolIndex = 0;
@@ -2104,7 +2106,6 @@ SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef 
         }
     }
     
-    
     unitsFoundCount = OCArrayGetCount(unitsFound);
     // if none, then return null
     if(unitsFoundCount == 0) {
@@ -2120,6 +2121,7 @@ SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef 
     
     // if one, then try to construct scalar
     if(unitsFoundCount == 1) {
+
         // Unit should not be followed by anything except spaces
         OCMutableStringRef mutLargestSymbol = OCStringCreateMutableCopy(largestSymbol);
         OCStringFindAndReplace2 (mutLargestSymbol,STR(" "), STR(""));
@@ -2168,6 +2170,7 @@ SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef 
         if(rangeFound) free(rangeFound);
         OCRelease(ranges);
         
+
         if(SIScalarIsReal(scalar)) {
             SIScalarRef realResult = SIScalarCreateByTakingComplexPart(scalar,kSIRealPart);
             OCRelease(mutString);
@@ -2865,6 +2868,7 @@ OCComparisonResult SIScalarCompare(SIScalarRef theScalar, SIScalarRef theOtherSc
 {
     if(NULL==theScalar) {
         IF_NO_OBJECT_EXISTS_RETURN(theScalar,kOCCompareError);
+        
     }
     if(NULL==theOtherScalar) {
         IF_NO_OBJECT_EXISTS_RETURN(theOtherScalar,kOCCompareError);

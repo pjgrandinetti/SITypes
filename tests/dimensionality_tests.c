@@ -1,4 +1,4 @@
-#include "SILibrary.h"
+#include "../src/SILibrary.h"
 #include <stdio.h>
 
 #ifndef PRINTERROR
@@ -72,6 +72,45 @@ bool dimensionalityTest2(void) {
 
     if (!SIDimensionalityEqual(dimensionality, mass)) PRINTERROR;
 
+    fprintf(stderr, "%s end...without problems\n", __func__);
+    return true;
+}
+
+bool dimensionalityTest3(void) {
+    fprintf(stderr, "%s begin...\n", __func__);
+    OCStringRef error = NULL;
+    // Test equality for commutative symbols
+    SIDimensionalityRef dim1 = SIDimensionalityForSymbol(STR("L*M"), &error);
+    SIDimensionalityRef dim2 = SIDimensionalityForSymbol(STR("M*L"), &error);
+    if (!SIDimensionalityEqual(dim1, dim2)) PRINTERROR;
+    // Test reduced exponents for mixed powers
+    SIDimensionalityRef dim3 = SIDimensionalityForSymbol(STR("L^3*M^-2*T"), &error);
+    if (!SIDimensionalityHasReducedExponents(dim3, 3, -2, 1, 0, 0, 0, 0)) PRINTERROR;
+    // Test dimensionless
+    SIDimensionalityRef dless = SIDimensionalityDimensionless();
+    if (!SIDimensionalityIsDimensionless(dless) || SIDimensionalityIsDerived(dless)) PRINTERROR;
+    // Test base dimension index and symbol consistency
+    for (int i = kSILengthIndex; i <= kSILuminousIntensityIndex; i++) {
+        SIDimensionalityRef baseDim = SIDimensionalityForBaseDimensionIndex((SIBaseDimensionIndex)i);
+        if (!SIDimensionalityIsBaseDimensionality(baseDim)) PRINTERROR;
+        if (SIDimensionalityGetNumeratorExponentAtIndex(baseDim, i) != 1) PRINTERROR;
+        for (int j = kSILengthIndex; j <= kSILuminousIntensityIndex; j++) {
+            if (i != j) {
+                if (SIDimensionalityGetNumeratorExponentAtIndex(baseDim, (SIBaseDimensionIndex)j) != 0) PRINTERROR;
+            }
+        }
+        OCRelease(baseDim);
+    }
+    // Test WithBaseDimensionSymbol
+    SIDimensionalityRef bySym = SIDimensionalityWithBaseDimensionSymbol(STR("L"), &error);
+    SIDimensionalityRef byIdx = SIDimensionalityForBaseDimensionIndex(kSILengthIndex);
+    if (!SIDimensionalityEqual(bySym, byIdx)) PRINTERROR;
+    OCRelease(bySym);
+    OCRelease(byIdx);
+    OCRelease(dim1);
+    OCRelease(dim2);
+    OCRelease(dim3);
+    OCRelease(dless);
     fprintf(stderr, "%s end...without problems\n", __func__);
     return true;
 }
