@@ -30,6 +30,12 @@ int main(int argc, const char * argv[]) {
     test_dimensionality_1();
     test_dimensionality_2();
     test_dimensionality_3();
+    test_dimensionality_show();
+    test_dimensionality_symbol_acceleration();
+    test_dimensionality_divide_mass();
+    test_dimensionality_multiply_work();
+    test_dimensionality_power_area();
+    test_dimensionality_reduction_behavior();
 
     printf("\n=== SIUnit Tests ===\n");
     test_unit_0();
@@ -43,6 +49,13 @@ int main(int argc, const char * argv[]) {
     test_scalar_1();
     test_scalar_2();
     test_scalar_3();
+    test_scalar_4();
+    test_scalar_5();
+    test_scalar_6();
+    test_scalar_7();
+    test_scalar_8();
+    test_scalar_error();
+    test_scalar_ideal_gas();
 
     // Print summary message if all tests pass
     printf("\nAll tests passed\n");
