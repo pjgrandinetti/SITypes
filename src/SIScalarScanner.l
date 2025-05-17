@@ -8,6 +8,7 @@
     #include "SIScalarParser.h"
     #include "SIScalar.tab.h"
     static double complex temp;
+    extern OCStringRef scalarError;  // forward declare parser's error string
 %}
 
 %x together
@@ -87,7 +88,7 @@ STRING \[[()a-zA-Z][()a-zA-Z0-9]*\*?[()a-zA-Z0-9]*\]
 "t_½"         {sislval.const_fn = BC_Isotope_HalfLife; return CONST_FUNC;}
 
 "&hbar" {double multiplier = 1;
-    SIUnitRef unit = SIUnitForSymbol(STR("ℏ"),&multiplier, &scalarErrorString);
+    SIUnitRef unit = SIUnitForSymbol(STR("ℏ"),&multiplier, &scalarError);
     sislval.d = SIScalarCreateWithDouble(multiplier,unit);
     return SCALAR;}
 
@@ -124,10 +125,11 @@ I[ ]*\*[ ]*{REALNUMBER} {
 {UNIT} {
     OCStringRef string = OCStringCreateWithCString(yytext);
     double unit_multiplier = 1;
-    SIUnitRef unit = SIUnitForSymbol(string, &unit_multiplier, &scalarErrorString);
+    SIUnitRef unit = SIUnitForSymbol(string, &unit_multiplier, &scalarError);
     if(unit == NULL) {
+        if(string) OCRelease(string);
         yyterminate();
-    }
+        }
     sislval.d = SIScalarCreateWithDouble(unit_multiplier, unit);
     OCRelease(string);
     return SCALAR;
@@ -166,10 +168,10 @@ I[ ]*\*[ ]*{REALNUMBER}[ ]*\/[ ]*{UNIT} {
 <together>{UNIT} {
     OCStringRef string = OCStringCreateWithCString(yytext);
     double unit_multiplier = 1;
-    SIUnitRef unit = SIUnitForSymbol(string, &unit_multiplier,&scalarErrorString);
+    SIUnitRef unit = SIUnitForSymbol(string, &unit_multiplier,&scalarError);
     if(unit==NULL) {
-        yyterminate();
         if(string) OCRelease(string);
+        yyterminate();
         BEGIN(INITIAL);
         return SCALAR;
     }
@@ -192,4 +194,5 @@ I[ ]*\*[ ]*{REALNUMBER}[ ]*\/[ ]*{UNIT} {
 }
 [ \t]+          {/* ignore whitespace */}
 .               {return(yytext[0]);}
+
 %%

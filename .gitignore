@@ -26,16 +26,13 @@ Makefile.cmake
 CTestTestfile.cmake
 
 # Flex/Bison generated files
-lex.sis.c
-SIScalarScanner.c
-SIScalarParser.tab.c
-SIScalarParser.tab.h
-SIUnitScanner.c
-SIUnitParser.tab.c
-SIUnitParser.tab.h
-SIDimensionalityScanner.c
-SIDimensionalityParser.tab.c
-SIDimensionalityParser.tab.h
+# (ignored by generic patterns below)
+
+# Ignore lex and yacc generated files
+*.tab.c
+*.tab.h
+*Scanner.c
+lex.*.c
 
 # Xcode project files and workspace settings
 *.xcworkspace
@@ -63,7 +60,6 @@ xcuserdata/
 *.dSYM
 *.asan
 *.debug
-runTests
 
 # Doxygen output
 docs/doxygen/

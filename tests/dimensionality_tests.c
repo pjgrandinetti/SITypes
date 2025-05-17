@@ -1,68 +1,60 @@
 #include "../src/SILibrary.h"
+#include <assert.h>
 #include <stdio.h>
 
-#ifndef PRINTERROR
-#define PRINTERROR printf("failure: line %d, %s\n", __LINE__, __FUNCTION__)
-#endif
-
-bool dimensionalityTest0(void) {
-
+void test_dimensionality_0(void) {
+    printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
-    fprintf(stderr, "%s begin...\n", __func__);
 
     SIDimensionalityRef dimensionality1 = SIDimensionalityForSymbol(STR("L"), &errorString);
 
     OCStringRef symbol = SIDimensionalityGetSymbol(dimensionality1);
-    if (OCStringCompare(symbol, STR("L"), 0) != kOCCompareEqualTo) PRINTERROR;
+    assert(OCStringCompare(symbol, STR("L"), 0) == kOCCompareEqualTo);
 
     SIDimensionalityRef dimensionality2 = SIDimensionalityWithBaseDimensionSymbol(STR("L"), &errorString);
-    if (OCStringCompare(SIDimensionalityGetSymbol(dimensionality1), SIDimensionalityGetSymbol(dimensionality2), 0) != kOCCompareEqualTo) PRINTERROR;
+    assert(OCStringCompare(SIDimensionalityGetSymbol(dimensionality1), SIDimensionalityGetSymbol(dimensionality2), 0) == kOCCompareEqualTo);
 
-    if (SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSILengthIndex) != 1) PRINTERROR;
-    if (SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSIMassIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSITimeIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSICurrentIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSITemperatureIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSIAmountIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSILuminousIntensityIndex) != 0) PRINTERROR;
+    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSILengthIndex) == 1);
+    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSIMassIndex) == 0);
+    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSITimeIndex) == 0);
+    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSICurrentIndex) == 0);
+    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSITemperatureIndex) == 0);
+    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSIAmountIndex) == 0);
+    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSILuminousIntensityIndex) == 0);
 
-    if (SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSILengthIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSIMassIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSITimeIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSICurrentIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSITemperatureIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSIAmountIndex) != 0) PRINTERROR;
-    if (SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSILuminousIntensityIndex) != 0) PRINTERROR;
+    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSILengthIndex) == 0);
+    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSIMassIndex) == 0);
+    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSITimeIndex) == 0);
+    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSICurrentIndex) == 0);
+    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSITemperatureIndex) == 0);
+    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSIAmountIndex) == 0);
+    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSILuminousIntensityIndex) == 0);
 
-    if (SIDimensionalityReducedExponentAtIndex(dimensionality1, kSILengthIndex) != 1) PRINTERROR;
-    if (SIDimensionalityReducedExponentAtIndex(dimensionality1, kSIMassIndex) != 0) PRINTERROR;
-    if (SIDimensionalityReducedExponentAtIndex(dimensionality1, kSITimeIndex) != 0) PRINTERROR;
-    if (SIDimensionalityReducedExponentAtIndex(dimensionality1, kSICurrentIndex) != 0) PRINTERROR;
-    if (SIDimensionalityReducedExponentAtIndex(dimensionality1, kSITemperatureIndex) != 0) PRINTERROR;
-    if (SIDimensionalityReducedExponentAtIndex(dimensionality1, kSIAmountIndex) != 0) PRINTERROR;
-    if (SIDimensionalityReducedExponentAtIndex(dimensionality1, kSILuminousIntensityIndex) != 0) PRINTERROR;
-
-    fprintf(stderr, "%s end...without problems\n", __func__);
-    return true;
+    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSILengthIndex) == 1);
+    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSIMassIndex) == 0);
+    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSITimeIndex) == 0);
+    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSICurrentIndex) == 0);
+    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSITemperatureIndex) == 0);
+    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSIAmountIndex) == 0);
+    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSILuminousIntensityIndex) == 0);
+    printf("%s passed\n", __func__);
 }
 
-bool dimensionalityTest1(void) {
+void test_dimensionality_1(void) {
+    printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
-    fprintf(stderr, "%s begin...\n", __func__);
 
     OCStringRef symbol = STR("L•M^2•T^3•I^4•ϴ^5•N^6•J^7/(L^2•M^3•T^4•I^5•ϴ^6•N^7•J^8)");
     SIDimensionalityRef dimensionality = SIDimensionalityForSymbol(symbol, &errorString);
-    if (dimensionality == NULL) PRINTERROR;
-    if (SIDimensionalityGetNumeratorExponentAtIndex(dimensionality, kSILengthIndex) != 1) PRINTERROR;
-    if (SIDimensionalityGetDenominatorExponentAtIndex(dimensionality, kSILengthIndex) != 2) PRINTERROR;
-    if (SIDimensionalityReducedExponentAtIndex(dimensionality, kSILengthIndex) != -1) PRINTERROR;
-
-    fprintf(stderr, "%s end...without problems\n", __func__);
-    return true;
+    assert(dimensionality != NULL);
+    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality, kSILengthIndex) == 1);
+    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality, kSILengthIndex) == 2);
+    assert(SIDimensionalityReducedExponentAtIndex(dimensionality, kSILengthIndex) == -1);
+    printf("%s passed\n", __func__);
 }
 
-bool dimensionalityTest2(void) {
-    fprintf(stderr, "%s begin...\n", __func__);
+void test_dimensionality_2(void) {
+    printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
 
     SIDimensionalityRef force = SIDimensionalityForQuantity(kSIQuantityForce, &errorString);
@@ -70,33 +62,30 @@ bool dimensionalityTest2(void) {
     SIDimensionalityRef dimensionality = SIDimensionalityByDividing(force, acceleration);
     SIDimensionalityRef mass = SIDimensionalityForQuantity(kSIQuantityMass, &errorString);
 
-    if (!SIDimensionalityEqual(dimensionality, mass)) PRINTERROR;
-
-    fprintf(stderr, "%s end...without problems\n", __func__);
-    return true;
+    assert(SIDimensionalityEqual(dimensionality, mass));
+    printf("%s passed\n", __func__);
 }
 
-bool dimensionalityTest3(void) {
-    fprintf(stderr, "%s begin...\n", __func__);
+void test_dimensionality_3(void) {
+    printf("Running %s...\n", __func__);
     OCStringRef error = NULL;
     // Test equality for commutative symbols
     SIDimensionalityRef dim1 = SIDimensionalityForSymbol(STR("L*M"), &error);
     SIDimensionalityRef dim2 = SIDimensionalityForSymbol(STR("M*L"), &error);
-    if (!SIDimensionalityEqual(dim1, dim2)) PRINTERROR;
+    assert(SIDimensionalityEqual(dim1, dim2));
     // Test reduced exponents for mixed powers
     SIDimensionalityRef dim3 = SIDimensionalityForSymbol(STR("L^3*M^-2*T"), &error);
-    if (!SIDimensionalityHasReducedExponents(dim3, 3, -2, 1, 0, 0, 0, 0)) PRINTERROR;
+    assert(SIDimensionalityHasReducedExponents(dim3, 3, -2, 1, 0, 0, 0, 0));
     // Test dimensionless
     SIDimensionalityRef dless = SIDimensionalityDimensionless();
-    if (!SIDimensionalityIsDimensionless(dless) || SIDimensionalityIsDerived(dless)) PRINTERROR;
+    assert(SIDimensionalityIsDimensionless(dless) && !SIDimensionalityIsDerived(dless));
     // Test base dimension index and symbol consistency
     for (int i = kSILengthIndex; i <= kSILuminousIntensityIndex; i++) {
         SIDimensionalityRef baseDim = SIDimensionalityForBaseDimensionIndex((SIBaseDimensionIndex)i);
-        if (!SIDimensionalityIsBaseDimensionality(baseDim)) PRINTERROR;
-        if (SIDimensionalityGetNumeratorExponentAtIndex(baseDim, i) != 1) PRINTERROR;
+        assert(SIDimensionalityGetNumeratorExponentAtIndex(baseDim, i) == 1);
         for (int j = kSILengthIndex; j <= kSILuminousIntensityIndex; j++) {
             if (i != j) {
-                if (SIDimensionalityGetNumeratorExponentAtIndex(baseDim, (SIBaseDimensionIndex)j) != 0) PRINTERROR;
+                assert(SIDimensionalityGetNumeratorExponentAtIndex(baseDim, (SIBaseDimensionIndex)j) == 0);
             }
         }
         OCRelease(baseDim);
@@ -104,13 +93,12 @@ bool dimensionalityTest3(void) {
     // Test WithBaseDimensionSymbol
     SIDimensionalityRef bySym = SIDimensionalityWithBaseDimensionSymbol(STR("L"), &error);
     SIDimensionalityRef byIdx = SIDimensionalityForBaseDimensionIndex(kSILengthIndex);
-    if (!SIDimensionalityEqual(bySym, byIdx)) PRINTERROR;
+    assert(SIDimensionalityEqual(bySym, byIdx));
     OCRelease(bySym);
     OCRelease(byIdx);
     OCRelease(dim1);
     OCRelease(dim2);
     OCRelease(dim3);
     OCRelease(dless);
-    fprintf(stderr, "%s end...without problems\n", __func__);
-    return true;
+    printf("%s passed\n", __func__);
 }
