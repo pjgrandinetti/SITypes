@@ -44,6 +44,14 @@ int main(int argc, const char * argv[]) {
     test_unit_4();
     test_unit_5();
     test_unit_6();
+    test_unit_7();
+    test_unit_8();
+    // Register additional special and non-SI unit tests
+    test_unit_9();
+    test_unit_10();
+    test_unit_11();
+    test_unit_12();
+    test_unit_13();
 
     printf("\n=== SIScalar Tests ===\n");
     test_scalar_1();

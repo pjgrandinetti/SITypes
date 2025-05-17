@@ -2,10 +2,6 @@
  * @file SIDimensionality.h
  * @brief Declares the SIDimensionality interface for representing and manipulating physical dimensionalities.
  *
- * SIDimensionality provides immutable objects representing the dimensionality of physical quantities,
- * supporting arithmetic operations, parsing from symbols, and mapping to physical quantity names.
- * The API is CoreFoundation-style, with explicit memory management and reference counting.
- *
  * The seven SI base dimensions are supported: length, mass, time, electric current, temperature,
  * amount of substance, and luminous intensity.
  *
@@ -337,10 +333,16 @@ int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDimensional
  */
 
 /**
- * @brief Determines if the two dimensionalities are equal.
+ * @brief Determines if the two dimensionalities are exactly equal.
  * @param theDimensionality1 The first dimensionality.
  * @param theDimensionality2 The second dimensionality.
- * @return True if equal, false otherwise.
+ * @return True if exactly equal, false otherwise.
+ * @details This function checks if two dimensionalities have exactly the same representation,
+ * including how numerator and denominator exponents are stored. For example, L/T and L^2/T^2 have
+ * the same reduced dimensionality but different representations, so this function would return false.
+ * 
+ * Use SIDimensionalityHasSameReducedDimensionality() instead when you want to check if two
+ * dimensionalities are equivalent.
  */
 bool SIDimensionalityEqual(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2);
 
@@ -385,6 +387,15 @@ bool SIDimensionalityIsBaseDimensionality(SIDimensionalityRef theDimensionality)
  * @param theDimensionality1 The first dimensionality.
  * @param theDimensionality2 The second dimensionality.
  * @return True if same reduced dimensionality, false otherwise.
+ * @details This function checks if two dimensionalities are physically equivalent, even if they 
+ * have different representations. For example, m/s and m*s^-1 have different numerator and denominator
+ * arrangements, but the net exponent for each dimension is the same. Similarly, this function 
+ * will recognize that 'Pa' (N/m²) and 'lbf/in²' have the same reduced dimensionality even though
+ * they might be represented differently internally.
+ * 
+ * Use this function when you need to check if units are dimensionally compatible for conversion
+ * or when checking if two units with different representations (like 'Pa' and 'lbf/in²') can 
+ * measure the same physical quantity.
  */
 bool SIDimensionalityHasSameReducedDimensionality(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2);
 

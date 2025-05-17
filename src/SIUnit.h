@@ -283,7 +283,23 @@ bool SIUnitIsDimensionless(SIUnitRef theUnit);
  * @param theUnit1 The first unit.
  * @param theUnit2 The second unit.
  * @return True or false.
- * @details Determines if units are equivalent. If true, these two units can be substituted for each other without modifying the quantity's numerical value.
+ * @details Determines if units are equivalent - meaning they can be substituted for each other without modifying
+ * the quantity's numerical value. Units with the same dimensionality but different prefixes (e.g., 'N' and 'kN',
+ * or 'm' and 'cm') are NOT equivalent because the numerical value would need to be scaled when converting between them.
+ * 
+ * Equivalent units include:
+ * - Coherent derived units and their base expressions (e.g., 'N' and 'kg*m/s^2')
+ * - Units with the same dimensionality and same scale (e.g., 'in/s' and 'm/s' if properly converted)
+ * - Units with identical reduction behavior
+ * 
+ * Non-equivalent units (even with same dimensionality):
+ * - Units with different prefixes ('m' vs 'cm', 'N' vs 'kN')
+ * - Units that require scaling for conversion ('Pa' vs 'lbf/in^2' - they have the same dimensionality
+ *   but are not directly substitutable without a multiplier)
+ * 
+ * Use SIDimensionalityEqual() to check if units have the same dimensionality regardless of equivalence.
+ * Use SIDimensionalityHasSameReducedDimensionality() for comparing units that might have different
+ * representations of the same dimensionality.
  */
 bool SIUnitAreEquivalentUnits(SIUnitRef theUnit1, SIUnitRef theUnit2);
 
@@ -527,7 +543,25 @@ OCDictionaryRef SIUnitCreateDictionaryOfUnitsWithSameReducedDimensionality(SIDim
  * @brief Calculates the conversion factor between units of the same dimensionality.
  * @param initialUnit The initial unit.
  * @param finalUnit The final unit.
- * @return The conversion factor.
+ * @return The conversion factor to convert from initialUnit to finalUnit.
+ * @details When working with multipliers from SIUnitForParsedSymbol, you often need to combine them with
+ * this conversion factor. For example, if you parse a non-SI unit (like "lb") and want to convert it to 
+ * a standard SI unit (like "kg"):
+ * 
+ * ```
+ * double multiplier = 1.0;  // Initialize to 1.0
+ * SIUnitRef unit_lb = SIUnitForParsedSymbol(STR("lb"), &multiplier, &err);
+ * SIUnitRef unit_kg = SIUnitForUnderivedSymbol(STR("kg"));
+ * 
+ * // Calculate the full conversion from lb to kg
+ * double conversion = SIUnitConversion(unit_lb, unit_kg);
+ * double total_conversion = multiplier * conversion;  // Total lb to kg conversion factor
+ * ```
+ * 
+ * The total_conversion will be 0.45359237 (the standard lb to kg conversion factor).
+ * 
+ * @note This function requires that units have the same dimensionality or are dimensionally compatible. 
+ * It will not work for units with different underlying dimensions.
  */
 double SIUnitConversion(SIUnitRef initialUnit, SIUnitRef finalUnit);
 
