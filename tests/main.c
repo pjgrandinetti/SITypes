@@ -62,8 +62,8 @@ int main(int argc, const char * argv[]) {
     test_scalar_6();
     test_scalar_7();
     test_scalar_8();
-    test_scalar_error();
-    test_scalar_ideal_gas();
+    test_scalar_9();
+    test_scalar_10();
 
     // Print summary message if all tests pass
     printf("\nAll tests passed\n");

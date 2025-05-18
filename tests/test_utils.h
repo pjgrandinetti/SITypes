@@ -29,4 +29,20 @@ static inline void assert_unit_parsed(SIUnitRef unit, OCStringRef err, const cha
     }
 }
 
+#define ASSERT_PARSED(obj, err_ptr, obj_name_str, fail_msg) \
+    do { \
+        if (!(obj)) { \
+            if (*(err_ptr)) { \
+                printf("Error parsing %s: %s\\n", (obj_name_str), OCStringGetCString(*(err_ptr))); \
+                OCRelease(*(err_ptr)); \
+                *(err_ptr) = NULL; \
+            } \
+            assert(0 && (fail_msg)); \
+        } \
+        if (*(err_ptr)) { \
+            OCRelease(*(err_ptr)); \
+            *(err_ptr) = NULL; \
+        } \
+    } while (0)
+
 #endif /* TEST_UTILS_H */

@@ -3,7 +3,6 @@
 %option nounput
 %option noinput
 %{
-    extern  void siserror(char *s, ...);
     #include "SILibrary.h"
     #include "SIScalarParser.h"
     #include "SIScalar.tab.h"

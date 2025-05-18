@@ -1,6 +1,8 @@
 %{
     #include <stdio.h>
     #include "SILibrary.h"
+    #include "SIScalarParser.h"
+
     void yyerror(char *s, ...);
     static SIDimensionalityRef final_dimensionality;
     OCStringRef dimensionalityError;
