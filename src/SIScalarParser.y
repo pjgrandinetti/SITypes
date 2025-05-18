@@ -1,7 +1,7 @@
 %{
-    #import <OCTypes/OCLibrary.h>
-    #import "SILibrary.h"
-    #import "SIScalarParser.h"
+    #include <OCTypes/OCLibrary.h>
+    #include "SILibrary.h"
+    #include "SIScalarParser.h"
     #include <ctype.h>
     void siserror(char *s, ...);
     SIScalarRef result;
