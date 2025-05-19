@@ -9,8 +9,8 @@
 #include <stdio.h> // For yyerror, fprintf, stderr
 #include <math.h> // For floor, isnan, erf, erfc, log
 #include <stdlib.h> // For malloc, free
-#import "SIScalarConstants.h"
-#import "SIScalarParser.h"
+#include "SIScalarConstants.h"
+#include "SIScalarParser.h"
 
 struct __symbol {
     char *name;

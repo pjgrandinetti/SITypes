@@ -5,6 +5,13 @@
 //  Copyright (c) 2008-2014 PhySy Ltd. All rights reserved.
 //
 
+#ifndef SIScalarParser_h
+#define SIScalarParser_h
+
+#include "SILibrary.h"
+#include "SIScalar.h"
+#include "SIUnitParser.h"
+
 typedef const struct __scalarNode * ScalarNodeRef;
 typedef const struct __scalarValue * NumberRef;
 typedef const struct __scalarNodeMathFunction * ScalarNodeMathFunctionRef;
@@ -70,3 +77,5 @@ char ScalarNodeGetType(ScalarNodeRef node);
 void ScalarNodeFree(ScalarNodeRef node);
 
 SIUnitRef ConversionWithDefinedUnit(OCMutableStringRef mutString, double *unit_multiplier, OCStringRef *errorString);
+
+#endif // SIScalarParser_h

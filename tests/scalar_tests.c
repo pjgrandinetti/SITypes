@@ -70,14 +70,17 @@ void test_scalar_2(void) {
 
 void test_scalar_3(void) {
     printf("Running %s...\n", __func__);
-    // OCStringRef err = NULL;
-    // SIScalarRef res1 = SIScalarCreateWithOCString(STR("2^3"), &err);
-    // ASSERT_PARSED(res1, &err, "exponent", "Failed to parse exponent expression");
-    // SIScalarRef res2 = SIScalarCreateWithOCString(STR("8"), &err);
-    // ASSERT_PARSED(res2, &err, "literal", "Failed to parse literal expression");
-    // assert(SIScalarCompare(res1, res2) == kOCCompareEqualTo);
-    // OCRelease(res1); 
-    // OCRelease(res2);
+    OCStringRef err = NULL;
+    fprintf(stderr, "Testing exponentiation...\n");
+    SIScalarRef res1 = SIScalarCreateWithOCString(STR("2^3"), &err);
+    ASSERT_PARSED(res1, &err, "exponent", "Failed to parse exponent expression");
+    fprintf(stderr, "Testing integer...\n");
+    SIScalarRef res2 = SIScalarCreateWithOCString(STR("8"), &err);
+    ASSERT_PARSED(res2, &err, "literal", "Failed to parse literal expression");
+    fprintf(stderr, "Testing SIScalarCompare...\n");
+    assert(SIScalarCompare(res1, res2) == kOCCompareEqualTo);
+    OCRelease(res1); 
+    OCRelease(res2);
     printf("%s passed\n", __func__);
 }
 
