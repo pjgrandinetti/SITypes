@@ -67,3 +67,4 @@ docs/doxygen/
 # Ignore downloaded OCTypes binaries and extracted files
 /third_party/libOCTypes*.zip
 /third_party/OCTypes/.DS_Store
+third_party/
