@@ -1,0 +1,1 @@
+mkdir -p ../SITypes/third_party/OCTypes/lib && cp ../OCTypes/libOCTypes.a ../SITypes/third_party/OCTypes/lib/

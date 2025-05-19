@@ -84,6 +84,8 @@ bool       sis_syntax_error;
 SIScalarRef
 SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
 {
+    fprintf(stderr,"Just entered SIScalarCreateWithOCString\n");
+
     if (OCStringCompare(string, kSIQuantityDimensionless, kOCCompareCaseInsensitive)
         == kOCCompareEqualTo)
     {
@@ -91,6 +93,7 @@ SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     }
 
     OCMutableStringRef mutString = OCStringCreateMutableCopy(string);
+    fprintf(stderr,"Just OCStringCreateMutableCopy\n");
 
     /* perform all Unicode-aware replacements */
     OCStringFindAndReplace(mutString, STR("*"), STR("•"),
@@ -113,19 +116,28 @@ SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     // Quick fix for quartertsp
     OCStringFindAndReplace(mutString, STR("qtertsp"), STR("quartertsp"), OCRangeMake(0, OCStringGetLength(mutString)), kOCCompareCaseInsensitive);
 
-    // Insert '*' for implicit multiplication between number and unit symbols (e.g., '4.3eV' -> '4.3*eV')
+    fprintf(stderr,"All OCStringFindAndReplace\n");
+
+
+    // Insert '*' for implicit multiplication
     {
-        OCMutableStringRef tmpMutStr = OCStringCreateMutableCopy(mutString);
+        OCMutableStringRef tmp = OCStringCreateMutableCopy(mutString);
+        OCRelease(mutString);
+        mutString = tmp;
+
+        OCStringShow(mutString);
+
+        // Now drive *both* the lookups and inserts on `mutString`
         size_t len = OCStringGetLength(mutString);
         for (int idx = (int)len - 2; idx >= 0; --idx) {
             char prev = OCStringGetCharacterAtIndex(mutString, idx);
             char next = OCStringGetCharacterAtIndex(mutString, idx + 1);
             if (characterIsDigitOrDecimalPoint(prev) && isalpha((unsigned char)next)) {
-                OCStringInsert(tmpMutStr, idx + 1, STR("*"));
+                OCStringInsert(mutString, idx + 1, STR("*"));
             }
         }
-        OCRelease(mutString);
-        mutString = tmpMutStr;
+
+        OCStringShow(mutString);
     }
 
     OCStringFindAndReplace(mutString, STR(")("), STR(")*("),

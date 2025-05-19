@@ -50,7 +50,7 @@ bool sid_syntax_error;
 SIDimensionalityRef SIDimensionalityForSymbol(OCStringRef string, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
-    
+
     OCMutableStringRef  mutString = OCStringCreateMutableCopy(string);
     OCStringTrimWhitespace(mutString);
     
@@ -62,7 +62,8 @@ SIDimensionalityRef SIDimensionalityForSymbol(OCStringRef string, OCStringRef *e
     
     OCStringFindAndReplace2(mutString,STR("•"),STR("*"));
     OCStringFindAndReplace2(mutString,STR("ϴ"), STR("@"));
-    
+    printf("after OCStringFindAndReplace2\n");
+
     final_dimensionality = NULL;
     dimensionalityError = NULL;
     sid_syntax_error = false;

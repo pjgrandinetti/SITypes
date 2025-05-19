@@ -168,6 +168,8 @@ void test_scalar_10(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
 
+    fprintf(stderr,"about to enter SIScalarCreateWithOCString\n");
+
     SIScalarRef n = SIScalarCreateWithOCString(STR("0.078 mol"), &err);
     ASSERT_PARSED(n, &err, "n", "Failed to parse n");
 
