@@ -17,18 +17,6 @@
 
 int main(int argc, const char * argv[]) {
 
-    printf("\n=== SIScalar Tests ===\n");
-    test_scalar_10();
-    test_scalar_1();
-    test_scalar_2();
-    test_scalar_3();
-    test_scalar_4();
-    test_scalar_5();
-    test_scalar_6();
-    test_scalar_7();
-    test_scalar_8();
-    test_scalar_9();
-
     printf("=== OCTypes Tests ===\n");
     octypesTest1();
     octypesTest2();
@@ -65,6 +53,17 @@ int main(int argc, const char * argv[]) {
     test_unit_12();
     test_unit_13();
 
+    printf("\n=== SIScalar Tests ===\n");
+    test_scalar_1();
+    test_scalar_2();
+    test_scalar_3();
+    test_scalar_4();
+    test_scalar_5();
+    test_scalar_6();
+    test_scalar_7();
+    test_scalar_8();
+    test_scalar_9();
+    test_scalar_10();
 
     // Print summary message if all tests pass
     printf("\nAll tests passed\n");

@@ -84,8 +84,6 @@ bool       sis_syntax_error;
 SIScalarRef
 SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
 {
-    fprintf(stderr,"Just entered SIScalarCreateWithOCString\n");
-
     if (OCStringCompare(string, kSIQuantityDimensionless, kOCCompareCaseInsensitive)
         == kOCCompareEqualTo)
     {
@@ -93,7 +91,6 @@ SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     }
 
     OCMutableStringRef mutString = OCStringCreateMutableCopy(string);
-    fprintf(stderr,"Just OCStringCreateMutableCopy\n");
 
     /* perform all Unicode-aware replacements */
     OCStringFindAndReplace(mutString, STR("*"), STR("•"),
@@ -116,16 +113,12 @@ SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     // Quick fix for quartertsp
     OCStringFindAndReplace(mutString, STR("qtertsp"), STR("quartertsp"), OCRangeMake(0, OCStringGetLength(mutString)), kOCCompareCaseInsensitive);
 
-    fprintf(stderr,"All OCStringFindAndReplace\n");
-
 
     // Insert '*' for implicit multiplication
     {
         OCMutableStringRef tmp = OCStringCreateMutableCopy(mutString);
         OCRelease(mutString);
         mutString = tmp;
-
-        OCStringShow(mutString);
 
         // Now drive *both* the lookups and inserts on `mutString`
         size_t len = OCStringGetLength(mutString);
@@ -137,7 +130,6 @@ SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
             }
         }
 
-        OCStringShow(mutString);
     }
 
     OCStringFindAndReplace(mutString, STR(")("), STR(")*("),
