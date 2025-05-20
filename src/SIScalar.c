@@ -2147,7 +2147,7 @@ SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef 
         OCStringFindAndReplace2(numericPart, mutLargestSymbol, STR(""));
         double complex numericValue = 1.0;
         if(OCStringGetLength(numericPart)!=0) numericValue = OCStringGetDoubleComplexValue(numericPart);
-        if(isnan(numericValue)) {
+        if(isnan(creal(numericValue)) || isnan(cimag(numericValue))) { // Check real and imaginary parts for NaN
             // Abort!
             OCRelease(unitsFound);
             for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
