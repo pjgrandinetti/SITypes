@@ -5,14 +5,9 @@
     #include "SIScalarParserHelpers.c"
     #include <ctype.h>
     void siserror(char *s, ...);
-
-    extern int  sis_scan_string(const char *);
-    extern void sislex_destroy(void);
-    bool       sis_syntax_error;
-
-    OCStringRef scalarError;
-
     SIScalarRef result;
+    OCStringRef scalarError;
+    int sislex(void);    
 %}
 
 %name-prefix="sis"
@@ -27,61 +22,50 @@
 }
 
 /* declare tokens */
-%token <d>            SCALAR
-%token <math_fn>      MATH_FUNC
-%token <const_fn>     CONST_FUNC CO      /* accept both modern and legacy names */
+%token <d> SCALAR
+%token <math_fn> MATH_FUNC
+%token <const_fn> CONST_FUNC
 %token <const_string> CONST_STRING
-%token                EOL
-
-%left   '='
-%left   '+' '-'
-%left   '*' '/'
-%right  '^'
-%right  '!'
+%token EOL
+%left '='
+%left  '+' '-'
+%left '*' '/'
+%right '^'
+%right '!'
 %nonassoc '|' UMINUS
 
 %type <a> exp explist
 
+/* may 19th, 2013 removed line below from exp: (was after exp '*' exp) */
+
 %%
+calclist:   /* do nothing */
+| calclist exp { 
+    result = ScalarNodeEvaluate($2, &scalarError);
+    if(!ScalarNodeisLeaf($2)) ScalarNodeFree($2);
+}
+;
 
+exp: exp '+' exp {$$ = ScalarNodeCreateInnerNode('+',$1, $3);}
+| exp '-' exp {$$ = ScalarNodeCreateInnerNode('-',$1, $3);}
+| exp '*' exp {$$ = ScalarNodeCreateInnerNode('*',$1, $3);}
+| exp '/' exp {$$ = ScalarNodeCreateInnerNode('/',$1, $3);}
+| exp '^' exp {$$ = ScalarNodeCreateInnerNode('^',$1, $3);}
+| '|' exp '|' {$$ = ScalarNodeCreateInnerNode('|',$2, NULL);}
+| '(' exp ')' {$$ = $2;}
+| '-' exp %prec UMINUS{$$ = ScalarNodeCreateInnerNode('M',$2, NULL);}
+| exp '!' {$$ = ScalarNodeCreateInnerNode('!',$1, NULL);}
+| SCALAR    {if($1==NULL) {YYERROR;} $$ = ScalarNodeCreateNumberLeaf($1);}
+| MATH_FUNC '(' explist ')' {$$ = ScalarNodeCreateMathFunction($1,$3);}
+| CONST_FUNC CONST_STRING {$$ = ScalarNodeCreateConstantFunction($1,$2);}
+;
 
-calclist:
-      /* empty */
-    | calclist exp
-      {
-          printf("Evaluating expression\n");
-          result = ScalarNodeEvaluate($2, &scalarError);
-          if (!ScalarNodeisLeaf($2))
-              ScalarNodeFree($2);
-      }
-    ;
-
-exp:
-      exp '+' exp     { $$ = ScalarNodeCreateInnerNode('+', $1, $3); }
-    | exp '-' exp     { $$ = ScalarNodeCreateInnerNode('-', $1, $3); }
-    | exp '*' exp     { $$ = ScalarNodeCreateInnerNode('*', $1, $3); }
-    | exp '/' exp     { $$ = ScalarNodeCreateInnerNode('/', $1, $3); }
-    | exp '^' exp     { $$ = ScalarNodeCreateInnerNode('^', $1, $3); }
-    | '|' exp '|'     { $$ = ScalarNodeCreateInnerNode('|', $2, NULL); }
-    | '(' exp ')'     { $$ = $2; }
-    | '-' exp %prec UMINUS
-                      { $$ = ScalarNodeCreateInnerNode('M', $2, NULL); }
-    | exp '!'         { $$ = ScalarNodeCreateInnerNode('!', $1, NULL); }
-    | SCALAR          { if ($1 == NULL) YYERROR; $$ = ScalarNodeCreateNumberLeaf($1); }
-    | MATH_FUNC '(' explist ')' 
-                      { $$ = ScalarNodeCreateMathFunction($1, $3); }
-    | CONST_FUNC CONST_STRING
-                      { $$ = ScalarNodeCreateConstantFunction($1, $2); }
-    | CO CONST_STRING
-                      { $$ = ScalarNodeCreateConstantFunction($1, $2); }
-    ;
-
-explist:
-      exp
-    | exp ',' explist
-      { $$ = ScalarNodeCreateInnerNode('L', $1, $3); }
-    ;
+explist: exp
+| exp ',' explist   {$$ = ScalarNodeCreateInnerNode('L',$1,$3);}
 
 %%
 
+extern int sis_scan_string(const char *);
+extern void sislex_destroy(void);
+bool sis_syntax_error;
 

@@ -38,6 +38,7 @@ BADUNIT {UNIT}{UNIT}
 
 OLDSTRING \[[a-zA-Z][a-zA-Z0-9]*\]
 STRING \[[()a-zA-Z][()a-zA-Z0-9]*\*?[()a-zA-Z0-9]*\]
+
 %%
 "+" |
 "-" |
@@ -134,32 +135,42 @@ I[ ]*\*[ ]*{REALNUMBER} {
     return SCALAR;
 }
 
-{REALNUMBER}[ ]*\/[ ]*{UNIT} {
+{REALNUMBER}[ ]*/{UNIT} {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
 }
 
-{UNIT}[ ]*\/[ ]*{REALNUMBER} {
+{UNIT}[ ]*/{REALNUMBER} {
     sislval.d = NULL;
     return SCALAR;
 }
 
-{UNIT}[ ]*\/[ ]*{COMPLEXNUMBER} {
+{UNIT}[ ]*/{COMPLEXNUMBER} {
     sislval.d = NULL;
     return SCALAR;
 }
 
-{COMPLEXNUMBER}[ ]*\/[ ]*{UNIT} {
+{COMPLEXNUMBER}[ ]*/{UNIT} {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
 }
 
-{REALNUMBER}[ ]*\*[ ]*I[ ]*\/[ ]*{UNIT} {
+{REALNUMBER}[ ]*\*[ ]*I[ ]*/{UNIT} {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
 }
 
-I[ ]*\*[ ]*{REALNUMBER}[ ]*\/[ ]*{UNIT} {
+{REALNUMBER}[ ]*\*[ ]*I[ ]*/{UNIT} {
+    temp = OCComplexFromCString(yytext);
+    BEGIN(together);
+}
+
+I[ ]*\*[ ]*{REALNUMBER}[ ]*/{UNIT} {
+    temp = OCComplexFromCString(yytext);
+    BEGIN(together);
+}
+
+I[ ]*\*[ ]*{REALNUMBER}[ ]*/{UNIT} {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
 }
@@ -179,19 +190,25 @@ I[ ]*\*[ ]*{REALNUMBER}[ ]*\/[ ]*{UNIT} {
     BEGIN(INITIAL);
     return SCALAR;
 }
+
 {STRING} {
     sislval.const_string = OCMutableStringCreateWithCString(yytext);
     return CONST_STRING;
 }
+
 {BADNUMBER} {
     sislval.d = NULL;
     return SCALAR;
 }
+
 {BADUNIT} {
     sislval.d = NULL;
     return SCALAR;
 }
+
 [ \t]+          {/* ignore whitespace */}
 .               {return(yytext[0]);}
 
 %%
+
+

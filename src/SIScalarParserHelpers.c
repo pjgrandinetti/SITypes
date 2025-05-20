@@ -15,20 +15,24 @@ extern int sislex(void);
 
 OCStringRef scalarErrorString;
 
-SIScalarRef
-SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
+SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
 {
-    if (OCStringCompare(string, kSIQuantityDimensionless, kOCCompareCaseInsensitive)
-        == kOCCompareEqualTo)
-    {
-        return NULL;
-    }
+    if(error) if(*error) return NULL;
+
+    if (OCStringCompare(string, kSIQuantityDimensionless, kOCCompareCaseInsensitive) == kOCCompareEqualTo) return NULL;
 
     OCMutableStringRef mutString = OCStringCreateMutableCopy(string);
 
     /* perform all Unicode-aware replacements */
     OCStringFindAndReplace(mutString, STR("*"), STR("•"),
         OCRangeMake(0, OCStringGetLength(mutString)), 0);
+
+    result = NULL;
+    scalarErrorString = NULL;
+    // check for and get the final conversion unit
+    double unit_multiplier = 1.0;
+    SIUnitRef finalUnit = ConversionWithDefinedUnit(mutString, &unit_multiplier, error);
+
     OCStringFindAndReplace(mutString, STR("•"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("×"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("÷"), STR("/"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
@@ -44,50 +48,29 @@ SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     OCStringFindAndReplace(mutString, STR("∛"), STR("cbrt"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("∜"), STR("qtrt"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR(" "), STR(""), OCRangeMake(0, OCStringGetLength(mutString)), 0);
+
     // Quick fix for quartertsp
     OCStringFindAndReplace(mutString, STR("qtertsp"), STR("quartertsp"), OCRangeMake(0, OCStringGetLength(mutString)), kOCCompareCaseInsensitive);
 
-    // Insert '*' for implicit multiplication
-    {
-        OCMutableStringRef tmp = OCStringCreateMutableCopy(mutString);
-        OCRelease(mutString);
-        mutString = tmp;
-
-        // Now drive *both* the lookups and inserts on `mutString`
-        size_t len = OCStringGetLength(mutString);
-        for (int idx = (int)len - 2; idx >= 0; --idx) {
-            char prev = OCStringGetCharacterAtIndex(mutString, idx);
-            char next = OCStringGetCharacterAtIndex(mutString, idx + 1);
-            if (characterIsDigitOrDecimalPoint(prev) && isalpha((unsigned char)next)) {
-                OCStringInsert(mutString, idx + 1, STR("*"));
-            }
-        }
-
-    }
-
-    OCStringFindAndReplace(mutString, STR(")("), STR(")*("),
-                           OCRangeMake(0, OCStringGetLength(mutString)), 0);
-    OCStringFindAndReplace(mutString, STR("Ɑ"), STR("α"),
-                           OCRangeMake(0, OCStringGetLength(mutString)), 0);
-
-    // Handle implicit multiplication around parentheses
-    OCArrayRef openParentheses = OCStringCreateArrayWithFindResults(
-        mutString, STR("("), OCRangeMake(0, OCStringGetLength(mutString)), 0);
-    if (openParentheses) {
-        OCMutableStringRef mutStringNew = OCStringCreateMutableCopy(mutString);
-        for (int index = OCArrayGetCount(openParentheses) - 1; index >= 0; index--) {
-            OCRange *range = (OCRange *)OCArrayGetValueAtIndex(openParentheses, index);
-            if (range->location > 0 && range->location < OCStringGetLength(mutString)) {
-                char prev = OCStringGetCharacterAtIndex(mutString, range->location - 1);
-                bool closeBr = false, skip = false;
-                for (int j = range->location - 1; j >= 0; j--) {
-                    char c = OCStringGetCharacterAtIndex(mutString, j);
-                    if (c == '[') { if (!closeBr) skip = true; }
-                    if (c == ']') closeBr = true;
+    OCArrayRef openParentheses = OCStringCreateArrayWithFindResults(mutString,STR("("),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    if(openParentheses) {
+        OCMutableStringRef  mutStringNew = OCStringCreateMutableCopy ( mutString);
+        for(int index = OCArrayGetCount(openParentheses)-1; index>=0;index--) {
+            OCRange *range = (OCRange *) OCArrayGetValueAtIndex(openParentheses,index);
+            if(range->location>0 && range->location<OCStringGetLength(mutString)) {
+                uint32_t previousCharacter = OCStringGetCharacterAtIndex(mutString,range->location-1);
+                // Don't insert asterisk if it's a string inside [ ]
+                bool closeSquareBracket = false;
+                bool skipThis = false;
+                for(int j=range->location-1; j>=0;j--) {
+                    uint32_t scanChar = OCStringGetCharacterAtIndex(mutString,j);
+                    if(scanChar=='[') {
+                        if(!closeSquareBracket) skipThis = true;
+                    }
+                    if(scanChar==']') closeSquareBracket = true;
                 }
-                if (!skip && characterIsDigitOrDecimalPoint(prev)) {
-                    OCStringInsert(mutStringNew, range->location, STR("*"));
-                }
+
+                if(!skipThis && characterIsDigitOrDecimalPoint(previousCharacter)) OCStringInsert(mutStringNew, range->location, STR("*"));
             }
         }
         OCRelease(mutString);
@@ -95,35 +78,38 @@ SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
         OCRelease(openParentheses);
     }
 
-    OCArrayRef closeParentheses = OCStringCreateArrayWithFindResults(
-        mutString, STR(")"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
-    if (closeParentheses) {
-        OCMutableStringRef mutStringNew = OCStringCreateMutableCopy(mutString);
-        for (int index = OCArrayGetCount(closeParentheses) - 1; index >= 0; index--) {
-            OCRange *range = (OCRange *)OCArrayGetValueAtIndex(closeParentheses, index);
-            if (range->location < OCStringGetLength(mutString) - 1) {
-                unsigned char next = (unsigned char)OCStringGetCharacterAtIndex(mutString, range->location + 1);
-                bool openBr = false, skip = false;
-                for (int j = range->location + 1; j < OCStringGetLength(mutString); j++) {
-                    unsigned char c = (unsigned char)OCStringGetCharacterAtIndex(mutString, j);
-                    if (c == ']') { if (!openBr) skip = true; }
-                    if (c == '[') openBr = true;
-                }
-                if (!skip) {
-                    if (next != '+' && next != '-' && next != '*' && next != '/' && next != '^' && next != ')' && next != 0xE2) {
-                        OCStringInsert(mutStringNew, range->location + 1, STR("*"));
+    OCArrayRef closeParentheses = OCStringCreateArrayWithFindResults(mutString,STR(")"),OCRangeMake(0,OCStringGetLength(mutString)),0);
+    if(closeParentheses) {
+        OCMutableStringRef  mutStringNew = OCStringCreateMutableCopy ( mutString);
+        for(OCIndex index = OCArrayGetCount(closeParentheses)-1; index>=0;index--) {
+            OCRange *range = (OCRange *) OCArrayGetValueAtIndex(closeParentheses,index);
+            if(range->location<OCStringGetLength(mutString)-1) {
+                uint32_t nextCharacter = OCStringGetCharacterAtIndex(mutString,range->location+1);
+                // Don't insert asterisk if it's a string inside [ ]
+                bool openSquareBracket = false;
+                bool skipThis = false;
+                for(OCIndex j=range->location+1; j<OCStringGetLength(mutString);j++) {
+                    uint32_t scanChar = OCStringGetCharacterAtIndex(mutString,j);
+                    if(scanChar==']') {
+                        if(!openSquareBracket) skipThis = true;
                     }
+                    if(scanChar=='[') openSquareBracket = true;
                 }
+                if(!skipThis) {
+                    if(nextCharacter !='+' && nextCharacter !='-'
+                    && nextCharacter !='*' && nextCharacter !='/'
+                    && nextCharacter !='^'  && nextCharacter !=')'
+                    && nextCharacter !=8226) OCStringInsert(mutStringNew, range->location+1, STR("*"));
+                }
+                
             }
         }
         OCRelease(mutString);
         mutString = mutStringNew;
         OCRelease(closeParentheses);
-    }
+   }
 
-// Ready to Parse    /* check for and get the final conversion unit */
-    double unit_multiplier = 1.0;
-    SIUnitRef finalUnit = ConversionWithDefinedUnit(mutString, &unit_multiplier, &scalarErrorString);
+// Ready to Parse  
 
     sis_syntax_error = false;
     const char *cString = OCStringGetCString(mutString);
