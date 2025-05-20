@@ -1,5 +1,5 @@
-#ifndef UNIT_TESTS_H
-#define UNIT_TESTS_H
+#ifndef TEST_UNIT_H
+#define TEST_UNIT_H
 
 // Declare all test functions from unit_tests.c
 void test_unit_0(void);
@@ -16,4 +16,4 @@ void test_unit_11(void);
 void test_unit_12(void);
 void test_unit_13(void);
 
-#endif /* UNIT_TESTS_H */
+#endif /* TEST_UNIT_H */

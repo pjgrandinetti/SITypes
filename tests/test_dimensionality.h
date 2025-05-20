@@ -1,5 +1,5 @@
-#ifndef DIMENSIONALITY_TESTS_H
-#define DIMENSIONALITY_TESTS_H
+#ifndef TEST_DIMENSIONALITY_H
+#define TEST_DIMENSIONALITY_H
 
 // Declare all test functions from dimensionality_tests.c
 void test_dimensionality_0(void);
@@ -13,4 +13,4 @@ void test_dimensionality_multiply_work(void);
 void test_dimensionality_power_area(void);
 void test_dimensionality_reduction_behavior(void);
 
-#endif /* DIMENSIONALITY_TESTS_H */
+#endif /* TEST_DIMENSIONALITY_H */

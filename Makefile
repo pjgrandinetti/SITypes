@@ -40,8 +40,8 @@ OBJ        := $(ALL_C:.c=.o)
 
 # Test sources
 TEST_SRC_DIR := tests
-TEST_FILES   := $(wildcard $(TEST_SRC_DIR)/test_*.c) $(TEST_SRC_DIR)/main.c
-TEST_OBJ     := $(notdir $(TEST_FILES:.c=.o))
+TEST_C_FILES := $(wildcard $(TEST_SRC_DIR)/*.c)
+TEST_OBJ     := $(notdir $(TEST_C_FILES:.c=.o))
 
 # OCTypes downloads
 UNAME_S := $(shell uname -s)
@@ -121,6 +121,10 @@ $(SRC_DIR)/%Scanner.c: $(SRC_DIR)/%Scanner.l %.tab.h
 
 %.o: tests/%.c | octypes
 	$(CC) $(CFLAGS) -Isrc -Itests -c -o $@ $<
+
+# Rule for compiling test source files into .o files in the root directory
+$(TEST_OBJ): %.o: $(TEST_SRC_DIR)/%.c | octypes libSITypes.a
+	$(CC) $(CFLAGS) -Isrc -Itests -c -o $@ $(TEST_SRC_DIR)/$(<F)
 
 # Run tests
 test: libSITypes.a $(TEST_OBJ)

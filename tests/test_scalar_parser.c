@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 // Integrated test for basic parsing and documentation example
-void test_scalar_1(void) {
+void test_scalar_parser_1(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
 
@@ -16,8 +16,6 @@ void test_scalar_1(void) {
     SIScalarRef expected1 = SIScalarCreateWithFloatComplex(4.3, evUnit);
     assert(expected1 && "Failed to create expected scalar");
     // show returned and expected
-    printf("Returned scalar: "); SIScalarShow(scalar);
-    printf("Expected scalar: "); SIScalarShow(expected1);
     assert(SIScalarCompare(scalar, expected1) == kOCCompareEqualTo);
     OCRelease(expected1);
     OCRelease(scalar);
@@ -40,8 +38,6 @@ void test_scalar_1(void) {
 
     // Due to round-off, use a looser comparison
     // show result and expected for second part
-    printf("Returned mass: "); SIScalarShow(mass);
-    printf("Expected mass: "); SIScalarShow(expected2);
     assert(SIScalarCompareLoose(mass, expected2) == kOCCompareEqualTo && "Mass value mismatch");
     OCRelease(acceleration);
     OCRelease(force);
@@ -50,7 +46,7 @@ void test_scalar_1(void) {
     printf("%s passed\n", __func__);
 }
 
-void test_scalar_2(void) {
+void test_scalar_parser_2(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // force
@@ -67,8 +63,6 @@ void test_scalar_2(void) {
     SIScalarReduceUnit((SIMutableScalarRef) mass2);
     ASSERT_PARSED(mass2, &err, "combined mass", "Failed to parse combined mass expression");
     // show both mass values
-    printf("mass: "); SIScalarShow(mass);
-    printf("mass2: "); SIScalarShow(mass2);
     assert(SIScalarCompare(mass, mass2) == kOCCompareEqualTo);
     printf("%s passed\n", __func__);
     // cleanup
@@ -78,20 +72,15 @@ void test_scalar_2(void) {
     OCRelease(mass2);
 }
 
-void test_scalar_3(void) {
+void test_scalar_parser_3(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
-    fprintf(stderr, "Testing exponentiation...\n");
     SIScalarRef res1 = SIScalarCreateWithOCString(STR("2^3"), &err);
     ASSERT_PARSED(res1, &err, "exponent", "Failed to parse exponent expression");
-    printf("res1: "); SIScalarShow(res1);
 
-    fprintf(stderr, "Testing integer...\n");
     SIScalarRef res2 = SIScalarCreateWithOCString(STR("8"), &err);
     ASSERT_PARSED(res2, &err, "literal", "Failed to parse literal expression");
-    printf("res2: "); SIScalarShow(res2);
 
-    fprintf(stderr, "Testing SIScalarCompare...\n");
     // show exponent and literal
     assert(SIScalarCompare(res1, res2) == kOCCompareEqualTo);
     OCRelease(res1); 
@@ -99,7 +88,7 @@ void test_scalar_3(void) {
     printf("%s passed\n", __func__);
 }
 
-void test_scalar_4(void) {
+void test_scalar_parser_4(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     SIScalarRef s = SIScalarCreateWithOCString(STR("(2+3)(4+1)"), &err);
@@ -107,15 +96,13 @@ void test_scalar_4(void) {
     SIScalarRef e = SIScalarCreateWithOCString(STR("25"), &err);
     ASSERT_PARSED(e, &err, "expected", "Failed to parse expected result");
     // show s and e
-    printf("s: "); SIScalarShow(s);
-    printf("e: "); SIScalarShow(e);
     assert(SIScalarCompare(s, e) == kOCCompareEqualTo);
     printf("%s passed\n", __func__);
     OCRelease(s); 
     OCRelease(e);
 }
 
-void test_scalar_5(void) {
+void test_scalar_parser_5(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     SIScalarRef r1 = SIScalarCreateWithOCString(STR("√(9) m"), &err);
@@ -129,22 +116,18 @@ void test_scalar_5(void) {
     ASSERT_PARSED(r4, &err, "comparison scalar for cubert", "Failed to parse comparison scalar for cubert");
     assert(SIScalarCompare(r3, r4) == kOCCompareEqualTo);
     // show r1, r2, r3, r4
-    printf("r1: "); SIScalarShow(r1);
-    printf("r2: "); SIScalarShow(r2);
-    printf("r3: "); SIScalarShow(r3);
-    printf("r4: "); SIScalarShow(r4);
     printf("%s passed\n", __func__);
     OCRelease(r1); OCRelease(r2); OCRelease(r3); OCRelease(r4);
 }
 
-void test_scalar_6(void) {
+void test_scalar_parser_6(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     SIScalarRef d1 = SIScalarCreateWithOCString(STR("6×2 kg"), &err);
     ASSERT_PARSED(d1, &err, "multiplication", "Multiplication operator failed");
     SIScalarRef d2 = SIScalarCreateWithOCString(STR("12 kg"), &err);
     ASSERT_PARSED(d2, &err, "comparison scalar for multiplication", "Failed to parse comparison scalar for multiplication");
-    SIScalarRef d3 = SIScalarCreateWithOCString(STR("12 ÷ 4 m"), &err);
+    SIScalarRef d3 = SIScalarCreateWithOCString(STR("(12 ÷ 4) m"), &err);
     ASSERT_PARSED(d3, &err, "division", "Division operator failed");
     SIScalarRef d4 = SIScalarCreateWithOCString(STR("3 m"), &err);
     ASSERT_PARSED(d4, &err, "comparison scalar for division", "Failed to parse comparison scalar for division");
@@ -153,18 +136,12 @@ void test_scalar_6(void) {
     SIScalarRef d6 = SIScalarCreateWithOCString(STR("-5 m"), &err);
     ASSERT_PARSED(d6, &err, "comparison scalar for minus", "Failed to parse comparison scalar for minus");
     // show d1, d2, d3, d4, d5, d6
-    printf("d1: "); SIScalarShow(d1);
-    printf("d2: "); SIScalarShow(d2);
-    printf("d3: "); SIScalarShow(d3);
-    printf("d4: "); SIScalarShow(d4);
-    printf("d5: "); SIScalarShow(d5);
-    printf("d6: "); SIScalarShow(d6);
     assert(SIScalarCompare(d1, d2) == kOCCompareEqualTo && SIScalarCompare(d3, d4) == kOCCompareEqualTo && SIScalarCompare(d5, d6) == kOCCompareEqualTo);
     printf("%s passed\n", __func__);
     OCRelease(d1); OCRelease(d2); OCRelease(d3); OCRelease(d4); OCRelease(d5); OCRelease(d6);
 }
 
-void test_scalar_7(void) {
+void test_scalar_parser_7(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     SIScalarRef m1 = SIScalarCreateWithOCString(STR("5 µm"), &err);
@@ -176,7 +153,7 @@ void test_scalar_7(void) {
     OCRelease(m1); OCRelease(m2);
 }
 
-void test_scalar_8(void) {
+void test_scalar_parser_8(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     SIScalarRef q = SIScalarCreateWithOCString(STR("1 quartertsp"), &err);
@@ -189,7 +166,7 @@ void test_scalar_8(void) {
     printf("%s passed\n", __func__);
 }
 
-void test_scalar_9(void) {
+void test_scalar_parser_9(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     SIScalarRef bad = SIScalarCreateWithOCString(STR("2+"), &err);
@@ -198,42 +175,42 @@ void test_scalar_9(void) {
     printf("%s passed\n", __func__);
 }
 
-void test_scalar_10(void) {
+void test_scalar_parser_10(void) {
     printf("Running %s...\n", __func__);
-    // OCStringRef err = NULL;
+    OCStringRef err = NULL;
 
-    // SIScalarRef n = SIScalarCreateWithOCString(STR("0.078 mol"), &err);
-    // ASSERT_PARSED(n, &err, "n", "Failed to parse n");
+    SIScalarRef n = SIScalarCreateWithOCString(STR("0.078 mol"), &err);
+    ASSERT_PARSED(n, &err, "n", "Failed to parse n");
 
-    // SIScalarRef T = SIScalarCreateWithOCString(STR("298.15 K"), &err);
-    // ASSERT_PARSED(T, &err, "T", "Failed to parse T");
-    // SIScalarRef V = SIScalarCreateWithOCString(STR("42.0 mL"), &err);
-    // ASSERT_PARSED(V, &err, "V", "Failed to parse V");
-    // SIScalarRef R = SIScalarCreateWithOCString(STR("8.314510 J/(K*mol)"), &err);
-    // ASSERT_PARSED(R, &err, "R", "Failed to parse R");
-    // // Compute p = n * R
-    // SIScalarRef p = SIScalarCreateByMultiplying(n, R, &err);
-    // ASSERT_PARSED(p, &err, "n*R", "Failed to multiply n and R");
-    // // p = p * T
-    // SIScalarRef p2 = SIScalarCreateByMultiplying(p, T, &err);
-    // OCRelease(p);
-    // p = p2;
-    // ASSERT_PARSED(p, &err, "p*T", "Failed to multiply p and T");
-    // // p = p / V
-    // assert(SIScalarDivide((SIMutableScalarRef)p, V, &err) && "Failed to divide by V");
-    // if (err) { printf("Error dividing by V: %s\n", OCStringGetCString(err)); OCRelease(err); err = NULL; }
-    // // Expect ~4603803.67339444 Pa
-    // SIScalarRef expected = SIScalarCreateWithOCString(STR("4603803.67339444 Pa"), &err);
-    // ASSERT_PARSED(expected, &err, "expected p", "Failed to parse expected p");
-    // // Use loose compare for round-off
-    // assert(SIScalarCompareLoose(p, expected) == kOCCompareEqualTo && "Ideal gas pressure mismatch");
-    // // Clean up
-    // OCRelease(T); 
-    // OCRelease(V); 
-    // OCRelease(R);
-    // OCRelease(p); 
-    // OCRelease(expected);
-    // OCRelease(n); 
+    SIScalarRef T = SIScalarCreateWithOCString(STR("298.15 K"), &err);
+    ASSERT_PARSED(T, &err, "T", "Failed to parse T");
+    SIScalarRef V = SIScalarCreateWithOCString(STR("42.0 mL"), &err);
+    ASSERT_PARSED(V, &err, "V", "Failed to parse V");
+    SIScalarRef R = SIScalarCreateWithOCString(STR("8.314510 J/(K*mol)"), &err);
+    ASSERT_PARSED(R, &err, "R", "Failed to parse R");
+    // Compute p = n * R
+    SIScalarRef p = SIScalarCreateByMultiplying(n, R, &err);
+    ASSERT_PARSED(p, &err, "n*R", "Failed to multiply n and R");
+    // p = p * T
+    SIScalarRef p2 = SIScalarCreateByMultiplying(p, T, &err);
+    OCRelease(p);
+    p = p2;
+    ASSERT_PARSED(p, &err, "p*T", "Failed to multiply p and T");
+    // p = p / V
+    assert(SIScalarDivide((SIMutableScalarRef)p, V, &err) && "Failed to divide by V");
+    if (err) { printf("Error dividing by V: %s\n", OCStringGetCString(err)); OCRelease(err); err = NULL; }
+    // Expect ~4603803.67339444 Pa
+    SIScalarRef expected = SIScalarCreateWithOCString(STR("4603803.67339444 Pa"), &err);
+    ASSERT_PARSED(expected, &err, "expected p", "Failed to parse expected p");
+    // Use loose compare for round-off
+    assert(SIScalarCompareLoose(p, expected) == kOCCompareEqualTo && "Ideal gas pressure mismatch");
+    // Clean up
+    OCRelease(T); 
+    OCRelease(V); 
+    OCRelease(R);
+    OCRelease(p); 
+    OCRelease(expected);
+    OCRelease(n); 
 
     printf("%s passed\n", __func__);
 }

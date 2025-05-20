@@ -10,10 +10,11 @@
 
 #include <stdio.h>
 #include "../src/SILibrary.h" // Updated include path to resolve missing header issue
-#include "octypes_tests.c"
-#include "dimensionality_tests.c"
-#include "unit_tests.c"
-#include "scalar_tests.c"
+#include "test_octypes.h"
+#include "test_dimensionality.h"
+#include "test_unit.h"
+#include "test_scalar.h"
+#include "test_scalar_parser.h"
 
 int main(int argc, const char * argv[]) {
 
@@ -53,17 +54,17 @@ int main(int argc, const char * argv[]) {
     test_unit_12();
     test_unit_13();
 
-    printf("\n=== SIScalar Tests ===\n");
-    test_scalar_1();
-    test_scalar_2();
-    test_scalar_3();
-    test_scalar_4();
-    test_scalar_5();
-    test_scalar_6();
-    test_scalar_7();
-    test_scalar_8();
-    test_scalar_9();
-    test_scalar_10();
+    printf("\n=== SIScalar Parser Tests ===\n");
+    test_scalar_parser_1();
+    test_scalar_parser_2();
+    test_scalar_parser_3();
+    test_scalar_parser_4();
+    test_scalar_parser_5();
+    test_scalar_parser_6();
+    test_scalar_parser_7();
+    test_scalar_parser_8();
+    test_scalar_parser_9();
+    test_scalar_parser_10();
 
     // Print summary message if all tests pass
     printf("\nAll tests passed\n");

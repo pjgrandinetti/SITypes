@@ -554,9 +554,7 @@ SIUnitRef ConversionWithDefinedUnit(OCMutableStringRef mutString, double *unit_m
 {
     if(errorString) if(*errorString) return NULL;
     // Remove appended unit conversion
-    printf("ConversionWithDefinedUnit, before calling\n");
     OCArrayRef conversions = OCStringCreateArrayBySeparatingStrings(mutString,STR(".."));
-    printf("ConversionWithDefinedUnit, after calling\n");
 
     if(conversions) {
         if(OCArrayGetCount(conversions) == 2) {
