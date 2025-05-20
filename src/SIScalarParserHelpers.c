@@ -1,5 +1,5 @@
 #include "SIScalarParser.h"
-#include "../../OCTypes/src/OCLibrary.h"
+#include <OCTypes/OCLibrary.h> // Corrected include path
 #include <ctype.h>
 #include "SIScalar.h"
 #include "SIDimensionality.h"
