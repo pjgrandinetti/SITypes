@@ -295,10 +295,11 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     // Quick fix for quartertsp
     OCStringFindAndReplace(mutString, STR("qtertsp"), STR("quartertsp"), OCRangeMake(0, OCStringGetLength(mutString)), kOCCompareCaseInsensitive);
 
-    printf("Inserted asterisks: %s\n", OCStringGetCString(mutString));
+    printf("Before asterisks: %s\n", OCStringGetCString(mutString));
     OCMutableStringRef newMutString = insertAsterisks(mutString);
     OCRelease(mutString);
     mutString = newMutString;
+    printf("After asterisks: %s\n", OCStringGetCString(mutString));
 
 // Ready to Parse  
     printf("Parsing: %s\n", OCStringGetCString(mutString));
