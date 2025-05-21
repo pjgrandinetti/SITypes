@@ -33,6 +33,7 @@ CTestTestfile.cmake
 *.tab.h
 *Scanner.c
 lex.*.c
+*.d
 
 # Xcode project files and workspace settings
 *.xcworkspace

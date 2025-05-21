@@ -160,11 +160,6 @@ I[ ]*\*[ ]*{REALNUMBER} {
     BEGIN(together);
 }
 
-{REALNUMBER}[ ]*\*[ ]*I[ ]*/{UNIT} {
-    temp = OCComplexFromCString(yytext);
-    BEGIN(together);
-}
-
 I[ ]*\*[ ]*{REALNUMBER}[ ]*/{UNIT} {
     temp = OCComplexFromCString(yytext);
     BEGIN(together);
