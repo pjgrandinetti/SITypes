@@ -81,14 +81,14 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     OCArrayRef closeParentheses = OCStringCreateArrayWithFindResults(mutString,STR(")"),OCRangeMake(0,OCStringGetLength(mutString)),0);
     if(closeParentheses) {
         OCMutableStringRef  mutStringNew = OCStringCreateMutableCopy ( mutString);
-        for(OCIndex index = OCArrayGetCount(closeParentheses)-1; index>=0;index--) {
+        for(int index = OCArrayGetCount(closeParentheses)-1; index>=0;index--) {
             OCRange *range = (OCRange *) OCArrayGetValueAtIndex(closeParentheses,index);
             if(range->location<OCStringGetLength(mutString)-1) {
                 uint32_t nextCharacter = OCStringGetCharacterAtIndex(mutString,range->location+1);
                 // Don't insert asterisk if it's a string inside [ ]
                 bool openSquareBracket = false;
                 bool skipThis = false;
-                for(OCIndex j=range->location+1; j<OCStringGetLength(mutString);j++) {
+                for(int j=range->location+1; j<OCStringGetLength(mutString);j++) {
                     uint32_t scanChar = OCStringGetCharacterAtIndex(mutString,j);
                     if(scanChar==']') {
                         if(!openSquareBracket) skipThis = true;
