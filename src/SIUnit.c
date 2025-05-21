@@ -878,7 +878,8 @@ static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
         }
         
     }
-    
+    theUnit->static_instance = true;
+    OCRetain(theUnit);
     return (SIUnitRef)theUnit;
 }
 
