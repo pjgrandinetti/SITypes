@@ -29,21 +29,21 @@ void test_dimensionality_0(void) {
     assert(OCStringCompare(SIDimensionalityGetSymbol(dimensionality1), SIDimensionalityGetSymbol(dimensionality2), 0) == kOCCompareEqualTo);
 
     // Check exponents
-    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSILengthIndex) == 1);
-    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSIMassIndex) == 0);
-    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSITimeIndex) == 0);
-    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSICurrentIndex) == 0);
-    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSITemperatureIndex) == 0);
-    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSIAmountIndex) == 0);
-    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality1, kSILuminousIntensityIndex) == 0);
+    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSILengthIndex) == 1);
+    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSIMassIndex) == 0);
+    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSITimeIndex) == 0);
+    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSICurrentIndex) == 0);
+    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSITemperatureIndex) == 0);
+    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSIAmountIndex) == 0);
+    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSILuminousIntensityIndex) == 0);
 
-    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSILengthIndex) == 0);
-    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSIMassIndex) == 0);
-    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSITimeIndex) == 0);
-    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSICurrentIndex) == 0);
-    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSITemperatureIndex) == 0);
-    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSIAmountIndex) == 0);
-    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality1, kSILuminousIntensityIndex) == 0);
+    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSILengthIndex) == 0);
+    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSIMassIndex) == 0);
+    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSITimeIndex) == 0);
+    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSICurrentIndex) == 0);
+    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSITemperatureIndex) == 0);
+    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSIAmountIndex) == 0);
+    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSILuminousIntensityIndex) == 0);
 
     assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSILengthIndex) == 1);
     assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSIMassIndex) == 0);
@@ -70,8 +70,8 @@ void test_dimensionality_1(void) {
         assert(0 && "Failed to create dimensionality");
     }
     if (err) { OCRelease(err); err = NULL; }
-    assert(SIDimensionalityGetNumeratorExponentAtIndex(dimensionality, kSILengthIndex) == 1);
-    assert(SIDimensionalityGetDenominatorExponentAtIndex(dimensionality, kSILengthIndex) == 2);
+    assert(SIDimensionalityGetNumExpAtIndex(dimensionality, kSILengthIndex) == 1);
+    assert(SIDimensionalityGetDenExpAtIndex(dimensionality, kSILengthIndex) == 2);
     assert(SIDimensionalityReducedExponentAtIndex(dimensionality, kSILengthIndex) == -1);
     printf("%s passed\n", __func__);
     OCRelease(dimensionality);
@@ -117,10 +117,10 @@ void test_dimensionality_3(void) {
     // Test base dimension index and symbol consistency
     for (int i = kSILengthIndex; i <= kSILuminousIntensityIndex; i++) {
         SIDimensionalityRef baseDim = SIDimensionalityForBaseDimensionIndex((SIBaseDimensionIndex)i);
-        assert(SIDimensionalityGetNumeratorExponentAtIndex(baseDim, i) == 1);
+        assert(SIDimensionalityGetNumExpAtIndex(baseDim, i) == 1);
         for (int j = kSILengthIndex; j <= kSILuminousIntensityIndex; j++) {
             if (i != j) {
-                assert(SIDimensionalityGetNumeratorExponentAtIndex(baseDim, (SIBaseDimensionIndex)j) == 0);
+                assert(SIDimensionalityGetNumExpAtIndex(baseDim, (SIBaseDimensionIndex)j) == 0);
             }
         }
         OCRelease(baseDim);

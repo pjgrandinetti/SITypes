@@ -249,8 +249,8 @@ typedef enum {
  */
 SIDimensionalityRef SIDimensionalityForSymbol(OCStringRef theString, OCStringRef *error);
 
-extern OCMutableDictionaryRef dimensionalityLibrary;
-extern OCMutableDictionaryRef dimensionalityQuantitiesLibrary;
+extern OCMutableDictionaryRef dimLibrary;
+extern OCMutableDictionaryRef dimQuantitiesLibrary;
 
 #define IF_UNEQUAL_DIMENSIONALITIES(DIM1,DIM2,RESULT) if(!SIDimensionalityEqual(DIM1,DIM2)) { \
 fprintf(stderr, "%s : Unequal dimensionalities:  ",__FUNCTION__); \
@@ -295,37 +295,37 @@ OCTypeID SIDimensionalityGetTypeID(void);
 
 /**
  * @brief Returns the symbol for the dimensionality.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @return A string containing the symbol.
  */
-OCStringRef SIDimensionalityGetSymbol(SIDimensionalityRef theDimensionality);
+OCStringRef SIDimensionalityGetSymbol(SIDimensionalityRef theDim);
 
 /**
  * @brief Gets the numerator exponent for the dimension at index.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @param index The dimension index constant.
  * @return The integer numerator exponent.
  * @details Base units length, mass, time, current, temperature, amount, and luminous intensity are assigned to index constants kSILengthIndex, kSIMassIndex, kSITimeIndex, kSICurrentIndex, kSITemperatureIndex, kSIAmountIndex, kSILuminousIntensityIndex, respectively.
  */
-uint8_t SIDimensionalityGetNumeratorExponentAtIndex(SIDimensionalityRef theDimensionality, SIBaseDimensionIndex index);
+uint8_t SIDimensionalityGetNumExpAtIndex(SIDimensionalityRef theDim, SIBaseDimensionIndex index);
 
 /**
  * @brief Gets the denominator exponent for the dimension at index.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @param index The dimension index constant.
  * @return The integer denominator exponent.
  * @details Base units length, mass, time, current, temperature, amount, and luminous intensity are assigned to index constants kSILengthIndex, kSIMassIndex, kSITimeIndex, kSICurrentIndex, kSITemperatureIndex, kSIAmountIndex, kSILuminousIntensityIndex, respectively.
  */
-uint8_t SIDimensionalityGetDenominatorExponentAtIndex(SIDimensionalityRef theDimensionality, SIBaseDimensionIndex index);
+uint8_t SIDimensionalityGetDenExpAtIndex(SIDimensionalityRef theDim, SIBaseDimensionIndex index);
 
 /**
  * @brief Returns the exponent for the dimension at index.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @param index The dimension index constant.
  * @return The integer exponent (numerator-denominator).
  * @details Base units length, mass, time, current, temperature, amount, and luminous intensity are assigned to index constants kSILengthIndex, kSIMassIndex, kSITimeIndex, kSICurrentIndex, kSITemperatureIndex, kSIAmountIndex, kSILuminousIntensityIndex, respectively.
  */
-int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDimensionality, SIBaseDimensionIndex index);
+int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDim, SIBaseDimensionIndex index);
 
 #pragma mark Tests
 /**
@@ -334,8 +334,8 @@ int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDimensional
 
 /**
  * @brief Determines if the two dimensionalities are exactly equal.
- * @param theDimensionality1 The first dimensionality.
- * @param theDimensionality2 The second dimensionality.
+ * @param theDim1 The first dimensionality.
+ * @param theDim2 The second dimensionality.
  * @return True if exactly equal, false otherwise.
  * @details This function checks if two dimensionalities have exactly the same representation,
  * including how numerator and denominator exponents are stored. For example, L/T and L^2/T^2 have
@@ -344,48 +344,48 @@ int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDimensional
  * Use SIDimensionalityHasSameReducedDimensionality() instead when you want to check if two
  * dimensionalities are equivalent.
  */
-bool SIDimensionalityEqual(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2);
+bool SIDimensionalityEqual(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
 
 /**
  * @brief Determines if the dimensionality is dimensionless.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @return True if dimensionless, false otherwise.
  */
-bool SIDimensionalityIsDimensionless(SIDimensionalityRef theDimensionality);
+bool SIDimensionalityIsDimensionless(SIDimensionalityRef theDim);
 
 /**
  * @brief Determines if the dimensionality is derived from at least one of seven base dimensions.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @return True if derived, false otherwise.
  */
-bool SIDimensionalityIsDerived(SIDimensionalityRef theDimensionality);
+bool SIDimensionalityIsDerived(SIDimensionalityRef theDim);
 
 /**
  * @brief Determines if the dimensionality is dimensionless but not derived.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @return True if dimensionless and not derived, false otherwise.
  * @details Determines if the dimensionality is dimensionless but not derived, that is, it may be a counting dimensionality.
  */
-bool SIDimensionalityIsDimensionlessAndNotDerived(SIDimensionalityRef theDimensionality);
+bool SIDimensionalityIsDimensionlessAndNotDerived(SIDimensionalityRef theDim);
 
 /**
  * @brief Determines if the dimensionality is dimensionless and derived.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @return True if dimensionless and derived, false otherwise.
  */
-bool SIDimensionalityIsDimensionlessAndDerived(SIDimensionalityRef theDimensionality);
+bool SIDimensionalityIsDimensionlessAndDerived(SIDimensionalityRef theDim);
 
 /**
  * @brief Determines if the dimensionality is one of the seven base dimensionalities.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @return True if base dimensionality, false otherwise.
  */
-bool SIDimensionalityIsBaseDimensionality(SIDimensionalityRef theDimensionality);
+bool SIDimensionalityIsBaseDimensionality(SIDimensionalityRef theDim);
 
 /**
  * @brief Determines if the two dimensionalities have the same reduced dimensionality.
- * @param theDimensionality1 The first dimensionality.
- * @param theDimensionality2 The second dimensionality.
+ * @param theDim1 The first dimensionality.
+ * @param theDim2 The second dimensionality.
  * @return True if same reduced dimensionality, false otherwise.
  * @details This function checks if two dimensionalities are physically equivalent, even if they 
  * have different representations. For example, m/s and m*s^-1 have different numerator and denominator
@@ -397,11 +397,11 @@ bool SIDimensionalityIsBaseDimensionality(SIDimensionalityRef theDimensionality)
  * or when checking if two units with different representations (like 'Pa' and 'lbf/in²') can 
  * measure the same physical quantity.
  */
-bool SIDimensionalityHasSameReducedDimensionality(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2);
+bool SIDimensionalityHasSameReducedDimensionality(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
 
 /**
  * @brief Determines if the dimensionality has the same seven base dimension exponents.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @param length_exponent The length exponent.
  * @param mass_exponent The mass exponent.
  * @param time_exponent The time exponent.
@@ -411,7 +411,7 @@ bool SIDimensionalityHasSameReducedDimensionality(SIDimensionalityRef theDimensi
  * @param luminous_intensity_exponent The luminous intensity exponent.
  * @return True if same reduced exponents, false otherwise.
  */
-bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDimensionality,
+bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
                                          int8_t length_exponent,
                                          int8_t mass_exponent,
                                          int8_t time_exponent,
@@ -471,95 +471,95 @@ SIDimensionalityRef SIDimensionalityForQuantity(OCStringRef quantity, OCStringRe
 
 /**
  * @brief Returns the dimensionality by reducing the numerator and denominator exponents to their lowest values.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @return The dimensionality with reduced numerator and denominator exponents.
  */
-SIDimensionalityRef SIDimensionalityByReducing(SIDimensionalityRef theDimensionality);
+SIDimensionalityRef SIDimensionalityByReducing(SIDimensionalityRef theDim);
 
 /**
  * @brief Returns the dimensionality by dividing the numerator and denominator exponents by an integer.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @param root The integer root.
  * @param error A pointer to a CFError.
  * @return The nth root dimensionality.
  * @details The numerator and denominator exponents in a valid dimensionality can only take on integer values.
  * If this function cannot return a valid dimensionality then it will return NULL.
  */
-SIDimensionalityRef SIDimensionalityByTakingNthRoot(SIDimensionalityRef theDimensionality, uint8_t root, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByTakingNthRoot(SIDimensionalityRef theDim, uint8_t root, OCStringRef *error);
 
 /**
  * @brief Returns the dimensionality after multiplying two dimensionalities and reducing the dimensionality numerator and denominator exponents to their lowest integer values.
- * @param theDimensionality1 The first dimensionality.
- * @param theDimensionality2 The second dimensionality.
+ * @param theDim1 The first dimensionality.
+ * @param theDim2 The second dimensionality.
  * @param error A pointer to a CFError.
  * @return The new dimensionality.
  */
-SIDimensionalityRef SIDimensionalityByMultiplying(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByMultiplying(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2, OCStringRef *error);
 
 /**
  * @brief Returns the dimensionality after multiplying two dimensionalities.
- * @param theDimensionality1 The first dimensionality.
- * @param theDimensionality2 The second dimensionality.
+ * @param theDim1 The first dimensionality.
+ * @param theDim2 The second dimensionality.
  * @param error A pointer to a CFError.
  * @return The new dimensionality.
  */
-SIDimensionalityRef SIDimensionalityByMultiplyingWithoutReducing(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByMultiplyingWithoutReducing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2, OCStringRef *error);
 
 /**
  * @brief Returns the dimensionality after dividing theDimensionality1 by theDimensionality2 and reducing the dimensionality numerator and denominator exponents to their lowest integer values.
- * @param theDimensionality1 The first dimensionality.
- * @param theDimensionality2 The second dimensionality.
+ * @param theDim1 The first dimensionality.
+ * @param theDim2 The second dimensionality.
  * @return The new dimensionality.
  */
-SIDimensionalityRef SIDimensionalityByDividing(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2);
+SIDimensionalityRef SIDimensionalityByDividing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
 
 /**
  * @brief Returns the dimensionality after dividing theDimensionality1 by theDimensionality2.
- * @param theDimensionality1 The first dimensionality.
- * @param theDimensionality2 The second dimensionality.
+ * @param theDim1 The first dimensionality.
+ * @param theDim2 The second dimensionality.
  * @return The new dimensionality.
  */
-SIDimensionalityRef SIDimensionalityByDividingWithoutReducing(SIDimensionalityRef theDimensionality1, SIDimensionalityRef theDimensionality2);
+SIDimensionalityRef SIDimensionalityByDividingWithoutReducing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
 
 /**
  * @brief Returns the dimensionality after raising a dimensionality to a power and reducing the dimensionality numerator and denominator exponents to their lowest integer values.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @param power The power.
  * @param error A pointer to a CFError.
  * @return The new dimensionality.
  */
-SIDimensionalityRef SIDimensionalityByRaisingToAPower(SIDimensionalityRef theDimensionality, double power, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByRaisingToAPower(SIDimensionalityRef theDim, double power, OCStringRef *error);
 
 /**
  * @brief Returns the dimensionality after raising a dimensionality to a power.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @param power The power.
  * @param error A pointer to a CFError.
  * @return The new dimensionality.
  */
-SIDimensionalityRef SIDimensionalityByRaisingToAPowerWithoutReducing(SIDimensionalityRef theDimensionality, double power, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByRaisingToAPowerWithoutReducing(SIDimensionalityRef theDim, double power, OCStringRef *error);
 
 /**
  * @brief Creates an array of physical quantity names for the dimensionality.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @return An OCArray of strings with all the physical quantity names having this dimensionality.
  */
-OCArrayRef SIDimensionalityCreateArrayOfQuantities(SIDimensionalityRef theDimensionality);
+OCArrayRef SIDimensionalityCreateArrayOfQuantities(SIDimensionalityRef theDim);
 
 /**
  * @brief Creates an array of physical quantity names with the same reduced dimensionality.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @return An OCArray of strings with all the physical quantity names having the same reduced dimensionality.
  */
-OCArrayRef SIDimensionalityCreateArrayOfQuantitiesWithSameReducedDimensionality(SIDimensionalityRef theDimensionality);
+OCArrayRef SIDimensionalityCreateArrayOfQuantitiesWithSameReducedDimensionality(SIDimensionalityRef theDim);
 
 /**
  * @brief Creates an array of dimensionalities with the same reduced dimensionality.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  * @return An OCArray of dimensionalities with all dimensionalities having the same reduced dimensionality as input.
  * @details The routine returns all the dimensionalities starting with the largest exponent (numerator or denominator) down to the reduced dimensionality.
  */
-OCArrayRef SIDimensionalityCreateArrayWithSameReducedDimensionality(SIDimensionalityRef theDimensionality);
+OCArrayRef SIDimensionalityCreateArrayWithSameReducedDimensionality(SIDimensionalityRef theDim);
 
 #pragma mark Strings and Archiving
 /**
@@ -568,15 +568,15 @@ OCArrayRef SIDimensionalityCreateArrayWithSameReducedDimensionality(SIDimensiona
 
 /**
  * @brief Shows a short descriptor of the dimensionality.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  */
-void SIDimensionalityShow(SIDimensionalityRef theDimensionality);
+void SIDimensionalityShow(SIDimensionalityRef theDim);
 
 /**
  * @brief Shows a long descriptor of the dimensionality.
- * @param theDimensionality The dimensionality.
+ * @param theDim The dimensionality.
  */
-void SIDimensionalityShowFull(SIDimensionalityRef theDimensionality);
+void SIDimensionalityShowFull(SIDimensionalityRef theDim);
 
 #pragma mark Library
 /**

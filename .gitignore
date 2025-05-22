@@ -69,3 +69,6 @@ docs/doxygen/
 /third_party/libOCTypes*.zip
 /third_party/OCTypes/.DS_Store
 third_party/
+
+# Ignore XML files in the docs/xml directory
+docs/xml/*.xml
