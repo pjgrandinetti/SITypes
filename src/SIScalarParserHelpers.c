@@ -256,7 +256,6 @@ insertAsterisks(OCMutableStringRef original)
 SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
-    printf("SIScalarCreateWithOCString: %s\n", OCStringGetCString(string));
     if (OCStringCompare(string, kSIQuantityDimensionless, kOCCompareCaseInsensitive) == kOCCompareEqualTo) return NULL;
 
     OCMutableStringRef mutString = OCStringCreateMutableCopy(string);
@@ -283,26 +282,20 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     OCStringFindAndReplace(mutString, STR("h_p"), STR("h_P"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("ɣ"), STR("𝛾"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
 
-    printf("Before replacements: %s\n", OCStringGetCString(mutString));
     OCStringFindAndReplace(mutString, STR("√"), STR("sqrt"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
-    printf("After replacements: %s\n", OCStringGetCString(mutString));
 
     OCStringFindAndReplace(mutString, STR("∛"), STR("cbrt"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("∜"), STR("qtrt"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR(" "), STR(""), OCRangeMake(0, OCStringGetLength(mutString)), 0);
 
-    printf("After replacements: %s\n", OCStringGetCString(mutString));
     // Quick fix for quartertsp
     OCStringFindAndReplace(mutString, STR("qtertsp"), STR("quartertsp"), OCRangeMake(0, OCStringGetLength(mutString)), kOCCompareCaseInsensitive);
 
-    printf("Before asterisks: %s\n", OCStringGetCString(mutString));
     OCMutableStringRef newMutString = insertAsterisks(mutString);
     OCRelease(mutString);
     mutString = newMutString;
-    printf("After asterisks: %s\n", OCStringGetCString(mutString));
 
 // Ready to Parse  
-    printf("Parsing: %s\n", OCStringGetCString(mutString));
     sis_syntax_error = false;
     const char *cString = OCStringGetCString(mutString);
     if (cString) {
