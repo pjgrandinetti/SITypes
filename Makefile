@@ -17,24 +17,53 @@ MKDIR_P := mkdir -p
 SRC_DIR        := src
 TEST_SRC_DIR   := tests
 
-#––––– OCTypes layout & fetch/extract ––––––––––––––––––––––––––––––––––––––––––
-
+# Third-party OCTypes layout
 OCTYPES_DIR    := third_party/OCTypes
 OCT_INCLUDE    := $(OCTYPES_DIR)/include
 OCT_LIBDIR     := $(OCTYPES_DIR)/lib
 
-UNAME_S        := $(shell uname -s)
-ifeq ($(UNAME_S),Darwin)
-  OCT_LIB_BIN   := libOCTypes-libOCTypes-macos-latest.zip
-else ifeq ($(UNAME_S),Linux)
-  OCT_LIB_BIN   := libOCTypes-libOCTypes-ubuntu-latest.zip
-endif
+# Compiler flags
+CFLAGS  := -I. -I$(SRC_DIR) -I$(OCT_INCLUDE) -O3 -Wall -Wextra \
+           -Wno-sign-compare -Wno-unused-parameter \
+           -Wno-missing-field-initializers -Wno-unused-function \
+           -MMD -MP
+CFLAGS_DEBUG := -O0 -g -Wall -Wextra -Werror -MMD -MP
 
+# Source files
+LEX_SRC       := $(wildcard $(SRC_DIR)/*.l)
+YACC_SRC      := $(wildcard $(SRC_DIR)/*Parser.y)
+GEN_PARSER_C  := $(patsubst $(SRC_DIR)/%Parser.y,%.tab.c,$(YACC_SRC))
+GEN_PARSER_H  := $(patsubst $(SRC_DIR)/%Parser.y,%.tab.h,$(YACC_SRC))
+GEN_SCANNER   := $(patsubst $(SRC_DIR)/%Scanner.l,%Scanner.c,$(LEX_SRC))
+GEN_C         := $(GEN_PARSER_C) $(GEN_SCANNER)
+GEN_H         := $(GEN_PARSER_H)
+
+STATIC_SRC    := $(filter-out $(YACC_SRC) $(LEX_SRC),$(wildcard $(SRC_DIR)/*.c))
+ALL_C         := $(GEN_C) $(notdir $(STATIC_SRC))
+OBJ           := $(ALL_C:.c=.o)
+DEP           := $(OBJ:.o=.d)
+
+TEST_C_FILES  := $(wildcard $(TEST_SRC_DIR)/*.c)
+TEST_OBJ      := $(notdir $(TEST_C_FILES:.c=.o))
+
+# OCTypes downloads
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+  OCT_LIB_BIN := libOCTypes-libOCTypes-macos-latest.zip
+else ifeq ($(UNAME_S),Linux)
+  OCT_LIB_BIN := libOCTypes-libOCTypes-ubuntu-latest.zip
+endif
 OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_ARCHIVE := third_party/libOCTypes-headers.zip
 
-.PHONY: octypes
-octypes: $(OCT_LIBDIR)/libOCTypes.a $(OCT_INCLUDE)/OCTypes/OCLibrary.h
+.PHONY: all octypes prepare test test-debug test-asan run-asan test-werror \
+        install uninstall clean clean-objects clean-docs
+
+all: octypes prepare libSITypes.a
+
+# Fetch and extract OCTypes
+octypes: $(OCT_LIBDIR)/libOCTypes.a \
+         $(OCT_INCLUDE)/OCTypes/OCLibrary.h
 
 third_party:
 	@$(MKDIR_P) third_party
@@ -60,54 +89,19 @@ $(OCT_INCLUDE)/OCTypes/OCLibrary.h: $(OCT_HEADERS_ARCHIVE)
 	@unzip -q $(OCT_HEADERS_ARCHIVE) -d $(OCT_INCLUDE)
 	@mv $(OCT_INCLUDE)/*.h $(OCT_INCLUDE)/OCTypes/ 2>/dev/null || true
 
-#––––– Compiler flags–––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
-CFLAGS  := -I. -I$(SRC_DIR) -I$(OCT_INCLUDE) -O3 -Wall -Wextra \
-           -Wno-sign-compare -Wno-unused-parameter \
-           -Wno-missing-field-initializers -Wno-unused-function \
-           -MMD -MP
-CFLAGS_DEBUG := -O0 -g -Wall -Wextra -Werror -MMD -MP
-
-#––––– Source files––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
-LEX_SRC       := $(wildcard $(SRC_DIR)/*.l)
-YACC_SRC      := $(wildcard $(SRC_DIR)/*Parser.y)
-GEN_PARSER_C  := $(patsubst $(SRC_DIR)/%Parser.y,%.tab.c,$(YACC_SRC))
-GEN_PARSER_H  := $(patsubst $(SRC_DIR)/%Parser.y,%.tab.h,$(YACC_SRC))
-GEN_SCANNER   := $(patsubst $(SRC_DIR)/%Scanner.l,%Scanner.c,$(LEX_SRC))
-GEN_C         := $(GEN_PARSER_C) $(GEN_SCANNER)
-GEN_H         := $(GEN_PARSER_H)
-
-STATIC_SRC    := $(filter-out $(YACC_SRC) $(LEX_SRC),$(wildcard $(SRC_DIR)/*.c))
-ALL_C         := $(GEN_C) $(notdir $(STATIC_SRC))
-OBJ           := $(ALL_C:.c=.o)
-DEP           := $(OBJ:.o=.d)
-
-TEST_C_FILES  := $(wildcard $(TEST_SRC_DIR)/*.c)
-TEST_OBJ      := $(notdir $(TEST_C_FILES:.c=.o))
-
-.PHONY: all prepare test test-debug test-asan test-werror install uninstall clean clean-objects clean-docs
-
-all: octypes prepare libSITypes.a
-
 prepare: $(GEN_PARSER_H)
 
-#––––– Library build–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
+# Library target
 libSITypes.a: $(OBJ)
 	$(AR) rcs $@ $^
 
 # Pattern rules for compilation
-
-# 1. Compile library sources under src/
 %.o: $(SRC_DIR)/%.c | octypes
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-# 2. Compile test sources under tests/
 %.o: $(TEST_SRC_DIR)/%.c | octypes
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) -c -o $@ $<
 
-# 3. Compile generated sources in project root
 %.o: %.c | octypes
 	$(CC) $(CFLAGS) -c -o $@ $<
 
@@ -121,24 +115,48 @@ libSITypes.a: $(OBJ)
 %Scanner.c: $(SRC_DIR)/%Scanner.l $(patsubst %Scanner.c,%.tab.h,$@)
 	$(LEX) -o $@ $<
 
-#––––– Testing––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# Tests
+# Build the test runner
+runTests: libSITypes.a $(TEST_OBJ)
+	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
+	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests
 
 test: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -Itests $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests
 	./runTests
 
-test-debug: CFLAGS := $(CFLAGS) -g -O0
-test-debug: test
+# Debug tests
+test-debug: CFLAGS := $(CFLAGS) $(CFLAGS_DEBUG)
+test-debug: clean all test
 
-test-asan: CFLAGS := $(CFLAGS) -fsanitize=address -fno-omit-frame-pointer -g -O1
-test-asan: test
+# AddressSanitizer test target: rebuild with ASan-enabled flags and run
+test-asan: \
+ 	CFLAGS := $(CFLAGS) -fsanitize=address -fno-omit-frame-pointer -g -O1
+test-asan: clean all run-asan
 
+#––– AddressSanitizer target with leak backtraces ––––––––––––––––––––––––––––
+ifeq ($(UNAME_S),Darwin)
+  ASAN_RUN_FLAGS = verbosity=2
+else
+  ASAN_RUN_FLAGS = detect_leaks=1:verbosity=2
+endif
+
+.PHONY: run-asan
+run-asan: runTests.asan
+	@echo "→ Running AddressSanitizer"
+	@ASAN_OPTIONS=$(ASAN_RUN_FLAGS) ./runTests.asan
+
+# AddressSanitizer test binary target
+runTests.asan: $(TEST_OBJ) libSITypes.a
+	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
+	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o $@
+
+# Treat warnings as errors
 test-werror: CFLAGS := $(CFLAGS_DEBUG)
 test-werror: clean all test
 
-#––––– Install/uninstall–––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
+# Install/uninstall
 PREFIX    ?= /usr/local
 INCDIR    := $(PREFIX)/include/SITypes
 LIBDIR    := $(PREFIX)/lib
@@ -154,10 +172,9 @@ uninstall:
 	$(RM) $(DESTDIR)$(INCDIR)/*.h
 	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(INCDIR)
 
-#––––– Clean targets–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
+# Clean targets
 clean-objects:
-	$(RM) $(OBJ) $(TEST_OBJ)
+	$(RM) $(OBJ) $(TEST_OBJ) runTests runTests.asan
 
 clean: clean-objects
 	$(RM) libSITypes.a runTests runTests.asan runTests.debug
@@ -172,4 +189,3 @@ clean-docs:
 
 # Include dependency files
 -include $(DEP)
-
