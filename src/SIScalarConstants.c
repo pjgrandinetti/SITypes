@@ -10,7 +10,6 @@
 #include "SIScalarConstants.h"
 #include "SIUnitParser.h"
 
-// dimensionalityLibrary is a Singleton
 OCMutableDictionaryRef molarMassLibrary = NULL;
 OCMutableDictionaryRef isotopeAbundanceLibrary = NULL;
 OCMutableDictionaryRef isotopeStableLibrary = NULL;
