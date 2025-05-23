@@ -11,6 +11,10 @@ void test_unit_0(void) {
     OCStringRef plist = SIUnitCopySymbol(unit);
     SIUnitRef unit2 = SIUnitForParsedSymbol(plist, NULL, &errorString);
     assert(SIUnitEqual(unit, unit2));
+
+    OCRelease(plist);
+    if (errorString) OCRelease(errorString);
+
     printf("%s passed\n", __func__);
 }
 
@@ -23,6 +27,9 @@ void test_unit_1(void) {
 
     SIUnitRef unit = SIUnitForUnderivedSymbol(STR("bar"));
     assert(unit != NULL);
+
+    if (errorString) OCRelease(errorString);
+
     printf("%s passed\n", __func__);
 }
 
@@ -38,6 +45,9 @@ void test_unit_3(void) {
     assert(unit != NULL);
     root_name = SIUnitCopyRootSymbol(unit);
     assert(OCStringCompare(root_name, STR("m"), 0) == kOCCompareEqualTo);
+
+    OCRelease(root_name); // Release only the copied root symbol
+
     printf("%s passed\n", __func__);
 }
 
@@ -54,6 +64,10 @@ void test_unit_4(void) {
 
     OCStringRef rootName = SIUnitCopyRootName(unit);
     assert(OCStringCompare(rootName, STR("meter"), 0) == kOCCompareEqualTo);
+
+    OCRelease(rootName);
+    if (errorString) OCRelease(errorString);
+
     printf("%s passed\n", __func__);
 }
 
@@ -64,6 +78,9 @@ void test_unit_5(void) {
     OCStringRef rootPlural = SIUnitCopyRootPluralName(unit);
     assert(OCStringCompare(rootPlural, STR("grams"), 0) == kOCCompareEqualTo);
     assert(SIUnitAllowsSIPrefix(unit));
+
+    OCRelease(rootPlural);
+
     printf("%s passed\n", __func__);
 }
 
@@ -77,6 +94,10 @@ void test_unit_6(void) {
     SIUnitRef unit2 = SIUnitForParsedSymbol(symbol, &multiplier, &errorString);
     assert(unit2 != NULL);
     assert(SIUnitEqual(unit, unit2));
+
+    OCRelease(symbol);
+    if (errorString) OCRelease(errorString);
+
     printf("%s passed\n", __func__);
 }
 
@@ -131,7 +152,6 @@ void test_unit_9(void) {
     // But they are NOT equivalent units (a value in kN is 1000x a value in N)
     assert(!SIUnitAreEquivalentUnits(unit, baseN) && "kN should NOT be equivalent to N");
     
-    OCRelease(baseN);
     printf("%s passed\n", __func__);
 }
 
@@ -162,7 +182,6 @@ void test_unit_11(void) {
     SIUnitRef ms = SIUnitForParsedSymbol(STR("m/s"), NULL, &err);
     assert(ms && SIUnitAreEquivalentUnits(unit, ms) && "in/s should be equivalent to m/s");
     if (err) OCRelease(err);
-    OCRelease(ms);
     printf("%s passed\n", __func__);
 }
 
@@ -193,7 +212,6 @@ void test_unit_12(void) {
     assert(OCCompareDoubleValuesLoose(conversion, expectedConversion) == kOCCompareEqualTo && 
            "Conversion factor from lbf/in^2 to Pa should be ~6894.76 Pa");
     
-    OCRelease(pa);
     printf("%s passed\n", __func__);
 }
 
@@ -261,10 +279,7 @@ void test_unit_13(void) {
     // Clean up
     OCRelease(root_symbol);
     OCRelease(lbf_root_symbol);
-    OCRelease(unit_lb);
-    OCRelease(kg);
-    OCRelease(unit_lbf);
-    OCRelease(N);
-    
+    if (err) OCRelease(err);
+
     printf("%s passed\n", __func__);
 }

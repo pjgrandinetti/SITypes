@@ -57,7 +57,7 @@ OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_ARCHIVE := third_party/libOCTypes-headers.zip
 
 .PHONY: all octypes prepare test test-debug test-asan run-asan test-werror \
-        install uninstall clean clean-objects clean-docs
+        install uninstall clean clean-objects clean-docs copy-octypes
 
 all: octypes prepare libSITypes.a
 
@@ -186,6 +186,16 @@ clean: clean-objects
 clean-docs:
 	@echo "Cleaning documentation..."
 	@rm -rf docs/doxygen docs/_build
+
+# Copy locally built OCTypes library and headers
+.PHONY: copy-octypes
+
+copy-octypes:
+	@echo "Copying locally built OCTypes library and headers..."
+	@$(RM) -r third_party/OCTypes
+	@$(MKDIR_P) third_party/OCTypes/lib third_party/OCTypes/include/OCTypes
+	@cp ../OCTypes/lib/libOCTypes.a third_party/OCTypes/lib/
+	@cp ../OCTypes/include/OCTypes/*.h third_party/OCTypes/include/OCTypes/
 
 # Include dependency files
 -include $(DEP)

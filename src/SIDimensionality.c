@@ -155,67 +155,70 @@ static void appendDimensionSymbol(OCMutableStringRef str, uint8_t exponent, OCSt
     }
 }
 
-static OCStringRef SIDimensionalityCreateSymbol(SIDimensionalityRef theDim)
+static OCStringRef
+SIDimensionalityCreateSymbol(SIDimensionalityRef theDim)
 {
-    if (NULL == theDim)
+    if (NULL == theDim) {
         return NULL;
-
-    OCMutableStringRef numerator = OCStringCreateMutable(0);
-    OCMutableStringRef denominator = OCStringCreateMutable(0);
-    bool denominator_multiple_dimensions = false;
-
-    for (uint8_t index = 0; index < BASE_DIMENSION_COUNT; index++)
-    {
-        appendDimensionSymbol(numerator, theDim->num_exp[index], baseDimensionSymbol(index));
-        appendDimensionSymbol(denominator, theDim->den_exp[index], baseDimensionSymbol(index));
     }
 
-    if (OCStringGetLength(numerator) != 0)
-    {
-        if (OCStringGetLength(denominator) != 0)
-        {
-            OCStringRef symbol;
-            if (denominator_multiple_dimensions)
-            {
-                symbol = OCStringCreateWithFormat(STR("%@/(%@)"), numerator, denominator);
-            }
-            else
-            {
-                symbol = OCStringCreateWithFormat(STR("%@/%@"), numerator, denominator);
-            }
-            OCRelease(numerator);
-            OCRelease(denominator);
-            return symbol;
+    // build up numerator and denominator
+    OCMutableStringRef num = OCStringCreateMutable(0);
+    OCMutableStringRef den = OCStringCreateMutable(0);
+    bool multiDen = false;
+
+    for (uint8_t i = 0; i < BASE_DIMENSION_COUNT; i++) {
+        OCStringRef base = baseDimensionSymbol(i);
+
+        // numerator
+        if (theDim->num_exp[i] > 0) {
+            appendDimensionSymbol(num, theDim->num_exp[i], base);
         }
-        else
-        {
-            OCRelease(denominator);
-            return numerator;
+
+        // denominator (track if we append more than one)
+        if (theDim->den_exp[i] > 0) {
+            if (OCStringGetLength(den) > 0) {
+                multiDen = true;
+            }
+            appendDimensionSymbol(den, theDim->den_exp[i], base);
         }
     }
-    else
-    {
-        if (OCStringGetLength(denominator) != 0)
-        {
-            OCStringRef symbol;
-            if (denominator_multiple_dimensions)
-            {
-                symbol = OCStringCreateWithFormat(STR("1/(%@)"), denominator);
-            }
-            else
-            {
-                symbol = OCStringCreateWithFormat(STR("1/%@"), denominator);
-            }
-            OCRelease(numerator);
-            OCRelease(denominator);
-            return symbol;
-        }
-        else
-        {
-            return STR("1");
-        }
+
+    // pick the right format
+    size_t lenN = OCStringGetLength(num);
+    size_t lenD = OCStringGetLength(den);
+    OCStringRef sym = NULL;
+
+    if (lenN && lenD) {
+        // e.g. "kg/(m·s2)" vs "kg/m"
+        sym = OCStringCreateWithFormat(
+            multiDen ? STR("%@/(%@)") : STR("%@/%@"),
+            num, den
+        );
     }
+    else if (lenN) {
+        // pure numerator, e.g. "m2·kg"
+        sym = num;            // transfer ownership
+    }
+    else if (lenD) {
+        // pure denominator, e.g. "1/(s·A)" vs "1/s"
+        sym = OCStringCreateWithFormat(
+            multiDen ? STR("1/(%@)") : STR("1/%@"),
+            den
+        );
+    }
+    else {
+        // dimensionless
+        sym = STR("1");       // constant, no release needed
+    }
+
+    // balance out the two mutable temporaries
+    if (sym != num) OCRelease(num);
+    if (sym != den) OCRelease(den);
+
+    return sym;
 }
+
 
 #pragma mark Designated Creator
 
@@ -1803,4 +1806,32 @@ static bool SIDimensionalityHasSameDimensionlessAndDerivedDimensionalities(SIDim
     if (!SIDimensionalityEqual(theDim1, theDim2))
         return false;
     return true;
+}
+
+// Add a cleanup function for static dictionaries
+void cleanupDimensionalityLibraries(void) {
+    if (dimLibrary) {
+        OCArrayRef values = OCDictionaryCreateArrayWithAllValues((OCDictionaryRef)dimLibrary);
+        if (values) {
+            for (uint64_t i = 0; i < OCArrayGetCount(values); i++) {
+                SIDimensionalityRef dim = OCArrayGetValueAtIndex(values, i);
+                OCTypeSetStaticInstance(dim, false);
+            }
+            OCRelease(values);
+        }
+        OCRelease(dimLibrary);
+        dimLibrary = NULL;
+    }
+
+    if (dimQuantitiesLibrary) {
+        OCRelease(dimQuantitiesLibrary);
+        dimQuantitiesLibrary = NULL;
+    }
+
+}
+
+// Register cleanupDimensionalityLibraries with atexit
+__attribute__((constructor))
+static void registerDimensionalityCleanup(void) {
+    atexit(cleanupDimensionalityLibraries);
 }

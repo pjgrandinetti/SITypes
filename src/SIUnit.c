@@ -372,7 +372,26 @@ void __SIUnitFinalize(const void *theType)
 {
     if (NULL == theType)
         return;
+
     SIUnitRef theUnit = (SIUnitRef)theType;
+
+    // Release dynamically allocated members
+    if (theUnit->dimensionality)
+        OCRelease(theUnit->dimensionality);
+
+    if (theUnit->symbol)
+        OCRelease(theUnit->symbol);
+
+    if (theUnit->root_name)
+        OCRelease(theUnit->root_name);
+
+    if (theUnit->root_plural_name)
+        OCRelease(theUnit->root_plural_name);
+
+    if (theUnit->root_symbol)
+        OCRelease(theUnit->root_symbol);
+
+    // Free the structure itself
     free((void *)theUnit);
 }
 
@@ -459,23 +478,31 @@ SIDimensionalityRef SIUnitGetDimensionality(SIUnitRef theUnit)
     return theUnit->dimensionality;
 }
 
-OCStringRef SIUnitCopyRootName(SIUnitRef theUnit)
-{
+OCStringRef SIUnitCopyRootName(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL)
 
-    if (SIUnitIsSIBaseUnit(theUnit))
-    {
-        for (uint8_t i = 0; i <= 6; i++)
-            if (SIDimensionalityGetNumExpAtIndex(theUnit->dimensionality, i))
-                return OCStringCreateCopy(baseUnitRootName(i));
+    OCStringRef result = NULL;
+
+    if (SIUnitIsSIBaseUnit(theUnit)) {
+        for (uint8_t i = 0; i <= 6; i++) {
+            if (SIDimensionalityGetNumExpAtIndex(theUnit->dimensionality, i)) {
+                result = OCStringCreateCopy(baseUnitRootName(i));
+                break;
+            }
+        }
+    } else {
+        if (theUnit->root_name) {
+            result = OCStringCreateCopy(theUnit->root_name);
+        }
     }
-    else
-    {
-        if (theUnit->root_name)
-            return OCStringCreateCopy(theUnit->root_name);
+
+    if (!result) {
+        result = STR("");
     }
-    return STR("");
+
+    return result;
 }
+
 
 OCStringRef SIUnitCopyRootPluralName(SIUnitRef theUnit)
 {
@@ -572,20 +599,8 @@ OCStringRef SIUnitCopySymbol(SIUnitRef theUnit)
 
     if (SIUnitIsDimensionlessAndUnderived(theUnit))
     {
-        return STR(" ");
+        return OCStringCreateCopy(STR(" "));
     }
-
-    /*
-     if(OCStringGetLength(theUnit->symbol)>2) {
-     OCRange range = OCStringFind(theUnit->symbol, STR("1/"), 0);
-     if(range.location != kOCNotFound) {
-     OCMutableStringRef symbol = OCStringCreateMutableCopy(kOCAllocatorDefault, 0, STR("("));
-     OCStringAppend(symbol, theUnit->symbol);
-     OCStringAppend(symbol, STR(")"));
-     return symbol;
-     }
-     }
-     */
 
     // Symbol should be generated and saved when unit is created.
     return OCStringCreateCopy(theUnit->symbol);
@@ -715,6 +730,8 @@ OCStringRef SIUnitCreateDerivedSymbol(SIUnitRef theUnit)
         }
         else
         {
+            OCRelease(numerator);
+            OCRelease(denominator);
             return STR(" ");
         }
     }
@@ -1191,10 +1208,13 @@ static bool AddAllSIPrefixedUnitsToLibrary(SIUnitRef rootUnit, OCStringRef quant
                 }
             }
         }
+        OCRelease(root_name); // Release the dynamically allocated root_name
     }
 
     return true;
 }
+
+
 
 static void AddNonSIUnitToLibrary(OCStringRef quantity, OCStringRef name, OCStringRef pluralName, OCStringRef symbol, double scale_to_coherent_si)
 {
@@ -1447,6 +1467,48 @@ void SIUnitsLibrarySetImperialVolumes(bool value)
         AddNonSIUnitToLibrary(kSIQuantityVolumetricFlowRate, STR("imperial gallon per second"), STR("imperial gallons per second"), STR("galUK/s"), 0.00454609);
     }
     imperialVolumes = value;
+}
+
+// Add a cleanup function for static dictionaries and array
+void cleanupUnitsLibraries(void) {
+
+    if (unitsQuantitiesLibrary) {
+        OCRelease(unitsQuantitiesLibrary);
+        unitsQuantitiesLibrary = NULL;
+    }
+
+    if (unitsDimensionalitiesLibrary) {
+        OCRelease(unitsDimensionalitiesLibrary);
+        unitsDimensionalitiesLibrary = NULL;
+    }
+
+    if (unitsNamesLibrary) {
+        OCRelease(unitsNamesLibrary);
+        unitsNamesLibrary = NULL;
+    }
+
+    // This dictionary must be released last, as it converts all units from static instances
+    // to non-static instances.  If this dictionary is released first, then the static instances
+    // will have been released and would be invalid in the other dictionaries above.
+    if (unitsLibrary) {
+        OCArrayRef values = OCDictionaryCreateArrayWithAllValues((OCDictionaryRef)unitsLibrary);
+        if (values) {
+            for (uint64_t i = 0; i < OCArrayGetCount(values); i++) {
+                SIUnitRef unit = (SIUnitRef)OCArrayGetValueAtIndex(values, i);
+                OCTypeSetStaticInstance(unit, false);
+            }
+            OCRelease(values);
+        }
+        OCRelease(unitsLibrary);
+        unitsLibrary = NULL;
+    }
+
+}
+
+// Register cleanupUnitsLibraries with atexit
+__attribute__((constructor))
+static void registerUnitsCleanup(void) {
+    atexit(cleanupUnitsLibraries);
 }
 
 void UnitsLibraryCreate()
