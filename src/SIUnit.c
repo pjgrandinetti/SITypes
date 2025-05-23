@@ -1495,18 +1495,19 @@ void cleanupUnitsLibraries(void) {
         if (values) {
             for (uint64_t i = 0; i < OCArrayGetCount(values); i++) {
                 SIUnitRef unit = (SIUnitRef)OCArrayGetValueAtIndex(values, i);
+                OCArrayRemoveValueAtIndex(values, i);
+                OCDictionaryRemoveValue(unitsLibrary, unit);
                 OCTypeSetStaticInstance(unit, false);
-                // Increase the retain count to 2 since it will be released with values and
-                // then again when the unitsLibrary is released.
-                OCRetain(unit);
+                OCRelease(unit);
             }
             OCRelease(values);
         }
         OCRelease(unitsLibrary);
         unitsLibrary = NULL;
     }
-
 }
+
+
 
 void UnitsLibraryCreate()
 {

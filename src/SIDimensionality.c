@@ -58,13 +58,19 @@ void __SIDimensionalityFinalize(const void *theType)
 
     SIDimensionalityRef theDim = (SIDimensionalityRef)theType;
 
+    // Free the memory allocated for the dimensionality object
+    fprintf(stderr, "[FREE ] SIDimensionality %p\n", theType);
+
+    printf("\t");
+    OCStringShow(theDim->symbol);
+    printf("\n");
+
     // Release the symbol if it exists
     if (theDim->symbol != NULL)
     {
         OCRelease(theDim->symbol);
     }
 
-    // Free the memory allocated for the dimensionality object
     free((void *)theDim);
 }
 
@@ -85,7 +91,9 @@ static struct __SIDimensionality *SIDimensionalityAllocate()
 {
     struct __SIDimensionality *theDim = malloc(sizeof(struct __SIDimensionality));
     if (NULL == theDim)
-        return NULL;
+        return NULL;    
+    fprintf(stderr, "[ALLOC] SIDimensionality %p\n", theDim);
+
     theDim->_base.typeID = SIDimensionalityGetTypeID();
     theDim->_base.static_instance = false;
     theDim->_base.finalize = __SIDimensionalityFinalize;
@@ -281,6 +289,9 @@ static SIDimensionalityRef SIDimensionalityCreate(
     theDim->den_exp[kSILuminousIntensityIndex] = luminous_intensity_den_exp;
 
     theDim->symbol = SIDimensionalityCreateSymbol(theDim);
+    printf("\t");
+    OCStringShow(theDim->symbol);
+    printf("\n");
 
     return (SIDimensionalityRef)theDim;
 }
@@ -1822,32 +1833,38 @@ static bool SIDimensionalityHasSameDimensionlessAndDerivedDimensionalities(SIDim
 }
 
 // Add a cleanup function for static dictionaries
-void cleanupDimensionalityLibraries(void) {
-    printf("Cleaning up dimensionality libraries...\n");
+static void cleanupDimensionalityLibraries(void)
+{
+    if (!dimLibrary) return;
+
+    // 1) First tear down dimQuantitiesLibrary if you haven’t already
     if (dimQuantitiesLibrary) {
         OCRelease(dimQuantitiesLibrary);
         dimQuantitiesLibrary = NULL;
     }
-    // Release the dimensionality library after dimQuantitiesLibrary.
-    if (dimLibrary) {
-        OCArrayRef values = OCDictionaryCreateArrayWithAllValues((OCDictionaryRef)dimLibrary);
-        if (values) {
-            for (int i = 0; i < OCArrayGetCount(values); i++) {
-                SIDimensionalityRef dim = OCArrayGetValueAtIndex(values, i);
-                // Set static_instance to false also resets the
-                // retain count to 1.
-                OCTypeSetStaticInstance(dim, false);
-                // Increase retain count to 2, since it will be
-                // released twice, once with values, 
-                // and then with dimLibrary.
-                OCRetain(dim);
-            }
-            OCRelease(values);
+
+    // 2) Grab all of the *keys* (the symbols) out of dimLibrary
+    OCArrayRef keys = OCDictionaryCreateArrayWithAllKeys(dimLibrary);
+    if (keys) {
+        size_t count = OCArrayGetCount(keys);
+        for (size_t i = 0; i < count; ++i) {
+            OCStringRef key = (OCStringRef) OCArrayGetValueAtIndex(keys, i);
+            SIDimensionalityRef dim = (SIDimensionalityRef)OCDictionaryGetValue(dimLibrary, key);
+
+            // Safe print: key is guaranteed non‐NULL
+            printf("Remove dim %s\n", OCStringGetCString(key));
+
+            // remove from dictionary, clear the “static” bit, then release
+            OCDictionaryRemoveValue((OCDictionaryRef)dimLibrary, key);
+            OCTypeSetStaticInstance(dim, false);
+            OCRelease(dim);
         }
-        OCRelease(dimLibrary);
-        dimLibrary = NULL;
+        OCRelease(keys);
     }
 
+    // 3) Finally release the dictionary itself
+    OCRelease(dimLibrary);
+    dimLibrary = NULL;
 }
 
 
