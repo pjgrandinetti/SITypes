@@ -1810,22 +1810,23 @@ static bool SIDimensionalityHasSameDimensionlessAndDerivedDimensionalities(SIDim
 
 // Add a cleanup function for static dictionaries
 void cleanupDimensionalityLibraries(void) {
+    if (dimQuantitiesLibrary) {
+        OCRelease(dimQuantitiesLibrary);
+        dimQuantitiesLibrary = NULL;
+    }
+    // Release the dimensionality library after dimQuantitiesLibrary.
     if (dimLibrary) {
         OCArrayRef values = OCDictionaryCreateArrayWithAllValues((OCDictionaryRef)dimLibrary);
         if (values) {
-            for (uint64_t i = 0; i < OCArrayGetCount(values); i++) {
+            for (int i = 0; i < OCArrayGetCount(values); i++) {
                 SIDimensionalityRef dim = OCArrayGetValueAtIndex(values, i);
                 OCTypeSetStaticInstance(dim, false);
+                OCRetain(dim);
             }
             OCRelease(values);
         }
         OCRelease(dimLibrary);
         dimLibrary = NULL;
-    }
-
-    if (dimQuantitiesLibrary) {
-        OCRelease(dimQuantitiesLibrary);
-        dimQuantitiesLibrary = NULL;
     }
 
 }
