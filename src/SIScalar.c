@@ -59,6 +59,7 @@ static void __SIScalarFinalize(const void * theType)
 {
     if(NULL == theType) return;
     SIScalarRef theNumber = (SIScalarRef) theType;
+    if(theNumber->unit) OCRelease(theNumber->unit);
     free((void *)theNumber);
 }
 

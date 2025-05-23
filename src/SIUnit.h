@@ -637,4 +637,7 @@ OCArrayRef SIUnitCreateArrayOfRootUnits(void);
  */
 OCArrayRef SIUnitCreateArrayOfRootUnitsForQuantity(OCStringRef quantity, OCStringRef *error);
 
+// Expose cleanup function for external shutdown
+void cleanupUnitsLibraries(void);
+
 #endif /* SIUnit_h */

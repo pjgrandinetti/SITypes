@@ -1471,7 +1471,7 @@ void SIUnitsLibrarySetImperialVolumes(bool value)
 
 // Add a cleanup function for static dictionaries and array
 void cleanupUnitsLibraries(void) {
-
+    printf("Cleaning up units libraries...\n");
     if (unitsQuantitiesLibrary) {
         OCRelease(unitsQuantitiesLibrary);
         unitsQuantitiesLibrary = NULL;
@@ -4474,50 +4474,54 @@ static SIUnitRef SIUnitFindEquivalentDerivedSIUnit(SIUnitRef input)
 
 SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
     if (SIUnitIsDimensionlessAndUnderived(theUnit))
         return theUnit;
 
     OCArrayRef candidates = SIUnitCreateArrayOfEquivalentUnits(theUnit);
-    if (candidates)
-    {
-        if (OCArrayGetCount(candidates) == 0)
-        {
-            OCRelease(candidates);
-            return theUnit;
+    if (!candidates)
+        return theUnit;
+
+    if (OCArrayGetCount(candidates) == 0) {
+        OCRelease(candidates);
+        return theUnit;
+    }
+
+    SIUnitRef best = theUnit;
+    OCStringRef symbol     = SIUnitCopySymbol(theUnit);
+    OCStringRef rootSymbol = SIUnitCopyRootSymbol(theUnit);
+
+    if (rootSymbol) {
+        // clean up everything before returning
+        OCRelease(symbol);
+        OCRelease(rootSymbol);
+        OCRelease(candidates);
+        return theUnit;
+    }
+
+    // no rootSymbol → use symbol’s length as baseline
+    int64_t length = OCStringGetLength(symbol);
+    OCRelease(symbol);
+
+    for (uint64_t i = 0, cnt = OCArrayGetCount(candidates); i < cnt; i++) {
+        SIUnitRef    candidate          = OCArrayGetValueAtIndex(candidates, i);
+        OCStringRef  candidateSymbol    = SIUnitCopySymbol(candidate);
+        OCStringRef  candidateRootSym   = SIUnitCopyRootSymbol(candidate);
+
+        if (candidateRootSym) {
+            best = candidate;
         }
-        SIUnitRef best = theUnit;
-        OCStringRef symbol = SIUnitCopySymbol(theUnit);
-        OCStringRef rootSymbol = SIUnitCopyRootSymbol(theUnit);
-        if (rootSymbol)
-        {
-            if (symbol)
-                OCRelease(symbol);
-            if (rootSymbol)
-                OCRelease(rootSymbol);
-            return theUnit;
+        else if (OCStringGetLength(candidateSymbol) < length) {
+            best   = candidate;
+            length = OCStringGetLength(candidateSymbol);
         }
 
-        int64_t length = OCStringGetLength(symbol);
-        OCRelease(symbol);
-        for (int64_t index = 0; index < OCArrayGetCount(candidates); index++)
-        {
-            SIUnitRef candidate = OCArrayGetValueAtIndex(candidates, index);
-            OCStringRef candidateSymbol = SIUnitCopySymbol(candidate);
-            OCStringRef candidateRootSymbol = SIUnitCopyRootSymbol(candidate);
-            if (candidateRootSymbol)
-                best = candidate;
-            else if (length > OCStringGetLength(candidateSymbol))
-                best = candidate;
-            if (candidateSymbol)
-                OCRelease(candidateSymbol);
-            if (candidateRootSymbol)
-                OCRelease(candidateRootSymbol);
-        }
-        OCRelease(candidates);
-        return best;
+        OCRelease(candidateSymbol);
+        OCRelease(candidateRootSym);
     }
-    return theUnit;
+
+    OCRelease(candidates);
+    return best;
 }
 
 SIUnitRef SIUnitByReducing(SIUnitRef theUnit, double *unit_multiplier)

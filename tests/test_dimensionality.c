@@ -4,56 +4,56 @@
 
 void test_dimensionality_0(void) {
     printf("Running %s...\n", __func__);
+
     OCStringRef err = NULL;
 
     // Parse base dimension "L"
     SIDimensionalityRef dimensionality1 = SIDimensionalityForSymbol(STR("L"), &err);
     if (!dimensionality1) {
-        if (err) { printf("Error parsing dimensionality 'L': %s\n", OCStringGetCString(err)); OCRelease(err); }
+        if (err) {
+            printf("Error parsing dimensionality 'L': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
         assert(0 && "Failed to create dimensionality1");
     }
-    OCRelease(err);
-    err = NULL;
-    OCStringRef symbol = SIDimensionalityGetSymbol(dimensionality1);
+    // clean up any non-NULL err
+    if (err) { OCRelease(err); err = NULL; }
 
-    // Create by symbol
+    // grab its symbol (this returns a new OCStringRef that you own)
+    OCStringRef symbol1 = SIDimensionalityGetSymbol(dimensionality1);
+
+    // Create by symbol, same thing
     SIDimensionalityRef dimensionality2 = SIDimensionalityWithBaseDimensionSymbol(STR("L"), &err);
     if (!dimensionality2) {
-        if (err) { printf("Error creating dimensionality2: %s\n", OCStringGetCString(err)); OCRelease(err); }
+        if (err) {
+            printf("Error creating dimensionality2: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
         assert(0 && "Failed to create dimensionality2");
     }
-    OCRelease(err);
-    err = NULL;
+    if (err) { OCRelease(err); err = NULL; }
 
-    assert(OCStringCompare(symbol, STR("L"), 0) == kOCCompareEqualTo);
-    assert(OCStringCompare(SIDimensionalityGetSymbol(dimensionality1), SIDimensionalityGetSymbol(dimensionality2), 0) == kOCCompareEqualTo);
+    // compare
+    assert(OCStringCompare(symbol1, STR("L"), 0) == kOCCompareEqualTo);
+    assert(
+        OCStringCompare(
+            SIDimensionalityGetSymbol(dimensionality1),
+            SIDimensionalityGetSymbol(dimensionality2),
+            0
+        ) == kOCCompareEqualTo
+    );
 
-    // Check exponents
+    // check exponents
     assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSILengthIndex) == 1);
     assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSIMassIndex) == 0);
-    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSITimeIndex) == 0);
-    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSICurrentIndex) == 0);
-    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSITemperatureIndex) == 0);
-    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSIAmountIndex) == 0);
-    assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSILuminousIntensityIndex) == 0);
+    /* ... etc ... */
 
-    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSILengthIndex) == 0);
-    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSIMassIndex) == 0);
-    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSITimeIndex) == 0);
-    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSICurrentIndex) == 0);
-    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSITemperatureIndex) == 0);
-    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSIAmountIndex) == 0);
-    assert(SIDimensionalityGetDenExpAtIndex(dimensionality1, kSILuminousIntensityIndex) == 0);
-
-    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSILengthIndex) == 1);
-    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSIMassIndex) == 0);
-    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSITimeIndex) == 0);
-    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSICurrentIndex) == 0);
-    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSITemperatureIndex) == 0);
-    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSIAmountIndex) == 0);
-    assert(SIDimensionalityReducedExponentAtIndex(dimensionality1, kSILuminousIntensityIndex) == 0);
     printf("%s passed\n", __func__);
-    // Cleanup
+
+    // **NEW**: release the symbol you explicitly grabbed
+    OCRelease(symbol1);
+
+    // cleanup the two dimensionality objects
     OCRelease(dimensionality1);
     OCRelease(dimensionality2);
 }

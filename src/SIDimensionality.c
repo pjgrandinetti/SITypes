@@ -55,7 +55,16 @@ void __SIDimensionalityFinalize(const void *theType)
 {
     if (NULL == theType)
         return;
+
     SIDimensionalityRef theDim = (SIDimensionalityRef)theType;
+
+    // Release the symbol if it exists
+    if (theDim->symbol != NULL)
+    {
+        OCRelease(theDim->symbol);
+    }
+
+    // Free the memory allocated for the dimensionality object
     free((void *)theDim);
 }
 
@@ -862,6 +871,10 @@ static SIDimensionalityRef AddDimensionalityToLibrary(uint8_t length_num_exp, ui
                                                      amount_num_exp, amount_den_exp,
                                                      luminous_intensity_num_exp, luminous_intensity_den_exp);
 
+    // Set dim to a static instance.
+    // This sets the reference count to 1 and prevents it from being released or retained
+    // by OCRelease an OCRetain.   This ensures that only one instance of the dimensionality
+    // exists in the library.
     OCTypeSetStaticInstance(dim, true);
     OCDictionaryAddValue(dimLibrary, dim->symbol, dim);
     OCRelease(dim);
@@ -1810,6 +1823,7 @@ static bool SIDimensionalityHasSameDimensionlessAndDerivedDimensionalities(SIDim
 
 // Add a cleanup function for static dictionaries
 void cleanupDimensionalityLibraries(void) {
+    printf("Cleaning up dimensionality libraries...\n");
     if (dimQuantitiesLibrary) {
         OCRelease(dimQuantitiesLibrary);
         dimQuantitiesLibrary = NULL;
@@ -1831,8 +1845,18 @@ void cleanupDimensionalityLibraries(void) {
 
 }
 
-// Register cleanupDimensionalityLibraries with atexit
-__attribute__((constructor))
-static void registerDimensionalityCleanup(void) {
-    atexit(cleanupDimensionalityLibraries);
+
+// highest‐priority destructor (runs first)
+__attribute__((destructor(200)))
+static void _SITypes__shutdown_dimensionality(void) {
+    cleanupDimensionalityLibraries();
+}
+
+// Master destructor for SITypes library (runs before OCTypes destructor)
+__attribute__((destructor(200)))
+static void _SITypes__shutdown(void) {
+    // Clean up units first
+    cleanupUnitsLibraries();
+    // Then clean up dimensionality
+    cleanupDimensionalityLibraries();
 }
