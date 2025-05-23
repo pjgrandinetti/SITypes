@@ -50,9 +50,6 @@ void test_dimensionality_0(void) {
 
     printf("%s passed\n", __func__);
 
-    // **NEW**: release the symbol you explicitly grabbed
-    OCRelease(symbol1);
-
     // cleanup the two dimensionality objects
     OCRelease(dimensionality1);
     OCRelease(dimensionality2);

@@ -1846,17 +1846,9 @@ void cleanupDimensionalityLibraries(void) {
 }
 
 
-// highest‐priority destructor (runs first)
-__attribute__((destructor(200)))
-static void _SITypes__shutdown_dimensionality(void) {
-    cleanupDimensionalityLibraries();
-}
-
-// Master destructor for SITypes library (runs before OCTypes destructor)
-__attribute__((destructor(200)))
-static void _SITypes__shutdown(void) {
-    // Clean up units first
-    cleanupUnitsLibraries();
-    // Then clean up dimensionality
-    cleanupDimensionalityLibraries();
+__attribute__((constructor))
+static void _SITypes_register_cleanup(void) {
+    // register in “natural” order; they’ll be *called* in reverse
+    atexit(cleanupDimensionalityLibraries);
+    atexit(cleanupUnitsLibraries);
 }

@@ -119,11 +119,11 @@ libSITypes.a: $(OBJ)
 # Build the test runner
 runTests: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests
+	  -L. -L$(OCT_LIBDIR) -lOCTypes -lSITypes -lm -o runTests
 
 test: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -Itests $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests
+	  -L. -L$(OCT_LIBDIR) -lOCTypes -lSITypes -lm -o runTests
 	./runTests
 
 # Debug tests
@@ -150,7 +150,7 @@ run-asan: runTests.asan
 # AddressSanitizer test binary target
 runTests.asan: $(TEST_OBJ) libSITypes.a
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o $@
+	  -L. -L$(OCT_LIBDIR) -lOCTypes -lSITypes -lm -o $@
 
 # Treat warnings as errors
 test-werror: CFLAGS := $(CFLAGS_DEBUG)

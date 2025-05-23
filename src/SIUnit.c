@@ -1508,12 +1508,6 @@ void cleanupUnitsLibraries(void) {
 
 }
 
-// Register cleanupUnitsLibraries with atexit
-__attribute__((constructor))
-static void registerUnitsCleanup(void) {
-    atexit(cleanupUnitsLibraries);
-}
-
 void UnitsLibraryCreate()
 {
     setlocale(LC_ALL, "");
