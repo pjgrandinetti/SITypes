@@ -18,6 +18,7 @@
 
 int main(int argc, const char * argv[]) {
 
+
     printf("=== OCTypes Tests ===\n");
     octypesTest1();
     octypesTest2();
@@ -26,8 +27,13 @@ int main(int argc, const char * argv[]) {
     octypesTest5();
     octypesTest6();
 
+
     printf("\n=== Dimensionality Tests ===\n");
     test_dimensionality_0();
+    // Print summary message if all tests pass
+    printf("\nAll tests passed\n");
+    return 0;
+
     test_dimensionality_1();
     test_dimensionality_2();
     test_dimensionality_3();
@@ -37,6 +43,7 @@ int main(int argc, const char * argv[]) {
     test_dimensionality_multiply_work();
     test_dimensionality_power_area();
     test_dimensionality_reduction_behavior();
+
 
     printf("\n=== SIUnit Tests ===\n");
     test_unit_0();

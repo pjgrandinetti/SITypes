@@ -1834,7 +1834,12 @@ void cleanupDimensionalityLibraries(void) {
         if (values) {
             for (int i = 0; i < OCArrayGetCount(values); i++) {
                 SIDimensionalityRef dim = OCArrayGetValueAtIndex(values, i);
+                // Set static_instance to false also resets the
+                // retain count to 1.
                 OCTypeSetStaticInstance(dim, false);
+                // Increase retain count to 2, since it will be
+                // released twice, once with values, 
+                // and then with dimLibrary.
                 OCRetain(dim);
             }
             OCRelease(values);

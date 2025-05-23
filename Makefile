@@ -116,14 +116,18 @@ libSITypes.a: $(OBJ)
 	$(LEX) -o $@ $<
 
 # Tests
-# Build the test runner
+# Build the test runner with a linker group so order doesn't matter
 runTests: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) -lOCTypes -lSITypes -lm -o runTests
+	  -L. -L$(OCT_LIBDIR) \
+	  -Wl,--start-group -lOCTypes -lSITypes -Wl,--end-group \
+	  -lm -o runTests
 
 test: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -Itests $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) -lOCTypes -lSITypes -lm -o runTests
+	  -L. -L$(OCT_LIBDIR) \
+	  -Wl,--start-group -lOCTypes -lSITypes -Wl,--end-group \
+	  -lm -o runTests
 	./runTests
 
 # Debug tests
@@ -150,7 +154,9 @@ run-asan: runTests.asan
 # AddressSanitizer test binary target
 runTests.asan: $(TEST_OBJ) libSITypes.a
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) -lOCTypes -lSITypes -lm -o $@
+	  -L. -L$(OCT_LIBDIR) \
+	  -Wl,--start-group -lOCTypes -lSITypes -Wl,--end-group \
+	  -lm -o $@
 
 # Treat warnings as errors
 test-werror: CFLAGS := $(CFLAGS_DEBUG)

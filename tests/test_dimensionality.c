@@ -19,7 +19,7 @@ void test_dimensionality_0(void) {
     // clean up any non-NULL err
     if (err) { OCRelease(err); err = NULL; }
 
-    // grab its symbol (this returns a new OCStringRef that you own)
+    // grab its symbol (this returns an OCStringRef that you don't own)
     OCStringRef symbol1 = SIDimensionalityGetSymbol(dimensionality1);
 
     // Create by symbol, same thing
