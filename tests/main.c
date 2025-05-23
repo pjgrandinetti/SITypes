@@ -15,6 +15,9 @@
 #include "test_unit.h"
 #include "test_scalar.h"
 #include "test_scalar_parser.h"
+#include <sanitizer/lsan_interface.h>
+extern void __lsan_do_leak_check() __attribute__((weak));
+
 
 int main(int argc, const char * argv[]) {
 
@@ -30,10 +33,6 @@ int main(int argc, const char * argv[]) {
 
     printf("\n=== Dimensionality Tests ===\n");
     test_dimensionality_0();
-    // Print summary message if all tests pass
-    printf("\nAll tests passed\n");
-    return 0;
-
     test_dimensionality_1();
     test_dimensionality_2();
     test_dimensionality_3();
@@ -44,7 +43,6 @@ int main(int argc, const char * argv[]) {
     test_dimensionality_power_area();
     test_dimensionality_reduction_behavior();
 
-
     printf("\n=== SIUnit Tests ===\n");
     test_unit_0();
     test_unit_1();
@@ -54,12 +52,24 @@ int main(int argc, const char * argv[]) {
     test_unit_6();
     test_unit_7();
     test_unit_8();
-    // Register additional special and non-SI unit tests
     test_unit_9();
     test_unit_10();
     test_unit_11();
     test_unit_12();
     test_unit_13();
+
+    // Print summary message if all tests pass
+    printf("\nAll tests passed\n");
+
+    // If LSAN is present, do an explicit leak check here:
+    if (&__lsan_do_leak_check) {
+        __lsan_do_leak_check();
+    }
+
+   return 0;
+
+
+
 
     printf("\n=== SIScalar Parser Tests ===\n");
     test_scalar_parser_1();
@@ -75,6 +85,12 @@ int main(int argc, const char * argv[]) {
 
     // Print summary message if all tests pass
     printf("\nAll tests passed\n");
-    return 0;
+
+    // If LSAN is present, do an explicit leak check here:
+    if (&__lsan_do_leak_check) {
+        __lsan_do_leak_check();
+    }
+
+   return 0;
 
 }

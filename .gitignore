@@ -63,7 +63,13 @@ xcuserdata/
 *.debug
 
 # Doxygen output
+/doxygen/
 docs/doxygen/
+html/
+latex/
+
+# Sphinx build directories
+docs/_build/
 
 # Ignore downloaded OCTypes binaries and extracted files
 /third_party/libOCTypes*.zip
@@ -72,3 +78,5 @@ third_party/
 
 # Ignore XML files in the docs/xml directory
 docs/xml/*.xml
+doxygen/xml/.*
+doxygen/html/.*

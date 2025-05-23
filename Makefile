@@ -56,8 +56,18 @@ endif
 OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_ARCHIVE := third_party/libOCTypes-headers.zip
 
+# After detecting OS, define linker group flags
+ifeq ($(UNAME_S),Linux)
+  GROUP_START := -Wl,--start-group
+  GROUP_END   := -Wl,--end-group
+else
+  GROUP_START :=
+  GROUP_END   :=
+endif
+
 .PHONY: all octypes prepare test test-debug test-asan run-asan test-werror \
-        install uninstall clean clean-objects clean-docs copy-octypes
+        install uninstall clean clean-objects clean-docs copy-octypes \
+        docs doxygen html
 
 all: octypes prepare libSITypes.a
 
@@ -120,13 +130,13 @@ libSITypes.a: $(OBJ)
 runTests: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) \
-	  -Wl,--start-group -lOCTypes -lSITypes -Wl,--end-group \
+	  $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) \
 	  -lm -o runTests
 
 test: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -Itests $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) \
-	  -Wl,--start-group -lOCTypes -lSITypes -Wl,--end-group \
+	  $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) \
 	  -lm -o runTests
 	./runTests
 
@@ -135,28 +145,12 @@ test-debug: CFLAGS := $(CFLAGS) $(CFLAGS_DEBUG)
 test-debug: clean all test
 
 # AddressSanitizer test target: rebuild with ASan-enabled flags and run
-test-asan: \
- 	CFLAGS := $(CFLAGS) -fsanitize=address -fno-omit-frame-pointer -g -O1
-test-asan: clean all run-asan
-
-#––– AddressSanitizer target with leak backtraces ––––––––––––––––––––––––––––
-ifeq ($(UNAME_S),Darwin)
-  ASAN_RUN_FLAGS = verbosity=2
-else
-  ASAN_RUN_FLAGS = detect_leaks=1:verbosity=2
-endif
-
-.PHONY: run-asan
-run-asan: runTests.asan
-	@echo "→ Running AddressSanitizer"
-	@ASAN_OPTIONS=$(ASAN_RUN_FLAGS) ./runTests.asan
-
-# AddressSanitizer test binary target
-runTests.asan: $(TEST_OBJ) libSITypes.a
-	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) \
-	  -Wl,--start-group -lOCTypes -lSITypes -Wl,--end-group \
-	  -lm -o $@
+test-asan: libSITypes.a $(TEST_OBJ)
+	$(CC) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
+	  -L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) \
+	  -lm -o runTests.asan
+	@echo "Running AddressSanitizer build..."
+	@./runTests.asan
 
 # Treat warnings as errors
 test-werror: CFLAGS := $(CFLAGS_DEBUG)
@@ -177,6 +171,20 @@ uninstall:
 	$(RM) $(DESTDIR)$(LIBDIR)/libSITypes.a
 	$(RM) $(DESTDIR)$(INCDIR)/*.h
 	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(INCDIR)
+
+# Documentation targets
+.PHONY: docs doxygen html
+
+doxygen:
+	@echo "Generating Doxygen XML..."
+	@cd docs && doxygen Doxyfile
+
+html: doxygen
+	@echo "Building Sphinx HTML..."
+	@cd docs && sphinx-build -W -E -b html . _build/html
+
+# Alias “make docs” to build HTML
+docs: html
 
 # Clean targets
 clean-objects:

@@ -58,13 +58,6 @@ void __SIDimensionalityFinalize(const void *theType)
 
     SIDimensionalityRef theDim = (SIDimensionalityRef)theType;
 
-    // Free the memory allocated for the dimensionality object
-    fprintf(stderr, "[FREE ] SIDimensionality %p\n", theType);
-
-    printf("\t");
-    OCStringShow(theDim->symbol);
-    printf("\n");
-
     // Release the symbol if it exists
     if (theDim->symbol != NULL)
     {
@@ -92,7 +85,6 @@ static struct __SIDimensionality *SIDimensionalityAllocate()
     struct __SIDimensionality *theDim = malloc(sizeof(struct __SIDimensionality));
     if (NULL == theDim)
         return NULL;    
-    fprintf(stderr, "[ALLOC] SIDimensionality %p\n", theDim);
 
     theDim->_base.typeID = SIDimensionalityGetTypeID();
     theDim->_base.static_instance = false;
@@ -175,67 +167,59 @@ static void appendDimensionSymbol(OCMutableStringRef str, uint8_t exponent, OCSt
 static OCStringRef
 SIDimensionalityCreateSymbol(SIDimensionalityRef theDim)
 {
-    if (NULL == theDim) {
-        return NULL;
-    }
+    if (!theDim) return NULL;
 
-    // build up numerator and denominator
+    // 1) Build numerator and denominator fragments
     OCMutableStringRef num = OCStringCreateMutable(0);
     OCMutableStringRef den = OCStringCreateMutable(0);
     bool multiDen = false;
-
     for (uint8_t i = 0; i < BASE_DIMENSION_COUNT; i++) {
         OCStringRef base = baseDimensionSymbol(i);
-
-        // numerator
-        if (theDim->num_exp[i] > 0) {
-            appendDimensionSymbol(num, theDim->num_exp[i], base);
-        }
-
-        // denominator (track if we append more than one)
-        if (theDim->den_exp[i] > 0) {
-            if (OCStringGetLength(den) > 0) {
-                multiDen = true;
-            }
-            appendDimensionSymbol(den, theDim->den_exp[i], base);
+        uint8_t n = theDim->num_exp[i], d = theDim->den_exp[i];
+        if (n) appendDimensionSymbol(num, n, base);
+        if (d) {
+            if (OCStringGetLength(den)) multiDen = true;
+            appendDimensionSymbol(den, d, base);
         }
     }
 
-    // pick the right format
-    size_t lenN = OCStringGetLength(num);
-    size_t lenD = OCStringGetLength(den);
-    OCStringRef sym = NULL;
+    // 2) Build final result in one mutable buffer
+    OCMutableStringRef result = OCStringCreateMutable(0);
+    size_t lenN = OCStringGetLength(num), lenD = OCStringGetLength(den);
 
     if (lenN && lenD) {
-        // e.g. "kg/(m·s2)" vs "kg/m"
-        sym = OCStringCreateWithFormat(
-            multiDen ? STR("%@/(%@)") : STR("%@/%@"),
-            num, den
-        );
+        // numerator/denominator form
+        OCStringAppendCString(result, OCStringGetCString(num));
+        OCStringAppendCString(result, "/");
+        if (multiDen) OCStringAppendCString(result, "(");
+        OCStringAppendCString(result, OCStringGetCString(den));
+        if (multiDen) OCStringAppendCString(result, ")");
     }
     else if (lenN) {
-        // pure numerator, e.g. "m2·kg"
-        sym = num;            // transfer ownership
+        // pure numerator
+        OCStringAppendCString(result, OCStringGetCString(num));
     }
     else if (lenD) {
-        // pure denominator, e.g. "1/(s·A)" vs "1/s"
-        sym = OCStringCreateWithFormat(
-            multiDen ? STR("1/(%@)") : STR("1/%@"),
-            den
-        );
+        // pure denominator form
+        OCStringAppendCString(result, "1/");
+        if (multiDen) OCStringAppendCString(result, "(");
+        OCStringAppendCString(result, OCStringGetCString(den));
+        if (multiDen) OCStringAppendCString(result, ")");
     }
     else {
         // dimensionless
-        sym = STR("1");       // constant, no release needed
+        OCStringAppendCString(result, "1");
     }
 
-    // balance out the two mutable temporaries
-    if (sym != num) OCRelease(num);
-    if (sym != den) OCRelease(den);
+    // 3) Clean up temporaries
+    OCRelease(num);
+    OCRelease(den);
 
+    // 4) Return an immutable copy (or transfer ownership if your API allows)
+    OCStringRef sym = OCStringCreateCopy(result);
+    OCRelease(result);
     return sym;
 }
-
 
 #pragma mark Designated Creator
 
@@ -289,9 +273,6 @@ static SIDimensionalityRef SIDimensionalityCreate(
     theDim->den_exp[kSILuminousIntensityIndex] = luminous_intensity_den_exp;
 
     theDim->symbol = SIDimensionalityCreateSymbol(theDim);
-    printf("\t");
-    OCStringShow(theDim->symbol);
-    printf("\n");
 
     return (SIDimensionalityRef)theDim;
 }
@@ -1850,12 +1831,7 @@ static void cleanupDimensionalityLibraries(void)
         for (size_t i = 0; i < count; ++i) {
             OCStringRef key = (OCStringRef) OCArrayGetValueAtIndex(keys, i);
             SIDimensionalityRef dim = (SIDimensionalityRef)OCDictionaryGetValue(dimLibrary, key);
-
-            // Safe print: key is guaranteed non‐NULL
-            printf("Remove dim %s\n", OCStringGetCString(key));
-
-            // remove from dictionary, clear the “static” bit, then release
-            OCDictionaryRemoveValue((OCDictionaryRef)dimLibrary, key);
+            OCDictionaryRemoveValue(dimLibrary, key);
             OCTypeSetStaticInstance(dim, false);
             OCRelease(dim);
         }
@@ -1868,9 +1844,10 @@ static void cleanupDimensionalityLibraries(void)
 }
 
 
-__attribute__((constructor))
-static void _SITypes_register_cleanup(void) {
-    // register in “natural” order; they’ll be *called* in reverse
-    atexit(cleanupDimensionalityLibraries);
-    atexit(cleanupUnitsLibraries);
+// Run before LSAN’s destructors (101–103)
+__attribute__((destructor(200)))
+static void _OCTypes_cleanup_before_leak_check(void) {
+    cleanupUnitsLibraries();
+    cleanupDimensionalityLibraries();
 }
+

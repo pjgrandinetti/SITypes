@@ -1471,7 +1471,8 @@ void SIUnitsLibrarySetImperialVolumes(bool value)
 
 // Add a cleanup function for static dictionaries and array
 void cleanupUnitsLibraries(void) {
-    printf("Cleaning up units libraries...\n");
+    if(!unitsLibrary) return;
+
     if (unitsQuantitiesLibrary) {
         OCRelease(unitsQuantitiesLibrary);
         unitsQuantitiesLibrary = NULL;
@@ -1490,21 +1491,20 @@ void cleanupUnitsLibraries(void) {
     // This dictionary must be released last, as it converts all units from static instances
     // to non-static instances.  If this dictionary is released first, then the static instances
     // will have been released and would be invalid in the other dictionaries above.
-    if (unitsLibrary) {
-        OCArrayRef values = OCDictionaryCreateArrayWithAllValues((OCDictionaryRef)unitsLibrary);
-        if (values) {
-            for (uint64_t i = 0; i < OCArrayGetCount(values); i++) {
-                SIUnitRef unit = (SIUnitRef)OCArrayGetValueAtIndex(values, i);
-                OCArrayRemoveValueAtIndex(values, i);
-                OCDictionaryRemoveValue(unitsLibrary, unit);
-                OCTypeSetStaticInstance(unit, false);
-                OCRelease(unit);
-            }
-            OCRelease(values);
+    OCArrayRef keys = OCDictionaryCreateArrayWithAllKeys((OCDictionaryRef)unitsLibrary);
+    if (keys) {
+        for (uint64_t i = 0; i < OCArrayGetCount(keys); i++) {
+            OCStringRef key = (OCStringRef) OCArrayGetValueAtIndex(keys, i);
+            SIUnitRef unit = (SIUnitRef) OCDictionaryGetValue(unitsLibrary, key);
+            OCDictionaryRemoveValue(unitsLibrary, key);
+            OCTypeSetStaticInstance(unit, false);
+            OCRelease(unit);
         }
-        OCRelease(unitsLibrary);
-        unitsLibrary = NULL;
+        OCRelease(keys);
     }
+    OCRelease(unitsLibrary);
+    unitsLibrary = NULL;
+   
 }
 
 
