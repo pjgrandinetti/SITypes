@@ -1,25 +1,3 @@
-/**
- * @file SIDimensionality.h
- * @brief Declares the SIDimensionality interface for representing and manipulating physical dimensionalities.
- *
- * The seven SI base dimensions are supported: length, mass, time, electric current, temperature,
- * amount of substance, and luminous intensity.
- *
- * @author Philip
- * @copyright PhySy Ltd.
- */
-
-#ifndef SIDIMENSIONALITY_H
-#define SIDIMENSIONALITY_H
-
-#include <stdbool.h>
-#include <stdint.h>
-#include <OCTypes/OCLibrary.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //
 //  SIDimensionality.h
 //  SITypes
@@ -28,11 +6,28 @@ extern "C" {
 //  Copyright © 2017 PhySy Ltd. All rights reserved.
 //
 
+#ifndef SIDIMENSIONALITY_H
+#define SIDIMENSIONALITY_H
+
+#include "SILibrary.h"
+
 /**
- * @defgroup SIDimensionality SIDimensionality
- * @brief Dimensionality types and operations in SITypes.
- * @{
+ * @file SIDimensionality.h
+ * @brief Declares the SIDimensionality interface for representing and manipulating physical dimensionalities.
+ *
+ * The seven SI base dimensions are supported: length, mass, time, electric current, temperature,
+ * amount of substance, and luminous intensity.
+ *
+ * @author Philip Grandinetti
+ * @copyright PhySy Ltd.
  */
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /**
  * @typedef SIDimensionalityRef

@@ -201,7 +201,8 @@ clean: clean-objects
 	$(RM) *.tab.c *.tab.h *Scanner.c
 	$(RM) *.d
 	$(RM) core.* *.dSYM
-	$(RM) -r docs/doxygen docs/_build
+	$(RM) -r docs/doxygen docs/_build docs/html
+	$(RM) -r build-xcode
 
 clean-docs:
 	@echo "Cleaning documentation..."
