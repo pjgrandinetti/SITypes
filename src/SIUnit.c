@@ -4458,8 +4458,10 @@ static SIUnitRef SIUnitFindEquivalentDerivedSIUnit(SIUnitRef input)
                 }
             }
         }
-        if (closest == -1)
+        if (closest == -1) {
+            OCRelease(candidates);
             return input;
+}
         SIUnitRef result = OCArrayGetValueAtIndex(candidates, closest);
         OCRelease(candidates);
         return result;

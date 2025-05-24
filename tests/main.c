@@ -58,6 +58,9 @@ int main(int argc, const char * argv[]) {
     test_unit_12();
     test_unit_13();
 
+    printf("\n=== SIScalar Parser Tests ===\n");
+    test_scalar_parser_1();
+
     // Print summary message if all tests pass
     printf("\nAll tests passed\n");
 
@@ -68,11 +71,6 @@ int main(int argc, const char * argv[]) {
 
    return 0;
 
-
-
-
-    printf("\n=== SIScalar Parser Tests ===\n");
-    test_scalar_parser_1();
     test_scalar_parser_2();
     test_scalar_parser_3();
     test_scalar_parser_4();
@@ -82,6 +80,8 @@ int main(int argc, const char * argv[]) {
     test_scalar_parser_8();
     test_scalar_parser_9();
     test_scalar_parser_10();
+
+
 
     // Print summary message if all tests pass
     printf("\nAll tests passed\n");
