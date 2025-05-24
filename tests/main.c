@@ -61,15 +61,6 @@ int main(int argc, const char * argv[]) {
     printf("\n=== SIScalar Parser Tests ===\n");
     test_scalar_parser_1();
 
-
-    // Print summary message if all tests pass
-    printf("\nAll tests passed\n");
-
-    // If LSAN is present, do an explicit leak check here:
-    if (&__lsan_do_leak_check) {
-        __lsan_do_leak_check();
-    }
-
     test_scalar_parser_2();
     test_scalar_parser_3();
     test_scalar_parser_4();
@@ -79,6 +70,14 @@ int main(int argc, const char * argv[]) {
     test_scalar_parser_8();
     test_scalar_parser_9();
     test_scalar_parser_10();
+
+    // Print summary message if all tests pass
+    printf("\nAll tests passed\n");
+
+    // If LSAN is present, do an explicit leak check here:
+    if (&__lsan_do_leak_check) {
+        __lsan_do_leak_check();
+    }
 
    return 0;
 
