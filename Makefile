@@ -67,7 +67,7 @@ endif
 
 .PHONY: all octypes prepare test test-debug test-asan run-asan test-werror \
         install uninstall clean clean-objects clean-docs copy-octypes \
-        docs doxygen html
+        docs doxygen html xcode
 
 all: octypes prepare libSITypes.a
 
@@ -185,6 +185,12 @@ html: doxygen
 
 # Alias “make docs” to build HTML
 docs: html
+
+# Generate an Xcode project using CMake
+xcode:
+	@echo "Generating Xcode project in build-xcode..."
+	@mkdir -p build-xcode
+	@cmake -G "Xcode" -S . -B build-xcode
 
 # Clean targets
 clean-objects:
