@@ -8,6 +8,8 @@
 #include "SIUnitParser.h"
 
 extern bool sis_syntax_error;
+extern ScalarNodeRef sis_root;
+
 extern SIScalarRef result;
 
 extern int sis_scan_string(const char *);
@@ -256,6 +258,10 @@ insertAsterisks(OCMutableStringRef original)
 SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
+
+    // 1) Create a local autorelease pool
+    OCAutoreleasePoolRef pool = OCAutoreleasePoolCreate();
+
     if (OCStringCompare(string, kSIQuantityDimensionless, kOCCompareCaseInsensitive) == kOCCompareEqualTo) return NULL;
 
     OCMutableStringRef mutString = OCStringCreateMutableCopy(string);
@@ -296,40 +302,61 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     mutString = newMutString;
 
 // Ready to Parse  
-    sis_syntax_error = false;
     const char *cString = OCStringGetCString(mutString);
+
+    SIScalarRef out = NULL;
     if (cString) {
+        sis_syntax_error = false;
         sis_scan_string(cString);
         sisparse();
         sislex_destroy();
+
+        if (!sis_syntax_error && sis_root) {
+            out = result;
+        }
+
+        /* whether parse succeeded or not, free the tree once here */
+        if (sis_root) {
+            ScalarNodeFree(sis_root);
+            sis_root = NULL;
+        }
+
         OCRelease(mutString);
+
+
+
     }
     if (error) {
         if (scalarErrorString) *error = scalarErrorString;
         if (*error) {
-            if (result) OCRelease(result);
+            if (out) OCRelease(out);
+            OCAutoreleasePoolRelease(pool);
             return NULL;
         }
     }
 
-    if (result) {
+    if (out) {
         /* unit conversion and real-part extraction logic */
         if (finalUnit) {
-            if (!SIScalarConvertToUnit((SIMutableScalarRef)result, finalUnit, error)) {
-                OCRelease(result);
+            if (!SIScalarConvertToUnit((SIMutableScalarRef)out, finalUnit, error)) {
+                OCRelease(out);
+                OCAutoreleasePoolRelease(pool);
                 return NULL;
             }
         }
         // If the result is real-only, extract its real component
-        if (SIScalarIsReal(result)) {
-            SIScalarRef realResult = SIScalarCreateByTakingComplexPart(result, kSIRealPart);
-            OCRelease(result);
+        if (SIScalarIsReal(out)) {
+            SIScalarRef realResult = SIScalarCreateByTakingComplexPart(out, kSIRealPart);
+            OCRelease(out);
+            OCAutoreleasePoolRelease(pool);
             return realResult;
         }
     } else {
         if (error) *error = STR("Syntax Error");
     }
-    return result;
+    OCRetain(out);
+    OCAutoreleasePoolRelease(pool);
+    return out;
 }
 
 void

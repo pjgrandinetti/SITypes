@@ -2,9 +2,11 @@
     #include <OCTypes/OCLibrary.h>
     #include "SILibrary.h"
     #include "SIScalarParser.h"
-    #include "SIScalarParserHelpers.c"
     #include <ctype.h>
     void siserror(char *s, ...);
+
+    ScalarNodeRef sis_root = NULL;
+
     SIScalarRef result;
     OCStringRef scalarError;
     int sislex(void);    
@@ -40,9 +42,9 @@
 
 %%
 calclist:   /* do nothing */
-| calclist exp { 
+| calclist exp {
+    sis_root = $2;
     result = ScalarNodeEvaluate($2, &scalarError);
-    if(!ScalarNodeisLeaf($2)) ScalarNodeFree($2);
 }
 ;
 
