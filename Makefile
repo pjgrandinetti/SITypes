@@ -52,6 +52,8 @@ ifeq ($(UNAME_S),Darwin)
   OCT_LIB_BIN := libOCTypes-libOCTypes-macos-latest.zip
 else ifeq ($(UNAME_S),Linux)
   OCT_LIB_BIN := libOCTypes-libOCTypes-ubuntu-latest.zip
+else ifneq ($(findstring MINGW,$(UNAME_S)),)
+  OCT_LIB_BIN := libOCTypes-libOCTypes-windows-latest.zip
 endif
 OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_ARCHIVE := third_party/libOCTypes-headers.zip
