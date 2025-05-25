@@ -38,36 +38,42 @@
 
 %type <a> exp explist
 
-/* may 19th, 2013 removed line below from exp: (was after exp '*' exp) */
+/* whenever Bison discards an 'exp' or 'explist', free its node */
+%destructor { ScalarNodeFree($$); } <a> exp explist
 
 %%
-calclist:   /* do nothing */
-| calclist exp {
-    sis_root = $2;
-    result = ScalarNodeEvaluate($2, &scalarError);
-}
-;
 
-exp: exp '+' exp {$$ = ScalarNodeCreateInnerNode('+',$1, $3);}
-| exp '-' exp {$$ = ScalarNodeCreateInnerNode('-',$1, $3);}
-| exp '*' exp {$$ = ScalarNodeCreateInnerNode('*',$1, $3);}
-| exp '/' exp {$$ = ScalarNodeCreateInnerNode('/',$1, $3);}
-| exp '^' exp {$$ = ScalarNodeCreateInnerNode('^',$1, $3);}
-| '|' exp '|' {$$ = ScalarNodeCreateInnerNode('|',$2, NULL);}
-| '(' exp ')' {$$ = $2;}
-| '-' exp %prec UMINUS{$$ = ScalarNodeCreateInnerNode('M',$2, NULL);}
-| exp '!' {$$ = ScalarNodeCreateInnerNode('!',$1, NULL);}
-| SCALAR    {if($1==NULL) {YYERROR;} $$ = ScalarNodeCreateNumberLeaf($1);}
-| MATH_FUNC '(' explist ')' {$$ = ScalarNodeCreateMathFunction($1,$3);}
-| CONST_FUNC CONST_STRING {$$ = ScalarNodeCreateConstantFunction($1,$2);}
-;
+calclist:
+      /* empty */
+    | calclist exp
+      {
+        sis_root = $2;
+        result = ScalarNodeEvaluate($2, &scalarError);
+      }
+    ;
 
-explist: exp
-| exp ',' explist   {$$ = ScalarNodeCreateInnerNode('L',$1,$3);}
+exp:
+      exp '+' exp   { $$ = ScalarNodeCreateInnerNode('+',$1,$3); }
+    | exp '-' exp   { $$ = ScalarNodeCreateInnerNode('-',$1,$3); }
+    | exp '*' exp   { $$ = ScalarNodeCreateInnerNode('*',$1,$3); }
+    | exp '/' exp   { $$ = ScalarNodeCreateInnerNode('/',$1,$3); }
+    | exp '^' exp   { $$ = ScalarNodeCreateInnerNode('^',$1,$3); }
+    | '|' exp '|'   { $$ = ScalarNodeCreateInnerNode('|',$2,NULL); }
+    | '(' exp ')'   { $$ = $2; }
+    | '-' exp %prec UMINUS { $$ = ScalarNodeCreateInnerNode('M',$2,NULL); }
+    | exp '!'       { $$ = ScalarNodeCreateInnerNode('!',$1,NULL); }
+    | SCALAR        { if ($1==NULL) YYERROR; $$ = ScalarNodeCreateNumberLeaf($1); }
+    | MATH_FUNC '(' explist ')'   { $$ = ScalarNodeCreateMathFunction($1,$3); }
+    | CONST_FUNC CONST_STRING      { $$ = ScalarNodeCreateConstantFunction($1,$2); }
+    ;
+
+explist:
+      exp
+    | exp ',' explist   { $$ = ScalarNodeCreateInnerNode('L',$1,$3); }
+    ;
 
 %%
 
 extern int sis_scan_string(const char *);
 extern void sislex_destroy(void);
 bool sis_syntax_error;
-

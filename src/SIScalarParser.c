@@ -323,21 +323,40 @@ void ScalarNodeFree(ScalarNodeRef node)
     case '*':
     case '/':
     case '^':
+    case 'L':
+    {
+        // Binary operators: free right and left
         ScalarNodeFree(node->right);
-    case '|':
-    case 'M':
-    case 'F':
-    case '!':
         ScalarNodeFree(node->left);
         break;
-    case 'K':
+    }
+    case '|':
+    case 'M':
+    case '!':
     {
-        struct __scalarValue *leaf = (struct __scalarValue *)node;
-        OCRelease(leaf->number);
-        free((void *)node);
+        // Unary operators: free left
+        ScalarNodeFree(node->left);
+        break;
     }
+    case 'F':
+    {
+        // Math function: free operand
+        ScalarNodeMathFunctionRef funcNode = (ScalarNodeMathFunctionRef)node;
+        ScalarNodeFree(funcNode->left);
+        break;
     }
+    case 'C':
+        break;
+    case 'K':
+        break;
+    default:
+        break;
+    }
+
+    free((void *)node); // Always free the node structure itself
 }
+
+
 
 SIScalarRef builtInConstantFunction(ScalarNodeConstantFunctionRef func, OCStringRef *errorString)
 {

@@ -60,7 +60,6 @@ int main(int argc, const char * argv[]) {
 
     printf("\n=== SIScalar Parser Tests ===\n");
     test_scalar_parser_1();
-
     test_scalar_parser_2();
     test_scalar_parser_3();
     test_scalar_parser_4();

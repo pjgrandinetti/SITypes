@@ -58,6 +58,7 @@ static bool __SIScalarEqual(const void * theType1, const void * theType2)
 static void __SIScalarFinalize(const void * theType)
 {
     if(NULL == theType) return;
+    fprintf(stderr, "Finalizing SIScalar : %p\n", theType);
     SIScalarRef theNumber = (SIScalarRef) theType;
     if(theNumber->unit) OCRelease(theNumber->unit);
     free((void *)theNumber);
@@ -97,11 +98,13 @@ static struct __SIScalar *SIScalarAllocate()
     struct __SIScalar *theNumber = malloc(sizeof(struct __SIScalar));
     if(NULL == theNumber) return NULL;
     theNumber->_base.typeID = SIScalarGetTypeID();
-    theNumber->_base.retainCount = 1;
+    theNumber->_base.static_instance = false; 
     theNumber->_base.finalize = __SIScalarFinalize;
     theNumber->_base.equal = __SIScalarEqual;
     theNumber->_base.copyFormattingDesc = __SIScalarCopyFormattingDescription;
-    
+    theNumber->_base.retainCount = 0;
+    OCRetain(theNumber);
+
     theNumber->unit = NULL;
     theNumber->type = kSINumberFloat32Type;
     return theNumber;
