@@ -39,6 +39,7 @@ jobs:
             make
             flex
             bison
+            unzip
 
       - name: Build on Windows
         if: runner.os == 'Windows'
