@@ -4568,7 +4568,7 @@ SIUnitRef SIUnitByMultiplyingWithoutReducing(SIUnitRef theUnit1, SIUnitRef theUn
     IF_NO_OBJECT_EXISTS_RETURN(theUnit1, NULL)
     IF_NO_OBJECT_EXISTS_RETURN(theUnit2, NULL)
     if (theUnit1 == theUnit2)
-        return SIUnitByRaisingToAPowerWithoutReducing(theUnit1, 2, unit_multiplier, error);
+        return SIUnitByRaisingToPowerWithoutReducing(theUnit1, 2, unit_multiplier, error);
 
     SIUnitRef dimensionlessAndUnderivedUnit = SIUnitDimensionlessAndUnderived();
     if (theUnit1 == dimensionlessAndUnderivedUnit)
@@ -4806,7 +4806,7 @@ SIUnitRef SIUnitByTakingNthRoot(SIUnitRef input, uint8_t root, double *unit_mult
     return theUnit;
 }
 
-SIUnitRef SIUnitByRaisingToAPowerWithoutReducing(SIUnitRef input, double power, double *unit_multiplier, OCStringRef *error)
+SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input, double power, double *unit_multiplier, OCStringRef *error)
 {
     if (error)
         if (*error)
@@ -4867,12 +4867,12 @@ SIUnitRef SIUnitByRaisingToAPowerWithoutReducing(SIUnitRef input, double power, 
     return theUnit;
 }
 
-SIUnitRef SIUnitByRaisingToAPower(SIUnitRef input, double power, double *unit_multiplier, OCStringRef *error)
+SIUnitRef SIUnitByRaisingToPower(SIUnitRef input, double power, double *unit_multiplier, OCStringRef *error)
 {
     if (error)
         if (*error)
             return NULL;
-    SIUnitRef unit = SIUnitByRaisingToAPowerWithoutReducing(input, power, unit_multiplier, error);
+    SIUnitRef unit = SIUnitByRaisingToPowerWithoutReducing(input, power, unit_multiplier, error);
     return SIUnitByReducing(unit, unit_multiplier);
 }
 

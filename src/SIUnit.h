@@ -900,7 +900,7 @@ SIUnitRef SIUnitByDividingWithoutReducing(SIUnitRef theUnit1,
  *          representable by integer exponents (after reduction), the function
  *          fails and sets @p *error.
  */
-SIUnitRef SIUnitByRaisingToAPower(SIUnitRef    input,
+SIUnitRef SIUnitByRaisingToPower(SIUnitRef    input,
                                   double       power,
                                   double      *unit_multiplier,
                                   OCStringRef *error);
@@ -927,7 +927,7 @@ SIUnitRef SIUnitByRaisingToAPower(SIUnitRef    input,
  * @details Performs exponentiation of the underlying dimensional exponents by @p power
  *          but does not simplify the resulting exponent arrays.
  */
-SIUnitRef SIUnitByRaisingToAPowerWithoutReducing(SIUnitRef    input,
+SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef    input,
                                                  double       power,
                                                  double      *unit_multiplier,
                                                  OCStringRef *error);
@@ -962,9 +962,11 @@ SIUnitRef SIUnitForUnderivedSymbol(OCStringRef symbol);
  * @param   unit_multiplier
  *          Pointer to a double initialized by the caller. On return, it is multiplied
  *          by any scale factor implied by the symbol (e.g., prefixes or compound factors).
+ *          The caller is responsible for initializing this value, as it may not be NULL.
  * @param   error
  *          Pointer to an OCStringRef. On failure, *error will be set to a newly created
  *          OCString describing the parse error; the caller is responsible for releasing it.
+ *          The caller may pass NULL if they do not wish to receive error information.
  *
  * @return  A non-owned SIUnitRef for the parsed symbol, or NULL if invalid.
  *          The caller must not release the returned reference.

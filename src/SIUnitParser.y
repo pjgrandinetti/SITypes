@@ -30,9 +30,9 @@ calclist: /* do nothing */ { $$ = NULL; }
 exp: '(' exp ')' {$$ = $2;}
 | exp '*' exp {$$ = SIUnitByMultiplyingWithoutReducing($1,$3,unit_multiplier_ref, &unitError);}
 | exp '/' exp {$$ = SIUnitByDividingWithoutReducing($1,$3,unit_multiplier_ref);}
-| exp '^' INTEGER {$$ = SIUnitByRaisingToAPowerWithoutReducing($1,$3,unit_multiplier_ref, &unitError);}
+| exp '^' INTEGER {$$ = SIUnitByRaisingToPowerWithoutReducing($1,$3,unit_multiplier_ref, &unitError);}
 | INTEGER '/' exp {
-    if($1 == 1) {$$ = SIUnitByRaisingToAPowerWithoutReducing($3,-1,unit_multiplier_ref, &unitError);}
+    if($1 == 1) {$$ = SIUnitByRaisingToPowerWithoutReducing($3,-1,unit_multiplier_ref, &unitError);}
     else  {
         unitError = STR("Unknown unit symbol");
         yyerror("Unknown unit symbol");

@@ -58,7 +58,6 @@ static bool __SIScalarEqual(const void * theType1, const void * theType2)
 static void __SIScalarFinalize(const void * theType)
 {
     if(NULL == theType) return;
-    fprintf(stderr, "Finalizing SIScalar : %p\n", theType);
     SIScalarRef theNumber = (SIScalarRef) theType;
     if(theNumber->unit) OCRelease(theNumber->unit);
     free((void *)theNumber);
@@ -1594,7 +1593,7 @@ bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar, doub
     
    	IF_NO_OBJECT_EXISTS_RETURN(theScalar,false);
     double unit_multiplier = 1;
-    SIUnitRef unit = SIUnitByRaisingToAPowerWithoutReducing(theScalar->unit, power, &unit_multiplier, error);
+    SIUnitRef unit = SIUnitByRaisingToPowerWithoutReducing(theScalar->unit, power, &unit_multiplier, error);
     if(error) {
         if(*error) return false;
     }
@@ -1639,7 +1638,7 @@ bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar, double power, OCStringR
     //	- returned SIScalar unit will be in coherent SI units
     
     double unit_multiplier = 1;
-    SIUnitRef unit = SIUnitByRaisingToAPower(theScalar->unit, power, &unit_multiplier, error);
+    SIUnitRef unit = SIUnitByRaisingToPower(theScalar->unit, power, &unit_multiplier, error);
     if(error) {
         if(*error) return false;
     }
@@ -1725,7 +1724,7 @@ SIScalarRef SIScalarCreateByGammaFunctionWithoutReducingUnit(SIScalarRef theScal
     else if(SIScalarIsRealNonNegativeInteger(theScalar)) {
         int64_t integerValue = (int64_t) SIScalarDoubleValue(theScalar);
         double unit_multiplier = 1;
-        SIUnitRef newUnit = SIUnitByRaisingToAPower(theScalar->unit, integerValue, &unit_multiplier, error);
+        SIUnitRef newUnit = SIUnitByRaisingToPower(theScalar->unit, integerValue, &unit_multiplier, error);
         double argument = SIScalarDoubleValue(theScalar)+1;
         double result = tgamma(argument);
         return SIScalarCreate(newUnit, kSINumberFloat64Type, &result);
