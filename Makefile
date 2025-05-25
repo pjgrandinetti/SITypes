@@ -23,10 +23,11 @@ OCT_INCLUDE    := $(OCTYPES_DIR)/include
 OCT_LIBDIR     := $(OCTYPES_DIR)/lib
 
 # Compiler flags
-CFLAGS  := -I. -I$(SRC_DIR) -I$(OCT_INCLUDE) -O3 -Wall -Wextra \
-           -Wno-sign-compare -Wno-unused-parameter \
-           -Wno-missing-field-initializers -Wno-unused-function \
-           -MMD -MP
+CPPFLAGS := -I. -I$(SRC_DIR) -I$(OCT_INCLUDE)
+CFLAGS   := -O3 -Wall -Wextra \
+             -Wno-sign-compare -Wno-unused-parameter \
+             -Wno-missing-field-initializers -Wno-unused-function \
+             -MMD -MP
 CFLAGS_DEBUG := -O0 -g -Wall -Wextra -Werror -MMD -MP
 
 # always append OCTypes include path, even if CFLAGS is overridden
@@ -118,13 +119,13 @@ libSITypes.a: $(OBJ)
 
 # Pattern rules for compilation
 %.o: $(SRC_DIR)/%.c | octypes
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 %.o: $(TEST_SRC_DIR)/%.c | octypes
-	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 %.o: %.c | octypes
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 # Bison rule: generate .tab.c and .tab.h
 %.tab.c %.tab.h: $(SRC_DIR)/%Parser.y
