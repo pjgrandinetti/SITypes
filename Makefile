@@ -101,13 +101,15 @@ $(OCT_LIBDIR)/libOCTypes.a: $(OCT_LIB_ARCHIVE)
 	@unzip -q $(OCT_LIB_ARCHIVE) -d $(OCT_LIBDIR)
 
 # fixup header-zip’s built-in include/ folder so we end up with
-# third_party/OCTypes/include/OCTypes/*.h
+# third_party/OCTypes/include/OCTypes/OCLibrary.h
 $(OCT_INCLUDE)/OCTypes/OCLibrary.h: $(OCT_HEADERS_ARCHIVE)
 	@echo "Extracting OCTypes headers"
 	@$(RM) -r $(OCT_INCLUDE)
 	@$(MKDIR_P) $(OCT_INCLUDE)/OCTypes
-	# unzip only the headers into our include/OCTypes directory
-	@unzip -q -j $(OCT_HEADERS_ARCHIVE) "include/OCTypes/*.h" -d $(OCT_INCLUDE)/OCTypes
+	# unzip into the root of our OCTYPES_DIR so that its own include/ is preserved
+	@unzip -q $(OCT_HEADERS_ARCHIVE) -d $(OCTYPES_DIR)
+	# move only the real .h files into include/OCTypes
+	@mv $(OCTYPES_DIR)/include/*.h $(OCT_INCLUDE)/OCTypes/
 
 prepare: $(GEN_PARSER_H)
 
@@ -220,3 +222,4 @@ copy-octypes:
 	@cp ../OCTypes/include/OCTypes/*.h third_party/OCTypes/include/OCTypes/
 
 -include $(DEP)
+
