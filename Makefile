@@ -29,6 +29,9 @@ CFLAGS  := -I. -I$(SRC_DIR) -I$(OCT_INCLUDE) -O3 -Wall -Wextra \
            -MMD -MP
 CFLAGS_DEBUG := -O0 -g -Wall -Wextra -Werror -MMD -MP
 
+# always append OCTypes include path, even if CFLAGS is overridden
+CFLAGS += -I$(OCT_INCLUDE)
+
 # Source files
 LEX_SRC       := $(wildcard $(SRC_DIR)/*.l)
 YACC_SRC      := $(wildcard $(SRC_DIR)/*Parser.y)
