@@ -100,12 +100,16 @@ $(OCT_LIBDIR)/libOCTypes.a: $(OCT_LIB_ARCHIVE)
 	@$(MKDIR_P) $(OCT_LIBDIR)
 	@unzip -q $(OCT_LIB_ARCHIVE) -d $(OCT_LIBDIR)
 
+# fixup header-zip’s built-in include/ folder so we end up with
+# third_party/OCTypes/include/OCTypes/OCLibrary.h
 $(OCT_INCLUDE)/OCTypes/OCLibrary.h: $(OCT_HEADERS_ARCHIVE)
 	@echo "Extracting OCTypes headers"
 	@$(RM) -r $(OCT_INCLUDE)
 	@$(MKDIR_P) $(OCT_INCLUDE)/OCTypes
-	@unzip -q $(OCT_HEADERS_ARCHIVE) -d $(OCT_INCLUDE)
-	@mv $(OCT_INCLUDE)/*.h $(OCT_INCLUDE)/OCTypes/ 2>/dev/null || true
+	# unzip into the root of our OCTYPES_DIR so that its own include/ is preserved
+	@unzip -q $(OCT_HEADERS_ARCHIVE) -d $(OCTYPES_DIR)
+	# move only the real .h files into include/OCTypes
+	@mv $(OCTYPES_DIR)/include/*.h $(OCT_INCLUDE)/OCTypes/
 
 prepare: $(GEN_PARSER_H)
 
@@ -134,25 +138,18 @@ libSITypes.a: $(OBJ)
 	$(LEX) -o $@ $<
 
 # Tests
-# Build the test runner with a linker group so order doesn't matter
 runTests: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) \
 	  $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) \
 	  -lm -o runTests
 
-test: libSITypes.a $(TEST_OBJ)
-	$(CC) $(CFLAGS) -Isrc -Itests $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) \
-	  $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) \
-	  -lm -o runTests
+test: runTests
 	./runTests
 
-# Debug tests
 test-debug: CFLAGS := $(CFLAGS) $(CFLAGS_DEBUG)
 test-debug: clean all test
 
-# AddressSanitizer test target: rebuild with ASan-enabled flags and run
 test-asan: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) \
@@ -160,7 +157,6 @@ test-asan: libSITypes.a $(TEST_OBJ)
 	@echo "Running AddressSanitizer build..."
 	@./runTests.asan
 
-# Treat warnings as errors
 test-werror: CFLAGS := $(CFLAGS_DEBUG)
 test-werror: clean all test
 
@@ -180,7 +176,7 @@ uninstall:
 	$(RM) $(DESTDIR)$(INCDIR)/*.h
 	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(INCDIR)
 
-# Documentation targets
+# Documentation
 .PHONY: docs doxygen html
 
 doxygen:
@@ -191,10 +187,9 @@ html: doxygen
 	@echo "Building Sphinx HTML..."
 	@cd docs && sphinx-build -W -E -b html . _build/html
 
-# Alias “make docs” to build HTML
 docs: html
 
-# Generate an Xcode project using CMake
+# Xcode project
 xcode:
 	@echo "Generating Xcode project in build-xcode..."
 	@mkdir -p build-xcode
@@ -226,5 +221,4 @@ copy-octypes:
 	@cp ../OCTypes/lib/libOCTypes.a third_party/OCTypes/lib/
 	@cp ../OCTypes/include/OCTypes/*.h third_party/OCTypes/include/OCTypes/
 
-# Include dependency files
 -include $(DEP)
