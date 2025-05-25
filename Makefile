@@ -78,6 +78,12 @@ octypes: $(OCT_LIBDIR)/libOCTypes.a \
 third_party:
 	@$(MKDIR_P) third_party
 
+third_party/OCTypes:
+	mkdir -p third_party/OCTypes
+	curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.1/$(OCT_LIB_BIN) -o third_party/OCTypes.tar.gz
+	tar -xzf third_party/OCTypes.tar.gz -C third_party/OCTypes
+	rm third_party/OCTypes.tar.gz
+
 $(OCT_LIB_ARCHIVE): | third_party
 	@echo "Fetching OCTypes library: $(OCT_LIB_BIN)"
 	@curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.1/$(OCT_LIB_BIN) -o $@
