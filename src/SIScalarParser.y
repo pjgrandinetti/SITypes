@@ -23,6 +23,9 @@
     OCMutableStringRef       const_string;
 }
 
+/* whenever Bison discards an 'exp' or 'explist', free its node */
+%destructor { ScalarNodeFree($$); } exp explist
+
 /* declare tokens */
 %token <d> SCALAR
 %token <math_fn> MATH_FUNC
@@ -38,11 +41,7 @@
 
 %type <a> exp explist
 
-/* whenever Bison discards an 'exp' or 'explist', free its node */
-%destructor { ScalarNodeFree($$); } <a> exp explist
-
 %%
-
 calclist:
       /* empty */
     | calclist exp
@@ -63,13 +62,13 @@ exp:
     | '-' exp %prec UMINUS { $$ = ScalarNodeCreateInnerNode('M',$2,NULL); }
     | exp '!'       { $$ = ScalarNodeCreateInnerNode('!',$1,NULL); }
     | SCALAR        { if ($1==NULL) YYERROR; $$ = ScalarNodeCreateNumberLeaf($1); }
-    | MATH_FUNC '(' explist ')'   { $$ = ScalarNodeCreateMathFunction($1,$3); }
-    | CONST_FUNC CONST_STRING      { $$ = ScalarNodeCreateConstantFunction($1,$2); }
+    | MATH_FUNC '(' explist ')' { $$ = ScalarNodeCreateMathFunction($1,$3); }
+    | CONST_FUNC CONST_STRING   { $$ = ScalarNodeCreateConstantFunction($1,$2); }
     ;
 
 explist:
       exp
-    | exp ',' explist   { $$ = ScalarNodeCreateInnerNode('L',$1,$3); }
+    | exp ',' explist { $$ = ScalarNodeCreateInnerNode('L',$1,$3); }
     ;
 
 %%
