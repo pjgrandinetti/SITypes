@@ -106,10 +106,10 @@ $(OCT_INCLUDE)/OCTypes/OCLibrary.h: $(OCT_HEADERS_ARCHIVE)
 	@echo "Extracting OCTypes headers"
 	@$(RM) -r $(OCT_INCLUDE)
 	@$(MKDIR_P) $(OCT_INCLUDE)/OCTypes
-	# unzip into the root of our OCTYPES_DIR so that its own include/ is preserved
+	# unzip so that it drops its own include/OCTypes tree under third_party/OCTypes
 	@unzip -q $(OCT_HEADERS_ARCHIVE) -d $(OCTYPES_DIR)
-	# move only the real .h files into include/OCTypes
-	@mv $(OCTYPES_DIR)/include/*.h $(OCT_INCLUDE)/OCTypes/
+	# move the real headers into our include/OCTypes
+	@mv $(OCTYPES_DIR)/include/OCTypes/*.h $(OCT_INCLUDE)/OCTypes/
 
 prepare: $(GEN_PARSER_H)
 
