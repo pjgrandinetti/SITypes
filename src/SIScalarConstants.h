@@ -23,7 +23,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "OCTypes/OCLibrary.h"
+#include <OCTypes/OCLibrary.h>
 
 /**
  * @brief Returns an array with the element symbols.
