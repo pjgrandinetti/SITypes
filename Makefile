@@ -157,6 +157,7 @@ test-debug: CFLAGS := $(CFLAGS) $(CFLAGS_DEBUG)
 test-debug: clean all test
 
 # AddressSanitizer test target: rebuild with ASan-enabled flags and run
+test-asan: CFLAGS += -DLEAK_SANITIZER
 test-asan: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) \

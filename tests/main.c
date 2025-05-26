@@ -16,8 +16,11 @@
 #include "test_scalar.h"
 #include "test_scalar_parser.h"
 #include <sanitizer/lsan_interface.h>
-extern void __lsan_do_leak_check() __attribute__((weak));
 
+#ifdef LEAK_SANITIZER
+#include <sanitizer/lsan_interface.h>
+extern void __lsan_do_leak_check() __attribute__((weak));
+#endif
 
 int main(int argc, const char * argv[]) {
 
@@ -166,10 +169,11 @@ int main(int argc, const char * argv[]) {
     // Print summary message if all tests pass
     printf("\nAll tests passed\n");
 
-    // If LSAN is present, do an explicit leak check here:
+#ifdef LEAK_SANITIZER
     if (&__lsan_do_leak_check) {
         __lsan_do_leak_check();
     }
+#endif
 
    return 0;
 

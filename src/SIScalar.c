@@ -1765,21 +1765,49 @@ SIScalarRef SIScalarCreateByMultiplyingByDimensionlessRealConstant(SIScalarRef t
 
 bool SIScalarMultiplyByDimensionlessComplexConstant(SIMutableScalarRef theScalar, double complex constant)
 {
-   	IF_NO_OBJECT_EXISTS_RETURN(theScalar,false);
-    // SIScalar elementType remains the same after multiplication, so information is loss
-    switch(theScalar->type) {
-        case kOCNumberFloat32Type:
-            theScalar->value.floatValue = theScalar->value.floatValue * constant;
-            return true;
-        case kSINumberFloat64Type:
-            theScalar->value.doubleValue = theScalar->value.doubleValue * constant;
-            return true;
-        case kOCNumberFloat32ComplexType:
-            theScalar->value.floatComplexValue = theScalar->value.floatComplexValue * constant;
-            return true;
-        case kSINumberFloat64ComplexType:
-            theScalar->value.doubleComplexValue = theScalar->value.doubleComplexValue * constant;
-            return true;
+    IF_NO_OBJECT_EXISTS_RETURN(theScalar,false);
+    
+    // Check if constant has a non-zero imaginary part
+    if (cimag(constant) != 0.0) {
+        // If scalar is real but constant is complex, we need to convert to complex type
+        switch(theScalar->type) {
+            case kOCNumberFloat32Type: {
+                // Convert float to float complex
+                float complex value = theScalar->value.floatValue * constant;
+                theScalar->type = kOCNumberFloat32ComplexType;
+                theScalar->value.floatComplexValue = value;
+                return true;
+            }
+            case kSINumberFloat64Type: {
+                // Convert double to double complex
+                double complex value = theScalar->value.doubleValue * constant;
+                theScalar->type = kSINumberFloat64ComplexType;
+                theScalar->value.doubleComplexValue = value;
+                return true;
+            }
+            case kOCNumberFloat32ComplexType:
+                theScalar->value.floatComplexValue = theScalar->value.floatComplexValue * constant;
+                return true;
+            case kSINumberFloat64ComplexType:
+                theScalar->value.doubleComplexValue = theScalar->value.doubleComplexValue * constant;
+                return true;
+        }
+    } else {
+        // Constant is purely real, so no type conversion needed
+        switch(theScalar->type) {
+            case kOCNumberFloat32Type:
+                theScalar->value.floatValue = theScalar->value.floatValue * creal(constant);
+                return true;
+            case kSINumberFloat64Type:
+                theScalar->value.doubleValue = theScalar->value.doubleValue * creal(constant);
+                return true;
+            case kOCNumberFloat32ComplexType:
+                theScalar->value.floatComplexValue = theScalar->value.floatComplexValue * constant;
+                return true;
+            case kSINumberFloat64ComplexType:
+                theScalar->value.doubleComplexValue = theScalar->value.doubleComplexValue * constant;
+                return true;
+        }
     }
     return false;
 }
@@ -1885,7 +1913,7 @@ bool SIScalarTakeLog10(SIMutableScalarRef theScalar, OCStringRef *error)
         case kOCNumberFloat32ComplexType: {
             theScalar->value.floatComplexValue = clogf(theScalar->value.floatComplexValue)/logf(10);
             break;
-        }
+               }
         case kSINumberFloat64ComplexType: {
             theScalar->value.doubleComplexValue = clog(theScalar->value.doubleComplexValue)/log(10);
             break;
@@ -2346,7 +2374,7 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
         if(theUnit == celsius) {
             OCArrayAppendValue(result, theScalar);
             
-            double complex value = SIScalarDoubleComplexValue(theScalar)*9./5. + 32;
+            double complex value = SIScalarDoubleValue(theScalar)*9./5. + 32;
             SIScalarRef scalar = SIScalarCreate(fahrenheit, kSINumberFloat64ComplexType, &value);
             OCArrayAppendValue(result, scalar);
             OCRelease(scalar);
@@ -2493,7 +2521,6 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
                 }
             }
         }
-        return result;
     }
     return NULL;
 }
@@ -2819,8 +2846,8 @@ bool SIScalarIsInfinite(SIScalarRef theScalar)
             if(isinf(crealf(theScalar->value.floatComplexValue))) return true;
             if(isinf(cimagf(theScalar->value.floatComplexValue))) return true;
         case kSINumberFloat64ComplexType:
-            if(isinf(creal(theScalar->value.floatComplexValue))) return true;
-            if(isinf(cimag(theScalar->value.floatComplexValue))) return true;
+            if(isinf(creal(theScalar->value.doubleComplexValue))) return true;
+            if(isinf(cimag(theScalar->value.doubleComplexValue))) return true;
     }
     return false;
 }
@@ -3169,7 +3196,7 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
                 case kOCNumberFloat32ComplexType: {
                     OCComparisonResult realResult = OCCompareFloatValuesLoose((float) creal(theScalar->value.doubleComplexValue), (float) crealf(theOtherConverted->value.floatComplexValue));
                     
-                    OCComparisonResult imagResult = OCCompareFloatValuesLoose((float) cimag(theScalar->value.doubleComplexValue), (float) cimagf(theOtherConverted->value.floatComplexValue));
+                    OCComparisonResult imagResult = OCCompareFloatValuesLoose((float) cimag(theScalar->value.doubleComplexValue), (float) cimag(theOtherConverted->value.floatComplexValue));
                     
                     if(realResult == kOCCompareEqualTo && imagResult == kOCCompareEqualTo) result = kOCCompareEqualTo;
                     else result = kOCCompareNoSingleValue;
