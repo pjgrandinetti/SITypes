@@ -1,5 +1,5 @@
 %option noyywrap nodefault yylineno
-%option prefix = "sid"
+%option prefix="sid"
 %option nounput
 %option noinput
 %{

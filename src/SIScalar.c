@@ -1774,7 +1774,7 @@ bool SIScalarMultiplyByDimensionlessComplexConstant(SIMutableScalarRef theScalar
             case kOCNumberFloat32Type: {
                 // Convert float to float complex
                 float complex value = theScalar->value.floatValue * constant;
-                theScalar->type = kOCNumberFloat32ComplexType;
+                theScalar->type = kSINumberFloat32ComplexType;
                 theScalar->value.floatComplexValue = value;
                 return true;
             }
