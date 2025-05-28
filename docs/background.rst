@@ -132,6 +132,7 @@ These prefixed and unprefixed symbols form the set $[Q]_\mathrm{BU}$ of 147 SI b
 
 where $[Q]_\mathrm{CBU}\subseteq[Q]_\mathrm{BU}$, $[Q]_\mathrm{BRU}\subseteq[Q]_\mathrm{BU}$, and each $x_i$ indicates that the root unit symbol may be modified with one of the SI prefixes in Table :ref:`tb:SIPrefixes`.
 
+
 .. table:: Coherent SI base units for the seven reference quantities.
    :name: tb:SIBaseUnits
 
@@ -146,8 +147,7 @@ where $[Q]_\mathrm{CBU}\subseteq[Q]_\mathrm{BU}$, $[Q]_\mathrm{BRU}\subseteq[Q]_
    +--------------------+-----------+------------+--------+
    | electric current   | ampere    | amperes    | A      |
    +--------------------+-----------+------------+--------+
-   | thermodynamic      | kelvin    | kelvin     | K      |
-   | temperature        |           |            |        |
+   | thermodynamic temperature | kelvin | kelvin | K      |
    +--------------------+-----------+------------+--------+
    | amount of substance| mole      | moles      | mol    |
    +--------------------+-----------+------------+--------+
@@ -157,24 +157,24 @@ where $[Q]_\mathrm{CBU}\subseteq[Q]_\mathrm{BU}$, $[Q]_\mathrm{BRU}\subseteq[Q]_
 .. table:: Base root unit names and symbols for the seven reference quantities.
    :name: tb:SIBaseUnitRoots
 
-   +--------------------+-------+--------+--------+
-   | Base Dimension     | Name  | Plural | Symbol |
-   +====================+=======+========+========+
-   | length             | meter | meters | m      |
-   +--------------------+-------+--------+--------+
-   | mass               | gram  | grams  | g      |
-   +--------------------+-------+--------+--------+
-   | time               | second| seconds| s      |
-   +--------------------+-------+--------+--------+
-   | electric current   | ampere| amperes| A      |
-   +--------------------+-------+--------+--------+
-   | thermodynamic      | kelvin| kelvin | K      |
-   | temperature        |       |        |        |
-   +--------------------+-------+--------+--------+
-   | amount of substance| mole  | moles  | mol    |
-   +--------------------+-------+--------+--------+
-   | luminous intensity | candela| candelas| cd    |
-   +--------------------+-------+--------+--------+
+   +------------------------------+-------+--------+--------+
+   | Base Dimension               | Name  | Plural | Symbol |
+   +==============================+=======+========+========+
+   | length                       | meter | meters | m      |
+   +------------------------------+-------+--------+--------+
+   | mass                         | gram  | grams  | g      |
+   +------------------------------+-------+--------+--------+
+   | time                         | second| seconds| s      |
+   +------------------------------+-------+--------+--------+
+   | electric current             | ampere| amperes| A      |
+   +------------------------------+-------+--------+--------+
+   | thermodynamic temperature    | kelvin| kelvin | K      |
+   +------------------------------+-------+--------+--------+
+   | amount of substance          | mole  | moles  | mol    |
+   +------------------------------+-------+--------+--------+
+   | luminous intensity           | candela| candelas| cd   |
+   +------------------------------+-------+--------+--------+
+
 
 .. table:: SI prefixes used for the seven reference quantities.
    :name: tb:SIPrefixes
@@ -222,3 +222,105 @@ where $[Q]_\mathrm{CBU}\subseteq[Q]_\mathrm{BU}$, $[Q]_\mathrm{BRU}\subseteq[Q]_
    +-----------------+---------------+-----------+
    | yocto           | y             | 10^-24    |
    +-----------------+---------------+-----------+
+
+
+
+Coherent Derived SI Units
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+*Coherent derived SI units* is an infinite set, ``[Q]_{\mathrm{CDU}}``, defined as the products of powers of *coherent SI base units*:
+
+.. math::
+
+   [q]_{\mathrm{CDU}} \in [Q]_{\mathrm{CDU}}
+     = \{
+       \mathrm{m}^{\alpha}
+       \cdot \mathrm{kg}^{\beta}
+       \cdot \mathrm{s}^{\gamma}
+       \cdot \mathrm{A}^{\delta}
+       \cdot \mathrm{K}^{\epsilon}
+       \cdot \mathrm{mol}^{\zeta}
+       \cdot \mathrm{cd}^{\eta}
+       \},
+
+for all positive and negative integer values of the exponents.  Here ``[Q]_{\mathrm{CBU}} \subseteq [Q]_{\mathrm{CDU}}``.
+
+Derived SI Root Units
+^^^^^^^^^^^^^^^^^^^^^
+
+*Derived SI root units* is an infinite set, ``[Q]_{\mathrm{DRU}}``, defined as the products of powers of *SI base root units*:
+
+.. math::
+
+   [q]_{\mathrm{DRU}} \in [Q]_{\mathrm{DRU}}
+     = \{
+       \mathrm{m}^{\alpha}
+       \cdot \mathrm{g}^{\beta}
+       \cdot \mathrm{s}^{\gamma}
+       \cdot \mathrm{A}^{\delta}
+       \cdot \mathrm{K}^{\epsilon}
+       \cdot \mathrm{mol}^{\zeta}
+       \cdot \mathrm{cd}^{\eta}
+       \},
+
+for all positive and negative integer values of the exponents.  Here ``[Q]_{\mathrm{BRU}} \subseteq [Q]_{\mathrm{DRU}}``.
+
+Derived SI Units
+^^^^^^^^^^^^^^^^
+
+*Derived SI units* is an infinite set, ``[Q]_{\mathrm{DU}}``, defined as the products of powers of *SI base units*:
+
+.. math::
+
+   [q]_{\mathrm{DU}} \in [Q]_{\mathrm{DU}}
+     = \{
+       (x_{L}\,\mathrm{m})^{\alpha}
+       \cdot (x_{M}\,\mathrm{g})^{\beta}
+       \cdot (x_{T}\,\mathrm{s})^{\gamma}
+       \cdot (x_{I}\,\mathrm{A})^{\delta}
+       \cdot (x_{\Theta}\,\mathrm{K})^{\epsilon}
+       \cdot (x_{N}\,\mathrm{mol})^{\zeta}
+       \cdot (x_{J}\,\mathrm{cd})^{\eta}
+       \},
+
+for all positive and negative integer values of the exponents.  Here ``[Q]_{\mathrm{CBU}} ⊆ [Q]_{\mathrm{CDU}} ⊆ [Q]_{\mathrm{DU}}`` and ``[Q]_{\mathrm{BRU}} ⊆ [Q]_{\mathrm{DRU}} ⊆ [Q]_{\mathrm{DU}}``.
+
+Derived SI Dimensionless Units
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There also exists dimensionless units, such as the radian (units m/m) or the steradian (units m²/m²).  Representing such units requires us to split each dimension exponent into numerator and denominator exponents.  Thus we redefine the infinite set of coherent derived SI units to incorporate numerator/denominator exponents:
+
+.. math::
+
+   [q]_{\mathrm{CDU}} \in [Q]_{\mathrm{CDU}}
+     = \{
+       \left[\frac{\mathrm{m}^{\alpha_{+}}}{\mathrm{m}^{\alpha_{-}}}\right]
+       \cdot \left[\frac{\mathrm{kg}^{\beta_{+}}}{\mathrm{kg}^{\beta_{-}}}\right]
+       \cdot \left[\frac{\mathrm{s}^{\gamma_{+}}}{\mathrm{s}^{\gamma_{-}}}\right]
+       \cdot \left[\frac{\mathrm{A}^{\delta_{+}}}{\mathrm{A}^{\delta_{-}}}\right]
+       \cdot \left[\frac{\mathrm{K}^{\epsilon_{+}}}{\mathrm{K}^{\epsilon_{-}}}\right]
+       \cdot \left[\frac{\mathrm{mol}^{\zeta_{+}}}{\mathrm{mol}^{\zeta_{-}}}\right]
+       \cdot \left[\frac{\mathrm{cd}^{\eta_{+}}}{\mathrm{cd}^{\eta_{-}}}\right]
+       \},
+
+for all non-negative integer numerator and denominator exponents.  Using this approach, a dimensionless unit is represented by its exponent vector
+
+``(\alpha_{+}-\alpha_{-},\;\beta_{+}-\beta_{-},\;\gamma_{+}-\gamma_{-},\;\delta_{+}-\delta_{-},\;\epsilon_{+}-\epsilon_{-},\;\zeta_{+}-\zeta_{-},\;\eta_{+}-\eta_{-})``.
+
+Thus the radian is ``(1-1, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0)`` and the steradian is ``(2-2, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0)``.  Dimensionless quantities such as counts are not derived SI units and are ``(0,0,0,0,0,0,0)``.
+
+Finally, we redefine the infinite set of derived SI units to incorporate numerator and denominator exponents:
+
+.. math::
+   :label: eq:complete_set_of_SIUnits
+
+   [q]_{\mathrm{DU}} \in [Q]_{\mathrm{DU}}
+     = \{
+       \left[\frac{(x_{L}^{+}\,\mathrm{m})^{\alpha_{+}}}{(x_{L}^{-}\,\mathrm{m})^{\alpha_{-}}}\right]
+       \cdot \left[\frac{(x_{M}^{+}\,\mathrm{g})^{\beta_{+}}}{(x_{M}^{-}\,\mathrm{g})^{\beta_{-}}}\right]
+       \cdot \left[\frac{(x_{T}^{+}\,\mathrm{s})^{\gamma_{+}}}{(x_{T}^{-}\,\mathrm{s})^{\gamma_{-}}}\right]
+       \cdot \left[\frac{(x_{I}^{+}\,\mathrm{A})^{\delta_{+}}}{(x_{I}^{-}\,\mathrm{A})^{\delta_{-}}}\right]
+       \cdot \left[\frac{(x_{\Theta}^{+}\,\mathrm{K})^{\epsilon_{+}}}{(x_{\Theta}^{-}\,\mathrm{K})^{\epsilon_{-}}}\right]
+       \cdot \left[\frac{(x_{N}^{+}\,\mathrm{mol})^{\zeta_{+}}}{(x_{N}^{-}\,\mathrm{mol})^{\zeta_{-}}}\right]
+       \cdot \left[\frac{(x_{J}^{+}\,\mathrm{cd})^{\eta_{+}}}{(x_{J}^{-}\,\mathrm{cd})^{\eta_{-}}}\right]
+       \}.
