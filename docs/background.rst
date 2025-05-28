@@ -16,7 +16,7 @@ An essential characteristic of physical quantities is that any given physical qu
 .. [1] Thermodynamic temperature is an absolute measure of temperature.
 
 Dimensionality
-==============
+--------------
 
 In the International System of Units (SI), seven reference quantities are used to define seven dimensions whose symbols are given in Table 1.
 
@@ -75,7 +75,7 @@ A list of accepted physical quantity names and their corresponding dimensionalit
 
 
 Unit
-====
+-----
 
 Inherent in measuring any physical quantity is a comparison to a previous measurement. What is most useful is the ratio of the new measurement to a previous measurement. For example, an ancient scientist might have used the cubit, an ancient unit of length, to measure the ratio of a large tree trunk’s circumference to its diameter. Around 3000 BC in Egypt, a cubit was decreed to be the length of a forearm and hand. A scientist could then make a string of one cubit in length using the distance from the back of their elbow to the tip of their middle finger and use that string to measure the ratio
 
