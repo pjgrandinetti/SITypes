@@ -169,6 +169,7 @@ void test_SIScalarCreateWithFloatComplex(void) {
     SIScalarRef s = SIScalarCreateWithFloatComplex(val, u);
     assert(s != NULL);
     assert(fabsf(crealf(SIScalarFloatComplexValue(s)) - 1.0f) < 1e-6);
+    assert(fabsf(crealf(SIScalarFloatComplexValue(s)) - 1.0f) < 1e-6);
     assert(fabsf(cimagf(SIScalarFloatComplexValue(s)) - 2.0f) < 1e-6);
     OCRelease(s);
 }
@@ -201,15 +202,6 @@ void test_SIScalarCreateMutableWithDoubleComplex(void) {
     assert(fabs(creal(SIScalarDoubleComplexValue(m)) - 4.0) < 1e-9);
     assert(fabs(cimag(SIScalarDoubleComplexValue(m)) - 5.0) < 1e-9);
     OCRelease(m);
-}
-
-void test_SIScalarCreateWithStringContainingSingleUnitFromLibrary(void) {
-    OCStringRef unitStr = STR("kg");
-    SIScalarRef s = SIScalarCreateWithStringContainingSingleUnitFromLibrary(unitStr);
-    assert(s != NULL);
-    assert(fabs(SIScalarDoubleValue(s) - 1.0) < 1e-9); // Should be 1.0 of that unit
-    // Further check unit if possible, e.g. by comparing to SIUnitForSymbol("kg")
-    OCRelease(s); OCRelease(unitStr);
 }
 
 void test_SIScalarGetValue(void) {
@@ -312,6 +304,7 @@ void test_SIScalarTakeComplexPart(void) {
     assert(success);
     assert(SIScalarIsReal(m));
     assert(fabsf(SIScalarFloatValue(m) - 3.0f) < 1e-6);
+    OCRelease(m);
 }
 
 void test_SIScalarCreateByTakingComplexPart(void) {
@@ -1061,8 +1054,7 @@ void test_SIScalarIsRealNonNegativeInteger(void) {
 }
 
 void test_SIScalarValidateProposedStringValue(void) {
-    SIUnitRef m = SIUnitForUnderivedSymbol(STR("m"));
-    SIScalarRef s_meter = SIScalarCreateWithFloat(1.0f, m);
+    SIScalarRef s_meter = SIScalarCreateWithFloat(1.0f, SIUnitForUnderivedSymbol(STR("m")));
     OCStringRef valid_str = STR("10 cm"); // cm has same dimensionality as m
     OCStringRef invalid_dim_str = STR("10 kg"); // kg has different dimensionality
     OCStringRef invalid_fmt_str = STR("ten meters"); // bad format
@@ -1072,15 +1064,16 @@ void test_SIScalarValidateProposedStringValue(void) {
     assert(error == NULL);
 
     assert(!SIScalarValidateProposedStringValue(s_meter, invalid_dim_str, &error));
-    assert(error != NULL); OCRelease(error); error = NULL;
+    assert(error != NULL); 
+    OCRelease(error); 
+    error = NULL;
 
     assert(!SIScalarValidateProposedStringValue(s_meter, invalid_fmt_str, &error));
-    assert(error != NULL); OCRelease(error); error = NULL;
+    assert(error != NULL); 
+    OCRelease(error); 
+    error = NULL;
 
     OCRelease(s_meter);
-    OCRelease(valid_str); 
-    OCRelease(invalid_dim_str); 
-    OCRelease(invalid_fmt_str);
 }
 
 void test_SIScalarEqual(void) {

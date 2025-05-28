@@ -1992,276 +1992,6 @@ SIScalarRef SIScalarCreateByZeroingPart(SIScalarRef theScalar, complexPart part)
     return NULL;
 }
 
-SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef theString)
-{
-
-    OCMutableStringRef  mutString = OCStringCreateMutableCopy (theString);
-    OCStringFindAndReplace2 (mutString,STR("×"), STR("*"));
-    OCStringFindAndReplace2 (mutString,STR("÷"), STR("/"));
-    OCStringFindAndReplace2 (mutString,STR("−"), STR("-"));
-    OCStringFindAndReplace2 (mutString,STR("\n"), STR(""));
-    OCStringFindAndReplace2 (mutString,STR("+"), STR("+"));
-    OCStringFindAndReplace2 (mutString,STR("μ"), STR("µ"));
-    OCStringFindAndReplace2 (mutString,STR("γ"), STR("𝛾"));
-    OCStringFindAndReplace2 (mutString,STR("º"), STR("°"));
-    OCStringFindAndReplace2 (mutString,STR("ɣ"), STR("𝛾"));
-    OCStringFindAndReplace2 (mutString,STR(" "), STR(""));
-    OCStringFindAndReplace2 (mutString,STR(")("), STR(")*("));
-    
-    OCRange plusRange = OCStringFind(mutString, STR("+"), 0);
-    if(plusRange.location != kOCNotFound && plusRange.location!=0) return NULL;
-    OCRange minusRange = OCStringFind(mutString, STR("-"), 0);
-    if(minusRange.location != kOCNotFound && minusRange.location!=0) return NULL;
-    
-    OCStringTrimMatchingParentheses(mutString);
-    
-    uint64_t length = OCStringGetLength(mutString);
-    
-    // See how many unit symbols are in the string
-    // For ones that are found, save their values, range, and determine the largest length symbol present
-    OCMutableArrayRef unitsFound = OCArrayCreateMutable(0,&kOCTypeArrayCallBacks);
-    OCMutableArrayRef ranges = OCArrayCreateMutable(0,NULL);
-    uint64_t maximumLength = 0;
-    OCRange fullRange = OCRangeMake(0, length);
-    
-    OCDictionaryRef unitsLibrary = SIUnitGetLibrary();
-    if(unitsLibrary == NULL) return NULL;
-    OCArrayRef keys = OCDictionaryCreateArrayWithAllKeys(unitsLibrary);
-    for(uint64_t index=0;index<OCArrayGetCount(keys); index++) {
-        OCStringRef symbol = OCArrayGetValueAtIndex(keys, index);
-        OCMutableStringRef mutSymbol = OCStringCreateMutableCopy(symbol);
-        OCStringFindAndReplace2 (mutSymbol,STR(" "), STR(""));
-        
-        OCArrayRef findResults = OCStringCreateArrayWithFindResults (mutString,
-                                                                     mutSymbol,
-                                                                     fullRange,
-                                                                     0);
-        OCRelease(mutSymbol);
-        if(findResults) {
-            for(uint64_t foundIndex=0; foundIndex<OCArrayGetCount(findResults);foundIndex++) {
-                OCRange *foundRange = (OCRange *) OCArrayGetValueAtIndex(findResults, foundIndex);
-                OCRange *rangeFound = (OCRange *) malloc(sizeof(OCRange));
-                rangeFound->location = foundRange->location;
-                rangeFound->length = foundRange->length;
-                OCArrayAppendValue(ranges, rangeFound);
-                OCArrayAppendValue(unitsFound, symbol);
-                uint64_t length = OCStringGetLength(symbol);
-                if(length>maximumLength) maximumLength = length;
-            }
-            OCRelease(findResults);
-        }
-    }
-    
-    OCRelease(keys);
-    
-    uint64_t unitsFoundCount = OCArrayGetCount(unitsFound);
-    if(unitsFoundCount==0) {
-        OCRelease(unitsFound);
-        for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-            OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-            if(rangeFound) free(rangeFound);
-        }
-        OCRelease(ranges);
-        OCRelease(mutString);
-        return NULL;
-    }
-    
-
-    // some unit symbols found.  Which one and how many are the largest
-    uint64_t largestSymbols = 0;
-    uint64_t largestSymbolIndex = 0;
-    for(uint64_t index=0; index<unitsFoundCount; index++) {
-        if(OCStringGetLength(OCArrayGetValueAtIndex(unitsFound, index)) == maximumLength) {
-            largestSymbols++;
-            largestSymbolIndex = index;
-        }
-    }
-    // More than one unit symbol of the same length -> abort
-    if(largestSymbols>1) {
-        OCRelease(unitsFound);
-        for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-            OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-            if(rangeFound) free(rangeFound);
-        }
-        OCRelease(ranges);
-        OCRelease(mutString);
-        return NULL;
-    }
-    
-    OCRange *largestSymbolRange  =  (OCRange *) OCArrayGetValueAtIndex(ranges, largestSymbolIndex);
-    OCStringRef largestSymbol = OCArrayGetValueAtIndex(unitsFound, largestSymbolIndex);
-    
-    // Still need to make sure unitsFoundCount is correct;
-    // Units inside the largest unit can be safely ignored and
-    // for this method to work other units can't be outside the largest unit.
-    // If units are outside, then game over and we return null;
-    // If units are inside largest symbol, then remove them from unitsFound array
-    for(int64_t index=unitsFoundCount-1; index>=0; index--) {
-        if(index != largestSymbolIndex) {
-            //All the smaller symbols must be present in the larger length symbol
-            OCStringRef smallerSymbol = OCArrayGetValueAtIndex(unitsFound, index);
-            OCRange range = OCStringFind(largestSymbol, smallerSymbol, 0);
-            if(range.location == kOCNotFound) {
-                OCRelease(unitsFound);
-                for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-                    OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-                    if(rangeFound) free(rangeFound);
-                }
-                OCRelease(ranges);
-                OCRelease(mutString);
-                return NULL;
-            }
-            else OCArrayRemoveValueAtIndex(unitsFound, index);
-            
-            OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, index);
-            if(rangeFound->location <largestSymbolRange->location) {
-                OCRelease(unitsFound);
-                for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-                    OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-                    if(rangeFound) free(rangeFound);
-                }
-                OCRelease(ranges);
-                OCRelease(mutString);
-                return NULL;
-            }
-            if(rangeFound->location >largestSymbolRange->location+largestSymbolRange->length-1) {
-                OCRelease(unitsFound);
-                for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-                    OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-                    if(rangeFound) free(rangeFound);
-                }
-                OCRelease(ranges);
-                OCRelease(mutString);
-                return NULL;
-            }
-        }
-    }
-    
-    unitsFoundCount = OCArrayGetCount(unitsFound);
-    // if none, then return null
-    if(unitsFoundCount == 0) {
-        OCRelease(unitsFound);
-        for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-            OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-            if(rangeFound) free(rangeFound);
-        }
-        OCRelease(ranges);
-        OCRelease(mutString);
-        return NULL;
-    }
-    
-    // if one, then try to construct scalar
-    if(unitsFoundCount == 1) {
-
-        // Unit should not be followed by anything except spaces
-        OCMutableStringRef mutLargestSymbol = OCStringCreateMutableCopy(largestSymbol);
-        OCStringFindAndReplace2 (mutLargestSymbol,STR(" "), STR(""));
-        OCRange range = OCStringFind(mutString, mutLargestSymbol, 0);
-        
-        for(uint64_t index = range.location+range.length; index<length; index++) {
-            char character = OCStringGetCharacterAtIndex(mutString, index);
-            if(character != ' ') {
-                OCRelease(unitsFound);
-                for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-                    OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-                    if(rangeFound) free(rangeFound);
-                }
-                OCRelease(ranges);
-                OCRelease(mutString);
-                OCRelease(mutLargestSymbol);
-                return NULL;
-            }
-        }
-        
-        // Create string with unit removed
-        OCMutableStringRef numericPart = OCStringCreateMutableCopy(mutString);
-        OCStringFindAndReplace2(numericPart, mutLargestSymbol, STR(""));
-        double complex numericValue = 1.0;
-        if(OCStringGetLength(numericPart)!=0) numericValue = OCStringGetDoubleComplexValue(numericPart);
-        if(isnan(creal(numericValue)) || isnan(cimag(numericValue))) { // Check real and imaginary parts for NaN
-            // Abort!
-            OCRelease(unitsFound);
-            for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-                OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-                if(rangeFound) free(rangeFound);
-            }
-            OCRelease(ranges);
-            OCRelease(mutString);
-            OCRelease(mutLargestSymbol);
-            OCRelease(numericPart);
-            return NULL;
-        }
-        SIUnitRef unit = SIUnitForUnderivedSymbol(largestSymbol);
-        SIScalarRef scalar = SIScalarCreateWithDoubleComplex(numericValue, unit);
-        if(numericPart) OCRelease(numericPart);
-        
-        OCRelease(mutLargestSymbol);
-        OCRelease(unitsFound);
-        OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, 0);
-        if(rangeFound) free(rangeFound);
-        OCRelease(ranges);
-        
-
-        if(SIScalarIsReal(scalar)) {
-            SIScalarRef realResult = SIScalarCreateByTakingComplexPart(scalar,kSIRealPart);
-            OCRelease(mutString);
-            OCRelease(scalar);
-            return realResult;
-        }
-        OCRelease(mutString);
-        return scalar;
-    }
-    
-    
-    // If we're here, then we have a single derived unit symbol at the end of the string and should be able to create a scalar
-    // Unit should not be followed by anything
-    if(largestSymbolRange->location+largestSymbolRange->length != length) {
-        OCRelease(unitsFound);
-        for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-            OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-            if(rangeFound) free(rangeFound);
-        }
-        OCRelease(unitsFound);
-        for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-            OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-            if(rangeFound) free(rangeFound);
-        }
-        OCRelease(ranges);
-        OCRelease(mutString);
-        return NULL;
-    }
-    
-    
-    // Create string with unit removed
-    
-    OCMutableStringRef mutLargestSymbol = OCStringCreateMutableCopy(largestSymbol);
-    OCStringFindAndReplace2 (mutLargestSymbol,STR(" "), STR(""));
-    
-    OCMutableStringRef numericPart = OCStringCreateMutableCopy( mutString);
-    OCStringFindAndReplace2(numericPart, mutLargestSymbol, STR(""));
-    double complex numericValue = OCStringGetDoubleComplexValue(numericPart);
-    SIUnitRef unit = SIUnitForUnderivedSymbol(largestSymbol);
-    SIScalarRef scalar = SIScalarCreateWithDoubleComplex(numericValue, unit);
-    if(numericPart) OCRelease(numericPart);
-    OCRelease(mutLargestSymbol);
-    
-    OCRelease(unitsFound);
-    for(uint64_t i=0;i<OCArrayGetCount(ranges); i++) {
-        OCRange *rangeFound = (OCRange *) OCArrayGetValueAtIndex(ranges, i);
-        if(rangeFound) free(rangeFound);
-    }
-    OCRelease(ranges);
-    
-    if(SIScalarIsReal(scalar)) {
-        SIScalarRef realResult = SIScalarCreateByTakingComplexPart(scalar,kSIRealPart);
-        OCRelease(scalar);
-        OCRelease(mutString);
-        return realResult;
-    }
-    OCRelease(mutString);
-    return scalar;
-}
-
 static OCStringRef SIScalarCreateStringValueSplitByUnits(SIScalarRef theScalar, OCArrayRef units, bool doubleCheck, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
@@ -2587,18 +2317,18 @@ void SIScalarShow(SIScalarRef theScalar)
     else fprintf(stdout,"invalid value.");
 }
 
-bool SIScalarValidateProposedStringValue(SIScalarRef theScalar,OCStringRef proposedStringValue, OCStringRef *error)
+bool SIScalarValidateProposedStringValue(SIScalarRef theScalar, OCStringRef proposedStringValue, OCStringRef *error)
 {
     if(error) if(*error) return false;
    	IF_NO_OBJECT_EXISTS_RETURN(theScalar,false);
    	IF_NO_OBJECT_EXISTS_RETURN(proposedStringValue,false);
     SIScalarRef proposedValue = SIScalarCreateWithOCString(proposedStringValue,error);
+    if(error) if(*error) OCRelease(*error);
     if(proposedValue==NULL) {
         if(error) {
             SIDimensionalityRef dimensionality = SIQuantityGetUnitDimensionality((SIQuantityRef) theScalar);
             OCStringRef dimensionalitySymbol = SIDimensionalityGetSymbol(dimensionality);
             *error = OCStringCreateWithFormat(STR("Unrecognized input. Value must have dimensionality: %@"),dimensionalitySymbol);
-            
         }
         return false;
     }
@@ -2608,8 +2338,10 @@ bool SIScalarValidateProposedStringValue(SIScalarRef theScalar,OCStringRef propo
             OCStringRef dimensionalitySymbol = SIDimensionalityGetSymbol(dimensionality);
             *error = OCStringCreateWithFormat(STR("Unrecognized input. Value must have dimensionality: %@"),dimensionalitySymbol);
         }
+        OCRelease(proposedValue);
         return false;
     }
+    OCRelease(proposedValue);
     return true;
 }
 

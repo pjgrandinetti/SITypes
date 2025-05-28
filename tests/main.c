@@ -85,7 +85,6 @@ int main(int argc, const char * argv[]) {
     test_SIScalarCreateMutableWithFloatComplex();
     test_SIScalarCreateWithDoubleComplex();
     test_SIScalarCreateMutableWithDoubleComplex();
-    test_SIScalarCreateWithStringContainingSingleUnitFromLibrary();
     test_SIScalarGetValue();
     test_SIScalarSetFloatValue();
     test_SIScalarSetDoubleValue();
