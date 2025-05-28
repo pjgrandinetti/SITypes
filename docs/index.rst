@@ -19,12 +19,11 @@ SITypes is a C library for the physical sciences designed from the ground up wit
    :maxdepth: 1
    :caption: API Reference
 
-   api/SIDimensionality
-   api/SILibrary
-   api/SIQuantity
    api/SIScalar
    api/SIScalarConstants
+   api/SIQuantity
    api/SIUnit
+   api/SIDimensionality
 
 Indices and Tables
 ==================

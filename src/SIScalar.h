@@ -23,10 +23,9 @@
  * This interface supports querying the value, type, and conversions of a scalar, as well as arithmetic and comparison operations.
  *
  * @author Philip Grandinetti
- * @copyright PhySy Ltd.
  */
 
-
+/** @cond INTERNAL */
 /**
  * @brief SIScalar represents a scalar physical quantity. It is a concrete subtype of SIQuantity.
  * It has three essential attributes: a unit, an elementType, and a numerical value.
@@ -52,6 +51,7 @@ typedef const struct __SIScalar *SIScalarRef;
  * @brief This is the type of a reference to mutable SIScalar.
  */
 typedef struct __SIScalar *SIMutableScalarRef;
+/** @endcond */
 
 /**
  * @brief Returns the unique type identifier for SIScalar objects.
@@ -60,7 +60,6 @@ typedef struct __SIScalar *SIMutableScalarRef;
  * This identifier can be used for runtime type checking, assertions,
  * or bridging with other OC-based frameworks.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return The OCTypeID corresponding to the SIScalar “class.”
  *
@@ -82,7 +81,6 @@ OCTypeID SIScalarGetTypeID(void);
  *
  * @param theScalar The SIScalarRef to copy. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef (an OCTypeRef) representing the copied scalar. The caller owns
  *         this reference and must balance it with OCRelease when it is no longer needed.
@@ -104,7 +102,6 @@ SIScalarRef SIScalarCreateCopy(SIScalarRef theScalar);
  *
  * @param theScalar The SIScalarRef to copy. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIMutableScalarRef representing the mutable copy. The caller owns this reference and
  *         must balance it with OCRelease when it is no longer needed.
@@ -123,7 +120,6 @@ SIMutableScalarRef SIScalarCreateMutableCopy(SIScalarRef theScalar);
  * @param input_value The float value for the scalar.
  * @param unit        The SIUnitRef representing the unit. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the scalar. The caller owns this reference and must balance
  *         it with OCRelease when it is no longer needed.
@@ -142,7 +138,6 @@ SIScalarRef SIScalarCreateWithFloat(float input_value, SIUnitRef unit);
  * @param input_value The float value for the scalar.
  * @param unit        The SIUnitRef representing the unit. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIMutableScalarRef representing the mutable scalar. The caller owns this reference
  *         and must balance it with OCRelease when it is no longer needed.
@@ -161,7 +156,6 @@ SIScalarRef SIScalarCreateWithFloat(float input_value, SIUnitRef unit);
  * @param input_value The float value for the scalar.
  * @param unit        The SIUnitRef representing the unit. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIMutableScalarRef representing the mutable scalar. The caller owns this reference
  *         and must balance it with OCRelease when it is no longer needed.
@@ -180,7 +174,6 @@ SIMutableScalarRef SIScalarCreateMutableWithFloat(float input_value, SIUnitRef u
  * @param input_value The double value for the scalar.
  * @param unit        The SIUnitRef representing the unit. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the scalar. The caller owns this reference
  *         and must balance it with OCRelease when it is no longer needed.
@@ -200,7 +193,6 @@ SIScalarRef SIScalarCreateWithDouble(double input_value, SIUnitRef unit);
  * @param input_value The double value for the scalar.
  * @param unit        The SIUnitRef representing the unit. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIMutableScalarRef representing the mutable scalar. The caller owns this reference
  *         and must balance it with OCRelease when it is no longer needed.
@@ -220,7 +212,6 @@ SIMutableScalarRef SIScalarCreateMutableWithDouble(double input_value, SIUnitRef
  * @param input_value The float complex value for the scalar.
  * @param unit        The SIUnitRef representing the unit. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the complex-valued scalar. The caller owns this reference
  *         and must balance it with OCRelease when it is no longer needed.
@@ -240,7 +231,6 @@ SIScalarRef SIScalarCreateWithFloatComplex(float complex input_value, SIUnitRef 
  * @param input_value The float complex value for the scalar.
  * @param unit        The SIUnitRef representing the unit. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIMutableScalarRef representing the mutable complex-valued scalar. The caller owns
  *         this reference and must balance it with OCRelease when it is no longer needed.
@@ -259,7 +249,6 @@ SIMutableScalarRef SIScalarCreateMutableWithFloatComplex(float complex input_val
  * @param input_value The double complex value for the scalar.
  * @param unit        The SIUnitRef representing the unit. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the complex-valued scalar. The caller owns this reference
  *         and must balance it with OCRelease when it is no longer needed.
@@ -279,7 +268,6 @@ SIScalarRef SIScalarCreateWithDoubleComplex(double complex input_value, SIUnitRe
  * @param input_value The double complex value for the scalar.
  * @param unit        The SIUnitRef representing the unit. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIMutableScalarRef representing the mutable complex-valued scalar. The caller owns
  *         this reference and must balance it with OCRelease when it is no longer needed.
@@ -300,7 +288,6 @@ SIMutableScalarRef SIScalarCreateMutableWithDoubleComplex(double complex input_v
  *
  * @param theString An OCStringRef containing a single unit name or symbol. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the unit scalar with value 1.0, or NULL if the string is invalid
  *         or the unit is not found. The caller owns this reference and must balance it with OCRelease when done.
@@ -695,7 +682,6 @@ double complex SIScalarDoubleComplexValueInCoherentUnit(SIScalarRef theScalar);
  * @param theScalar    The SIScalarRef to convert. Must not be NULL.
  * @param elementType  The SINumberType indicating the target numeric representation.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the converted scalar. The caller owns this reference and must
  *         balance it with OCRelease when it is no longer needed.
@@ -715,7 +701,6 @@ SIScalarRef SIScalarCreateByConvertingToNumberType(SIScalarRef theScalar, SINumb
  * @param part      The complexPart enum value specifying which component to extract:
  *                  kSIRealPart, kSIImaginaryPart, kSIMagnitudePart, or kSIArgumentPart.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the extraction and update succeeded; false if the scalar’s value is not complex
  *         or the specified part could not be obtained.
@@ -735,7 +720,6 @@ bool SIScalarTakeComplexPart(SIMutableScalarRef theScalar, complexPart part);
  * @param part      The complexPart enum value specifying which component to extract:
  *                  kSIRealPart, kSIImaginaryPart, kSIMagnitudePart, or kSIArgumentPart.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the extracted component. The caller owns this reference and
  *         must balance it with OCRelease when it is no longer needed.
@@ -757,7 +741,6 @@ SIScalarRef SIScalarCreateByTakingComplexPart(SIScalarRef theScalar, complexPart
  *               message. The caller is responsible for releasing this string. May be NULL if
  *               the caller does not require error details.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the parsed value and unit, or NULL if parsing fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -776,7 +759,6 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error);
  *
  * @param theScalar The SIScalarRef whose unit is to be reduced. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef with reduced unit exponents. The caller owns this reference and must
  *         balance it with OCRelease when it is no longer needed.
@@ -794,7 +776,6 @@ SIScalarRef SIScalarCreateByReducingUnit(SIScalarRef theScalar);
  *
  * @param theScalar The SIMutableScalarRef to modify. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the unit was successfully reduced (or was already in simplest form), false on error.
  *
@@ -815,7 +796,6 @@ bool SIScalarReduceUnit(SIMutableScalarRef theScalar);
  *                  message. The caller is responsible for releasing this string. May be NULL if
  *                  the caller does not require error details.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if conversion succeeded, false otherwise. On failure, *error (if provided) will contain
  *         an explanation.
@@ -839,7 +819,6 @@ bool SIScalarConvertToUnit(SIMutableScalarRef theScalar, SIUnitRef unit, OCStrin
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the converted scalar, or NULL if conversion fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -860,7 +839,6 @@ SIScalarRef SIScalarCreateByConvertingToUnit(SIScalarRef theScalar,
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if conversion succeeded; false otherwise. On failure, *error (if provided) will contain
  *         the error description.
@@ -881,7 +859,6 @@ bool SIScalarConvertToCoherentUnit(SIMutableScalarRef theScalar,
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the converted scalar, or NULL if conversion fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -903,7 +880,6 @@ SIScalarRef SIScalarCreateByConvertingToCoherentUnit(SIScalarRef theScalar,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the sum, or NULL if addition fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -925,7 +901,6 @@ SIScalarRef SIScalarCreateByAdding(SIScalarRef input1,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if addition succeeded; false otherwise. On failure, *error (if provided) will contain
  *         the error description.
@@ -948,7 +923,6 @@ bool SIScalarAdd(SIMutableScalarRef target,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the difference, or NULL if subtraction fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -970,7 +944,6 @@ SIScalarRef SIScalarCreateBySubtracting(SIScalarRef input1,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if subtraction succeeded; false otherwise. On failure, *error (if provided) will contain
  *         the error description.
@@ -994,7 +967,6 @@ bool SIScalarSubtract(SIMutableScalarRef target,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the product, or NULL if multiplication fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -1017,7 +989,6 @@ SIScalarRef SIScalarCreateByMultiplyingWithoutReducingUnit(SIScalarRef input1,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if multiplication succeeded; false otherwise. On failure, *error (if provided) will contain
  *         the error description.
@@ -1041,7 +1012,6 @@ bool SIScalarMultiplyWithoutReducingUnit(SIMutableScalarRef target,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the product, or NULL if multiplication fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -1063,7 +1033,6 @@ SIScalarRef SIScalarCreateByMultiplying(SIScalarRef input1,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if multiplication succeeded; false otherwise. On failure, *error (if provided) will
  *         contain the error description.
@@ -1087,7 +1056,6 @@ bool SIScalarMultiply(SIMutableScalarRef target,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the quotient, or NULL if division fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -1110,7 +1078,6 @@ SIScalarRef SIScalarCreateByDividingWithoutReducingUnit(SIScalarRef input1,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if division succeeded; false otherwise. On failure, *error (if provided) will contain
  *         the error description.
@@ -1134,7 +1101,6 @@ bool SIScalarDivideWithoutReducingUnit(SIMutableScalarRef target,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the quotient, or NULL if division fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -1156,7 +1122,6 @@ SIScalarRef SIScalarCreateByDividing(SIScalarRef input1,
  * @param error  A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *               message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if division succeeded; false otherwise. On failure, *error (if provided) will contain
  *         the error description.
@@ -1179,7 +1144,6 @@ bool SIScalarDivide(SIMutableScalarRef target,
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the result, or NULL if the operation fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -1202,7 +1166,6 @@ SIScalarRef SIScalarCreateByRaisingToAPowerWithoutReducingUnit(SIScalarRef theSc
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the operation succeeded; false otherwise. On failure, *error (if provided)
  *         will contain the error description.
@@ -1225,7 +1188,6 @@ bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar,
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the result, or NULL if the operation fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -1247,7 +1209,6 @@ SIScalarRef SIScalarCreateByRaisingToAPower(SIScalarRef theScalar,
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the operation succeeded; false otherwise. On failure, *error (if provided)
  *         will contain the error description.
@@ -1269,7 +1230,6 @@ bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar,
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the absolute value, or NULL if the operation fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -1289,7 +1249,6 @@ SIScalarRef SIScalarCreateByTakingAbsoluteValue(SIScalarRef theScalar,
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the operation succeeded; false otherwise.
  *
@@ -1310,7 +1269,6 @@ bool SIScalarTakeAbsoluteValue(SIMutableScalarRef theScalar,
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the Gamma result, or NULL if the operation fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -1333,7 +1291,6 @@ SIScalarRef SIScalarCreateByGammaFunctionWithoutReducingUnit(SIScalarRef theScal
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the Nth root, or NULL if the operation fails.
  *         On failure, *error (if provided) will contain the error description.
@@ -1356,7 +1313,6 @@ SIScalarRef SIScalarCreateByTakingNthRoot(SIScalarRef theScalar,
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the operation succeeded; false otherwise.
  *
@@ -1377,7 +1333,6 @@ bool SIScalarTakeNthRoot(SIMutableScalarRef theScalar,
  * @param error     A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                  message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the operation succeeded; false otherwise.
  *
@@ -1399,7 +1354,6 @@ bool SIScalarTakeLog10(SIMutableScalarRef theScalar,
  * @param part      The complexPart enum value specifying which component to zero:
  *                  kSIRealPart, kSIImaginaryPart, kSIMagnitudePart, or kSIArgumentPart.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef with the specified part zeroed. Caller owns this reference and must
  *         balance it with OCRelease when it is no longer needed.
@@ -1418,7 +1372,6 @@ SIScalarRef SIScalarCreateByZeroingPart(SIScalarRef theScalar, complexPart part)
  * @param part      The complexPart enum value specifying which component to zero:
  *                  kSIRealPart, kSIImaginaryPart, kSIMagnitudePart, or kSIArgumentPart.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the operation succeeded; false otherwise.
  *
@@ -1435,7 +1388,6 @@ bool SIScalarZeroPart(SIMutableScalarRef theScalar, complexPart part);
  * @param theScalar The SIMutableScalarRef to modify. Must not be NULL.
  * @param constant  The dimensionless real constant multiplier.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the operation succeeded; false otherwise.
  *
@@ -1452,7 +1404,6 @@ bool SIScalarMultiplyByDimensionlessRealConstant(SIMutableScalarRef theScalar, d
  * @param theScalar The SIScalarRef to process. Must not be NULL.
  * @param constant  The dimensionless real constant multiplier.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the scaled value. Caller owns this reference and must
  *         balance it with OCRelease when it is no longer needed.
@@ -1471,7 +1422,6 @@ SIScalarRef SIScalarCreateByMultiplyingByDimensionlessRealConstant(SIScalarRef t
  * @param theScalar The SIScalarRef to process. Must not be NULL.
  * @param constant  The dimensionless complex constant multiplier.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the complex-scaled value. Caller owns this reference and
  *         must balance it with OCRelease when it is no longer needed.
@@ -1489,7 +1439,6 @@ SIScalarRef SIScalarCreateByMultiplyingByDimensionlessComplexConstant(SIScalarRe
  * @param theScalar The SIMutableScalarRef to modify. Must not be NULL.
  * @param constant  The dimensionless complex constant multiplier.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the operation succeeded; false otherwise.
  *
@@ -1506,7 +1455,6 @@ bool SIScalarMultiplyByDimensionlessComplexConstant(SIMutableScalarRef theScalar
  *
  * @param theScalar The SIScalarRef to conjugate. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new SIScalarRef representing the conjugated value. Caller owns this reference and
  *         must balance it with OCRelease when it is no longer needed.
@@ -1523,7 +1471,6 @@ SIScalarRef SIScalarCreateByConjugation(SIScalarRef theScalar);
  *
  * @param theScalar The SIMutableScalarRef to modify. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the operation succeeded; false otherwise.
  *
@@ -1543,7 +1490,6 @@ bool SIScalarConjugate(SIMutableScalarRef theScalar);
  *
  * @param theScalar The SIScalarRef to display. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @see SIScalarCreateStringValue, OCLog
  */
@@ -1558,7 +1504,6 @@ void SIScalarShow(SIScalarRef theScalar);
  *
  * @param theScalar The SIScalarRef to stringify. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new OCStringRef representing the scalar. The caller owns this reference
  *         and must balance it with OCRelease when no longer needed.
@@ -1575,7 +1520,6 @@ OCStringRef SIScalarCreateStringValue(SIScalarRef theScalar);
  *
  * @param theScalar The SIScalarRef whose numeric part is to be stringified. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new OCStringRef representing the numeric value. The caller owns this
  *         reference and must balance it with OCRelease when no longer needed.
@@ -1594,7 +1538,6 @@ OCStringRef SIScalarCreateNumericStringValue(SIScalarRef theScalar);
  * @param theScalar The SIScalarRef to inspect. Must not be NULL.
  * @param thePart   The complexPart enum value specifying which component to stringify.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new OCStringRef representing the requested component. The caller owns
  *         this reference and must balance it with OCRelease when no longer needed.
@@ -1612,7 +1555,6 @@ OCStringRef SIScalarCreateStringValueForPart(SIScalarRef theScalar,
  *
  * @param theScalar The SIScalarRef whose unit is to be stringified. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new OCStringRef representing the unit. The caller owns this reference
  *         and must balance it with OCRelease when no longer needed.
@@ -1631,7 +1573,6 @@ OCStringRef SIScalarCreateUnitString(SIScalarRef theScalar);
  * @param theScalar The SIScalarRef to format. Must not be NULL.
  * @param format    An OCStringRef containing a valid format specifier. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new OCStringRef containing the formatted result. The caller owns this
  *         reference and must balance it with OCRelease when no longer needed.
@@ -1651,7 +1592,6 @@ OCStringRef SIScalarCreateStringValueWithFormat(SIScalarRef theScalar,
  * @param theScalar The SIScalarRef whose numeric part is to be formatted. Must not be NULL.
  * @param format    An OCStringRef containing a valid format specifier. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return A new OCStringRef containing the formatted numeric value. The caller owns
  *         this reference and must balance it with OCRelease when no longer needed.
@@ -1671,7 +1611,6 @@ OCStringRef SIScalarCreateNumericStringValueWithFormat(SIScalarRef theScalar,
  * @param theScalar The SIScalarRef to stringify and append. Must not be NULL.
  * @param array     The OCMutableArrayRef to which the string is added. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @see SIScalarCreateStringValue, OCMutableArrayAddObject
  */
@@ -1689,7 +1628,6 @@ void SIScalarAddToArrayAsStringValue(SIScalarRef theScalar,
  *
  * @param theScalar The SIScalarRef to test. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the scalar is real; false otherwise.
  *
@@ -1705,7 +1643,6 @@ bool SIScalarIsReal(SIScalarRef theScalar);
  *
  * @param theScalar The SIScalarRef to test. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the scalar is purely imaginary; false otherwise.
  *
@@ -1721,7 +1658,6 @@ bool SIScalarIsImaginary(SIScalarRef theScalar);
  *
  * @param theScalar The SIScalarRef to test. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the scalar is complex (imaginary part ≠ 0); false otherwise.
  *
@@ -1737,7 +1673,6 @@ bool SIScalarIsComplex(SIScalarRef theScalar);
  *
  * @param theScalar The SIScalarRef to test. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the scalar is zero; false otherwise.
  */
@@ -1751,7 +1686,6 @@ bool SIScalarIsZero(SIScalarRef theScalar);
  *
  * @param theScalar The SIScalarRef to test. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the scalar is infinite; false otherwise.
  */
@@ -1765,7 +1699,6 @@ bool SIScalarIsInfinite(SIScalarRef theScalar);
  *
  * @param theScalar The SIScalarRef to test. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the scalar is a non-negative integer; false otherwise.
  */
@@ -1783,7 +1716,6 @@ bool SIScalarIsRealNonNegativeInteger(SIScalarRef theScalar);
  * @param error                A pointer to an OCStringRef that, on failure, will be set to a descriptive error
  *                             message. The caller is responsible for releasing this string. May be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if the proposed string is valid and matches dimensionality; false otherwise.
  */
@@ -1800,7 +1732,6 @@ bool SIScalarValidateProposedStringValue(SIScalarRef theScalar,
  * @param input1 The first SIScalarRef. Must not be NULL.
  * @param input2 The second SIScalarRef. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return true if all attributes match exactly; false otherwise.
  */
@@ -1816,7 +1747,6 @@ bool SIScalarEqual(SIScalarRef input1, SIScalarRef input2);
  * @param scalar      The first SIScalarRef. Must not be NULL.
  * @param otherScalar The second SIScalarRef. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return An OCComparisonResult indicating comparison outcome.
  */
@@ -1832,7 +1762,6 @@ OCComparisonResult SIScalarCompare(SIScalarRef scalar, SIScalarRef otherScalar);
  * @param theScalar       The first SIScalarRef. Must not be NULL.
  * @param theOtherScalar  The second SIScalarRef. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return An OCComparisonResult indicating comparison outcome.
  */
@@ -1848,7 +1777,6 @@ OCComparisonResult SIScalarCompareReduced(SIScalarRef theScalar, SIScalarRef the
  * @param theScalar       The first SIScalarRef. Must not be NULL.
  * @param theOtherScalar  The second SIScalarRef. Must not be NULL.
  *
- * @thread_safety Safe to call from any thread.
  *
  * @return An OCComparisonResult indicating comparison outcome.
  */

@@ -1,4 +1,0 @@
-SILibrary
-=========
-
-.. doxygenfile:: SILibrary.h

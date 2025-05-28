@@ -10,7 +10,6 @@
  * This interface supports querying and manipulating the unit, dimensionality, and element type of a quantity, as well as type and dimensionality comparisons.
  *
  * @author Philip Grandinetti
- * @copyright PhySy Ltd.
  */
 
 //
@@ -53,6 +52,8 @@ typedef enum { // Anonymous enum
     kSINumberFloat64ComplexType = Float64ComplexType
 } SINumberType;
 
+/** @cond INTERNAL */
+
 /**
  * @typedef SIQuantityRef
  * @brief Reference to a SIQuantity object.
@@ -64,6 +65,7 @@ typedef const struct __SIQuantity * SIQuantityRef;
  * @brief Reference to a mutable SIQuantity object.
  */
 typedef struct __SIQuantity * SIMutableQuantityRef;
+/** @endcond */
 
 /**
  * @brief Returns the quantity's unit.

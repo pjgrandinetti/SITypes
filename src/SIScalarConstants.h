@@ -14,8 +14,7 @@
  *
  * This interface supports querying element and isotope properties, as well as generating arrays of symbols and physical constants for use in scientific calculations.
  *
- * @author PhySy Ltd
- * @copyright PhySy Ltd
+ * @author Philip Grandinetti
  */
 
 #ifndef SIScalarConstants_h

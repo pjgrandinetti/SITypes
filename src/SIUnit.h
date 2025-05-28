@@ -13,35 +13,26 @@
 
 /**
  * @file SIUnit.h
- * @brief Declares the SIUnit interface for representing and manipulating physical units.
+ * @brief Core interface for SI and derived units.
  *
- * SIUnit provides an interface for SI and derived units, supporting unit construction, comparison, and conversion.
- * The API is CoreFoundation-style, with explicit memory management and reference counting.
+ * SIUnitRef encapsulates an immutable unit definition in the International System
+ * of Units, including:
+ *   - Base symbol and SI prefix (e.g. “m”, “km”, “ms”)
+ *   - Dimensional exponents for the seven SI base quantities (L, M, T, I, Θ, N, J)
+ *   - Scale factors and conversion logic
  *
- * SIUnit objects are immutable by default; use SIMutableUnitRef for mutable variants.
+ * Key features:
+ *   - Parse/format unit symbols
+ *   - Unit arithmetic (multiply/divide, power, nth-root)
+ *   - Equivalence checks and conversion-factor computation
  *
- * This interface supports querying the symbol, dimensionality, and conversion factors of a unit, as well as unit arithmetic and comparison.
+ * Memory is managed via OC-style retain/release.  
  *
- * @author Philip Grandinetti
- * @copyright PhySy Ltd.
+ * @see SIDimensionalityRef
  */
 
-/**
- * @brief SIUnit represents the unit of a physical quantity.
- * @details An important characteristic of physical quantities is that any given physical quantity can be derived from other physical quantities through physical laws. 
- * For example, the physical quantity of speed is calculated as a ratio of distance traveled to time elapsed. The volume of a box is calculated as the product of three quantities of length: i.e., height, width, and depth of the box. 
- * Any physical quantity can always be related back through physical laws to a smaller set of reference physical quantities. 
- * In fact, as the laws of physics become unified it has been argued that this smaller set can be reduced to simply the Planck length and the speed of light. 
- * At the level of theory employed by most scientists and engineers, however, there is a practical agreement that seven physical quantities should serve as fundamental reference quantities from which all other physical quantities can be derived. 
- * These reference quantities are:
- * - length
- * - mass
- * - time
- * - electric current
- * - thermodynamic temperature (the absolute measure of temperature)
- * - amount of substance
- * - luminous intensity
- */
+
+/** @cond INTERNAL */
 
 /**
  * @enum SIPrefix
@@ -91,6 +82,7 @@ typedef enum {
     kSIPrefixZetta = 21,
     kSIPrefixYotta = 24
 } SIPrefix;
+
 
 /**
  * @brief Constants for SI units and physical constants.
@@ -158,6 +150,7 @@ typedef enum {
  * @brief Type of a reference to immutable SIUnit.
  */
 typedef const struct __SIUnit * SIUnitRef;
+/** @endcond */
 
 #pragma mark Accessors
 
@@ -199,6 +192,8 @@ OCTypeID SIUnitGetTypeID(void);
  * @see SIDimensionalityGetSymbol, SIDimensionalityHasSameReducedDimensionality
  */
 SIDimensionalityRef SIUnitGetDimensionality(SIUnitRef theUnit);
+
+/** @cond INTERNAL */
 
 /**
  * @brief Retrieves the SI prefix applied to a unit’s numerator for a given base dimension.
@@ -275,6 +270,7 @@ SIPrefix SIUnitGetNumeratorPrefixAtIndex(SIUnitRef theUnit, uint8_t index);
  * @see SIUnitGetNumeratorPrefixAtIndex, SIPrefix
  */
 SIPrefix SIUnitGetDenominatorPrefixAtIndex(SIUnitRef theUnit, uint8_t index);
+/** @endcond */
 
 /**
  * @brief Creates and returns a copy of the base (singular) name for a unit.
@@ -1123,6 +1119,7 @@ OCArrayRef SIUnitCreateArrayOfRootUnits(void);
  */
 OCArrayRef SIUnitCreateArrayOfRootUnitsForQuantity(OCStringRef quantity, OCStringRef *error);
 
+/** @cond INTERNAL */
 /**
  * @brief   Tear down all static and global unit dictionaries.
  *
@@ -1130,5 +1127,6 @@ OCArrayRef SIUnitCreateArrayOfRootUnitsForQuantity(OCStringRef quantity, OCStrin
  *          during application shutdown if static cleanup did not run.
  */
 void cleanupUnitsLibraries(void);
+/** @endcond */
 
 #endif /* SIUnit_h */

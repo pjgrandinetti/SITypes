@@ -19,7 +19,6 @@
  * amount of substance, and luminous intensity.
  *
  * @author Philip Grandinetti
- * @copyright PhySy Ltd.
  */
 
 
@@ -28,6 +27,7 @@
 extern "C" {
 #endif
 
+/** @cond INTERNAL */
 
 /**
  * @typedef SIDimensionalityRef
@@ -56,183 +56,7 @@ typedef enum {
     kSIAmountIndex = 5,
     kSILuminousIntensityIndex = 6,
 } SIBaseDimensionIndex;
-
-/**
- * @brief Dimensionality constants for various physical quantities.
- */
-#define kSIQuantityDimensionless                        STR("dimensionless")
-#define kSIQuantityLength                               STR("length")
-#define kSIQuantityInverseLength                        STR("inverse length")
-#define kSIQuantityWavenumber                           STR("wavenumber")
-#define kSIQuantityLengthRatio                          STR("length ratio")
-#define kSIQuantityPlaneAngle                           STR("plane angle")
-#define kSIQuantityMass                                 STR("mass")
-#define kSIQuantityInverseMass                          STR("inverse mass")
-#define kSIQuantityMassRatio                            STR("mass ratio")
-#define kSIQuantityTime                                 STR("time")
-#define kSIQuantityInverseTime                          STR("inverse time")
-#define kSIQuantityFrequency                            STR("frequency")
-#define kSIQuantityRadioactivity                        STR("radioactivity")
-#define kSIQuantityTimeRatio                            STR("time ratio")
-#define kSIQuantityFrequencyRatio                       STR("frequency ratio")
-#define kSIQuantityInverseTimeSquared                   STR("inverse time squared")
-#define kSIQuantityCurrent                              STR("current")
-#define kSIQuantityInverseCurrent                       STR("inverse current")
-#define kSIQuantityCurrentRatio                         STR("current ratio")
-#define kSIQuantityTemperature                          STR("temperature")
-#define kSIQuantityInverseTemperature                   STR("inverse temperature")
-#define kSIQuantityTemperatureRatio                     STR("temperature ratio")
-#define kSIQuantityTemperatureGradient                  STR("temperature gradient")
-#define kSIQuantityAmount                               STR("amount")
-#define kSIQuantityInverseAmount                        STR("inverse amount")
-#define kSIQuantityAmountRatio                          STR("amount ratio")
-#define kSIQuantityLuminousIntensity                    STR("luminous intensity")
-#define kSIQuantityInverseLuminousIntensity             STR("inverse luminous intensity")
-#define kSIQuantityLuminousIntensityRatio               STR("luminous intensity ratio")
-#define kSIQuantityArea                                 STR("area")
-#define kSIQuantityInverseArea                          STR("inverse area")
-#define kSIQuantityAreaRatio                            STR("area ratio")
-#define kSIQuantitySolidAngle                           STR("solid angle")
-#define kSIQuantityVolume                               STR("volume")
-#define kSIQuantityInverseVolume                        STR("inverse volume")
-#define kSIQuantityVolumeRatio                          STR("volume ratio")
-#define kSIQuantitySpeed                                STR("speed")
-#define kSIQuantityVelocity                             STR("velocity")
-#define kSIQuantityLinearMomentum                       STR("linear momentum")
-#define kSIQuantityAngularMomentum                      STR("angular momentum")
-#define kSIQuantityMomentOfInertia                      STR("moment of inertia")
-#define kSIQuantityAcceleration                         STR("acceleration")
-#define kSIQuantityMassFlowRate                         STR("mass flow rate")
-#define kSIQuantityMassFlux                             STR("mass flux")
-#define kSIQuantityDensity                              STR("density")
-#define kSIQuantitySpecificGravity                      STR("specific gravity")
-#define kSIQuantitySpecificSurfaceArea                  STR("specific surface area")
-#define kSIQuantitySurfaceAreaToVolumeRatio             STR("surface area to volume ratio")
-#define kSIQuantitySurfaceDensity                       STR("surface density")
-#define kSIQuantitySpecificVolume                       STR("specific volume")
-#define kSIQuantityCurrentDensity                       STR("current density")
-#define kSIQuantityMagneticFieldStrength                STR("magnetic field strength")
-#define kSIQuantityLuminance                            STR("luminance")
-#define kSIQuantityRefractiveIndex                      STR("refractive index")
-#define kSIQuantityFluidity                             STR("fluidity")
-#define kSIQuantityMomentOfForce                        STR("moment of force")
-#define kSIQuantitySurfaceTension                       STR("surface tension")
-#define kSIQuantitySurfaceEnergy                        STR("surface energy")
-#define kSIQuantityAngularSpeed                         STR("angular speed")
-#define kSIQuantityAngularVelocity                      STR("angular velocity")
-#define kSIQuantityAngularAcceleration                  STR("angular acceleration")
-#define kSIQuantityHeatFluxDensity                      STR("heat flux density")
-#define kSIQuantityIrradiance                           STR("irradiance")
-#define kSIQuantitySpectralRadiantFluxDensity           STR("spectral radiant flux density")
-#define kSIQuantityHeatCapacity                         STR("heat capacity")
-#define kSIQuantityEntropy                              STR("entropy")
-#define kSIQuantitySpecificHeatCapacity                 STR("specific heat capacity")
-#define kSIQuantitySpecificEntropy                      STR("specific entropy")
-#define kSIQuantitySpecificEnergy                       STR("specific energy")
-#define kSIQuantityThermalConductance                   STR("thermal conductance")
-#define kSIQuantityThermalConductivity                  STR("thermal conductivity")
-#define kSIQuantityEnergyDensity                        STR("energy density")
-#define kSIQuantityElectricFieldStrength                STR("electric field strength")
-#define kSIQuantityElectricFieldGradient                STR("electric field gradient")
-#define kSIQuantityElectricChargeDensity                STR("electric charge density")
-#define kSIQuantitySurfaceChargeDensity                 STR("surface charge density")
-#define kSIQuantityElectricFlux                         STR("electric flux")
-#define kSIQuantityElectricFluxDensity                  STR("electric flux density")
-#define kSIQuantityElectricDisplacement                 STR("electric displacement")
-#define kSIQuantityPermittivity                         STR("permittivity")
-#define kSIQuantityPermeability                         STR("permeability")
-#define kSIQuantityMolarEnergy                          STR("molar energy")
-#define kSIQuantityMolarEntropy                         STR("molar entropy")
-#define kSIQuantityMolarHeatCapacity                    STR("molar heat capacity")
-#define kSIQuantityMolarMass                            STR("molar mass")
-#define kSIQuantityMolality                             STR("molality")
-#define kSIQuantityDiffusionFlux                        STR("diffusion flux")
-#define kSIQuantityMassToChargeRatio                    STR("mass to charge ratio")
-#define kSIQuantityChargeToMassRatio                    STR("charge to mass ratio")
-#define kSIQuantityRadiationExposure                    STR("radiation exposure")
-#define kSIQuantityAbsorbedDoseRate                     STR("absorbed dose rate")
-#define kSIQuantityRadiantIntensity                     STR("radiant intensity")
-#define kSIQuantitySpectralRadiantIntensity             STR("spectral radiant intensity")
-#define kSIQuantityRadiance                             STR("radiance")
-#define kSIQuantitySpectralRadiance                     STR("spectral radiance")
-#define kSIQuantityPorosity                             STR("porosity")
-#define kSIQuantityAngularFrequency                     STR("angular frequency")
-#define kSIQuantityForce                                STR("force")
-#define kSIQuantityTorque                               STR("torque")
-#define kSIQuantityPressure                             STR("pressure")
-#define kSIQuantityStress                               STR("stress")
-#define kSIQuantityElasticModulus                       STR("elastic modulus")
-#define kSIQuantityCompressibility                      STR("compressibility")
-#define kSIQuantityStressOpticCoefficient               STR("stress-optic coefficient")
-#define kSIQuantityPressureGradient                     STR("pressure gradient")
-#define kSIQuantityEnergy                               STR("energy")
-#define kSIQuantitySpectralRadiantEnergy                STR("spectral radiant energy")
-#define kSIQuantityPower                                STR("power")
-#define kSIQuantitySpectralPower                        STR("spectral power")
-#define kSIQuantityVolumePowerDensity                   STR("volume power density")
-#define kSIQuantitySpecificPower                        STR("specific power")
-#define kSIQuantityRadiantFlux                          STR("radiant flux")
-#define kSIQuantityElectricCharge                       STR("electric charge")
-#define kSIQuantityAmountOfElectricity                  STR("amount of electricity")
-#define kSIQuantityElectricPotentialDifference          STR("electric potential difference")
-#define kSIQuantityElectromotiveForce                   STR("electromotive force")
-#define kSIQuantityElectricPolarizability               STR("electric polarizability")
-#define kSIQuantityElectricDipoleMoment                 STR("electric dipole moment")
-#define kSIQuantityVoltage                              STR("voltage")
-#define kSIQuantityCapacitance                          STR("capacitance")
-#define kSIQuantityElectricResistance                   STR("electric resistance")
-#define kSIQuantityElectricResistancePerLength          STR("electric resistance per length")
-#define kSIQuantityElectricResistivity                  STR("electric resistivity")
-#define kSIQuantityElectricConductance                  STR("electric conductance")
-#define kSIQuantityElectricConductivity                 STR("electric conductivity")
-#define kSIQuantityElectricalMobility                   STR("electrical mobility")
-#define kSIQuantityMolarConductivity                    STR("molar conductivity")
-#define kSIQuantityMagneticDipoleMoment                 STR("magnetic dipole moment")
-#define kSIQuantityMagneticDipoleMomentRatio            STR("magnetic dipole moment ratio")
-#define kSIQuantityMagneticFlux                         STR("magnetic flux")
-#define kSIQuantityMagneticFluxDensity                  STR("magnetic flux density")
-#define kSIQuantityMolarMagneticSusceptibility          STR("molar magnetic susceptibility")
-#define kSIQuantityInverseMagneticFluxDensity           STR("inverse magnetic flux density")
-#define kSIQuantityMagneticFieldGradient                STR("magnetic field gradient")
-#define kSIQuantityInductance                           STR("inductance")
-#define kSIQuantityLuminousFlux                         STR("luminous flux")
-#define kSIQuantityLuminousFluxDensity                  STR("luminous flux density")
-#define kSIQuantityLuminousEnergy                       STR("luminous energy")
-#define kSIQuantityIlluminance                          STR("illuminance")
-#define kSIQuantityAbsorbedDose                         STR("absorbed dose")
-#define kSIQuantityDoseEquivalent                       STR("dose equivalent")
-#define kSIQuantityCatalyticActivity                    STR("catalytic activity")
-#define kSIQuantityCatalyticActivityConcentration       STR("catalytic activity concentration")
-#define kSIQuantityCatalyticActivityContent             STR("catalytic activity content")
-#define kSIQuantityAction                               STR("action")
-#define kSIQuantityReducedAction                        STR("reduced action")
-#define kSIQuantityKinematicViscosity                   STR("kinematic viscosity")
-#define kSIQuantityDiffusionCoefficient                 STR("diffusion coefficient")
-#define kSIQuantityCirculation                          STR("circulation")
-#define kSIQuantityDynamicViscosity                     STR("dynamic viscosity")
-#define kSIQuantityAmountConcentration                  STR("amount concentration")
-#define kSIQuantityMassConcentration                    STR("mass concentration")
-#define kSIQuantityChargePerAmount                      STR("charge per amount")
-#define kSIQuantityGravitationalConstant                STR("gravitational constant")
-#define kSIQuantityLengthPerVolume                      STR("distance per volume")
-#define kSIQuantityVolumePerLength                      STR("volume per length")
-#define kSIQuantityVolumetricFlowRate                   STR("volumetric flow rate")
-#define kSIQuantityFrequencyPerMagneticFluxDensity      STR("frequency per magnetic flux density")
-#define kSIQuantityPowerPerLuminousFlux                 STR("power per luminous flux")
-#define kSIQuantityLuminousEfficacy                     STR("luminous efficacy")
-#define kSIQuantityRockPermeability                     STR("rock permeability")
-#define kSIQuantityGyromagneticRatio                    STR("gyromagnetic ratio")
-#define kSIQuantityHeatTransferCoefficient              STR("heat transfer coefficient")
-#define kSIQuantityGasPermeance                         STR("gas permeance")
-#define kSIQuantityPowerPerAreaPerTemperatureToFourthPower        STR("stefan-boltzmann constant")
-#define kSIQuantityFirstHyperPolarizability             STR("first hyperpolarizability")
-#define kSIQuantitySecondHyperPolarizability            STR("second hyperpolarizability")
-#define kSIQuantityElectricQuadrupoleMoment             STR("electric quadrupole moment")
-#define kSIQuantityMagnetizability                      STR("magnetizability")
-#define kSIQuantitySecondRadiationConstant              STR("second radiation constant")
-#define kSIQuantityWavelengthDisplacementConstant       STR("wavelength displacement constant")
-#define kSIQuantityFineStructureConstant                STR("fine structure constant")
-#define kSIQuantityRatePerAmountConcentrationPerTime    STR("inverse amount concentration inverse time")
+/** @endcond */
 
 /**
  * @brief Parse an SI dimensionality expression into a cached, immutable object.
@@ -275,6 +99,8 @@ typedef enum {
 SIDimensionalityRef
 SIDimensionalityForSymbol(OCStringRef symbol, OCStringRef *error);
 
+/** @cond INTERNAL */
+
 extern OCMutableDictionaryRef dimLibrary;
 extern OCMutableDictionaryRef dimQuantitiesLibrary;
 
@@ -293,6 +119,7 @@ fprintf(stderr, " and "); \
 OCStringShow(SIDimensionalityGetSymbol(DIM2)); \
 fprintf(stderr, "\n"); \
 return RESULT;}
+/** @endcond */
 
 /**
  * @brief SIDimensionality represents the dimensionality of a physical quantity.
@@ -361,6 +188,7 @@ SIDimensionalityGetTypeID(void);
 OCStringRef
 SIDimensionalityGetSymbol(SIDimensionalityRef theDim);
 
+/** @cond INTERNAL */
 
 /**
  * @brief Retrieve the numerator of the rational exponent for a given SI base dimension.
@@ -458,6 +286,7 @@ SIDimensionalityGetDenExpAtIndex(SIDimensionalityRef      theDim,
 int8_t
 SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef   theDim,
                                        SIBaseDimensionIndex  index);
+/** @endcond */
 
 #pragma mark Tests
 /**
@@ -626,6 +455,7 @@ bool SIDimensionalityIsBaseDimensionality(SIDimensionalityRef theDim);
 bool SIDimensionalityHasSameReducedDimensionality(SIDimensionalityRef theDim1,
                                                  SIDimensionalityRef theDim2);
 
+/** @cond INTERNAL */
 /**
  * @brief Verifies that a dimensionality has the specified reduced exponents for each base symbol.
  *
@@ -664,6 +494,8 @@ bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
                                          int8_t amount_exponent,
                                          int8_t luminous_intensity_exponent);
 
+/** @endcond */
+
 
 #pragma mark Operations
 /**
@@ -685,6 +517,8 @@ bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
  * counting quantities not derived from physical base dimensions.
  */
 SIDimensionalityRef SIDimensionalityDimensionless(void);
+
+/** @cond INTERNAL */
 
 /**
  * @brief Retrieves the dimensionality corresponding to one of the seven base dimensions.
@@ -759,6 +593,7 @@ SIDimensionalityRef SIDimensionalityForBaseDimensionIndex(SIBaseDimensionIndex i
  */
 SIDimensionalityRef
 SIDimensionalityWithBaseDimensionSymbol(OCStringRef symbol, OCStringRef *error);
+/** @endcond */
 
 /**
  * @brief Parses a dimensionality expression and returns the corresponding dimensionality object.
@@ -1172,6 +1007,185 @@ SIDimensionalityShow(SIDimensionalityRef theDim);
  */
 void
 SIDimensionalityShowFull(SIDimensionalityRef theDim);
+
+
+/**
+ * @brief Dimensionality constants for various physical quantities.
+ */
+#define kSIQuantityDimensionless                        STR("dimensionless")
+#define kSIQuantityLength                               STR("length")
+#define kSIQuantityInverseLength                        STR("inverse length")
+#define kSIQuantityWavenumber                           STR("wavenumber")
+#define kSIQuantityLengthRatio                          STR("length ratio")
+#define kSIQuantityPlaneAngle                           STR("plane angle")
+#define kSIQuantityMass                                 STR("mass")
+#define kSIQuantityInverseMass                          STR("inverse mass")
+#define kSIQuantityMassRatio                            STR("mass ratio")
+#define kSIQuantityTime                                 STR("time")
+#define kSIQuantityInverseTime                          STR("inverse time")
+#define kSIQuantityFrequency                            STR("frequency")
+#define kSIQuantityRadioactivity                        STR("radioactivity")
+#define kSIQuantityTimeRatio                            STR("time ratio")
+#define kSIQuantityFrequencyRatio                       STR("frequency ratio")
+#define kSIQuantityInverseTimeSquared                   STR("inverse time squared")
+#define kSIQuantityCurrent                              STR("current")
+#define kSIQuantityInverseCurrent                       STR("inverse current")
+#define kSIQuantityCurrentRatio                         STR("current ratio")
+#define kSIQuantityTemperature                          STR("temperature")
+#define kSIQuantityInverseTemperature                   STR("inverse temperature")
+#define kSIQuantityTemperatureRatio                     STR("temperature ratio")
+#define kSIQuantityTemperatureGradient                  STR("temperature gradient")
+#define kSIQuantityAmount                               STR("amount")
+#define kSIQuantityInverseAmount                        STR("inverse amount")
+#define kSIQuantityAmountRatio                          STR("amount ratio")
+#define kSIQuantityLuminousIntensity                    STR("luminous intensity")
+#define kSIQuantityInverseLuminousIntensity             STR("inverse luminous intensity")
+#define kSIQuantityLuminousIntensityRatio               STR("luminous intensity ratio")
+#define kSIQuantityArea                                 STR("area")
+#define kSIQuantityInverseArea                          STR("inverse area")
+#define kSIQuantityAreaRatio                            STR("area ratio")
+#define kSIQuantitySolidAngle                           STR("solid angle")
+#define kSIQuantityVolume                               STR("volume")
+#define kSIQuantityInverseVolume                        STR("inverse volume")
+#define kSIQuantityVolumeRatio                          STR("volume ratio")
+#define kSIQuantitySpeed                                STR("speed")
+#define kSIQuantityVelocity                             STR("velocity")
+#define kSIQuantityLinearMomentum                       STR("linear momentum")
+#define kSIQuantityAngularMomentum                      STR("angular momentum")
+#define kSIQuantityMomentOfInertia                      STR("moment of inertia")
+#define kSIQuantityAcceleration                         STR("acceleration")
+#define kSIQuantityMassFlowRate                         STR("mass flow rate")
+#define kSIQuantityMassFlux                             STR("mass flux")
+#define kSIQuantityDensity                              STR("density")
+#define kSIQuantitySpecificGravity                      STR("specific gravity")
+#define kSIQuantitySpecificSurfaceArea                  STR("specific surface area")
+#define kSIQuantitySurfaceAreaToVolumeRatio             STR("surface area to volume ratio")
+#define kSIQuantitySurfaceDensity                       STR("surface density")
+#define kSIQuantitySpecificVolume                       STR("specific volume")
+#define kSIQuantityCurrentDensity                       STR("current density")
+#define kSIQuantityMagneticFieldStrength                STR("magnetic field strength")
+#define kSIQuantityLuminance                            STR("luminance")
+#define kSIQuantityRefractiveIndex                      STR("refractive index")
+#define kSIQuantityFluidity                             STR("fluidity")
+#define kSIQuantityMomentOfForce                        STR("moment of force")
+#define kSIQuantitySurfaceTension                       STR("surface tension")
+#define kSIQuantitySurfaceEnergy                        STR("surface energy")
+#define kSIQuantityAngularSpeed                         STR("angular speed")
+#define kSIQuantityAngularVelocity                      STR("angular velocity")
+#define kSIQuantityAngularAcceleration                  STR("angular acceleration")
+#define kSIQuantityHeatFluxDensity                      STR("heat flux density")
+#define kSIQuantityIrradiance                           STR("irradiance")
+#define kSIQuantitySpectralRadiantFluxDensity           STR("spectral radiant flux density")
+#define kSIQuantityHeatCapacity                         STR("heat capacity")
+#define kSIQuantityEntropy                              STR("entropy")
+#define kSIQuantitySpecificHeatCapacity                 STR("specific heat capacity")
+#define kSIQuantitySpecificEntropy                      STR("specific entropy")
+#define kSIQuantitySpecificEnergy                       STR("specific energy")
+#define kSIQuantityThermalConductance                   STR("thermal conductance")
+#define kSIQuantityThermalConductivity                  STR("thermal conductivity")
+#define kSIQuantityEnergyDensity                        STR("energy density")
+#define kSIQuantityElectricFieldStrength                STR("electric field strength")
+#define kSIQuantityElectricFieldGradient                STR("electric field gradient")
+#define kSIQuantityElectricChargeDensity                STR("electric charge density")
+#define kSIQuantitySurfaceChargeDensity                 STR("surface charge density")
+#define kSIQuantityElectricFlux                         STR("electric flux")
+#define kSIQuantityElectricFluxDensity                  STR("electric flux density")
+#define kSIQuantityElectricDisplacement                 STR("electric displacement")
+#define kSIQuantityPermittivity                         STR("permittivity")
+#define kSIQuantityPermeability                         STR("permeability")
+#define kSIQuantityMolarEnergy                          STR("molar energy")
+#define kSIQuantityMolarEntropy                         STR("molar entropy")
+#define kSIQuantityMolarHeatCapacity                    STR("molar heat capacity")
+#define kSIQuantityMolarMass                            STR("molar mass")
+#define kSIQuantityMolality                             STR("molality")
+#define kSIQuantityDiffusionFlux                        STR("diffusion flux")
+#define kSIQuantityMassToChargeRatio                    STR("mass to charge ratio")
+#define kSIQuantityChargeToMassRatio                    STR("charge to mass ratio")
+#define kSIQuantityRadiationExposure                    STR("radiation exposure")
+#define kSIQuantityAbsorbedDoseRate                     STR("absorbed dose rate")
+#define kSIQuantityRadiantIntensity                     STR("radiant intensity")
+#define kSIQuantitySpectralRadiantIntensity             STR("spectral radiant intensity")
+#define kSIQuantityRadiance                             STR("radiance")
+#define kSIQuantitySpectralRadiance                     STR("spectral radiance")
+#define kSIQuantityPorosity                             STR("porosity")
+#define kSIQuantityAngularFrequency                     STR("angular frequency")
+#define kSIQuantityForce                                STR("force")
+#define kSIQuantityTorque                               STR("torque")
+#define kSIQuantityPressure                             STR("pressure")
+#define kSIQuantityStress                               STR("stress")
+#define kSIQuantityElasticModulus                       STR("elastic modulus")
+#define kSIQuantityCompressibility                      STR("compressibility")
+#define kSIQuantityStressOpticCoefficient               STR("stress-optic coefficient")
+#define kSIQuantityPressureGradient                     STR("pressure gradient")
+#define kSIQuantityEnergy                               STR("energy")
+#define kSIQuantitySpectralRadiantEnergy                STR("spectral radiant energy")
+#define kSIQuantityPower                                STR("power")
+#define kSIQuantitySpectralPower                        STR("spectral power")
+#define kSIQuantityVolumePowerDensity                   STR("volume power density")
+#define kSIQuantitySpecificPower                        STR("specific power")
+#define kSIQuantityRadiantFlux                          STR("radiant flux")
+#define kSIQuantityElectricCharge                       STR("electric charge")
+#define kSIQuantityAmountOfElectricity                  STR("amount of electricity")
+#define kSIQuantityElectricPotentialDifference          STR("electric potential difference")
+#define kSIQuantityElectromotiveForce                   STR("electromotive force")
+#define kSIQuantityElectricPolarizability               STR("electric polarizability")
+#define kSIQuantityElectricDipoleMoment                 STR("electric dipole moment")
+#define kSIQuantityVoltage                              STR("voltage")
+#define kSIQuantityCapacitance                          STR("capacitance")
+#define kSIQuantityElectricResistance                   STR("electric resistance")
+#define kSIQuantityElectricResistancePerLength          STR("electric resistance per length")
+#define kSIQuantityElectricResistivity                  STR("electric resistivity")
+#define kSIQuantityElectricConductance                  STR("electric conductance")
+#define kSIQuantityElectricConductivity                 STR("electric conductivity")
+#define kSIQuantityElectricalMobility                   STR("electrical mobility")
+#define kSIQuantityMolarConductivity                    STR("molar conductivity")
+#define kSIQuantityMagneticDipoleMoment                 STR("magnetic dipole moment")
+#define kSIQuantityMagneticDipoleMomentRatio            STR("magnetic dipole moment ratio")
+#define kSIQuantityMagneticFlux                         STR("magnetic flux")
+#define kSIQuantityMagneticFluxDensity                  STR("magnetic flux density")
+#define kSIQuantityMolarMagneticSusceptibility          STR("molar magnetic susceptibility")
+#define kSIQuantityInverseMagneticFluxDensity           STR("inverse magnetic flux density")
+#define kSIQuantityMagneticFieldGradient                STR("magnetic field gradient")
+#define kSIQuantityInductance                           STR("inductance")
+#define kSIQuantityLuminousFlux                         STR("luminous flux")
+#define kSIQuantityLuminousFluxDensity                  STR("luminous flux density")
+#define kSIQuantityLuminousEnergy                       STR("luminous energy")
+#define kSIQuantityIlluminance                          STR("illuminance")
+#define kSIQuantityAbsorbedDose                         STR("absorbed dose")
+#define kSIQuantityDoseEquivalent                       STR("dose equivalent")
+#define kSIQuantityCatalyticActivity                    STR("catalytic activity")
+#define kSIQuantityCatalyticActivityConcentration       STR("catalytic activity concentration")
+#define kSIQuantityCatalyticActivityContent             STR("catalytic activity content")
+#define kSIQuantityAction                               STR("action")
+#define kSIQuantityReducedAction                        STR("reduced action")
+#define kSIQuantityKinematicViscosity                   STR("kinematic viscosity")
+#define kSIQuantityDiffusionCoefficient                 STR("diffusion coefficient")
+#define kSIQuantityCirculation                          STR("circulation")
+#define kSIQuantityDynamicViscosity                     STR("dynamic viscosity")
+#define kSIQuantityAmountConcentration                  STR("amount concentration")
+#define kSIQuantityMassConcentration                    STR("mass concentration")
+#define kSIQuantityChargePerAmount                      STR("charge per amount")
+#define kSIQuantityGravitationalConstant                STR("gravitational constant")
+#define kSIQuantityLengthPerVolume                      STR("distance per volume")
+#define kSIQuantityVolumePerLength                      STR("volume per length")
+#define kSIQuantityVolumetricFlowRate                   STR("volumetric flow rate")
+#define kSIQuantityFrequencyPerMagneticFluxDensity      STR("frequency per magnetic flux density")
+#define kSIQuantityPowerPerLuminousFlux                 STR("power per luminous flux")
+#define kSIQuantityLuminousEfficacy                     STR("luminous efficacy")
+#define kSIQuantityRockPermeability                     STR("rock permeability")
+#define kSIQuantityGyromagneticRatio                    STR("gyromagnetic ratio")
+#define kSIQuantityHeatTransferCoefficient              STR("heat transfer coefficient")
+#define kSIQuantityGasPermeance                         STR("gas permeance")
+#define kSIQuantityPowerPerAreaPerTemperatureToFourthPower        STR("stefan-boltzmann constant")
+#define kSIQuantityFirstHyperPolarizability             STR("first hyperpolarizability")
+#define kSIQuantitySecondHyperPolarizability            STR("second hyperpolarizability")
+#define kSIQuantityElectricQuadrupoleMoment             STR("electric quadrupole moment")
+#define kSIQuantityMagnetizability                      STR("magnetizability")
+#define kSIQuantitySecondRadiationConstant              STR("second radiation constant")
+#define kSIQuantityWavelengthDisplacementConstant       STR("wavelength displacement constant")
+#define kSIQuantityFineStructureConstant                STR("fine structure constant")
+#define kSIQuantityRatePerAmountConcentrationPerTime    STR("inverse amount concentration inverse time")
+
 
 
 #ifdef __cplusplus
