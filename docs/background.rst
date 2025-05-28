@@ -92,3 +92,133 @@ Thus, we begin by representing a physical quantity, ``q``, using the notation
    q = \{q\} \cdot [q]
 
 where ``\{q\}`` is the numerical value and ``[q]`` is the reference unit symbol, i.e., a non-numerical string of characters, usually an abbreviation for the name of the unit.
+
+SI Units
+---------
+
+Coherent SI Base Units
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The *coherent SI base (reference) units* form a set of seven units, described in Table :ref:`tb:SIBaseUnits` and given by the symbols
+
+.. math::
+
+   [q]_\mathrm{CBU} \in [Q]_\mathrm{CBU}
+     = \{\,\mathrm{m},\,\mathrm{kg},\,\mathrm{s},\,\mathrm{A},\,\mathrm{K},\,\mathrm{mol},\,\mathrm{cd}\}.
+
+SI Base Root Units
+^^^^^^^^^^^^^^^^^^^
+
+A minor complication is that the coherent base unit for mass in SI is defined as the kilogram, not the gram. For this reason, we define the set of seven base root units,
+
+.. math::
+
+   [q]_\mathrm{BRU} \in [Q]_\mathrm{BRU}
+     = \{\,\mathrm{m},\,\mathrm{g},\,\mathrm{s},\,\mathrm{A},\,\mathrm{K},\,\mathrm{mol},\,\mathrm{cd}\},
+
+with names and symbols shown in Table :ref:`tb:SIBaseUnitRoots`.
+
+SI Base Units
+^^^^^^^^^^^^^^
+
+The set of *Coherent SI Base Units* includes only the seven SI base units in Table :ref:`tb:SIBaseUnits`.  
+The larger set of *SI Base Units* includes all decimal multiples of the root units, created using the 20 prefix symbols in Table :ref:`tb:SIPrefixes` with the root‐unit names and symbols in Table :ref:`tb:SIBaseUnitRoots`.  
+These prefixed and unprefixed symbols form the set $[Q]_\mathrm{BU}$ of 147 SI base units:
+
+.. math::
+
+   [q]_\mathrm{BU} \in [Q]_\mathrm{BU}
+     = \{\,x_L\,\mathrm{m},\,x_M\,\mathrm{g},\,x_T\,\mathrm{s},\,x_I\,\mathrm{A},\,x_\Theta\,\mathrm{K},\,x_N\,\mathrm{mol},\,x_J\,\mathrm{cd}\},
+
+where $[Q]_\mathrm{CBU}\subseteq[Q]_\mathrm{BU}$, $[Q]_\mathrm{BRU}\subseteq[Q]_\mathrm{BU}$, and each $x_i$ indicates that the root unit symbol may be modified with one of the SI prefixes in Table :ref:`tb:SIPrefixes`.
+
+.. table:: Coherent SI base units for the seven reference quantities.
+   :name: tb:SIBaseUnits
+
+   +--------------------+-----------+------------+--------+
+   | Base Dimension     | Name      | Plural     | Symbol |
+   +====================+===========+============+========+
+   | length             | meter     | meters     | m      |
+   +--------------------+-----------+------------+--------+
+   | mass               | kilogram  | kilograms  | kg     |
+   +--------------------+-----------+------------+--------+
+   | time               | second    | seconds    | s      |
+   +--------------------+-----------+------------+--------+
+   | electric current   | ampere    | amperes    | A      |
+   +--------------------+-----------+------------+--------+
+   | thermodynamic      | kelvin    | kelvin     | K      |
+   | temperature        |           |            |        |
+   +--------------------+-----------+------------+--------+
+   | amount of substance| mole      | moles      | mol    |
+   +--------------------+-----------+------------+--------+
+   | luminous intensity | candela   | candelas   | cd     |
+   +--------------------+-----------+------------+--------+
+
+.. table:: Base root unit names and symbols for the seven reference quantities.
+   :name: tb:SIBaseUnitRoots
+
+   +--------------------+-------+--------+--------+
+   | Base Dimension     | Name  | Plural | Symbol |
+   +====================+=======+========+========+
+   | length             | meter | meters | m      |
+   +--------------------+-------+--------+--------+
+   | mass               | gram  | grams  | g      |
+   +--------------------+-------+--------+--------+
+   | time               | second| seconds| s      |
+   +--------------------+-------+--------+--------+
+   | electric current   | ampere| amperes| A      |
+   +--------------------+-------+--------+--------+
+   | thermodynamic      | kelvin| kelvin | K      |
+   | temperature        |       |        |        |
+   +--------------------+-------+--------+--------+
+   | amount of substance| mole  | moles  | mol    |
+   +--------------------+-------+--------+--------+
+   | luminous intensity | candela| candelas| cd    |
+   +--------------------+-------+--------+--------+
+
+.. table:: SI prefixes used for the seven reference quantities.
+   :name: tb:SIPrefixes
+
+   +-----------------+---------------+-----------+
+   | SI Prefix Name  | Symbol (x)    | Factor    |
+   +=================+===============+===========+
+   | yotta           | Y             | 10^24     |
+   +-----------------+---------------+-----------+
+   | zetta           | Z             | 10^21     |
+   +-----------------+---------------+-----------+
+   | exa             | E             | 10^18     |
+   +-----------------+---------------+-----------+
+   | peta            | P             | 10^15     |
+   +-----------------+---------------+-----------+
+   | tera            | T             | 10^12     |
+   +-----------------+---------------+-----------+
+   | giga            | G             | 10^9      |
+   +-----------------+---------------+-----------+
+   | mega            | M             | 10^6      |
+   +-----------------+---------------+-----------+
+   | kilo            | k             | 10^3      |
+   +-----------------+---------------+-----------+
+   | hecto           | h             | 10^2      |
+   +-----------------+---------------+-----------+
+   | deca            | da            | 10^1      |
+   +-----------------+---------------+-----------+
+   | deci            | d             | 10^-1     |
+   +-----------------+---------------+-----------+
+   | centi           | c             | 10^-2     |
+   +-----------------+---------------+-----------+
+   | milli           | m             | 10^-3     |
+   +-----------------+---------------+-----------+
+   | micro           | μ             | 10^-6     |
+   +-----------------+---------------+-----------+
+   | nano            | n             | 10^-9     |
+   +-----------------+---------------+-----------+
+   | pico            | p             | 10^-12    |
+   +-----------------+---------------+-----------+
+   | femto           | f             | 10^-15    |
+   +-----------------+---------------+-----------+
+   | atto            | a             | 10^-18    |
+   +-----------------+---------------+-----------+
+   | zepto           | z             | 10^-21    |
+   +-----------------+---------------+-----------+
+   | yocto           | y             | 10^-24    |
+   +-----------------+---------------+-----------+
