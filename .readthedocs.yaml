@@ -38,7 +38,8 @@ build:
     - ls -la docs/
     # Run Doxygen from the project root, where Doxyfile is located
     # Output Doxygen log to project root for easier access in RTD build artifacts.
-    - doxygen Doxyfile > doxygen_run.log 2>&1
+    - echo "Running Doxygen using docs/Doxyfile"
+    - doxygen docs/Doxyfile > doxygen_run.log 2>&1
     - echo "Doxygen command finished. Log content (from project root):"
     - cat doxygen_run.log
     - 'echo "--- Listing Doxygen Output Directory (expected: doxygen/) ---"'
