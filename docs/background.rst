@@ -136,23 +136,23 @@ where $[Q]_\mathrm{CBU}\subseteq[Q]_\mathrm{BU}$, $[Q]_\mathrm{BRU}\subseteq[Q]_
 .. table:: Coherent SI base units for the seven reference quantities.
    :name: tb:SIBaseUnits
 
-   +--------------------+-----------+------------+--------+
-   | Base Dimension     | Name      | Plural     | Symbol |
-   +====================+===========+============+========+
-   | length             | meter     | meters     | m      |
-   +--------------------+-----------+------------+--------+
-   | mass               | kilogram  | kilograms  | kg     |
-   +--------------------+-----------+------------+--------+
-   | time               | second    | seconds    | s      |
-   +--------------------+-----------+------------+--------+
-   | electric current   | ampere    | amperes    | A      |
-   +--------------------+-----------+------------+--------+
-   | thermodynamic temperature | kelvin | kelvin | K      |
-   +--------------------+-----------+------------+--------+
-   | amount of substance| mole      | moles      | mol    |
-   +--------------------+-----------+------------+--------+
-   | luminous intensity | candela   | candelas   | cd     |
-   +--------------------+-----------+------------+--------+
+   +------------------------------+-----------+------------+--------+
+   | Base Dimension               | Name      | Plural     | Symbol |
+   +==============================+===========+============+========+
+   | length                       | meter     | meters     | m      |
+   +------------------------------+-----------+------------+--------+
+   | mass                         | kilogram  | kilograms  | g      |
+   +------------------------------+-----------+------------+--------+
+   | time                         | second    | seconds    | s      |
+   +------------------------------+-----------+------------+--------+
+   | electric current             | ampere    | amperes    | A      |
+   +------------------------------+-----------+------------+--------+
+   | thermodynamic temperature    | kelvin    | kelvin     | K      |
+   +------------------------------+-----------+------------+--------+
+   | amount of substance          | mole      | moles      | mol    |
+   +------------------------------+-----------+------------+--------+
+   | luminous intensity           | candela   | candelas   | cd     |
+   +------------------------------+-----------+------------+--------+
 
 .. table:: Base root unit names and symbols for the seven reference quantities.
    :name: tb:SIBaseUnitRoots
