@@ -25,7 +25,8 @@ build:
 
     # 4) Copy the output into RTD’s expected dir
     - echo "Copying HTML to RTD output…"
-    - cp -R docs/_build/html "$READTHEDOCS_OUTPUT/html"
+    - mkdir -p "$READTHEDOCS_OUTPUT/html"
+    - cp -R docs/_build/html/. "$READTHEDOCS_OUTPUT/html"
 
 python:
   install:
