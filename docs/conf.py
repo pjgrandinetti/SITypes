@@ -33,12 +33,14 @@ exclude_patterns = []
 
 # -- Breathe configuration --------------------------------------------------
 
-# Tell Breathe where the Doxygen XML lives (relative to this conf.py)
+# Tell Breathe where the Doxygen XML lives (relative to this conf.py).
+# This should match OUTPUT_DIRECTORY = doxygen and XML_OUTPUT = xml in Doxyfile,
+# resulting in docs/doxygen/xml.
 breathe_projects = {
-    # key is the name you’ll use in your RST (and here in breathe_default_project)
-    'SITypes': 'doxygen/xml',
+    "OCTypes": os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "doxygen", "xml")
+    ),
 }
-# use this project for all the breathe directives
 breathe_default_project = 'SITypes'
 
 

@@ -1,9 +1,5 @@
-# Doxyfile 1.13.2
-
-#--------------------------------------------------------------------------- 
-# Project related configuration options 
-#--------------------------------------------------------------------------- 
 PROJECT_NAME            = "SITypes"
+PROJECT_BRIEF          = "A lightweight library for handling units and physical quantities in C"
 PROJECT_NUMBER          = "0.1.0"
 OUTPUT_DIRECTORY        = doxygen
 CREATE_SUBDIRS          = YES
@@ -48,10 +44,6 @@ STRIP_CODE_COMMENTS     = YES
 #---------------------------------------------------------------------------
 
 ALPHABETICAL_INDEX     = YES
-
-#--------------------------------------------------------------------------- 
-# Configuration options related to the input files 
-#--------------------------------------------------------------------------- 
 INPUT                   = ../src
 FILE_PATTERNS           = *.h *.c
 RECURSIVE               = YES
