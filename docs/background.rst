@@ -49,7 +49,7 @@ The dimensionality of any physical quantity, ``q``, can then be expressed in ter
            \; I^{\delta} \; \Theta^{\epsilon}
            \; N^{\zeta} \; J^{\eta}
 
-where the lower-case Greek symbols represent integers called the dimensional exponents. The dimensionality of any physical quantity can be represented as a point in the space of dimensional exponents ``(\alpha, \beta, \gamma, \delta, \epsilon, \zeta, \eta)``. Physical quantities with different meanings can have the same dimensionality. For example, the thermodynamic quantities *entropy* and *heat capacity* are different physical quantities having the same physical dimensions. Only physical quantities with the same dimensionality can be added. With the operation of multiplication, the physical dimensions form a mathematical group.
+where the lower-case Greek symbols represent integers called the dimensional exponents. The dimensionality of any physical quantity can be represented as a point in the space of dimensional exponents (:math:`\alpha`, :math:`\beta`, :math:`\gamma`, :math:`\delta`, :math:`\epsilon`, :math:`\zeta`, :math:`\eta`). Physical quantities with different meanings can have the same dimensionality. For example, the thermodynamic quantities *entropy* and *heat capacity* are different physical quantities having the same physical dimensions. Only physical quantities with the same dimensionality can be added. With the operation of multiplication, the physical dimensions form a mathematical group.
 
 There also exists numerous dimensionless quantities of importance, such as *plane angle* which has dimensionality of ``L/L``, or *solid angle* with a dimensionality of ``L^2/L^2``. It is sometimes necessary to distinguish between these different types of dimensionless quantities. Representing dimensionless dimensionalities requires us to split each dimension exponent into numerator and denominator exponents. Thus, we redefine our set of dimensionalities to incorporate numerator and denominator exponents,
 
@@ -83,7 +83,7 @@ Inherent in measuring any physical quantity is a comparison to a previous measur
 
    \frac{l_{\text{circumference}}}{l_{\text{diameter}}} \approx 3.14.
 
-While another scientist with longer arms might have cut a longer string to be a cubit, the procedure for finding the ratio of a large tree trunk’s circumference to its diameter is the same, and the result is independent of the absolute length of the string used (i.e., independent of the units of length used).
+While another scientist with longer arms might have cut a longer string to be a cubit, the procedure for finding the ratio of a large tree trunk's circumference to its diameter is the same, and the result is independent of the absolute length of the string used (i.e., independent of the units of length used).
 
 Thus, we begin by representing a physical quantity, ``q``, using the notation
 
@@ -91,7 +91,7 @@ Thus, we begin by representing a physical quantity, ``q``, using the notation
 
    q = \{q\} \cdot [q]
 
-where ``\{q\}`` is the numerical value and ``[q]`` is the reference unit symbol, i.e., a non-numerical string of characters, usually an abbreviation for the name of the unit.
+where :math:`\{q\}` is the numerical value and :math:`[q]` is the reference unit symbol, i.e., a non-numerical string of characters, usually an abbreviation for the name of the unit.
 
 SI Units
 ---------
@@ -122,15 +122,15 @@ SI Base Units
 ^^^^^^^^^^^^^^
 
 The set of *Coherent SI Base Units* includes only the seven SI base units in Table :ref:`tb:SIBaseUnits`.  
-The larger set of *SI Base Units* includes all decimal multiples of the root units, created using the 20 prefix symbols in Table :ref:`tb:SIPrefixes` with the root‐unit names and symbols in Table :ref:`tb:SIBaseUnitRoots`.  
-These prefixed and unprefixed symbols form the set $[Q]_\mathrm{BU}$ of 147 SI base units:
+The larger set of *SI Base Units* includes all decimal multiples of the root units, created using the 20 prefix symbols in Table :ref:`tb:SIPrefixes` with the root-unit names and symbols in Table :ref:`tb:SIBaseUnitRoots`.  
+These prefixed and unprefixed symbols form the set :math:`[Q]_\mathrm{BU}` of 147 SI base units:
 
 .. math::
 
    [q]_\mathrm{BU} \in [Q]_\mathrm{BU}
      = \{\,x_L\,\mathrm{m},\,x_M\,\mathrm{g},\,x_T\,\mathrm{s},\,x_I\,\mathrm{A},\,x_\Theta\,\mathrm{K},\,x_N\,\mathrm{mol},\,x_J\,\mathrm{cd}\},
 
-where $[Q]_\mathrm{CBU}\subseteq[Q]_\mathrm{BU}$, $[Q]_\mathrm{BRU}\subseteq[Q]_\mathrm{BU}$, and each $x_i$ indicates that the root unit symbol may be modified with one of the SI prefixes in Table :ref:`tb:SIPrefixes`.
+where :math:`[Q]_\mathrm{CBU}\subseteq[Q]_\mathrm{BU}`, :math:`[Q]_\mathrm{BRU}\subseteq[Q]_\mathrm{BU}`, and each :math:`x_i` indicates that the root unit symbol may be modified with one of the SI prefixes in Table :ref:`tb:SIPrefixes`.
 
 
 .. table:: Coherent SI base units for the seven reference quantities.
@@ -157,78 +157,76 @@ where $[Q]_\mathrm{CBU}\subseteq[Q]_\mathrm{BU}$, $[Q]_\mathrm{BRU}\subseteq[Q]_
 .. table:: Base root unit names and symbols for the seven reference quantities.
    :name: tb:SIBaseUnitRoots
 
-   +------------------------------+-------+--------+--------+
-   | Base Dimension               | Name  | Plural | Symbol |
-   +==============================+=======+========+========+
-   | length                       | meter | meters | m      |
-   +------------------------------+-------+--------+--------+
-   | mass                         | gram  | grams  | g      |
-   +------------------------------+-------+--------+--------+
-   | time                         | second| seconds| s      |
-   +------------------------------+-------+--------+--------+
-   | electric current             | ampere| amperes| A      |
-   +------------------------------+-------+--------+--------+
-   | thermodynamic temperature    | kelvin| kelvin | K      |
-   +------------------------------+-------+--------+--------+
-   | amount of substance          | mole  | moles  | mol    |
-   +------------------------------+-------+--------+--------+
-   | luminous intensity           | candela| candelas| cd   |
-   +------------------------------+-------+--------+--------+
+   +------------------------------+--------+---------+--------+
+   | Base Dimension               | Name   | Plural  | Symbol |
+   +==============================+========+=========+========+
+   | length                       | meter  | meters  | m      |
+   +------------------------------+--------+---------+--------+
+   | mass                         | gram   | grams   | g      |
+   +------------------------------+--------+---------+--------+
+   | time                         | second | seconds | s      |
+   +------------------------------+--------+---------+--------+
+   | electric current             | ampere | amperes | A      |
+   +------------------------------+--------+---------+--------+
+   | thermodynamic temperature    | kelvin | kelvin  | K      |
+   +------------------------------+--------+---------+--------+
+   | amount of substance          | mole   | moles   | mol    |
+   +------------------------------+--------+---------+--------+
+   | luminous intensity           | candela| candelas| cd     |
+   +------------------------------+--------+---------+--------+
 
 
 .. table:: SI prefixes used for the seven reference quantities.
    :name: tb:SIPrefixes
 
-   +-----------------+---------------+-----------+
-   | SI Prefix Name  | Symbol (x)    | Factor    |
-   +=================+===============+===========+
-   | yotta           | Y             | 10^24     |
-   +-----------------+---------------+-----------+
-   | zetta           | Z             | 10^21     |
-   +-----------------+---------------+-----------+
-   | exa             | E             | 10^18     |
-   +-----------------+---------------+-----------+
-   | peta            | P             | 10^15     |
-   +-----------------+---------------+-----------+
-   | tera            | T             | 10^12     |
-   +-----------------+---------------+-----------+
-   | giga            | G             | 10^9      |
-   +-----------------+---------------+-----------+
-   | mega            | M             | 10^6      |
-   +-----------------+---------------+-----------+
-   | kilo            | k             | 10^3      |
-   +-----------------+---------------+-----------+
-   | hecto           | h             | 10^2      |
-   +-----------------+---------------+-----------+
-   | deca            | da            | 10^1      |
-   +-----------------+---------------+-----------+
-   | deci            | d             | 10^-1     |
-   +-----------------+---------------+-----------+
-   | centi           | c             | 10^-2     |
-   +-----------------+---------------+-----------+
-   | milli           | m             | 10^-3     |
-   +-----------------+---------------+-----------+
-   | micro           | μ             | 10^-6     |
-   +-----------------+---------------+-----------+
-   | nano            | n             | 10^-9     |
-   +-----------------+---------------+-----------+
-   | pico            | p             | 10^-12    |
-   +-----------------+---------------+-----------+
-   | femto           | f             | 10^-15    |
-   +-----------------+---------------+-----------+
-   | atto            | a             | 10^-18    |
-   +-----------------+---------------+-----------+
-   | zepto           | z             | 10^-21    |
-   +-----------------+---------------+-----------+
-   | yocto           | y             | 10^-24    |
-   +-----------------+---------------+-----------+
-
-
+   +-------------------+-------------+------------------+
+   | SI Prefix Name    | Symbol (x)  | Factor           |
+   +===================+=============+==================+
+   | yotta             | Y           | :math:`10^{24}`  |
+   +-------------------+-------------+------------------+
+   | zetta             | Z           | :math:`10^{21}`  |
+   +-------------------+-------------+------------------+
+   | exa               | E           | :math:`10^{18}`  |
+   +-------------------+-------------+------------------+
+   | peta              | P           | :math:`10^{15}`  |
+   +-------------------+-------------+------------------+
+   | tera              | T           | :math:`10^{12}`  |
+   +-------------------+-------------+------------------+
+   | giga              | G           | :math:`10^{9}`   |
+   +-------------------+-------------+------------------+
+   | mega              | M           | :math:`10^{6}`   |
+   +-------------------+-------------+------------------+
+   | kilo              | k           | :math:`10^{3}`   |
+   +-------------------+-------------+------------------+
+   | hecto             | h           | :math:`10^{2}`   |
+   +-------------------+-------------+------------------+
+   | deca              | da          | :math:`10^{1}`   |
+   +-------------------+-------------+------------------+
+   | deci              | d           | :math:`10^{-1}`  |
+   +-------------------+-------------+------------------+
+   | centi             | c           | :math:`10^{-2}`  |
+   +-------------------+-------------+------------------+
+   | milli             | m           | :math:`10^{-3}`  |
+   +-------------------+-------------+------------------+
+   | micro             | μ           | :math:`10^{-6}`  |
+   +-------------------+-------------+------------------+
+   | nano              | n           | :math:`10^{-9}`  |
+   +-------------------+-------------+------------------+
+   | pico              | p           | :math:`10^{-12}` |
+   +-------------------+-------------+------------------+
+   | femto             | f           | :math:`10^{-15}` |
+   +-------------------+-------------+------------------+
+   | atto              | a           | :math:`10^{-18}` |
+   +-------------------+-------------+------------------+
+   | zepto             | z           | :math:`10^{-21}` |
+   +-------------------+-------------+------------------+
+   | yocto             | y           | :math:`10^{-24}` |
+   +-------------------+-------------+------------------+
 
 Coherent Derived SI Units
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-*Coherent derived SI units* is an infinite set, ``[Q]_{\mathrm{CDU}}``, defined as the products of powers of *coherent SI base units*:
+*Coherent derived SI units* is an infinite set, :math:`[Q]_{\mathrm{CDU}}`, defined as the products of powers of *coherent SI base units*:
 
 .. math::
 
@@ -243,12 +241,12 @@ Coherent Derived SI Units
        \cdot \mathrm{cd}^{\eta}
        \},
 
-for all positive and negative integer values of the exponents.  Here ``[Q]_{\mathrm{CBU}} \subseteq [Q]_{\mathrm{CDU}}``.
+for all positive and negative integer values of the exponents.  Here :math:`[Q]_{\mathrm{CBU}} \subseteq [Q]_{\mathrm{CDU}}`.
 
 Derived SI Root Units
 ^^^^^^^^^^^^^^^^^^^^^
 
-*Derived SI root units* is an infinite set, ``[Q]_{\mathrm{DRU}}``, defined as the products of powers of *SI base root units*:
+*Derived SI root units* is an infinite set, :math:`[Q]_{\mathrm{DRU}}`, defined as the products of powers of *SI base root units*:
 
 .. math::
 
@@ -263,12 +261,12 @@ Derived SI Root Units
        \cdot \mathrm{cd}^{\eta}
        \},
 
-for all positive and negative integer values of the exponents.  Here ``[Q]_{\mathrm{BRU}} \subseteq [Q]_{\mathrm{DRU}}``.
+for all positive and negative integer values of the exponents.  Here :math:`[Q]_{\mathrm{BRU}} \subseteq [Q]_{\mathrm{DRU}}`.
 
 Derived SI Units
 ^^^^^^^^^^^^^^^^
 
-*Derived SI units* is an infinite set, ``[Q]_{\mathrm{DU}}``, defined as the products of powers of *SI base units*:
+*Derived SI units* is an infinite set, :math:`[Q]_{\mathrm{DU}}`, defined as the products of powers of *SI base units*:
 
 .. math::
 
@@ -283,7 +281,7 @@ Derived SI Units
        \cdot (x_{J}\,\mathrm{cd})^{\eta}
        \},
 
-for all positive and negative integer values of the exponents.  Here ``[Q]_{\mathrm{CBU}} ⊆ [Q]_{\mathrm{CDU}} ⊆ [Q]_{\mathrm{DU}}`` and ``[Q]_{\mathrm{BRU}} ⊆ [Q]_{\mathrm{DRU}} ⊆ [Q]_{\mathrm{DU}}``.
+for all positive and negative integer values of the exponents.  Here :math:`[Q]_{\mathrm{CBU}} ⊆ [Q]_{\mathrm{CDU}} ⊆ [Q]_{\mathrm{DU}}` and :math:`[Q]_{\mathrm{BRU}} ⊆ [Q]_{\mathrm{DRU}} ⊆ [Q]_{\mathrm{DU}}`.
 
 Derived SI Dimensionless Units
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -305,9 +303,9 @@ There also exists dimensionless units, such as the radian (units m/m) or the ste
 
 for all non-negative integer numerator and denominator exponents.  Using this approach, a dimensionless unit is represented by its exponent vector
 
-``(\alpha_{+}-\alpha_{-},\;\beta_{+}-\beta_{-},\;\gamma_{+}-\gamma_{-},\;\delta_{+}-\delta_{-},\;\epsilon_{+}-\epsilon_{-},\;\zeta_{+}-\zeta_{-},\;\eta_{+}-\eta_{-})``.
+:math:`(\alpha_{+}-\alpha_{-},\;\beta_{+}-\beta_{-},\;\gamma_{+}-\gamma_{-},\;\delta_{+}-\delta_{-},\;\epsilon_{+}-\epsilon_{-},\;\zeta_{+}-\zeta_{-},\;\eta_{+}-\eta_{-})`.
 
-Thus the radian is ``(1-1, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0)`` and the steradian is ``(2-2, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0)``.  Dimensionless quantities such as counts are not derived SI units and are ``(0,0,0,0,0,0,0)``.
+Thus the radian is :math:`(1-1, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0)` and the steradian is :math:`(2-2, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0)`.  Dimensionless quantities such as counts are not derived SI units and are :math:`(0,0,0,0,0,0,0)`.
 
 Finally, we redefine the infinite set of derived SI units to incorporate numerator and denominator exponents:
 
