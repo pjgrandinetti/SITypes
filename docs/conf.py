@@ -17,6 +17,7 @@ author = 'Philip J. Grandinetti'
 release = '0.1.0'
 # The short X.Y version
 version = release
+master_doc = 'index'
 
 # -- General configuration ---------------------------------------------------
 
