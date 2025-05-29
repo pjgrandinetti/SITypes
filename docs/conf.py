@@ -37,7 +37,7 @@ exclude_patterns = []
 # This should match OUTPUT_DIRECTORY = doxygen and XML_OUTPUT = xml in Doxyfile,
 # resulting in docs/doxygen/xml.
 breathe_projects = {
-    "OCTypes": os.path.abspath(
+    "SITypes": os.path.abspath(
         os.path.join(os.path.dirname(__file__), "doxygen", "xml")
     ),
 }
