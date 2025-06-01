@@ -145,17 +145,20 @@ $(BIN_DIR)/runTests: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 		-L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) -lm -o $@
 
-test: $(BIN_DIR)/runTests
-	$<
+# Run tests
+test: octypes libSITypes.a $(TEST_OBJ)
+	$(CC) $(CFLAGS) -Isrc -Itests $(TEST_OBJ) \
+	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests
 
-test-debug: CFLAGS := $(CFLAGS) $(CFLAGS_DEBUG)
-test-debug: clean all test
+test-debug: octypes libSITypes.a $(TEST_OBJ)
+	$(CC) $(CFLAGS) -g -O0 -Isrc -Itests $(TEST_OBJ) \
+	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests.debug
 
-test-asan: CFLAGS += -DLEAK_SANITIZER
-test-asan: libSITypes.a $(TEST_OBJ)
-	$(CC) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-		-L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) -lm -o $(BIN_DIR)/runTests.asan
-	@./$(BIN_DIR)/runTests.asan
+test-asan: octypes libSITypes.a $(TEST_OBJ)
+	$(CC) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
+	  -Isrc -Itests $(TEST_OBJ) -L. -L$(OCT_LIBDIR) \
+	  -lSITypes -lOCTypes -lm -o runTests.asan
+	@./runTests.asan
 
 test-werror: CFLAGS := $(CFLAGS_DEBUG)
 test-werror: clean all test
