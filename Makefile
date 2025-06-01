@@ -176,7 +176,8 @@ clean-objects:
 
 clean:
 	$(RM) -r $(BUILD_DIR) libSITypes.a runTests runTests.asan runTests.debug *.dSYM
-	$(RM) *.tab.* *Scanner.c *.d core.* -r docs/doxygen docs/_build docs/html build-xcode $(INSTALL_DIR)
+	$(RM) *.tab.* *Scanner.c *.d core.*
+	$(RM) -rf docs/doxygen docs/_build docs/html build-xcode install
 
 clean-docs:
 	@echo "Cleaning documentation..."
