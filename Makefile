@@ -7,7 +7,7 @@
 CC      := clang
 AR      := ar
 LEX     := flex
-YACC    := bison -y
+YACC    := bison
 YFLAGS  := -d
 
 RM      := rm -f
@@ -128,8 +128,9 @@ $(OBJ_DIR)/%.o: $(TEST_SRC_DIR)/%.c | dirs
 # Bison-generated parser source and header
 $(GEN_DIR)/%Parser.tab.c $(GEN_DIR)/%Parser.tab.h: $(SRC_DIR)/%Parser.y | dirs
 	$(YACC) $(YFLAGS) $<
-	mv y.tab.c $(GEN_DIR)/$*Parser.tab.c
-	mv y.tab.h $(GEN_DIR)/$*Parser.tab.h
+	# Move modern Bison outputs into gen dir
+	mv $(basename $(notdir $<)).tab.c $(GEN_DIR)/$*Parser.tab.c
+	mv $(basename $(notdir $<)).tab.h $(GEN_DIR)/$*Parser.tab.h
 
 # Flex-generated scanner source
 # For scanners that *do* depend on a parser header
@@ -147,11 +148,12 @@ $(BIN_DIR)/runTests: libSITypes.a $(TEST_OBJ)
 
 # Run tests
 test: octypes libSITypes.a $(TEST_OBJ)
-	$(CC) $(CFLAGS) -Isrc -Itests $(TEST_OBJ) \
+	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests
+	./runTests
 
 test-debug: octypes libSITypes.a $(TEST_OBJ)
-	$(CC) $(CFLAGS) -g -O0 -Isrc -Itests $(TEST_OBJ) \
+	$(CC) $(CFLAGS) -g -O0 -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests.debug
 
 test-asan: octypes libSITypes.a $(TEST_OBJ)
