@@ -24,4 +24,3 @@ SITypes is a C library for the physical sciences designed from the ground up wit
 - Complex-value support for real + imaginary scalars
 - OCType-based memory management (`OCRelease`, `OCRetain`)
 - Example Makefile and CMake integration
-
