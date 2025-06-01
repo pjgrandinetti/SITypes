@@ -20,6 +20,8 @@ struct __SIScalar {
     // __SIQuantity Type attributes
     SIUnitRef       unit;
     SINumberType    type;
+
+    // __SIScalar Type attributes
     __SINumber      value;
 };
 
@@ -84,6 +86,11 @@ static OCStringRef __SIScalarCopyFormattingDescription(OCTypeRef theType)
             break;
         }
     }
+}
+
+// Expose the formatting description function
+OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar) {
+    return __SIScalarCopyFormattingDescription(scalar);
 }
 
 OCTypeID SIScalarGetTypeID(void)

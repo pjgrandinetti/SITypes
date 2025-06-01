@@ -354,4 +354,7 @@ OCComparisonResult SIScalarCompareReduced(SIScalarRef theScalar, SIScalarRef the
 /** @brief Performs a “loose” comparison between two scalars and returns an ordering result. */
 OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOtherScalar);
 
+
+OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar);
+
 #endif /* SIScalar_h */
