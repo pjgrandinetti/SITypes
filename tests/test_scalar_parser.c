@@ -104,20 +104,25 @@ void test_scalar_parser_4(void) {
 
 void test_scalar_parser_5(void) {
     printf("Running %s...\n", __func__);
+
     OCStringRef err = NULL;
     SIScalarRef r1 = SIScalarCreateWithOCString(STR("√(9) m"), &err);
     ASSERT_PARSED(r1, &err, "root", "Root parsing failed");
+
     SIScalarRef r2 = SIScalarCreateWithOCString(STR("3 m"), &err);
     ASSERT_PARSED(r2, &err, "comparison scalar for root", "Failed to parse comparison scalar for root");
     assert(SIScalarCompare(r1, r2) == kOCCompareEqualTo);
+    OCRelease(r1); 
+    OCRelease(r2); 
+
     SIScalarRef r3 = SIScalarCreateWithOCString(STR("∛(8) kg"), &err);
     ASSERT_PARSED(r3, &err, "cubert", "Cubert parsing failed");
     SIScalarRef r4 = SIScalarCreateWithOCString(STR("2 kg"), &err);
     ASSERT_PARSED(r4, &err, "comparison scalar for cubert", "Failed to parse comparison scalar for cubert");
     assert(SIScalarCompare(r3, r4) == kOCCompareEqualTo);
-    // show r1, r2, r3, r4
+    OCRelease(r3); 
+    OCRelease(r4);
     printf("%s passed\n", __func__);
-    OCRelease(r1); OCRelease(r2); OCRelease(r3); OCRelease(r4);
 }
 
 void test_scalar_parser_6(void) {
