@@ -222,9 +222,9 @@ clean-docs:
 	@rm -rf docs/doxygen docs/_build
 
 # Copy locally built OCTypes library and headers
-.PHONY: copy-octypes
+.PHONY: sync-libs
 
-copy-octypes:
+sync-libs:
 	@echo "Copying locally built OCTypes library and headers..."
 	@$(RM) -r third_party/OCTypes
 	@$(MKDIR_P) third_party/OCTypes/lib third_party/OCTypes/include/OCTypes
