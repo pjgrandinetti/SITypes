@@ -19,7 +19,7 @@ SITypes is a C library for the physical sciences designed from the ground up wit
   - `SIUnit` and `SIDimensionality`
   - `SIQuantity` for pairing scalars + units
 - Basic arithmetic: add, subtract, multiply, divide, exponentiation
-- Human-readable parser for quantities (e.g. “9.8 m/s²”, “4.3 eV”)
+- Human-readable parser for quantities (e.g. “9.8 m/s^2”, “4.3 eV”)
 - Dimensionality checks and unit reduction
 - Complex-value support for real + imaginary scalars
 - OCType-based memory management (`OCRelease`, `OCRetain`)
