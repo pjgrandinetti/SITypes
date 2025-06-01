@@ -57,11 +57,11 @@ TEST_OBJ       := $(patsubst $(TEST_SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(TEST_C_FILES))
 # OS-specific linking
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-  OCT_LIB_BIN := libOCTypes-macos-latest.zip
+  OCT_LIB_BIN := libOCTypes-libOCTypes-macos-latest.zip
 else ifeq ($(UNAME_S),Linux)
-  OCT_LIB_BIN := libOCTypes-ubuntu-latest.zip
+  OCT_LIB_BIN := libOCTypes-libOCTypes-ubuntu-latest.zip
 else ifneq ($(findstring MINGW,$(UNAME_S)),)
-  OCT_LIB_BIN := libOCTypes-windows-latest.zip
+  OCT_LIB_BIN := libOCTypes-libOCTypes-windows-latest.zip
 endif
 OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_ARCHIVE := third_party/libOCTypes-headers.zip
