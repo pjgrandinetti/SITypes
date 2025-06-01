@@ -90,7 +90,7 @@ static OCStringRef __SIScalarCopyFormattingDescription(OCTypeRef theType)
 
 // Expose the formatting description function
 OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar) {
-    return __SIScalarCopyFormattingDescription(scalar);
+    return __SIScalarCopyFormattingDescription((OCTypeRef) scalar);
 }
 
 OCTypeID SIScalarGetTypeID(void)
