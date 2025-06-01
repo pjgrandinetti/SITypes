@@ -1,5 +1,6 @@
-# Makefile for SITypes static library (modern build layout with complete scanner support)
+# Makefile for SITypes static library
 
+# Default target
 .DEFAULT_GOAL := all
 .SUFFIXES:
 
@@ -15,46 +16,41 @@ MKDIR_P := mkdir -p
 
 SRC_DIR        := src
 TEST_SRC_DIR   := tests
-BUILD_DIR      := build
-OBJ_DIR        := $(BUILD_DIR)/obj
-GEN_DIR        := $(BUILD_DIR)/gen
-BIN_DIR        := $(BUILD_DIR)/bin
 
-# OCTypes integration
+# Third-party OCTypes layout
 OCTYPES_DIR    := third_party/OCTypes
 OCT_INCLUDE    := $(OCTYPES_DIR)/include
 OCT_LIBDIR     := $(OCTYPES_DIR)/lib
 
+# Compiler flags
 CPPFLAGS := -I. -I$(SRC_DIR) -I$(OCT_INCLUDE)
 CFLAGS   := -O3 -Wall -Wextra \
              -Wno-sign-compare -Wno-unused-parameter \
              -Wno-missing-field-initializers -Wno-unused-function \
-             -MMD -MP -I$(OCT_INCLUDE)
+             -MMD -MP
 CFLAGS_DEBUG := -O0 -g -Wall -Wextra -Werror -MMD -MP
 
-# Flex/Bison sources
-LEX_SRC        := $(wildcard $(SRC_DIR)/*.l)
-YACC_SRC       := $(wildcard $(SRC_DIR)/*Parser.y)
+# always append OCTypes include path, even if CFLAGS is overridden
+CFLAGS += -I$(OCT_INCLUDE)
 
-# Generated files
-GEN_PARSER_C   := $(patsubst $(SRC_DIR)/%Parser.y,$(GEN_DIR)/%Parser.tab.c,$(YACC_SRC))
-GEN_PARSER_H   := $(patsubst $(SRC_DIR)/%Parser.y,$(GEN_DIR)/%Parser.tab.h,$(YACC_SRC))
-GEN_SCANNER    := $(patsubst $(SRC_DIR)/%.l,$(GEN_DIR)/%.c,$(LEX_SRC))
-GEN_C          := $(GEN_PARSER_C) $(GEN_SCANNER)
-GEN_H          := $(GEN_PARSER_H)
+# Source files
+LEX_SRC       := $(wildcard $(SRC_DIR)/*.l)
+YACC_SRC      := $(wildcard $(SRC_DIR)/*Parser.y)
+GEN_PARSER_C  := $(patsubst $(SRC_DIR)/%Parser.y,%.tab.c,$(YACC_SRC))
+GEN_PARSER_H  := $(patsubst $(SRC_DIR)/%Parser.y,%.tab.h,$(YACC_SRC))
+GEN_SCANNER   := $(patsubst $(SRC_DIR)/%Scanner.l,%Scanner.c,$(LEX_SRC))
+GEN_C         := $(GEN_PARSER_C) $(GEN_SCANNER)
+GEN_H         := $(GEN_PARSER_H)
 
-# Static sources and object files
-STATIC_SRC     := $(filter-out $(YACC_SRC) $(LEX_SRC),$(wildcard $(SRC_DIR)/*.c))
-OBJ_SRC        := $(STATIC_SRC) $(GEN_C)
-OBJ            := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(filter %.c,$(STATIC_SRC))) \
-                  $(patsubst $(GEN_DIR)/%.c,$(OBJ_DIR)/%.o,$(GEN_C))
-DEP            := $(OBJ:.o=.d)
+STATIC_SRC    := $(filter-out $(YACC_SRC) $(LEX_SRC),$(wildcard $(SRC_DIR)/*.c))
+ALL_C         := $(GEN_C) $(notdir $(STATIC_SRC))
+OBJ           := $(ALL_C:.c=.o)
+DEP           := $(OBJ:.o=.d)
 
-# Test sources and objects
-TEST_C_FILES   := $(wildcard $(TEST_SRC_DIR)/*.c)
-TEST_OBJ       := $(patsubst $(TEST_SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(TEST_C_FILES))
+TEST_C_FILES  := $(wildcard $(TEST_SRC_DIR)/*.c)
+TEST_OBJ      := $(notdir $(TEST_C_FILES:.c=.o))
 
-# OS-specific linking
+# OCTypes downloads
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
   OCT_LIB_BIN := libOCTypes-libOCTypes-macos-latest.zip
@@ -66,6 +62,7 @@ endif
 OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_ARCHIVE := third_party/libOCTypes-headers.zip
 
+# After detecting OS, define linker group flags
 ifeq ($(UNAME_S),Linux)
   GROUP_START := -Wl,--start-group
   GROUP_END   := -Wl,--end-group
@@ -74,19 +71,24 @@ else
   GROUP_END   :=
 endif
 
-.PHONY: all dirs octypes prepare test test-debug test-asan run-asan \
-        test-werror install uninstall clean clean-objects clean-docs sync-libs docs doxygen html xcode
+.PHONY: all octypes prepare test test-debug test-asan run-asan test-werror \
+        install uninstall clean clean-objects clean-docs copy-octypes \
+        docs doxygen html xcode
 
-all: dirs octypes prepare libSITypes.a
+all: octypes prepare libSITypes.a
 
-dirs:
-	$(MKDIR_P) $(BUILD_DIR) $(OBJ_DIR) $(GEN_DIR) $(BIN_DIR)
-
-# Download and extract OCTypes
-octypes: $(OCT_LIBDIR)/libOCTypes.a $(OCT_INCLUDE)/OCTypes/OCLibrary.h
+# Fetch and extract OCTypes
+octypes: $(OCT_LIBDIR)/libOCTypes.a \
+         $(OCT_INCLUDE)/OCTypes/OCLibrary.h
 
 third_party:
 	@$(MKDIR_P) third_party
+
+third_party/OCTypes:
+	@$(MKDIR_P) third_party/OCTypes
+	curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.1/$(OCT_LIB_BIN) -o third_party/OCTypes/$(OCT_LIB_BIN)
+	tar -xzf third_party/OCTypes/$(OCT_LIB_BIN) -C third_party/OCTypes
+	rm third_party/OCTypes/$(OCT_LIB_BIN)
 
 $(OCT_LIB_ARCHIVE): | third_party
 	@echo "Fetching OCTypes library: $(OCT_LIB_BIN)"
@@ -100,112 +102,134 @@ $(OCT_LIBDIR)/libOCTypes.a: $(OCT_LIB_ARCHIVE)
 	@echo "Extracting OCTypes library"
 	@$(RM) -r $(OCT_LIBDIR)
 	@$(MKDIR_P) $(OCT_LIBDIR)
-	@unzip -q $< -d $(OCT_LIBDIR)
+	@unzip -q $(OCT_LIB_ARCHIVE) -d $(OCT_LIBDIR)
 
 $(OCT_INCLUDE)/OCTypes/OCLibrary.h: $(OCT_HEADERS_ARCHIVE)
 	@echo "Extracting OCTypes headers"
 	@$(RM) -r $(OCT_INCLUDE)
 	@$(MKDIR_P) $(OCT_INCLUDE)/OCTypes
-	@unzip -q $< -d $(OCT_INCLUDE)
+	@unzip -q $(OCT_HEADERS_ARCHIVE) -d $(OCT_INCLUDE)
 	@mv $(OCT_INCLUDE)/*.h $(OCT_INCLUDE)/OCTypes/ 2>/dev/null || true
 
-prepare: $(GEN_H)
+prepare: $(GEN_PARSER_H)
 
-# Library
+# Library target
 libSITypes.a: $(OBJ)
 	$(AR) rcs $@ $^
 
-# Pattern rules
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | dirs
+# Pattern rules for compilation
+%.o: $(SRC_DIR)/%.c | octypes
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
-$(OBJ_DIR)/%.o: $(GEN_DIR)/%.c | dirs
-	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(GEN_DIR) -c -o $@ $<
-
-$(OBJ_DIR)/%.o: $(TEST_SRC_DIR)/%.c | dirs
+%.o: $(TEST_SRC_DIR)/%.c | octypes
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
-# Bison-generated parser source and header
-$(GEN_DIR)/%Parser.tab.c $(GEN_DIR)/%Parser.tab.h: $(SRC_DIR)/%Parser.y | dirs
+%.o: %.c | octypes
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
+# Bison rule: generate .tab.c and .tab.h
+%.tab.c %.tab.h: $(SRC_DIR)/%Parser.y
 	$(YACC) $(YFLAGS) $<
-	mv y.tab.c $(GEN_DIR)/$*Parser.tab.c
-	mv y.tab.h $(GEN_DIR)/$*Parser.tab.h
+	mv y.tab.c $*.tab.c
+	mv y.tab.h $*.tab.h
 
-# Flex-generated scanner source
-# For scanners that *do* depend on a parser header
-$(GEN_DIR)/%Scanner.c: $(SRC_DIR)/%Scanner.l $(GEN_DIR)/%Parser.tab.h | dirs
-	$(LEX) -o $@ $<
-
-# For scanners that do *not* depend on a parser (fallback rule)
-$(GEN_DIR)/%.c: $(SRC_DIR)/%.l | dirs
+# Flex rule: generate scanner .c
+%Scanner.c: $(SRC_DIR)/%Scanner.l $(patsubst %Scanner.c,%.tab.h,$@)
 	$(LEX) -o $@ $<
 
 # Tests
-$(BIN_DIR)/runTests: libSITypes.a $(TEST_OBJ)
+# Build the test runner with a linker group so order doesn't matter
+runTests: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-		-L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) -lm -o $@
+	  -L. -L$(OCT_LIBDIR) \
+	  $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) \
+	  -lm -o runTests
 
-test: $(BIN_DIR)/runTests
-	$<
+test: libSITypes.a $(TEST_OBJ)
+	$(CC) $(CFLAGS) -Isrc -Itests $(TEST_OBJ) \
+	  -L. -L$(OCT_LIBDIR) \
+	  $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) \
+	  -lm -o runTests
+	./runTests
 
+# Debug tests
 test-debug: CFLAGS := $(CFLAGS) $(CFLAGS_DEBUG)
 test-debug: clean all test
 
+# AddressSanitizer test target: rebuild with ASan-enabled flags and run
 test-asan: CFLAGS += -DLEAK_SANITIZER
-test-asan: libSITypes.a $(TEST_OBJ)
+test-asan: octypes prepare libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-		-L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) -lm -o $(BIN_DIR)/runTests.asan
-	@./$(BIN_DIR)/runTests.asan
+	  -L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) \
+	  -lm -o runTests.asan
+	@echo "Running AddressSanitizer build..."
+	@./runTests.asan
 
+# Treat warnings as errors
 test-werror: CFLAGS := $(CFLAGS_DEBUG)
 test-werror: clean all test
 
-# Internal install target layout (for local staging)
-INSTALL_DIR := install
-INSTALL_LIB_DIR := $(INSTALL_DIR)/lib
-INSTALL_INC_DIR := $(INSTALL_DIR)/include/SITypes
+# Install/uninstall
+PREFIX    ?= /usr/local
+INCDIR    := $(PREFIX)/include/SITypes
+LIBDIR    := $(PREFIX)/lib
 
-install: all
-	$(MKDIR_P) $(INSTALL_LIB_DIR) $(INSTALL_INC_DIR)
-	cp libSITypes.a $(INSTALL_LIB_DIR)/
-	cp src/*.h $(INSTALL_INC_DIR)/
+install: libSITypes.a $(GEN_H)
+	install -d $(DESTDIR)$(INCDIR)
+	install -m 0644 $(GEN_H) $(DESTDIR)$(INCDIR)
+	install -d $(DESTDIR)$(LIBDIR)
+	install -m 0644 libSITypes.a $(DESTDIR)$(LIBDIR)
 
-# Clean
-clean-objects:
-	$(RM) $(OBJ) $(TEST_OBJ)
+uninstall:
+	$(RM) $(DESTDIR)$(LIBDIR)/libSITypes.a
+	$(RM) $(DESTDIR)$(INCDIR)/*.h
+	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(INCDIR)
 
-clean:
-	$(RM) -r $(BUILD_DIR) libSITypes.a runTests runTests.asan runTests.debug *.dSYM
-	$(RM) *.tab.* *Scanner.c *.d core.*
-	$(RM) -rf docs/doxygen docs/_build docs/html build-xcode install
+# Documentation targets
+.PHONY: docs doxygen html
 
-clean-docs:
-	@echo "Cleaning documentation..."
-	@rm -rf docs/doxygen docs/_build
-
-# Copy from installed OCTypes
-sync-libs:
-	@echo "Copying OCTypes from installed location..."
-	@$(RM) -r third_party/OCTypes
-	@$(MKDIR_P) third_party/OCTypes/lib third_party/OCTypes/include/OCTypes
-	@cp ../OCTypes/install/lib/libOCTypes.a third_party/OCTypes/lib/
-	@cp ../OCTypes/install/include/OCTypes/*.h third_party/OCTypes/include/OCTypes/
-
-# Docs
 doxygen:
 	@echo "Generating Doxygen XML..."
-	cd docs && doxygen Doxyfile
+	@cd docs && doxygen Doxyfile
 
 html: doxygen
 	@echo "Building Sphinx HTML..."
-	cd docs && sphinx-build -W -E -b html . _build/html
+	@cd docs && sphinx-build -W -E -b html . _build/html
 
+# Alias “make docs” to build HTML
 docs: html
 
+# Generate an Xcode project using CMake
 xcode:
 	@echo "Generating Xcode project in build-xcode..."
 	@mkdir -p build-xcode
 	@cmake -G "Xcode" -S . -B build-xcode
 
-# Include generated dependency files
+# Clean targets
+clean-objects:
+	$(RM) $(OBJ) $(TEST_OBJ) runTests runTests.asan
+
+clean: clean-objects
+	$(RM) libSITypes.a runTests runTests.asan runTests.debug
+	$(RM) *.tab.c *.tab.h *Scanner.c
+	$(RM) *.d
+	$(RM) core.* *.dSYM
+	$(RM) -r docs/doxygen docs/_build docs/html
+	$(RM) -r build-xcode
+
+clean-docs:
+	@echo "Cleaning documentation..."
+	@rm -rf docs/doxygen docs/_build
+
+# Copy locally built OCTypes library and headers
+.PHONY: sync-libs
+
+sync-libs:
+	@echo "Copying locally built OCTypes library and headers..."
+	@$(RM) -r third_party/OCTypes
+	@$(MKDIR_P) third_party/OCTypes/lib third_party/OCTypes/include/OCTypes
+	@cp ../OCTypes/lib/libOCTypes.a third_party/OCTypes/lib/
+	@cp ../OCTypes/include/OCTypes/*.h third_party/OCTypes/include/OCTypes/
+
+# Include dependency files
 -include $(DEP)
