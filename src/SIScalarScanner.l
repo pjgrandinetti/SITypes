@@ -5,7 +5,7 @@
 %{
     #include "SILibrary.h"
     #include "SIScalarParser.h"
-    #include "SIScalar.tab.h"
+    #include "SIScalarParser.tab.h"
     static double complex temp;
     extern OCStringRef scalarError;  // forward declare parser's error string
 %}

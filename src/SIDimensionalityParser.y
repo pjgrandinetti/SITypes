@@ -1,7 +1,7 @@
 %{
     #include <stdio.h>
     #include "SILibrary.h"
-    #include "SIScalarParser.h"
+    #include "SIDimensionalityParser.h"
 
     void yyerror(char *s, ...);
     static SIDimensionalityRef final_dimensionality;

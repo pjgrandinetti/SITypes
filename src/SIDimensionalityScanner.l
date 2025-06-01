@@ -4,7 +4,7 @@
 %option noinput
 %{
     #include "SILibrary.h"
-    #include "SIDimensionality.tab.h"
+    #include "SIDimensionalityParser.tab.h"
     #include "SIDimensionalityParser.h"
 %}
 SYMBOL (L|M|T|I|@|N|J)
