@@ -1054,10 +1054,11 @@ void test_SIScalarIsRealNonNegativeInteger(void) {
 }
 
 void test_SIScalarValidateProposedStringValue(void) {
-    SIScalarRef s_meter = SIScalarCreateWithFloat(1.0f, SIUnitForUnderivedSymbol(STR("m")));
     OCStringRef valid_str = STR("10 cm"); // cm has same dimensionality as m
     OCStringRef invalid_dim_str = STR("10 kg"); // kg has different dimensionality
     OCStringRef invalid_fmt_str = STR("ten meters"); // bad format
+
+    SIScalarRef s_meter = SIScalarCreateWithFloat(1.0f, SIUnitForUnderivedSymbol(STR("m")));
     OCStringRef error = NULL;
 
     assert(SIScalarValidateProposedStringValue(s_meter, valid_str, &error));
@@ -1078,26 +1079,31 @@ void test_SIScalarValidateProposedStringValue(void) {
 
 void test_SIScalarEqual(void) {
     SIUnitRef m = SIUnitForUnderivedSymbol(STR("m"));
+    SIUnitRef cm = SIUnitForUnderivedSymbol(STR("cm"));
+
     SIScalarRef s1 = SIScalarCreateWithFloat(1.0f, m);
     SIScalarRef s2 = SIScalarCreateWithFloat(1.0f, m);
     SIScalarRef s3 = SIScalarCreateWithFloat(1.1f, m);
-    SIUnitRef cm = SIUnitForUnderivedSymbol(STR("cm"));
     SIScalarRef s4 = SIScalarCreateWithFloat(1.0f, cm); // Different unit
 
     assert(SIScalarEqual(s1, s2));
     assert(!SIScalarEqual(s1, s3));
     assert(!SIScalarEqual(s1, s4)); // Should be false due to different unit object, even if value is same type
 
-    OCRelease(s1); OCRelease(s2); OCRelease(s3); OCRelease(s4);
+    OCRelease(s1); 
+    OCRelease(s2); 
+    OCRelease(s3); 
+    OCRelease(s4);
 }
 
 void test_SIScalarCompare(void) {
     SIUnitRef m = SIUnitForUnderivedSymbol(STR("m"));
     SIUnitRef cm = SIUnitForUnderivedSymbol(STR("cm"));
+    SIUnitRef kg = SIUnitForUnderivedSymbol(STR("kg"));
+
     SIScalarRef s_1m = SIScalarCreateWithFloat(1.0f, m);
     SIScalarRef s_2m = SIScalarCreateWithFloat(2.0f, m);
     SIScalarRef s_100cm = SIScalarCreateWithFloat(100.0f, cm);
-    SIUnitRef kg = SIUnitForUnderivedSymbol(STR("kg"));
     SIScalarRef s_1kg = SIScalarCreateWithFloat(1.0f, kg);
 
     assert(SIScalarCompare(s_1m, s_2m) == kOCCompareLessThan);

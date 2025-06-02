@@ -83,21 +83,22 @@ OCTypeID SIDimensionalityGetTypeID(void)
 
 static struct __SIDimensionality *SIDimensionalityAllocate()
 {
-    struct __SIDimensionality *theDim = malloc(sizeof(struct __SIDimensionality));
-    if (NULL == theDim) {
+    struct __SIDimensionality *obj = malloc(sizeof(struct __SIDimensionality));
+    if (NULL == obj) {
         fprintf(stderr, "SIDimensionalityAllocate: Memory allocation failed.\n");
         return NULL;    
     }
 
-    theDim->_base.typeID = SIDimensionalityGetTypeID();
-    theDim->_base.static_instance = false;
-    theDim->_base.finalize = __SIDimensionalityFinalize;
-    theDim->_base.equal = __SIDimensionalityEqual;
-    theDim->_base.copyFormattingDesc = __SIDimensionalityCopyFormattingDescription;
-    theDim->symbol = NULL;
-    theDim->_base.retainCount = 0;
-    OCRetain(theDim);
-    return theDim;
+    obj->_base.typeID = SIDimensionalityGetTypeID();
+    obj->_base.finalize = __SIDimensionalityFinalize;
+    obj->_base.equal = __SIDimensionalityEqual;
+    obj->_base.copyFormattingDesc = __SIDimensionalityCopyFormattingDescription;
+    obj->_base.static_instance = false;
+    obj->_base.finalized = false;
+    obj->_base.retainCount = 1;
+
+    obj->symbol = NULL;
+    return obj;
 }
 
 #pragma mark Static Utility Functions

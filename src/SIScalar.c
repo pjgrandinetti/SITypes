@@ -103,23 +103,24 @@ OCTypeID SIScalarGetTypeID(void)
 
 static struct __SIScalar *SIScalarAllocate()
 {
-    struct __SIScalar *theNumber = malloc(sizeof(struct __SIScalar));
-    if(NULL == theNumber) {
+    struct __SIScalar *obj = malloc(sizeof(struct __SIScalar));
+    if(NULL == obj) {
         fprintf(stderr, "Failed to allocate memory for SIScalarAllocate\n");
         return NULL;
     }
 
-    theNumber->_base.typeID = SIScalarGetTypeID();
-    theNumber->_base.static_instance = false; 
-    theNumber->_base.finalize = __SIScalarFinalize;
-    theNumber->_base.equal = __SIScalarEqual;
-    theNumber->_base.copyFormattingDesc = __SIScalarCopyFormattingDescription;
-    theNumber->_base.retainCount = 0;
+    obj->_base.typeID = SIScalarGetTypeID();
+    obj->_base.static_instance = false; 
+    obj->_base.finalize = __SIScalarFinalize;
+    obj->_base.equal = __SIScalarEqual;
+    obj->_base.copyFormattingDesc = __SIScalarCopyFormattingDescription;
+    obj->_base.retainCount = 1;
+    obj->_base.finalized = false;
 
-    theNumber->unit = NULL;
-    theNumber->type = kSINumberFloat32Type;
-    memset(&theNumber->value, 0, sizeof(theNumber->value));
-    return (struct __SIScalar *) OCRetain(theNumber);
+    obj->unit = NULL;
+    obj->type = kSINumberFloat32Type;
+    memset(&obj->value, 0, sizeof(obj->value));
+    return obj;
 }
 
 
