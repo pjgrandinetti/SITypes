@@ -260,7 +260,6 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
     case 'F':
     {
         SIScalarRef result = builtInMathFunction((ScalarNodeMathFunctionRef)node, errorString);
-        OCAutorelease(result);
         if (errorString)
             if (*errorString)
                 return NULL;
@@ -269,7 +268,6 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
     case 'C':
     {
         SIScalarRef result = builtInConstantFunction((ScalarNodeConstantFunctionRef)node, errorString);
-        OCAutorelease(result);
         if (errorString)
             if (*errorString)
                 return NULL;

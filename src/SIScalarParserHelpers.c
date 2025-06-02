@@ -303,7 +303,7 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     } else {
         if (error) *error = STR("Syntax Error");
     }
-    OCRetain(out);
+    if(out) OCRetain(out);
     return out;
 }
 
