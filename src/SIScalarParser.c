@@ -72,12 +72,13 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
             if (*errorString)
                 return NULL;
         SIScalarRef temp = SIScalarCreateByAdding(left, right, errorString);
-        OCAutorelease(temp);
         if (errorString)
             if (*errorString)
                 return NULL;
-        if (temp)
+        if (temp) {
+            OCAutorelease(temp);
             return temp;
+            }
         return NULL;
     }
     case '-':
@@ -91,12 +92,13 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
             if (*errorString)
                 return NULL;
         SIScalarRef temp = SIScalarCreateBySubtracting(left, right, errorString);
-        OCAutorelease(temp);
         if (errorString)
             if (*errorString)
                 return NULL;
-        if (temp)
+        if (temp) {
+            OCAutorelease(temp);
             return temp;
+        }
         return NULL;
     }
     case '*':
@@ -110,9 +112,10 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
             if (*errorString)
                 return NULL;
         SIScalarRef temp = SIScalarCreateByMultiplyingWithoutReducingUnit(left, right, errorString);
-        OCAutorelease(temp);
-        if (temp)
+        if (temp) {
+            OCAutorelease(temp);
             return temp;
+        }
         return NULL;
     }
     case '/':
@@ -126,9 +129,10 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
             if (*errorString)
                 return NULL;
         SIScalarRef temp = SIScalarCreateByDividingWithoutReducingUnit(left, right, errorString);
-        OCAutorelease(temp);
-        if (temp)
+        if (temp) {
+            OCAutorelease(temp);
             return temp;
+        }
         return NULL;
     }
     case '!':
@@ -138,9 +142,10 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
             if (*errorString)
                 return NULL;
         SIScalarRef temp = SIScalarCreateByGammaFunctionWithoutReducingUnit(left, errorString);
-        OCAutorelease(temp);
-        if (temp)
+        if (temp) {
+            OCAutorelease(temp);
             return temp;
+        }
         return NULL;
     }
     case '^':
@@ -175,7 +180,9 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
                         return NULL;
                     }
                     SIScalarRef theScalar = SIScalarCreateWithDoubleComplex(result, NULL);
-                    OCAutorelease(theScalar);
+                    if(theScalar) {
+                        OCAutorelease(theScalar);
+                    }
                     return theScalar;
                 }
                 else
@@ -191,7 +198,9 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
                         return NULL;
                     }
                     SIScalarRef theScalar = SIScalarCreateWithDoubleComplex(result, NULL);
-                    OCAutorelease(theScalar);
+                    if(theScalar) {
+                        OCAutorelease(theScalar);
+                    }
                     return theScalar;
                 }
             }
@@ -200,7 +209,9 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
                 if (SIScalarIsReal(right))
                 {
                     SIScalarRef theScalar = SIScalarCreateByRaisingToAPowerWithoutReducingUnit(left, power, errorString);
-                    OCAutorelease(theScalar);
+                    if(theScalar) {
+                        OCAutorelease(theScalar);
+                    }
                     if (errorString)
                         if (*errorString)
                             return NULL;
@@ -229,7 +240,9 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
             if (*errorString)
                 return NULL;
         SIScalarRef theScalar = SIScalarCreateByTakingComplexPart(left, kSIMagnitudePart);
-        OCAutorelease(theScalar);
+        if(theScalar) {
+            OCAutorelease(theScalar);
+        }
         return theScalar;
     }
     case 'M':
@@ -239,13 +252,14 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
             if (*errorString)
                 return NULL;
         SIScalarRef theScalar = SIScalarCreateByMultiplyingByDimensionlessRealConstant(left, -1.);
-        OCAutorelease(theScalar);
+        if(theScalar) {
+            OCAutorelease(theScalar);
+        }
         return theScalar;
     }
     case 'F':
     {
         SIScalarRef result = builtInMathFunction((ScalarNodeMathFunctionRef)node, errorString);
-        OCAutorelease(result);
         if (errorString)
             if (*errorString)
                 return NULL;
@@ -254,7 +268,6 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
     case 'C':
     {
         SIScalarRef result = builtInConstantFunction((ScalarNodeConstantFunctionRef)node, errorString);
-        OCAutorelease(result);
         if (errorString)
             if (*errorString)
                 return NULL;
@@ -269,6 +282,11 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
 ScalarNodeRef ScalarNodeCreateInnerNode(int nodeType, ScalarNodeRef left, ScalarNodeRef right)
 {
     struct __scalarNode *node = malloc(sizeof(struct __scalarNode));
+    if(NULL == node)
+    {
+        fprintf(stderr, "ScalarNodeCreateInnerNode: Memory allocation failed.\n");
+        return NULL; // Handle memory allocation failure
+    }
     node->nodeType = nodeType;
     node->left = left;
     node->right = right;
@@ -278,6 +296,11 @@ ScalarNodeRef ScalarNodeCreateInnerNode(int nodeType, ScalarNodeRef left, Scalar
 ScalarNodeRef ScalarNodeCreateMathFunction(builtInMathFunctions funcType, ScalarNodeRef left)
 {
     struct __scalarNodeMathFunction *node = malloc(sizeof(struct __scalarNodeMathFunction));
+    if(NULL == node)
+    {
+        fprintf(stderr, "ScalarNodeCreateMathFunction: Memory allocation failed.\n");
+        return NULL; // Handle memory allocation failure
+    }
     node->nodeType = 'F';
     node->left = left;
     node->funcType = funcType;
@@ -287,6 +310,11 @@ ScalarNodeRef ScalarNodeCreateMathFunction(builtInMathFunctions funcType, Scalar
 ScalarNodeRef ScalarNodeCreateConstantFunction(builtInConstantFunctions funcType, OCMutableStringRef string)
 {
     struct __scalarNodeConstantFunction *node = malloc(sizeof(struct __scalarNodeConstantFunction));
+    if(NULL == node)
+    {
+        fprintf(stderr, "ScalarNodeCreateConstantFunction: Memory allocation failed.\n");
+        return NULL; // Handle memory allocation failure
+    }
     node->nodeType = 'C';
     node->string = string;
     node->funcType = funcType;
@@ -296,8 +324,13 @@ ScalarNodeRef ScalarNodeCreateConstantFunction(builtInConstantFunctions funcType
 ScalarNodeRef ScalarNodeCreateNumberLeaf(SIScalarRef number)
 {
     struct __scalarValue *leaf = malloc(sizeof(struct __scalarValue));
+    if(NULL == leaf)
+    {
+        fprintf(stderr, "ScalarNodeCreateNumberLeaf: Memory allocation failed.\n");
+        return NULL; // Handle memory allocation failure
+    }
     leaf->nodeType = 'K';
-    leaf->number = number;
+    leaf->number = OCRetain(number);
     return (ScalarNodeRef)leaf;
 }
 
@@ -354,6 +387,7 @@ void ScalarNodeFree(ScalarNodeRef node)
     }
 
     free((void *)node); // Always free the node structure itself
+    node = NULL; // Set to NULL to avoid dangling pointer
 }
 
 
@@ -380,63 +414,63 @@ SIScalarRef builtInConstantFunction(ScalarNodeConstantFunctionRef func, OCString
     case BC_AW:
     {
         SIScalarRef theScalar = SIPeriodicTableCreateMolarMass(func->string, errorString);
-        OCAutorelease(theScalar);
+        if(theScalar) OCAutorelease(theScalar);
         return theScalar;
         break;
     }
     case BC_FW:
     {
         SIScalarRef theScalar = SIPeriodicTableCreateFormulaMass(func->string, errorString);
-        OCAutorelease(theScalar);
+        if(theScalar) OCAutorelease(theScalar);
         return theScalar;
         break;
     }
     case BC_Isotope_Abundance:
     {
         SIScalarRef theScalar = SIPeriodicTableCreateIsotopeAbundance(func->string, errorString);
-        OCAutorelease(theScalar);
+        if(theScalar) OCAutorelease(theScalar);
         return theScalar;
         break;
     }
     case BC_Isotope_Spin:
     {
         SIScalarRef theScalar = SIPeriodicTableCreateIsotopeSpin(func->string, errorString);
-        OCAutorelease(theScalar);
+        if(theScalar) OCAutorelease(theScalar);
         return theScalar;
         break;
     }
     case BC_Isotope_HalfLife:
     {
         SIScalarRef theScalar = SIPeriodicTableCreateIsotopeHalfLife(func->string, errorString);
-        OCAutorelease(theScalar);
+        if(theScalar) OCAutorelease(theScalar);
         return theScalar;
         break;
     }
     case BC_Isotope_Gyromag:
     {
         SIScalarRef theScalar = SIPeriodicTableCreateIsotopeGyromagneticRatio(func->string, errorString);
-        OCAutorelease(theScalar);
+        if(theScalar) OCAutorelease(theScalar);
         return theScalar;
         break;
     }
     case BC_Isotope_MagneticDipole:
     {
         SIScalarRef theScalar = SIPeriodicTableCreateIsotopeMagneticDipoleMoment(func->string, errorString);
-        OCAutorelease(theScalar);
+        if(theScalar) OCAutorelease(theScalar);
         return theScalar;
         break;
     }
     case BC_Isotope_ElectricQuadrupole:
     {
         SIScalarRef theScalar = SIPeriodicTableCreateIsotopeElectricQuadrupoleMoment(func->string, errorString);
-        OCAutorelease(theScalar);
+        if(theScalar) OCAutorelease(theScalar);
         return theScalar;
         break;
     }
     case BC_nmr:
     {
         SIScalarRef theScalar = SIPeriodicTableCreateNMRFrequency(func->string, errorString);
-        OCAutorelease(theScalar);
+        if(theScalar) OCAutorelease(theScalar);
         return theScalar;
         break;
     }
@@ -456,8 +490,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
 
     builtInMathFunctions funcType = func->funcType;
     SIScalarRef scalar = ScalarNodeEvaluate(func->left, errorString);
-    if (NULL == scalar)
-        return NULL;
+    if (NULL == scalar) return NULL;
     OCAutorelease(scalar);
 
     switch (funcType)
@@ -465,25 +498,25 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
     case BM_reduce:
     {
         SIScalarRef result = SIScalarCreateByReducingUnit(scalar);
-        OCAutorelease(result);
+        if(result) OCAutorelease(result);
         return result;
     }
     case BM_sqrt:
     {
         SIScalarRef result = SIScalarCreateByTakingNthRoot(scalar, 2, errorString);
-        OCAutorelease(result);
+        if(result) OCAutorelease(result);
         return result;
     }
     case BM_cbrt:
     {
         SIScalarRef result = SIScalarCreateByTakingNthRoot(scalar, 3, errorString);
-        OCAutorelease(result);
+        if(result) OCAutorelease(result);
         return result;
     }
     case BM_qtrt:
     {
         SIScalarRef result = SIScalarCreateByTakingNthRoot(scalar, 4, errorString);
-        OCAutorelease(result);
+        if(result) OCAutorelease(result);
         return result;
     }
     case BM_exp:
@@ -493,7 +526,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = cexp(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -511,7 +544,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
                 SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
                 double complex value = erf(SIScalarDoubleValue(scalar));
                 SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-                OCAutorelease(result);
+                if(result) OCAutorelease(result);
                 return result;
             }
         }
@@ -530,7 +563,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
                 SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
                 double complex value = erfc(SIScalarDoubleValue(scalar));
                 SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-                OCAutorelease(result);
+                if(result) OCAutorelease(result);
                 return result;
             }
         }
@@ -547,7 +580,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = clog(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -564,7 +597,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = clog(SIScalarDoubleComplexValue(scalar)) / log(10);
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -582,7 +615,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             double complex value = cacos(SIScalarDoubleComplexValue(scalar));
             SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -599,7 +632,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             double complex value = cacosh(SIScalarDoubleComplexValue(scalar));
             SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -617,7 +650,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             double complex value = casin(SIScalarDoubleComplexValue(scalar));
             SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -635,7 +668,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
             double complex value = casinh(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -653,7 +686,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
             double complex value = catan(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -671,7 +704,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
             double complex value = catanh(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -688,7 +721,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = complex_cosine(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -705,7 +738,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = ccosh(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -722,7 +755,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = complex_sine(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -739,7 +772,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = csinh(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -756,7 +789,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = complex_tangent(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -773,7 +806,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = ctanh(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-            OCAutorelease(result);
+            if(result) OCAutorelease(result);
             return result;
         }
         if (errorString)
@@ -786,31 +819,31 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
     case BM_conj:
     {
         SIScalarRef result = SIScalarCreateByConjugation(scalar);
-        OCAutorelease(result);
+        if(result) OCAutorelease(result);
         return result;
     }
     case BM_creal:
     {
         SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIRealPart);
-        OCAutorelease(result);
+        if(result) OCAutorelease(result);
         return result;
     }
     case BM_cimag:
     {
         SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIImaginaryPart);
-        OCAutorelease(result);
+        if(result) OCAutorelease(result);
         return result;
     }
     case BM_carg:
     {
         SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIArgumentPart);
-        OCAutorelease(result);
+        if(result) OCAutorelease(result);
         return result;
     }
     case BM_cabs:
     {
         SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIMagnitudePart);
-        OCAutorelease(result);
+        if(result) OCAutorelease(result);
         return result;
     }
     default:

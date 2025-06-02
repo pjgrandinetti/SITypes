@@ -10,10 +10,11 @@ void test_scalar_parser_1(void) {
 
     // Part 1: 4.3 eV parsing
     SIScalarRef scalar = SIScalarCreateWithOCString(STR("4.3 eV"), &err);
-    ASSERT_PARSED(scalar, &err, "scalar '4.3 eV'", "Failed to create scalar with eV");
 
+    ASSERT_PARSED(scalar, &err, "scalar '4.3 eV'", "Failed to create scalar with eV");
     SIUnitRef evUnit = SIUnitForUnderivedSymbol(STR("eV"));
     SIScalarRef expected1 = SIScalarCreateWithFloatComplex(4.3, evUnit);
+
     assert(expected1 && "Failed to create expected scalar");
     // show returned and expected
     assert(SIScalarCompare(scalar, expected1) == kOCCompareEqualTo);
@@ -26,6 +27,7 @@ void test_scalar_parser_1(void) {
 
     // force
     SIScalarRef force = SIScalarCreateWithOCString(STR("500 N"), &err);
+
     ASSERT_PARSED(force, &err, "force", "Failed to parse force");
 
     // mass = force / acceleration

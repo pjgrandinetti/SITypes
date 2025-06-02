@@ -393,6 +393,7 @@ void __SIUnitFinalize(const void *theType)
 
     // Free the structure itself
     free((void *)theUnit);
+    theUnit = NULL; // Set to NULL to avoid dangling pointer
 }
 
 static OCStringRef __SIUnitCopyFormattingDescription(OCTypeRef theType)
@@ -410,32 +411,34 @@ OCTypeID SIUnitGetTypeID(void)
 
 static struct __SIUnit *SIUnitAllocate()
 {
-    struct __SIUnit *theUnit = malloc(sizeof(struct __SIUnit));
-    if (NULL == theUnit)
+    struct __SIUnit *obj = malloc(sizeof(struct __SIUnit));
+    if (NULL == obj) {
+        fprintf(stderr, "SIUnitAllocate: Memory allocation failed.\n");
         return NULL;
-    theUnit->_base.typeID = SIUnitGetTypeID();
-    theUnit->_base.static_instance = false;
-    theUnit->_base.finalize = __SIUnitFinalize;
-    theUnit->_base.equal = __SIUnitEqual;
-    theUnit->_base.copyFormattingDesc = __SIUnitCopyFormattingDescription;
-    theUnit->_base.retainCount = 0;
-    theUnit->dimensionality = NULL;
+    }
+    obj->_base.typeID = SIUnitGetTypeID();
+    obj->_base.static_instance = false;
+    obj->_base.finalize = __SIUnitFinalize;
+    obj->_base.equal = __SIUnitEqual;
+    obj->_base.copyFormattingDesc = __SIUnitCopyFormattingDescription;
+    obj->_base.retainCount = 1;
+    obj->_base.finalized = false;
+    obj->dimensionality = NULL;
     for (int index = 0; index < 7; index++)
     {
-        theUnit->num_prefix[index] = kSIPrefixNone;
-        theUnit->den_prefix[index] = kSIPrefixNone;
+        obj->num_prefix[index] = kSIPrefixNone;
+        obj->den_prefix[index] = kSIPrefixNone;
     }
-    theUnit->scale_to_coherent_si = 1.;
-    theUnit->allows_si_prefix = false;
-    theUnit->is_special_si_symbol = false;
-    theUnit->root_symbol_prefix = kSIPrefixNone;
+    obj->scale_to_coherent_si = 1.;
+    obj->allows_si_prefix = false;
+    obj->is_special_si_symbol = false;
+    obj->root_symbol_prefix = kSIPrefixNone;
 
-    theUnit->symbol = NULL;
-    theUnit->root_name = NULL;
-    theUnit->root_plural_name = NULL;
-    theUnit->root_symbol = NULL;
-    OCRetain(theUnit);
-    return theUnit;
+    obj->symbol = NULL;
+    obj->root_name = NULL;
+    obj->root_plural_name = NULL;
+    obj->root_symbol = NULL;
+    return obj;
 }
 
 bool SIUnitIsSIBaseUnit(SIUnitRef theUnit)

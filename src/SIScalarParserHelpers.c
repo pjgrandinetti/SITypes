@@ -77,7 +77,16 @@ insertAsterisks(OCMutableStringRef original)
     // 1) Measure code-points & collect code-point values
     size_t   cp_count  = OCStringGetLength((OCStringRef)original);
     uint32_t *cps      = malloc(cp_count * sizeof(uint32_t));
+    if (NULL == cps) {
+        fprintf(stderr, "insertAsterisks: Memory allocation failed for code points.\n");
+        return NULL;
+    } 
     size_t   *byte_off = malloc((cp_count + 1) * sizeof(size_t));
+    if (NULL == byte_off) {
+        fprintf(stderr, "insertAsterisks: Memory allocation failed for byte offsets.\n");
+        free(cps);
+        return NULL;
+    }
 
     const char *p = src;
     size_t       bo = 0;
@@ -91,11 +100,33 @@ insertAsterisks(OCMutableStringRef original)
 
     // 2) Determine where to insert “*”
     bool *ins_before = calloc(cp_count, sizeof(bool));
+    if (!ins_before) {
+        fprintf(stderr, "insertAsterisks: Memory allocation failed for insertion flags.\n");
+        free(cps);
+        free(byte_off);
+        return NULL;
+    }
     bool *ins_after  = calloc(cp_count, sizeof(bool));
+    if (!ins_after) {
+        fprintf(stderr, "insertAsterisks: Memory allocation failed for insertion flags.\n");
+        free(cps);
+        free(byte_off);
+        free(ins_before);
+        return NULL;
+    }
 
     // Track square-bracket nesting
     int    bracket_level = 0;
     int   *levels        = malloc(cp_count * sizeof(int));
+    if (NULL == levels) {
+        fprintf(stderr, "insertAsterisks: Memory allocation failed for bracket levels.\n");
+        free(cps);
+        free(byte_off);
+        free(ins_before);
+        free(ins_after);
+        return NULL;
+    }
+
     for (size_t i = 0; i < cp_count; i++) {
         if (cps[i] == '[') {
             bracket_level++;
@@ -133,6 +164,15 @@ insertAsterisks(OCMutableStringRef original)
     }
     size_t new_bytes = orig_bytes + insertions * /* strlen("*") == */ 1;
     char *out = malloc(new_bytes + 1);
+    if (NULL == out) {
+        fprintf(stderr, "insertAsterisks: Memory allocation failed for output buffer.\n");
+        free(cps);
+        free(levels);
+        free(ins_before);
+        free(ins_after);
+        free(byte_off);
+        return NULL;
+    }
     char *d   = out;
 
     // 4) Build the new UTF-8 in one pass
@@ -163,97 +203,6 @@ insertAsterisks(OCMutableStringRef original)
     return result;
 }
 
-
-/**
- * @brief  Produce a new string in which implicit multiplications
- *         around “(” and “)” have “*” inserted.
- * @param  original   The original mutable string (not modified).
- * @return A brand‐new OCMutableStringRef; caller must release it.
- */
-// OCMutableStringRef
-// insertAsterisks(OCMutableStringRef original)
-// {
-//     // 1) Make a copy; we will insert into this
-//     OCMutableStringRef result =
-//         OCStringCreateMutableCopy((OCStringRef)original);
-//     if (!result) return NULL;
-
-//     // 2) Insert before ‘(’ where appropriate
-//     OCRange range = { .location = 0,
-//                       .length   = OCStringGetLength((OCStringRef)result) };
-//     OCArrayRef openParens = OCStringCreateArrayWithFindResults(
-//         (OCStringRef)result,
-//         STR("("),
-//         range,
-//         0
-//     );
-//     if (openParens) {
-//         for (int i = OCArrayGetCount(openParens) - 1; i >= 0; --i) {
-//             OCRange *r = (OCRange *)OCArrayGetValueAtIndex(openParens, i);
-//             // Only if preceded by a digit or decimal point, and not inside [ … ]
-//             if (r->location > 0 &&
-//                 r->location < OCStringGetLength((OCStringRef)result))
-//             {
-//                 uint32_t prevCp =
-//                     OCStringGetCharacterAtIndex(result, r->location - 1);
-//                 bool closeSq = false, skip = false;
-//                 for (int j = (int)r->location - 1; j >= 0; --j) {
-//                     uint32_t cp = OCStringGetCharacterAtIndex(result, j);
-//                     if (cp == '[' && !closeSq) { skip = true; }
-//                     if (cp == ']') { closeSq = true; }
-//                 }
-//                 if (!skip &&
-//                     characterIsDigitOrDecimalPoint(prevCp))
-//                 {
-//                     OCStringInsert(result, r->location, STR("*"));
-//                 }
-//             }
-//         }
-//         OCRelease(openParens);
-//     }
-
-//     // 3) Insert after ‘)’ where appropriate
-//     range.length = OCStringGetLength((OCStringRef)result);
-//     OCArrayRef closeParens = OCStringCreateArrayWithFindResults(
-//         (OCStringRef)result,
-//         STR(")"),
-//         range,
-//         0
-//     );
-//     if (closeParens) {
-//         for (int i = OCArrayGetCount(closeParens) - 1; i >= 0; --i) {
-//             OCRange *r = (OCRange *)OCArrayGetValueAtIndex(closeParens, i);
-//             if (r->location < OCStringGetLength((OCStringRef)result) - 1) {
-//                 uint32_t nextCp =
-//                     OCStringGetCharacterAtIndex(result, r->location + 1);
-//                 // Don’t insert if it’s + - * / ^ ) or a bullet (U+2022)
-//                 bool openSq = false, skip = false;
-//                 for (uint64_t j = r->location + 1;
-//                      j < OCStringGetLength((OCStringRef)result);
-//                      ++j)
-//                 {
-//                     uint32_t cp = OCStringGetCharacterAtIndex(result, j);
-//                     if (cp == ']' && !openSq) { skip = true; }
-//                     if (cp == '[')               { openSq = true; }
-//                 }
-//                 if (!skip &&
-//                     nextCp != '+'  &&
-//                     nextCp != '-'  &&
-//                     nextCp != '*'  &&
-//                     nextCp != '/'  &&
-//                     nextCp != '^'  &&
-//                     nextCp != ')'  &&
-//                     nextCp != 0x2022)
-//                 {
-//                     OCStringInsert(result, r->location + 1, STR("*"));
-//                 }
-//             }
-//         }
-//         OCRelease(closeParens);
-//     }
-
-//     return result;
-// }
 
 SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
 {
@@ -312,7 +261,7 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
         sislex_destroy();
 
         if (!sis_syntax_error && sis_root) {
-            out = result;
+            out = SIScalarCreateCopy(result);
         }
 
         /* whether parse succeeded or not, free the tree once here */
@@ -326,11 +275,13 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
 
 
     }
+    
+    OCAutoreleasePoolRelease(pool);
+
     if (error) {
         if (scalarErrorString) *error = scalarErrorString;
         if (*error) {
             if (out) OCRelease(out);
-            OCAutoreleasePoolRelease(pool);
             return NULL;
         }
     }
@@ -340,7 +291,6 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
         if (finalUnit) {
             if (!SIScalarConvertToUnit((SIMutableScalarRef)out, finalUnit, error)) {
                 OCRelease(out);
-                OCAutoreleasePoolRelease(pool);
                 return NULL;
             }
         }
@@ -348,14 +298,12 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
         if (SIScalarIsReal(out)) {
             SIScalarRef realResult = SIScalarCreateByTakingComplexPart(out, kSIRealPart);
             OCRelease(out);
-            OCAutoreleasePoolRelease(pool);
             return realResult;
         }
     } else {
         if (error) *error = STR("Syntax Error");
     }
-    OCRetain(out);
-    OCAutoreleasePoolRelease(pool);
+    if(out) OCRetain(out);
     return out;
 }
 

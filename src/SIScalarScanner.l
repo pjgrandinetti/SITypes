@@ -94,31 +94,41 @@ STRING \[[()a-zA-Z][()a-zA-Z0-9]*\*?[()a-zA-Z0-9]*\]
 
 {REALNUMBER} {
     temp = OCComplexFromCString(yytext);
-    sislval.d = (SIScalarRef) OCAutorelease(SIScalarCreateWithDoubleComplex(temp, NULL));
+    SIScalarRef d = SIScalarCreateWithDoubleComplex(temp, NULL);
+    if(d) OCAutorelease(d);
+    sislval.d = d;
     return SCALAR;
 }
 
 {COMPLEXNUMBER} {
     temp = OCComplexFromCString(yytext);
-    sislval.d = (SIScalarRef) OCAutorelease(SIScalarCreateWithDoubleComplex(temp, NULL));
+    SIScalarRef d = SIScalarCreateWithDoubleComplex(temp, NULL);
+    if(d) OCAutorelease(d);
+    sislval.d = d;
     return SCALAR;
 }
 
 {REALNUMBER}[ ]*\*[ ]*I[ ]* {
     temp = OCComplexFromCString(yytext);
-    sislval.d = (SIScalarRef) OCAutorelease(SIScalarCreateWithDoubleComplex(temp, NULL));
+    SIScalarRef d = SIScalarCreateWithDoubleComplex(temp, NULL);
+    if(d) OCAutorelease(d);
+    sislval.d = d;
     return SCALAR;
 }
 
 I[ ]*\*[ ]*{REALNUMBER} {
     temp = OCComplexFromCString(yytext);
-    sislval.d = (SIScalarRef) OCAutorelease(SIScalarCreateWithDoubleComplex(temp, NULL));
+    SIScalarRef d = SIScalarCreateWithDoubleComplex(temp, NULL);
+    if(d) OCAutorelease(d);
+    sislval.d = d;
     return SCALAR;
 }
 
 "I" {
     temp = OCComplexFromCString(yytext);
-    sislval.d = (SIScalarRef) OCAutorelease(SIScalarCreateWithDoubleComplex(temp, NULL));
+    SIScalarRef d = SIScalarCreateWithDoubleComplex(temp, NULL);
+    if(d) OCAutorelease(d);
+    sislval.d = d;
     return SCALAR;
 }
 
@@ -130,7 +140,9 @@ I[ ]*\*[ ]*{REALNUMBER} {
         if(string) OCRelease(string);
         yyterminate();
         }
-    sislval.d = (SIScalarRef) OCAutorelease(SIScalarCreateWithDouble(unit_multiplier, unit));
+    SIScalarRef d = SIScalarCreateWithDouble(unit_multiplier, unit);
+    if(d) OCAutorelease(d);
+    sislval.d = d;
     OCRelease(string);
     return SCALAR;
 }
@@ -180,14 +192,18 @@ I[ ]*\*[ ]*{REALNUMBER}[ ]*/{UNIT} {
         BEGIN(INITIAL);
         return SCALAR;
     }
-    sislval.d = (SIScalarRef) OCAutorelease(SIScalarCreateWithDoubleComplex(temp*unit_multiplier, unit));
+    SIScalarRef d = SIScalarCreateWithDoubleComplex(temp*unit_multiplier, unit);
+    if(d) OCAutorelease(d);
+    sislval.d = d;
     OCRelease(string);
     BEGIN(INITIAL);
     return SCALAR;
 }
 
 {STRING} {
-    sislval.const_string = (OCMutableStringRef) OCAutorelease(OCMutableStringCreateWithCString(yytext));
+    OCMutableStringRef const_string = OCMutableStringCreateWithCString(yytext);
+    if(const_string) OCAutorelease(const_string);
+    sislval.const_string = const_string;
     return CONST_STRING;
 }
 
