@@ -65,6 +65,7 @@ void __SIDimensionalityFinalize(const void *theType)
     }
 
     free((void *)theDim);
+    theDim = NULL; // Set to NULL to avoid dangling pointer
 }
 
 static OCStringRef __SIDimensionalityCopyFormattingDescription(OCTypeRef theType)
@@ -83,8 +84,10 @@ OCTypeID SIDimensionalityGetTypeID(void)
 static struct __SIDimensionality *SIDimensionalityAllocate()
 {
     struct __SIDimensionality *theDim = malloc(sizeof(struct __SIDimensionality));
-    if (NULL == theDim)
+    if (NULL == theDim) {
+        fprintf(stderr, "SIDimensionalityAllocate: Memory allocation failed.\n");
         return NULL;    
+    }
 
     theDim->_base.typeID = SIDimensionalityGetTypeID();
     theDim->_base.static_instance = false;

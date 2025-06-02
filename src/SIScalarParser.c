@@ -269,6 +269,11 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
 ScalarNodeRef ScalarNodeCreateInnerNode(int nodeType, ScalarNodeRef left, ScalarNodeRef right)
 {
     struct __scalarNode *node = malloc(sizeof(struct __scalarNode));
+    if(NULL == node)
+    {
+        fprintf(stderr, "ScalarNodeCreateInnerNode: Memory allocation failed.\n");
+        return NULL; // Handle memory allocation failure
+    }
     node->nodeType = nodeType;
     node->left = left;
     node->right = right;
@@ -278,6 +283,11 @@ ScalarNodeRef ScalarNodeCreateInnerNode(int nodeType, ScalarNodeRef left, Scalar
 ScalarNodeRef ScalarNodeCreateMathFunction(builtInMathFunctions funcType, ScalarNodeRef left)
 {
     struct __scalarNodeMathFunction *node = malloc(sizeof(struct __scalarNodeMathFunction));
+    if(NULL == node)
+    {
+        fprintf(stderr, "ScalarNodeCreateMathFunction: Memory allocation failed.\n");
+        return NULL; // Handle memory allocation failure
+    }
     node->nodeType = 'F';
     node->left = left;
     node->funcType = funcType;
@@ -287,6 +297,11 @@ ScalarNodeRef ScalarNodeCreateMathFunction(builtInMathFunctions funcType, Scalar
 ScalarNodeRef ScalarNodeCreateConstantFunction(builtInConstantFunctions funcType, OCMutableStringRef string)
 {
     struct __scalarNodeConstantFunction *node = malloc(sizeof(struct __scalarNodeConstantFunction));
+    if(NULL == node)
+    {
+        fprintf(stderr, "ScalarNodeCreateConstantFunction: Memory allocation failed.\n");
+        return NULL; // Handle memory allocation failure
+    }
     node->nodeType = 'C';
     node->string = string;
     node->funcType = funcType;
@@ -296,6 +311,11 @@ ScalarNodeRef ScalarNodeCreateConstantFunction(builtInConstantFunctions funcType
 ScalarNodeRef ScalarNodeCreateNumberLeaf(SIScalarRef number)
 {
     struct __scalarValue *leaf = malloc(sizeof(struct __scalarValue));
+    if(NULL == leaf)
+    {
+        fprintf(stderr, "ScalarNodeCreateNumberLeaf: Memory allocation failed.\n");
+        return NULL; // Handle memory allocation failure
+    }
     leaf->nodeType = 'K';
     leaf->number = number;
     return (ScalarNodeRef)leaf;
@@ -354,6 +374,7 @@ void ScalarNodeFree(ScalarNodeRef node)
     }
 
     free((void *)node); // Always free the node structure itself
+    node = NULL; // Set to NULL to avoid dangling pointer
 }
 
 

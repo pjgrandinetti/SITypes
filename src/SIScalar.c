@@ -10,6 +10,7 @@
 #include <stdio.h> // Already likely there or in a header, but good to ensure for printf, etc.
 #include <stdlib.h> // For malloc, free, abs
 #include <math.h>   // For math functions like nan, fabsf, log10, pow, etc.
+#include <string.h>
 
 static OCTypeID kSIScalarID = _kOCNotATypeID;
 
@@ -63,6 +64,7 @@ static void __SIScalarFinalize(const void * theType)
     SIScalarRef theNumber = (SIScalarRef) theType;
     if(theNumber->unit) OCRelease(theNumber->unit);
     free((void *)theNumber);
+    theNumber = NULL; // Set to NULL to avoid dangling pointer
 }
 
 static OCStringRef __SIScalarCopyFormattingDescription(OCTypeRef theType)
@@ -102,18 +104,22 @@ OCTypeID SIScalarGetTypeID(void)
 static struct __SIScalar *SIScalarAllocate()
 {
     struct __SIScalar *theNumber = malloc(sizeof(struct __SIScalar));
-    if(NULL == theNumber) return NULL;
+    if(NULL == theNumber) {
+        fprintf(stderr, "Failed to allocate memory for SIScalarAllocate\n");
+        return NULL;
+    }
+
     theNumber->_base.typeID = SIScalarGetTypeID();
     theNumber->_base.static_instance = false; 
     theNumber->_base.finalize = __SIScalarFinalize;
     theNumber->_base.equal = __SIScalarEqual;
     theNumber->_base.copyFormattingDesc = __SIScalarCopyFormattingDescription;
     theNumber->_base.retainCount = 0;
-    OCRetain(theNumber);
 
     theNumber->unit = NULL;
     theNumber->type = kSINumberFloat32Type;
-    return theNumber;
+    memset(&theNumber->value, 0, sizeof(theNumber->value));
+    return (struct __SIScalar *) OCRetain(theNumber);
 }
 
 
@@ -173,7 +179,7 @@ SIScalarRef SIScalarCreateCopy(SIScalarRef theScalar)
 SIMutableScalarRef SIScalarCreateMutableCopy(SIScalarRef theScalar)
 {
    	IF_NO_OBJECT_EXISTS_RETURN(theScalar,NULL);
-    return SIScalarCreateMutable(theScalar->unit,theScalar->type,(void *) &theScalar->value);
+    return (SIMutableScalarRef) SIScalarCreate(theScalar->unit, theScalar->type, (void *) &theScalar->value);
 }
 
 //SIScalarRef SIScalarCreateWithInt32(int32_t input_value)
@@ -2647,6 +2653,10 @@ OCComparisonResult SIScalarCompare(SIScalarRef theScalar, SIScalarRef theOtherSc
                                                      SIQuantityGetUnitDimensionality((SIQuantityRef) theOtherScalar))) return kOCCompareUnequalDimensionalities;
     
     SIMutableScalarRef theOtherConverted = SIScalarCreateMutableCopy(theOtherScalar);
+    if(NULL==theOtherConverted) {
+        IF_NO_OBJECT_EXISTS_RETURN(theOtherConverted,kOCCompareError);
+    }
+
     SIScalarConvertToUnit(theOtherConverted, SIQuantityGetUnit((SIQuantityRef) theScalar), NULL);
     
     OCComparisonResult result = kOCCompareError;

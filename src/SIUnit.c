@@ -393,6 +393,7 @@ void __SIUnitFinalize(const void *theType)
 
     // Free the structure itself
     free((void *)theUnit);
+    theUnit = NULL; // Set to NULL to avoid dangling pointer
 }
 
 static OCStringRef __SIUnitCopyFormattingDescription(OCTypeRef theType)
@@ -411,8 +412,10 @@ OCTypeID SIUnitGetTypeID(void)
 static struct __SIUnit *SIUnitAllocate()
 {
     struct __SIUnit *theUnit = malloc(sizeof(struct __SIUnit));
-    if (NULL == theUnit)
+    if (NULL == theUnit) {
+        fprintf(stderr, "SIUnitAllocate: Memory allocation failed.\n");
         return NULL;
+    }
     theUnit->_base.typeID = SIUnitGetTypeID();
     theUnit->_base.static_instance = false;
     theUnit->_base.finalize = __SIUnitFinalize;
