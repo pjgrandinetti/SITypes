@@ -261,7 +261,7 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
         sislex_destroy();
 
         if (!sis_syntax_error && sis_root) {
-            out = result;
+            out = SIScalarCreateCopy(result);
         }
 
         /* whether parse succeeded or not, free the tree once here */
@@ -275,11 +275,13 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
 
 
     }
+    
+    OCAutoreleasePoolRelease(pool);
+
     if (error) {
         if (scalarErrorString) *error = scalarErrorString;
         if (*error) {
             if (out) OCRelease(out);
-            OCAutoreleasePoolRelease(pool);
             return NULL;
         }
     }
@@ -289,7 +291,6 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
         if (finalUnit) {
             if (!SIScalarConvertToUnit((SIMutableScalarRef)out, finalUnit, error)) {
                 OCRelease(out);
-                OCAutoreleasePoolRelease(pool);
                 return NULL;
             }
         }
@@ -297,14 +298,12 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
         if (SIScalarIsReal(out)) {
             SIScalarRef realResult = SIScalarCreateByTakingComplexPart(out, kSIRealPart);
             OCRelease(out);
-            OCAutoreleasePoolRelease(pool);
             return realResult;
         }
     } else {
         if (error) *error = STR("Syntax Error");
     }
     OCRetain(out);
-    OCAutoreleasePoolRelease(pool);
     return out;
 }
 

@@ -60,6 +60,12 @@ else
   GROUP_END   :=
 endif
 
+##────────────────────────────────────────────────────────────────────────────
+##  Disable built‐in implicit rules
+### MODIFIED: this prevents `make` from inferring a `%.c: %.l` rule
+MAKEFLAGS += -rR
+.SUFFIXES:
+##────────────────────────────────────────────────────────────────────────────
 
 .PHONY: all dirs octypes prepare test test-debug test-asan \
         test-werror install clean clean-objects clean-docs \
@@ -128,14 +134,17 @@ GEN_SCANNER := $(patsubst $(SRC_DIR)/%.l,$(GEN_DIR)/%.c,$(LEX_SRC))
 GEN_C := $(GEN_PARSER_C) $(GEN_SCANNER)
 GEN_H := $(GEN_PARSER_H)
 
-# 5.1) Bison rule: each *.y → two files under $(GEN_DIR)/
+##────────────────────────────────────────────────────────────────────────────
+##  5.1) Bison rule: each *.y → two files under $(GEN_DIR)/
+### MODIFIED: Tell Bison _exactly_ where to write its .c and .h (no mv)
 $(GEN_DIR)/%Parser.tab.c $(GEN_DIR)/%Parser.tab.h: $(SRC_DIR)/%Parser.y | dirs
-	$(YACC) $(YFLAGS) $<
-	mv *.tab.c $(GEN_DIR)/$*Parser.tab.c
-	mv *.tab.h $(GEN_DIR)/$*Parser.tab.h
+	$(YACC) $(YFLAGS) -o $(GEN_DIR)/$*Parser.tab.c --defines=$(GEN_DIR)/$*Parser.tab.h $<
+##────────────────────────────────────────────────────────────────────────────
 
-# 5.2) Flex rule: each *.l → single .c under $(GEN_DIR)/
-$(GEN_DIR)/%Scanner.c: $(SRC_DIR)/%Scanner.l $(GEN_DIR)/%Parser.tab.h | dirs
+##────────────────────────────────────────────────────────────────────────────
+##  5.2) Flex rule: each *.l → single .c under $(GEN_DIR)/
+### MODIFIED: drop the parser-header prerequisite
+$(GEN_DIR)/%Scanner.c: $(SRC_DIR)/%Scanner.l | dirs
 	$(LEX) -o $@ $<
 
 # Catch‐all: if there were any other “.l” files without parser dependencies
@@ -170,6 +179,12 @@ $(OBJ_DIR)/%.o: $(GEN_DIR)/%.c | dirs
 	$(CC) $(CFLAGS) -I$(GEN_DIR) -c -o $@ $<
 
 ##────────────────────────────────────────────────────────────────────────────
+##  6.3) Ensure scanner object is compiled only after its parser header exists
+### MODIFIED: this prevents any attempt to compile scanner .o before .tab.h exists
+$(OBJ_DIR)/%Scanner.o: $(GEN_DIR)/%Parser.tab.h
+##────────────────────────────────────────────────────────────────────────────
+
+##────────────────────────────────────────────────────────────────────────────
 ##  7) LINK INTO STATIC LIB
 ##────────────────────────────────────────────────────────────────────────────
 
@@ -191,7 +206,7 @@ $(BIN_DIR)/runTests: libSITypes.a $(TEST_OBJ)
 	    -L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) -lm \
 	    -o $@
 
-test: octypes libSITypes.a $(TEST_OBJ)
+test: octypes $(BIN_DIR)/runTests
 	$(BIN_DIR)/runTests
 
 test-debug: octypes libSITypes.a $(TEST_OBJ)
@@ -207,6 +222,14 @@ test-asan: octypes libSITypes.a $(TEST_OBJ)
 
 test-werror: CFLAGS := $(CFLAGS_DEBUG)
 test-werror: clean all test
+
+# Copy from installed OCTypes
+sync-libs:
+	@echo "Copying OCTypes from installed location..."
+	@$(RM) -r third_party/OCTypes
+	@$(MKDIR_P) third_party/OCTypes/lib third_party/OCTypes/include/OCTypes
+	@cp ../OCTypes/install/lib/libOCTypes.a third_party/OCTypes/lib/
+	@cp ../OCTypes/install/include/OCTypes/*.h third_party/OCTypes/include/OCTypes/
 
 ##────────────────────────────────────────────────────────────────────────────
 ##  9) INSTALL (same as before)
