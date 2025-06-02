@@ -94,7 +94,7 @@ SIScalarRef SIPeriodicTableCreateFormulaMass(OCStringRef formula, OCStringRef *e
         OCStringFindAndReplace(calculation, STR("(+"), STR("("), OCRangeMake(0, OCStringGetLength(calculation)), 0);
         OCStringFindAndReplace(calculation, STR("+*"), STR("+"), OCRangeMake(0, OCStringGetLength(calculation)), 0);
 
-        int replacements = OCStringFindAndReplace(calculation, STR("!+"), STR("("), OCRangeMake(0, OCStringGetLength(calculation)), 0);
+        int64_t replacements = OCStringFindAndReplace(calculation, STR("!+"), STR("("), OCRangeMake(0, OCStringGetLength(calculation)), 0);
         if (replacements == 1) {
             OCStringAppend(calculation, STR(")"));
         }

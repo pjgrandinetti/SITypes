@@ -1474,7 +1474,6 @@ void SIUnitsLibrarySetImperialVolumes(bool value)
 
 // Add a cleanup function for static dictionaries and array
 void cleanupUnitsLibraries(void) {
-
     if(!unitsLibrary) return;
 
     if (unitsQuantitiesLibrary) {
@@ -1498,11 +1497,9 @@ void cleanupUnitsLibraries(void) {
     OCArrayRef keys = OCDictionaryCreateArrayWithAllKeys((OCDictionaryRef)unitsLibrary);
     if (keys) {
         for (uint64_t i = 0; i < OCArrayGetCount(keys); i++) {
-
             OCStringRef key = (OCStringRef) OCArrayGetValueAtIndex(keys, i);
             SIUnitRef unit = (SIUnitRef) OCDictionaryGetValue(unitsLibrary, key);
-            fprintf(stderr,"release %s %p\n",OCStringGetCString(key),unit);
-
+        
             OCDictionaryRemoveValue(unitsLibrary, key);
             OCTypeSetStaticInstance(unit, false);
             OCRelease(unit);
