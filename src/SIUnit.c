@@ -392,7 +392,12 @@ static OCStringRef __SIUnitCopyFormattingDescription(OCTypeRef theType)
     if (!theType) return NULL;
 
     SIUnitRef theUnit = (SIUnitRef)theType;
-    return theUnit->symbol ? OCStringCreateCopy(theUnit->symbol) : NULL;
+    if (theUnit->symbol) {
+        return OCStringCreateCopy(theUnit->symbol);
+    }
+
+    // Provide a fallback string for better diagnostics
+    return OCStringCreateWithCString("<SIUnit>");
 }
 
 OCTypeID SIUnitGetTypeID(void)

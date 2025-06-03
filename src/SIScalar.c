@@ -73,34 +73,48 @@ static void __SIScalarFinalize(const void *theType)
 
 static OCStringRef __SIScalarCopyFormattingDescription(OCTypeRef theType)
 {
-    SIScalarRef scalar = (SIScalarRef) theType;
+    if (!theType) return OCStringCreateWithCString("(null)");
+
+    SIScalarRef scalar = (SIScalarRef)theType;
+    OCStringRef unitDesc = scalar->unit ? OCTypeCopyFormattingDesc(scalar->unit) : STR("");
+    OCStringRef result = NULL;
 
     switch (scalar->type) {
         case kOCNumberFloat32Type:
-            return OCStringCreateWithFormat(STR("%f %@"),
-                                            scalar->value.floatValue,
-                                            scalar->unit);
+            result = OCStringCreateWithFormat(STR("%f %@"),
+                                              scalar->value.floatValue,
+                                              unitDesc);
+            break;
 
         case kSINumberFloat64Type:
-            return OCStringCreateWithFormat(STR("%lf %@"),
-                                            scalar->value.doubleValue,
-                                            scalar->unit);
+            result = OCStringCreateWithFormat(STR("%lf %@"),
+                                              scalar->value.doubleValue,
+                                              unitDesc);
+            break;
 
         case kOCNumberFloat32ComplexType:
-            return OCStringCreateWithFormat(STR("%f+I•%f %@"),
-                                            crealf(scalar->value.floatComplexValue),
-                                            cimagf(scalar->value.floatComplexValue),
-                                            scalar->unit);
+            result = OCStringCreateWithFormat(STR("%f+I•%f %@"),
+                                              crealf(scalar->value.floatComplexValue),
+                                              cimagf(scalar->value.floatComplexValue),
+                                              unitDesc);
+            break;
 
         case kSINumberFloat64ComplexType:
-            return OCStringCreateWithFormat(STR("%lf+I•%lf %@"),
-                                            creal(scalar->value.doubleComplexValue),
-                                            cimag(scalar->value.doubleComplexValue),
-                                            scalar->unit);
+            result = OCStringCreateWithFormat(STR("%lf+I•%lf %@"),
+                                              creal(scalar->value.doubleComplexValue),
+                                              cimag(scalar->value.doubleComplexValue),
+                                              unitDesc);
+            break;
 
         default:
-            return OCStringCreateWithCString("Invalid SIScalar type");
+            result = OCStringCreateWithCString("<Invalid SIScalar>");
+            break;
     }
+
+    if (scalar->unit)
+        OCRelease(unitDesc);
+
+    return result;
 }
 
 // Expose the formatting description function

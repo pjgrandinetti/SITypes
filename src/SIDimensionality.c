@@ -59,8 +59,14 @@ static void __SIDimensionalityFinalize(const void *theType)
 static OCStringRef __SIDimensionalityCopyFormattingDescription(OCTypeRef cf)
 {
     if (cf == NULL) return NULL;
+
     SIDimensionalityRef theDim = (SIDimensionalityRef)cf;
-    return theDim->symbol ? OCStringCreateCopy(theDim->symbol) : NULL;
+    if (theDim->symbol != NULL) {
+        return OCStringCreateCopy(theDim->symbol);
+    }
+
+    // Fallback: return a generic placeholder
+    return OCStringCreateWithCString("<SIDimensionality>");
 }
 
 OCTypeID SIDimensionalityGetTypeID(void)
