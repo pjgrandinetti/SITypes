@@ -126,9 +126,6 @@ SIDimensionalityRef SIDimensionalityForBaseDimensionIndex(SIBaseDimensionIndex i
 /** @brief Returns the dimensionality for a single-character base symbol. */
 SIDimensionalityRef SIDimensionalityWithBaseDimensionSymbol(OCStringRef symbol, OCStringRef *error);
 
-/** @brief Parses a dimensionality expression and returns the object. */
-SIDimensionalityRef SIDimensionalityForSymbol(OCStringRef expression, OCStringRef *error);
-
 /** @brief Maps a quantity name to its dimensionality. */
 SIDimensionalityRef SIDimensionalityForQuantity(OCStringRef quantity, OCStringRef *error);
 

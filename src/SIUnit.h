@@ -109,38 +109,40 @@ typedef enum {
 #define kSICentury      3155760000
 #define kSIMillennium   31557600000
 
-#define kSISpeedOfLight             299792458
-#define kSIElectricConstant         8.854187817620413e-12
-
-#define kSIElementaryCharge         1.6021766208e-19
-#define kSIPlanckConstant           6.626070040e-34
 #define kSIPi                       3.141592653589793
 #define kSIEulersNumber             2.718281828459045
-#define kSIBoltmannConstant         1.38064852e-23
-#define kSIAvogadroConstant         6.022140857e23
-#define kSIStefanBoltzmannConstant  5.670367e-8
-#define kSIWeinDisplacementConstant 2.8977729e-3
 
-#define kSIElectronMass             9.10938356e-31
+#define kSISpeedOfLight             299792458
+#define kSIElementaryCharge         1.602176634e-19
+#define kSIPlanckConstant           6.62607015e-34
+#define kSIBoltmannConstant         1.380649e-23
+#define kSIAvogadroConstant         6.02214076e23
+#define kSIStefanBoltzmannConstant  5.670374419e-8
+#define kSIWeinDisplacementConstant 2.897771955e-3
+#define kSIElectronMass             9.109383701528e-31
+#define kSIProtonMass               1.6726219236951e-27
+#define kSINeutronMass              1.6749274980495e-27
+#define kSIMuonMass                 1.883531627459132e-28
+#define kSIAtomicMassConstant       1.6605390666050e-27
+#define kSIAlphaParticleMass        6.64465723082e-27
+#define kSIGravitaionalConstant     6.6743015e-11
+
+#define kSIElectricConstant         8.854187817620389e-12  // Defined as 1/sqrt(c_0^2*µ_0)
+
+// Above updated for 2019 mass definitions
+
 #define kSIElectronMagneticMoment   -928.4764620e-26
 #define kSIElectronGFactor          -2.00231930436182
 
-#define kSIProtonMass               1.672621898e-27
 #define kSIProtonMagneticMoment     1.4106067873e-26
 #define kSIProtonGFactor            5.585694702
 
-#define kSINeutronMass              1.674927471e-27
 #define kSINeutronMagneticMoment    -0.96623650e-26
 #define kSINeutronGFactor           -3.82608545
 
-#define kSIMuonMass                 1.883531594e-28
 #define kSIMuonMagneticMoment       -4.49044826e-26
 #define kSIMuonGFactor              -2.0023318418
 
-#define kSIAtomicMassConstant       1.660539040e-27
-#define kSIAlphaParticleMass        6.644657230e-27
-
-#define kSIGravitaionalConstant     6.67408e-11
 #define kSIGravityAcceleration      9.80665
 
 /** @brief Type of a reference to immutable SIUnit. */

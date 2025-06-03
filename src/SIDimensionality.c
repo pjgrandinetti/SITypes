@@ -26,52 +26,41 @@ struct __SIDimensionality
     OCStringRef symbol;
 };
 
-bool __SIDimensionalityEqual(const void *theType1, const void *theType2)
+static bool __SIDimensionalityEqual(const void *theType1, const void *theType2)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theType1, false)
-    IF_NO_OBJECT_EXISTS_RETURN(theType2, false)
+    if (theType1 == theType2) return true;
+    if (theType1 == NULL || theType2 == NULL) return false;
 
-    SIDimensionalityRef theDim1 = (SIDimensionalityRef)theType1;
-    SIDimensionalityRef theDim2 = (SIDimensionalityRef)theType2;
-    if (theDim1->_base.typeID != theDim2->_base.typeID)
+    SIDimensionalityRef dim1 = (SIDimensionalityRef)theType1;
+    SIDimensionalityRef dim2 = (SIDimensionalityRef)theType2;
+
+    if (dim1->_base.typeID != dim2->_base.typeID)
         return false;
 
-    if (NULL == theDim1 || NULL == theDim2)
-        return false;
-    if (theDim1 == theDim2)
-        return true;
-    for (int i = 0; i < BASE_DIMENSION_COUNT; i++)
-    {
-        if (theDim1->num_exp[i] != theDim2->num_exp[i])
-            return false;
-        if (theDim1->den_exp[i] != theDim2->den_exp[i])
-            return false;
+    for (int i = 0; i < BASE_DIMENSION_COUNT; ++i) {
+        if (dim1->num_exp[i] != dim2->num_exp[i]) return false;
+        if (dim1->den_exp[i] != dim2->den_exp[i]) return false;
     }
 
     return true;
 }
 
-void __SIDimensionalityFinalize(const void *theType)
+static void __SIDimensionalityFinalize(const void *theType)
 {
-    if (NULL == theType)
+    if (theType == NULL)
         return;
 
     SIDimensionalityRef theDim = (SIDimensionalityRef)theType;
 
-    // Release the symbol if it exists
-    if (theDim->symbol != NULL)
-    {
+    if (theDim->symbol)
         OCRelease(theDim->symbol);
-    }
-
-    free((void *)theDim);
-    theDim = NULL; // Set to NULL to avoid dangling pointer
 }
 
-static OCStringRef __SIDimensionalityCopyFormattingDescription(OCTypeRef theType)
+static OCStringRef __SIDimensionalityCopyFormattingDescription(OCTypeRef cf)
 {
-    SIDimensionalityRef theDim = (SIDimensionalityRef)theType;
-    return (OCStringRef)OCStringCreateCopy(theDim->symbol);
+    if (cf == NULL) return NULL;
+    SIDimensionalityRef theDim = (SIDimensionalityRef)cf;
+    return theDim->symbol ? OCStringCreateCopy(theDim->symbol) : NULL;
 }
 
 OCTypeID SIDimensionalityGetTypeID(void)
@@ -83,21 +72,21 @@ OCTypeID SIDimensionalityGetTypeID(void)
 
 static struct __SIDimensionality *SIDimensionalityAllocate()
 {
-    struct __SIDimensionality *obj = malloc(sizeof(struct __SIDimensionality));
-    if (NULL == obj) {
-        fprintf(stderr, "SIDimensionalityAllocate: Memory allocation failed.\n");
-        return NULL;    
+    struct __SIDimensionality *obj = OCTypeAlloc(struct __SIDimensionality,
+                                                 SIDimensionalityGetTypeID(),
+                                                 __SIDimensionalityFinalize,
+                                                 __SIDimensionalityEqual,
+                                                 __SIDimensionalityCopyFormattingDescription);
+    if (!obj) {
+        fprintf(stderr, "SIDimensionalityAllocate: OCTypeAlloc failed.\n");
+        return NULL;
     }
 
-    obj->_base.typeID = SIDimensionalityGetTypeID();
-    obj->_base.finalize = __SIDimensionalityFinalize;
-    obj->_base.equal = __SIDimensionalityEqual;
-    obj->_base.copyFormattingDesc = __SIDimensionalityCopyFormattingDescription;
-    obj->_base.static_instance = false;
-    obj->_base.finalized = false;
-    obj->_base.retainCount = 1;
-
+    // Initialize type-specific fields
     obj->symbol = NULL;
+    memset(obj->num_exp, 0, sizeof(obj->num_exp));
+    memset(obj->den_exp, 0, sizeof(obj->den_exp));
+
     return obj;
 }
 
@@ -299,7 +288,7 @@ OCStringRef SIDimensionalityGetSymbol(SIDimensionalityRef theDim)
  */
 int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDim, SIBaseDimensionIndex index)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, 0)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, 0);
 
     if (theDim)
         return theDim->num_exp[index] - theDim->den_exp[index];
@@ -413,7 +402,7 @@ SIDimensionalityRef SIDimensionalityWithBaseDimensionSymbol(OCStringRef theStrin
 
 SIDimensionalityRef SIDimensionalityByReducing(SIDimensionalityRef theDim)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
 
     uint8_t num_exp[BASE_DIMENSION_COUNT];
     uint8_t den_exp[BASE_DIMENSION_COUNT];
@@ -449,7 +438,7 @@ SIDimensionalityRef SIDimensionalityByTakingNthRoot(SIDimensionalityRef theDim, 
         if (*error)
             return NULL;
 
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
 
     uint8_t num_exp[BASE_DIMENSION_COUNT];
     uint8_t den_exp[BASE_DIMENSION_COUNT];
@@ -486,8 +475,8 @@ SIDimensionalityRef SIDimensionalityByDividingWithoutReducing(SIDimensionalityRe
      *	It will additionally return a multiplier for the numerical part of the quantity product
      *
      */
-    IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL)
-    IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL);
+    IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL);
 
     uint8_t num_exp[BASE_DIMENSION_COUNT];
     uint8_t den_exp[BASE_DIMENSION_COUNT];
@@ -521,7 +510,7 @@ SIDimensionalityRef SIDimensionalityByRaisingToAPowerWithoutReducing(SIDimension
     if (error)
         if (*error)
             return NULL;
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
 
     int32_t pow = (int32_t)floor(power);
     double fraction = power - pow;
@@ -583,8 +572,8 @@ SIDimensionalityRef SIDimensionalityByMultiplyingWithoutReducing(SIDimensionalit
     if (error)
         if (*error)
             return NULL;
-    IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL)
-    IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL);
+    IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL);
     if (theDim1 == theDim2)
         return SIDimensionalityByRaisingToAPowerWithoutReducing(theDim1, 2, error);
 
@@ -614,7 +603,7 @@ SIDimensionalityRef SIDimensionalityByMultiplying(SIDimensionalityRef theDim1, S
 
 OCArrayRef SIDimensionalityCreateArrayOfQuantities(SIDimensionalityRef theDim)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
 
     if (NULL == dimQuantitiesLibrary)
         DimensionalityLibraryBuild();
@@ -645,7 +634,7 @@ OCArrayRef SIDimensionalityCreateArrayOfQuantities(SIDimensionalityRef theDim)
 
 OCArrayRef SIDimensionalityCreateArrayWithSameReducedDimensionality(SIDimensionalityRef theDim)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
     if (NULL == dimQuantitiesLibrary)
         DimensionalityLibraryBuild();
 
@@ -792,14 +781,14 @@ OCArrayRef SIDimensionalityCreateArrayOfQuantitiesWithSameReducedDimensionality(
 
 void SIDimensionalityShow(SIDimensionalityRef theDim)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, )
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, );
     OCStringShow((theDim)->symbol);
     fprintf(stdout, "\n");
 }
 
 void SIDimensionalityShowFull(SIDimensionalityRef theDim)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, )
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, );
 
     OCStringShow(STR("============================================================================================================="));
 
@@ -1616,8 +1605,8 @@ void SIDimensionalitySetLibrary(OCMutableDictionaryRef newDimLibrary)
 
 bool SIDimensionalityEqual(SIDimensionalityRef input1, SIDimensionalityRef input2)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(input1, false)
-    IF_NO_OBJECT_EXISTS_RETURN(input2, false)
+    IF_NO_OBJECT_EXISTS_RETURN(input1, false);
+    IF_NO_OBJECT_EXISTS_RETURN(input2, false);
 
     if (NULL == input1)
         return false;
@@ -1640,7 +1629,7 @@ bool SIDimensionalityEqual(SIDimensionalityRef input1, SIDimensionalityRef input
 
 bool SIDimensionalityIsDimensionless(SIDimensionalityRef theDim)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, false)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, false);
 
     for (SIBaseDimensionIndex index = 0; index < BASE_DIMENSION_COUNT; index++)
     {
@@ -1654,7 +1643,7 @@ bool SIDimensionalityIsDimensionless(SIDimensionalityRef theDim)
 bool SIDimensionalityIsDimensionlessAndNotDerived(SIDimensionalityRef theDim)
 {
     // To be dimensionless and not derived all the numerator and denominator exponents must be 0
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, false)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, false);
     for (SIBaseDimensionIndex index = 0; index < BASE_DIMENSION_COUNT; index++)
     {
         if (theDim->num_exp[index] != 0)
@@ -1676,7 +1665,7 @@ bool SIDimensionalityIsDimensionlessAndDerived(SIDimensionalityRef theDim)
 
 bool SIDimensionalityIsBaseDimensionality(SIDimensionalityRef theDim)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, false)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, false);
     if (SIDimensionalityIsDimensionlessAndNotDerived(theDim))
         return false;
     // If it is base dimensionality, then all the denominator exponents must be 0
@@ -1699,7 +1688,7 @@ bool SIDimensionalityIsBaseDimensionality(SIDimensionalityRef theDim)
 
 bool SIDimensionalityIsDerived(SIDimensionalityRef theDim)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, false)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, false);
     if (SIDimensionalityIsDimensionlessAndNotDerived(theDim))
         return false;
     if (SIDimensionalityIsBaseDimensionality(theDim))
@@ -1709,8 +1698,8 @@ bool SIDimensionalityIsDerived(SIDimensionalityRef theDim)
 
 bool SIDimensionalityHasSameReducedDimensionality(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL)
-    IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL);
+    IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL);
     if (theDim1 == theDim2)
         return true;
 
@@ -1777,7 +1766,7 @@ bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
                                          int8_t amount_exponent,
                                          int8_t luminous_intensity_exponent)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
 
     if (SIDimensionalityReducedExponentAtIndex(theDim, kSILengthIndex) != length_exponent)
         return false;
@@ -1805,8 +1794,8 @@ bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
  */
 static bool SIDimensionalityHasSameDimensionlessAndDerivedDimensionalities(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL)
-    IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL)
+    IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL);
+    IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL);
     if (!SIDimensionalityIsDimensionlessAndDerived(theDim1))
         return false;
     if (!SIDimensionalityIsDimensionlessAndDerived(theDim2))

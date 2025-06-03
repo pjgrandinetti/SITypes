@@ -95,52 +95,53 @@ bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2)
     return SIDimensionalityEqual(SIQuantityGetUnitDimensionality(quantity1), SIQuantityGetUnitDimensionality(quantity2));
 }
 
-SINumberType SIQuantityBestElementType(SIQuantityRef input1, SIQuantityRef input2)
-{
-    SIQuantityRef quantity1 = (SIQuantityRef) input1;
-    SIQuantityRef quantity2 = (SIQuantityRef) input2;
-    switch (quantity1->type) {
-        case kSINumberFloat32Type: {
-            switch (quantity2->type) {
-                case kSINumberFloat32Type:
-                    return kSINumberFloat32Type;
-                case kSINumberFloat64Type:
-                    return kSINumberFloat64Type;
-                case kSINumberFloat32ComplexType:
-                    return kSINumberFloat32ComplexType;
-                case kSINumberFloat64ComplexType:
-                    return kSINumberFloat64ComplexType;
-            }
-        }
-        case kSINumberFloat64Type: {
-            switch (quantity2->type) {
-                case kSINumberFloat32Type:
-                    return kSINumberFloat64Type;
-                case kSINumberFloat64Type:
-                    return kSINumberFloat64Type;
-                    return kSINumberFloat64ComplexType;
-                case kSINumberFloat32ComplexType:
-                    return kSINumberFloat64ComplexType;
-                case kSINumberFloat64ComplexType:
-                    return kSINumberFloat64ComplexType;
-            }
-        }
-        case kSINumberFloat32ComplexType: {
-            switch (quantity2->type) {
-                case kSINumberFloat32Type:
-                    return kSINumberFloat32ComplexType;
-                case kSINumberFloat64Type:
-                    return kSINumberFloat64ComplexType;
-                case kSINumberFloat32ComplexType:
-                    return kSINumberFloat32ComplexType;
-                case kSINumberFloat64ComplexType:
-                    return kSINumberFloat64ComplexType;
-            }
-        }
-        case kSINumberFloat64ComplexType:
-            return kSINumberFloat64ComplexType;
-    }
-}
+
+ SINumberType SIQuantityBestElementType(SIQuantityRef input1, SIQuantityRef input2)
+ {
+     SIQuantityRef quantity1 = (SIQuantityRef) input1;
+     SIQuantityRef quantity2 = (SIQuantityRef) input2;
+     switch (quantity1->type) {
+         case kSINumberFloat32Type: {
+             switch (quantity2->type) {
+                 case kSINumberFloat32Type:
+                     return kSINumberFloat32Type;
+                 case kSINumberFloat64Type:
+                     return kSINumberFloat64Type;
+                 case kSINumberFloat32ComplexType:
+                     return kSINumberFloat32ComplexType;
+                 case kSINumberFloat64ComplexType:
+                     return kSINumberFloat64ComplexType;
+             }
+         }
+         case kSINumberFloat64Type: {
+             switch (quantity2->type) {
+                 case kSINumberFloat32Type:
+                     return kSINumberFloat64Type;
+                 case kSINumberFloat64Type:
+                     return kSINumberFloat64Type;
+                     return kSINumberFloat64ComplexType;
+                 case kSINumberFloat32ComplexType:
+                     return kSINumberFloat64ComplexType;
+                 case kSINumberFloat64ComplexType:
+                     return kSINumberFloat64ComplexType;
+             }
+         }
+         case kSINumberFloat32ComplexType: {
+             switch (quantity2->type) {
+                 case kSINumberFloat32Type:
+                     return kSINumberFloat32ComplexType;
+                 case kSINumberFloat64Type:
+                     return kSINumberFloat64ComplexType;
+                 case kSINumberFloat32ComplexType:
+                     return kSINumberFloat32ComplexType;
+                 case kSINumberFloat64ComplexType:
+                     return kSINumberFloat64ComplexType;
+             }
+         }
+         case kSINumberFloat64ComplexType:
+             return kSINumberFloat64ComplexType;
+     }
+ }
 
 SINumberType SIQuantityLargerElementType(SIQuantityRef input1, SIQuantityRef input2)
 {

@@ -307,8 +307,7 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
     return out;
 }
 
-void
-siserror(char *s, ...)
+void siserror(char *s, ...)
 {
     scalarErrorString = STR("Syntax Error");
     sis_syntax_error = true;

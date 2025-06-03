@@ -189,36 +189,51 @@ void test_scalar_parser_10(void) {
     SIScalarRef n = SIScalarCreateWithOCString(STR("0.078 mol"), &err);
     ASSERT_PARSED(n, &err, "n", "Failed to parse n");
 
+    SIScalarRef R = SIScalarCreateWithOCString(STR("R"), &err);
+    ASSERT_PARSED(R, &err, "R", "Failed to parse R");
+
     SIScalarRef T = SIScalarCreateWithOCString(STR("298.15 K"), &err);
     ASSERT_PARSED(T, &err, "T", "Failed to parse T");
+
     SIScalarRef V = SIScalarCreateWithOCString(STR("42.0 mL"), &err);
     ASSERT_PARSED(V, &err, "V", "Failed to parse V");
-    SIScalarRef R = SIScalarCreateWithOCString(STR("8.314510 J/(K*mol)"), &err);
-    ASSERT_PARSED(R, &err, "R", "Failed to parse R");
-    // Compute p = n * R
-    SIScalarRef p = SIScalarCreateByMultiplying(n, R, &err);
-    ASSERT_PARSED(p, &err, "n*R", "Failed to multiply n and R");
-    // p = p * T
-    SIScalarRef p2 = SIScalarCreateByMultiplying(p, T, &err);
-    OCRelease(p);
-    p = p2;
-    ASSERT_PARSED(p, &err, "p*T", "Failed to multiply p and T");
-    // p = p / V
-    assert(SIScalarDivide((SIMutableScalarRef)p, V, &err) && "Failed to divide by V");
-    if (err) { printf("Error dividing by V: %s\n", OCStringGetCString(err)); OCRelease(err); err = NULL; }
-    // Expect ~4603803.67339444 Pa
-    SIScalarRef expected = SIScalarCreateWithOCString(STR("4603803.67339444 Pa"), &err);
+
+    SIScalarRef nR = SIScalarCreateByMultiplying(n, R, &err);
+    ASSERT_PARSED(nR, &err, "n*R", "Failed to multiply n and R");
+
+    SIScalarRef nRT = SIScalarCreateByMultiplying(nR, T, &err);
+    ASSERT_PARSED(nRT, &err, "n*R*T", "Failed to multiply nR and T");
+
+    SIScalarRef p = SIScalarCreateByDividing(nRT, V, &err);
+    ASSERT_PARSED(p, &err, "n*R*T/V", "Failed to divide nRT by V");
+
+    SIScalarRef expected = SIScalarCreateWithOCString(STR("4603777.340690149 Pa"), &err);
     ASSERT_PARSED(expected, &err, "expected p", "Failed to parse expected p");
-    // Use loose compare for round-off
-    assert(SIScalarCompareLoose(p, expected) == kOCCompareEqualTo && "Ideal gas pressure mismatch");
-    // Clean up
-    OCRelease(T); 
-    OCRelease(V); 
+
+    // Compare and print if mismatch
+    OCComparisonResult cmp = SIScalarCompareLoose(p, expected);
+    if (cmp != kOCCompareEqualTo) {
+        OCStringRef actualStr = SIScalarCreateStringValue(p);
+        OCStringRef expectedStr = SIScalarCreateStringValue(expected);
+        printf("Mismatch in ideal gas pressure:\n  Computed: %s\n  Expected: %s\n",
+               OCStringGetCString(actualStr),
+               OCStringGetCString(expectedStr));
+        OCRelease(actualStr);
+        OCRelease(expectedStr);
+    }
+    assert(cmp == kOCCompareEqualTo && "Ideal gas pressure mismatch");
+
+    // Cleanup
+    OCRelease(T);
+    OCRelease(V);
     OCRelease(R);
-    OCRelease(p); 
+    OCRelease(p);
     OCRelease(expected);
-    OCRelease(n); 
+    OCRelease(n);
+    OCRelease(nR);
+    OCRelease(nRT);
 
     printf("%s passed\n", __func__);
 }
+
 
