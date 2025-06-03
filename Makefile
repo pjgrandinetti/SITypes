@@ -27,7 +27,7 @@ OCTYPES_DIR    := third_party/OCTypes
 OCT_INCLUDE    := $(OCTYPES_DIR)/include
 OCT_LIBDIR     := $(OCTYPES_DIR)/lib
 
-CPPFLAGS := -I. -I$(SRC_DIR) -I$(OCT_INCLUDE)
+CPPFLAGS := -DDEBUG -I. -I$(SRC_DIR) -I$(OCT_INCLUDE)
 WARNINGS := -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter \
              -Wno-missing-field-initializers -Wno-unused-function
 OPT      := -O3

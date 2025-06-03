@@ -168,6 +168,10 @@ int main(int argc, const char * argv[]) {
     // Print summary message if all tests pass
     printf("\nAll tests passed\n");
 
+#ifdef DEBUG
+_OCReportLeaks();
+#endif
+
 #ifdef LEAK_SANITIZER
     if (&__lsan_do_leak_check) {
         __lsan_do_leak_check();
