@@ -1820,8 +1820,6 @@ static bool SIDimensionalityHasSameDimensionlessAndDerivedDimensionalities(SIDim
 // Add a cleanup function for static dictionaries
 static void cleanupDimensionalityLibraries(void)
 {
-    fprintf(stderr,"cleanupDimensionalityLibraries\n");
-
     if (!dimLibrary) return;
 
     // 1) First tear down dimQuantitiesLibrary if you haven’t already

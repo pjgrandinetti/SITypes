@@ -1501,16 +1501,13 @@ void cleanupUnitsLibraries(void) {
 
             OCStringRef key = (OCStringRef) OCArrayGetValueAtIndex(keys, i);
             SIUnitRef unit = (SIUnitRef) OCDictionaryGetValue(unitsLibrary, key);
-            fprintf(stderr,"release %s %p\n",OCStringGetCString(key),unit);
 
             OCDictionaryRemoveValue(unitsLibrary, key);
             OCTypeSetStaticInstance(unit, false);
             OCRelease(unit);
         }
-        fprintf(stderr,"release keys\n");
         OCRelease(keys);
     }
-    fprintf(stderr,"release unitsLibrary\n");
     OCRelease(unitsLibrary);
     unitsLibrary = NULL;
    
@@ -1558,17 +1555,18 @@ void UnitsLibraryCreate()
     // ***** Dimensionless **********************************************************************************************************************************
     // ******************************************************************************************************************************************************
 #pragma mark kSIQuantityDimensionless
-    AddUnitForQuantityToLibrary(kSIQuantityDimensionless,
-                                kSIPrefixNone, kSIPrefixNone,
-                                kSIPrefixKilo, kSIPrefixNone,
-                                kSIPrefixNone, kSIPrefixNone,
-                                kSIPrefixNone, kSIPrefixNone,
-                                kSIPrefixNone, kSIPrefixNone,
-                                kSIPrefixNone, kSIPrefixNone,
-                                kSIPrefixNone, kSIPrefixNone,
-                                NULL, NULL, NULL, kSIPrefixNone, false, 1., false);
+    // AddUnitForQuantityToLibrary(kSIQuantityDimensionless,
+    //                             kSIPrefixNone, kSIPrefixNone,
+    //                             kSIPrefixKilo, kSIPrefixNone,
+    //                             kSIPrefixNone, kSIPrefixNone,
+    //                             kSIPrefixNone, kSIPrefixNone,
+    //                             kSIPrefixNone, kSIPrefixNone,
+    //                             kSIPrefixNone, kSIPrefixNone,
+    //                             kSIPrefixNone, kSIPrefixNone,
+    //                             NULL, NULL, NULL, kSIPrefixNone, false, 1., false);
+    AddNonSIUnitToLibrary(kSIQuantityDimensionless, STR("dimensionless"), STR("dimensionless"), STR(" "), 1);
 
-    // Dimensionless - Percent
+    // Dimensionless - 1, percent, part per thousand, part per ten thousand
     AddNonSIUnitToLibrary(kSIQuantityDimensionless, STR("percent"), STR("percent"), STR("%"), 0.01);
     AddNonSIUnitToLibrary(kSIQuantityDimensionless, STR("part per thousand"), STR("parts per thousand"), STR("‰"), 0.001);
     AddNonSIUnitToLibrary(kSIQuantityDimensionless, STR("part per ten thousand"), STR("parts per ten thousand"), STR("‱"), 0.0001);
