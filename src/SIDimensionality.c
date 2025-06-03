@@ -334,10 +334,15 @@ static SIDimensionalityRef SIDimensionalityWithExponents(
         return existingDim;
     }
 
-    OCTypeSetStaticInstance(newDim, true);
-    OCDictionaryAddValue(dimLibrary, newDim->symbol, newDim);
+    if(!OCDictionaryContainsKey(dimLibrary, newDim->symbol)) {
+        OCTypeSetStaticInstance(newDim, true);
+        OCDictionaryAddValue(dimLibrary, newDim->symbol, newDim);
+        OCRelease(newDim);
+        return newDim;
+    }
+    SIDimensionalityRef existingDim = OCDictionaryGetValue(dimLibrary, newDim->symbol);
     OCRelease(newDim);
-    return newDim;
+    return existingDim;
 }
 
 SIDimensionalityRef SIDimensionalityDimensionless()
@@ -866,10 +871,16 @@ static SIDimensionalityRef AddDimensionalityToLibrary(uint8_t length_num_exp, ui
     // This sets the reference count to 1 and prevents it from being released or retained
     // by OCRelease an OCRetain.   This ensures that only one instance of the dimensionality
     // exists in the library.
-    OCTypeSetStaticInstance(dim, true);
-    OCDictionaryAddValue(dimLibrary, dim->symbol, dim);
+
+    if(!OCDictionaryContainsKey(dimLibrary, dim->symbol)) {
+        OCTypeSetStaticInstance(dim, true);
+        OCDictionaryAddValue(dimLibrary, dim->symbol, dim);
+        OCRelease(dim);
+        return dim;
+    }
+    SIDimensionalityRef existingDim = OCDictionaryGetValue(dimLibrary, dim->symbol);
     OCRelease(dim);
-    return dim;
+    return existingDim;
 }
 
 static void DimensionalityLibraryBuild()
@@ -1844,12 +1855,9 @@ static void cleanupDimensionalityLibraries(void)
 
 
 // Run before LSAN’s destructors (101–103)
-__attribute__((destructor(200)))
+__attribute__((destructor(100)))
 static void _OCTypes_cleanup_before_leak_check(void) {
     fprintf(stderr, "Cleaning up SITypes...\n");
-    #ifdef DEBUG
-    _OCReportLeaks();
-    #endif
     cleanupUnitsLibraries();
     cleanupDimensionalityLibraries();
 }

@@ -208,9 +208,6 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
 
-    // 1) Create a local autorelease pool
-    OCAutoreleasePoolRef pool = OCAutoreleasePoolCreate();
-
     if (OCStringCompare(string, kSIQuantityDimensionless, kOCCompareCaseInsensitive) == kOCCompareEqualTo) return NULL;
 
     OCMutableStringRef mutString = OCStringCreateMutableCopy(string);
@@ -252,6 +249,8 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
 
 // Ready to Parse  
     const char *cString = OCStringGetCString(mutString);
+    // Create a local autorelease pool
+    OCAutoreleasePoolRef pool = OCAutoreleasePoolCreate();
 
     SIScalarRef out = NULL;
     if (cString) {
@@ -259,23 +258,16 @@ SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
         sis_scan_string(cString);
         sisparse();
         sislex_destroy();
-
         if (!sis_syntax_error && sis_root) {
             out = SIScalarCreateCopy(result);
         }
-
         /* whether parse succeeded or not, free the tree once here */
         if (sis_root) {
             ScalarNodeFree(sis_root);
             sis_root = NULL;
         }
-
         OCRelease(mutString);
-
-
-
     }
-    
     OCAutoreleasePoolRelease(pool);
 
     if (error) {

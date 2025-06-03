@@ -329,8 +329,9 @@ ScalarNodeRef ScalarNodeCreateNumberLeaf(SIScalarRef number)
         fprintf(stderr, "ScalarNodeCreateNumberLeaf: Memory allocation failed.\n");
         return NULL; // Handle memory allocation failure
     }
+
     leaf->nodeType = 'K';
-    leaf->number = OCRetain(number);
+    leaf->number = number;
     return (ScalarNodeRef)leaf;
 }
 
