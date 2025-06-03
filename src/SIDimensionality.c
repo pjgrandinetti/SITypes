@@ -1846,6 +1846,10 @@ static void cleanupDimensionalityLibraries(void)
 // Run before LSAN’s destructors (101–103)
 __attribute__((destructor(200)))
 static void _OCTypes_cleanup_before_leak_check(void) {
+    fprintf(stderr, "Cleaning up SITypes...\n");
+    #ifdef DEBUG
+    _OCReportLeaks();
+    #endif
     cleanupUnitsLibraries();
     cleanupDimensionalityLibraries();
 }

@@ -22,6 +22,15 @@
 extern void __lsan_do_leak_check() __attribute__((weak));
 #endif
 
+#define TRACK_SCALAR_LEAK(test_fn) do { \
+    size_t before = _OCLeakCountForType(SIScalarGetTypeID()); \
+    test_fn(); \
+    size_t after = _OCLeakCountForType(SIScalarGetTypeID()); \
+    if (after > before) { \
+        printf("[LEAK] %s leaked %zu SIScalar(s)\n", #test_fn, after - before); \
+    } \
+} while(0)
+
 int main(int argc, const char * argv[]) {
 
 
@@ -62,107 +71,108 @@ int main(int argc, const char * argv[]) {
     test_unit_13();
 
     printf("\n=== SIScalar Parser Tests ===\n");
-    test_scalar_parser_1();
-    test_scalar_parser_2();
-    test_scalar_parser_3();
-    test_scalar_parser_4();
-    test_scalar_parser_5();
-    test_scalar_parser_6();
-    test_scalar_parser_7();
-    test_scalar_parser_8();
-    test_scalar_parser_9();
-    test_scalar_parser_10();
+    TRACK_SCALAR_LEAK(test_scalar_parser_1);
+    TRACK_SCALAR_LEAK(test_scalar_parser_2);
+    TRACK_SCALAR_LEAK(test_scalar_parser_3);
+    TRACK_SCALAR_LEAK(test_scalar_parser_4);
+    TRACK_SCALAR_LEAK(test_scalar_parser_5);
+    TRACK_SCALAR_LEAK(test_scalar_parser_6);
+    TRACK_SCALAR_LEAK(test_scalar_parser_7);
+    TRACK_SCALAR_LEAK(test_scalar_parser_8);
+    TRACK_SCALAR_LEAK(test_scalar_parser_9);
+    TRACK_SCALAR_LEAK(test_scalar_parser_10);
+
 
     printf("\n=== SIScalar Tests ===\n");
-    test_SIScalarGetTypeID();
-    test_SIScalarCreateCopy();
-    test_SIScalarCreateMutableCopy();
-    test_SIScalarCreateWithFloat();
-    test_SIScalarCreateMutableWithFloat();
-    test_SIScalarCreateWithDouble();
-    test_SIScalarCreateMutableWithDouble();
-    test_SIScalarCreateWithFloatComplex();
-    test_SIScalarCreateMutableWithFloatComplex();
-    test_SIScalarCreateWithDoubleComplex();
-    test_SIScalarCreateMutableWithDoubleComplex();
-    test_SIScalarGetValue();
-    test_SIScalarSetFloatValue();
-    test_SIScalarSetDoubleValue();
-    test_SIScalarSetFloatComplexValue();
-    test_SIScalarSetDoubleComplexValue();
-    test_SIScalarSetElementType();
-    test_SIScalarFloatValue();
-    test_SIScalarDoubleValue();
-    test_SIScalarFloatComplexValue();
-    test_SIScalarDoubleComplexValue();
-    // test_SIScalarMagnitudeValue();
-    // test_SIScalarArgumentValue();
-    // test_SIScalarFloatValueInUnit();
-    // test_SIScalarDoubleValueInUnit();
-    // test_SIScalarFloatComplexValueInUnit();
-    // test_SIScalarDoubleComplexValueInUnit();
-    // test_SIScalarFloatValueInCoherentUnit();
-    // test_SIScalarDoubleValueInCoherentUnit();
-    // test_SIScalarFloatComplexValueInCoherentUnit();
-    // test_SIScalarDoubleComplexValueInCoherentUnit();
-    test_SIScalarCreateByConvertingToNumberType();
-    test_SIScalarTakeComplexPart();
-    test_SIScalarCreateByTakingComplexPart();
-    test_SIScalarCreateByReducingUnit();
-    test_SIScalarReduceUnit();
-    test_SIScalarConvertToUnit();
-    test_SIScalarCreateByConvertingToUnit();
-    test_SIScalarConvertToCoherentUnit();
-    test_SIScalarCreateByConvertingToCoherentUnit();
-    test_SIScalarCreateByAdding();
-    test_SIScalarAdd();
-    test_SIScalarCreateBySubtracting();
-    test_SIScalarSubtract();
-    test_SIScalarCreateByMultiplyingWithoutReducingUnit();
-    test_SIScalarMultiplyWithoutReducingUnit();
-    test_SIScalarCreateByMultiplying();
-    test_SIScalarMultiply();
-    test_SIScalarCreateByDividingWithoutReducingUnit();
-    test_SIScalarDivideWithoutReducingUnit();
-    test_SIScalarCreateByDividing();
-    test_SIScalarDivide();
-    test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit();
-    test_SIScalarRaiseToAPowerWithoutReducingUnit();
-    test_SIScalarCreateByRaisingToAPower();
-    test_SIScalarRaiseToAPower();
-    test_SIScalarCreateByTakingAbsoluteValue();
-    test_SIScalarTakeAbsoluteValue();
-    test_SIScalarCreateByGammaFunctionWithoutReducingUnit();
-    test_SIScalarCreateByTakingNthRoot();
-    test_SIScalarTakeNthRoot();
-    test_SIScalarTakeLog10();
-    test_SIScalarCreateByZeroingPart();
-    test_SIScalarZeroPart();
-    test_SIScalarMultiplyByDimensionlessRealConstant();
-    test_SIScalarCreateByMultiplyingByDimensionlessRealConstant();
-    test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant();
-    test_SIScalarMultiplyByDimensionlessComplexConstant();
-    test_SIScalarCreateByConjugation();
-    test_SIScalarConjugate();
-    test_SIScalarShow();
-    test_SIScalarCreateStringValue();
-    test_SIScalarCreateNumericStringValue();
-    test_SIScalarCreateStringValueForPart();
-    test_SIScalarCreateUnitString();
-    test_SIScalarCreateStringValueWithFormat();
-    test_SIScalarCreateNumericStringValueWithFormat();
-    test_SIScalarAddToArrayAsStringValue();
-    test_SIScalarIsReal();
-    test_SIScalarIsImaginary();
-    test_SIScalarIsComplex();
-    test_SIScalarIsZero();
-    test_SIScalarIsInfinite();
-    test_SIScalarIsRealNonNegativeInteger();
-    test_SIScalarValidateProposedStringValue();
-    test_SIScalarEqual();
-    test_SIScalarCompare();
-    test_SIScalarCompareReduced();
-    test_SIScalarCompareLoose();
+    TRACK_SCALAR_LEAK(test_SIScalarGetTypeID);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateCopy);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateMutableCopy);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateWithFloat);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateMutableWithFloat);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateWithDouble);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateMutableWithDouble);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateWithFloatComplex);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateMutableWithFloatComplex);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateWithDoubleComplex);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateMutableWithDoubleComplex);
+    TRACK_SCALAR_LEAK(test_SIScalarGetValue);
+    TRACK_SCALAR_LEAK(test_SIScalarSetFloatValue);
+    TRACK_SCALAR_LEAK(test_SIScalarSetDoubleValue);
+    TRACK_SCALAR_LEAK(test_SIScalarSetFloatComplexValue);
+    TRACK_SCALAR_LEAK(test_SIScalarSetDoubleComplexValue);
+    TRACK_SCALAR_LEAK(test_SIScalarSetElementType);
+    TRACK_SCALAR_LEAK(test_SIScalarFloatValue);
+    TRACK_SCALAR_LEAK(test_SIScalarDoubleValue);
+    TRACK_SCALAR_LEAK(test_SIScalarFloatComplexValue);
+    TRACK_SCALAR_LEAK(test_SIScalarDoubleComplexValue);
+    // TRACK_SCALAR_LEAK(test_SIScalarMagnitudeValue);
+    // TRACK_SCALAR_LEAK(test_SIScalarArgumentValue);
+    // TRACK_SCALAR_LEAK(test_SIScalarFloatValueInUnit);
+    // TRACK_SCALAR_LEAK(test_SIScalarDoubleValueInUnit);
+    // TRACK_SCALAR_LEAK(test_SIScalarFloatComplexValueInUnit);
+    // TRACK_SCALAR_LEAK(test_SIScalarDoubleComplexValueInUnit);
+    // TRACK_SCALAR_LEAK(test_SIScalarFloatValueInCoherentUnit);
+    // TRACK_SCALAR_LEAK(test_SIScalarDoubleValueInCoherentUnit);
+    // TRACK_SCALAR_LEAK(test_SIScalarFloatComplexValueInCoherentUnit);
+    // TRACK_SCALAR_LEAK(test_SIScalarDoubleComplexValueInCoherentUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByConvertingToNumberType);
+    TRACK_SCALAR_LEAK(test_SIScalarTakeComplexPart);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByTakingComplexPart);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByReducingUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarReduceUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarConvertToUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByConvertingToUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarConvertToCoherentUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByConvertingToCoherentUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByAdding);
+    TRACK_SCALAR_LEAK(test_SIScalarAdd);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateBySubtracting);
+    TRACK_SCALAR_LEAK(test_SIScalarSubtract);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByMultiplyingWithoutReducingUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarMultiplyWithoutReducingUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByMultiplying);
+    TRACK_SCALAR_LEAK(test_SIScalarMultiply);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByDividingWithoutReducingUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarDivideWithoutReducingUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByDividing);
+    TRACK_SCALAR_LEAK(test_SIScalarDivide);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarRaiseToAPowerWithoutReducingUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByRaisingToAPower);
+    TRACK_SCALAR_LEAK(test_SIScalarRaiseToAPower);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByTakingAbsoluteValue);
+    TRACK_SCALAR_LEAK(test_SIScalarTakeAbsoluteValue);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByGammaFunctionWithoutReducingUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByTakingNthRoot);
+    TRACK_SCALAR_LEAK(test_SIScalarTakeNthRoot);
+    TRACK_SCALAR_LEAK(test_SIScalarTakeLog10);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByZeroingPart);
+    TRACK_SCALAR_LEAK(test_SIScalarZeroPart);
+    TRACK_SCALAR_LEAK(test_SIScalarMultiplyByDimensionlessRealConstant);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByMultiplyingByDimensionlessRealConstant);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant);
+    TRACK_SCALAR_LEAK(test_SIScalarMultiplyByDimensionlessComplexConstant);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByConjugation);
+    TRACK_SCALAR_LEAK(test_SIScalarConjugate);
+    TRACK_SCALAR_LEAK(test_SIScalarShow);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateStringValue);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateNumericStringValue);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateStringValueForPart);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateUnitString);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateStringValueWithFormat);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateNumericStringValueWithFormat);
+    TRACK_SCALAR_LEAK(test_SIScalarAddToArrayAsStringValue);
+    TRACK_SCALAR_LEAK(test_SIScalarIsReal);
+    TRACK_SCALAR_LEAK(test_SIScalarIsImaginary);
+    TRACK_SCALAR_LEAK(test_SIScalarIsComplex);
+    TRACK_SCALAR_LEAK(test_SIScalarIsZero);
+    TRACK_SCALAR_LEAK(test_SIScalarIsInfinite);
+    TRACK_SCALAR_LEAK(test_SIScalarIsRealNonNegativeInteger);
+    TRACK_SCALAR_LEAK(test_SIScalarValidateProposedStringValue);
+    TRACK_SCALAR_LEAK(test_SIScalarEqual);
+    TRACK_SCALAR_LEAK(test_SIScalarCompare);
+    TRACK_SCALAR_LEAK(test_SIScalarCompareReduced);
+    TRACK_SCALAR_LEAK(test_SIScalarCompareLoose);
 
 
     // Print summary message if all tests pass
