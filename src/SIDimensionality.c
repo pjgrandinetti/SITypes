@@ -1853,12 +1853,30 @@ static void cleanupDimensionalityLibraries(void)
     dimLibrary = NULL;
 }
 
+void SITypesShutdown(void) {
+#if defined(DEBUG) && !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
+    _OCReportLeaksForType(SIScalarGetTypeID());
+#endif
 
-// Run before LSAN’s destructors (101–103)
-__attribute__((destructor(100)))
-static void _OCTypes_cleanup_before_leak_check(void) {
-    fprintf(stderr, "Cleaning up SITypes...\n");
     cleanupUnitsLibraries();
+
+#if defined(DEBUG) && !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
+    _OCReportLeaksForType(SIUnitGetTypeID());
+#endif
+
     cleanupDimensionalityLibraries();
+
+#if defined(DEBUG) && !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
+    _OCReportLeaksForType(SIDimensionalityGetTypeID());
+#endif
+}
+
+// In SITypes (e.g. in src/SITypesCleanup.c)
+__attribute__((destructor(500)))
+void SICTypes_cleanup(void) {
+    fprintf(stderr, "Cleaning up SITypes...\n");
+    SITypesShutdown();
+    fprintf(stderr, "Cleaning up OCTypes...\n");
+    OCTypesShutdown();
 }
 
