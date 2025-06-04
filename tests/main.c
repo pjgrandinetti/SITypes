@@ -23,9 +23,9 @@ extern void __lsan_do_leak_check() __attribute__((weak));
 #endif
 
 #define TRACK_SCALAR_LEAK(test_fn) do { \
-    size_t before = _OCLeakCountForType(SIScalarGetTypeID()); \
+    size_t before = OCLeakCountForType(SIScalarGetTypeID()); \
     test_fn(); \
-    size_t after = _OCLeakCountForType(SIScalarGetTypeID()); \
+    size_t after = OCLeakCountForType(SIScalarGetTypeID()); \
     if (after > before) { \
         printf("[LEAK] %s leaked %zu SIScalar(s)\n", #test_fn, after - before); \
     } \

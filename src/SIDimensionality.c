@@ -1855,19 +1855,19 @@ static void cleanupDimensionalityLibraries(void)
 
 void SITypesShutdown(void) {
 #if defined(DEBUG) && !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
-    _OCReportLeaksForType(SIScalarGetTypeID());
+    OCReportLeaksForType(SIScalarGetTypeID());
 #endif
 
     cleanupUnitsLibraries();
 
 #if defined(DEBUG) && !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
-    _OCReportLeaksForType(SIUnitGetTypeID());
+    OCReportLeaksForType(SIUnitGetTypeID());
 #endif
 
     cleanupDimensionalityLibraries();
 
 #if defined(DEBUG) && !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
-    _OCReportLeaksForType(SIDimensionalityGetTypeID());
+    OCReportLeaksForType(SIDimensionalityGetTypeID());
 #endif
 }
 
