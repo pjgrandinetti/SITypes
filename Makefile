@@ -103,18 +103,44 @@ $(OCT_HEADERS_ARCHIVE): | third_party
 	@echo "Fetching OCTypes headers"
 	curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.1/libOCTypes-headers.zip -o $@
 
+# ----------------------------------------------------------------------------
+# On Unix/macOS: use 'unzip'; on Windows: use PowerShell Expand-Archive
+# ----------------------------------------------------------------------------
+
+$(OCT_INCLUDE)/OCTypes/OCLibrary.h: $(OCT_HEADERS_ARCHIVE)
+	@echo "Extracting OCTypes headers into $(OCT_INCLUDE)/OCTypes"
+	$(RM) $(OCT_INCLUDE)
+	$(MKDIR_P) $(OCT_INCLUDE)/OCTypes
+
+ifneq ($(findstring MINGW,$(UNAME_S)),$(UNAME_S))
+# ------------------ Unix / macOS path ------------------
+	unzip -q $< -d $(OCT_INCLUDE)
+	# Move any .h files at top level into the OCTypes/ subdir
+	-mv $(OCT_INCLUDE)/*.h $(OCT_INCLUDE)/OCTypes/ 2>/dev/null || true
+else
+# ------------------ Windows path (Git Bash, MSYS, or MINGW) ------------------
+	@echo "Detected Windows; using PowerShell to unzip headers"
+	powershell -NoProfile -Command " \
+	    if (Test-Path '$(subst /,\\,$<)') { \
+	      Expand-Archive -Force '$(subst /,\\,$<)' -DestinationPath '$(subst /,\\,$(OCT_INCLUDE))' ; \
+	    } else { \
+	      Write-Error 'Header archive not found: $(OCT_HEADERS_ARCHIVE)' ; exit 1;\
+	    }"
+	# Move any top-level .h into the OCTypes subdirectory if present
+	-if exist "$(subst /,\\,$(OCT_INCLUDE))\*.h" ( \
+	    move /Y "$(subst /,\\,$(OCT_INCLUDE))\*.h" "$(subst /,\\,$(OCT_INCLUDE))\OCTypes\" \
+	) else ( \
+	    rem No top-level .h to move \
+	)
+endif
+	@echo " → Extracted headers to $(OCT_INCLUDE)/OCTypes"
+# ----------------------------------------------------------------------------
+
 $(OCT_LIBDIR)/libOCTypes.a: $(OCT_LIB_ARCHIVE)
 	@echo "Extracting OCTypes library"
 	$(RM) $(OCT_LIBDIR)
 	$(MKDIR_P) $(OCT_LIBDIR)
 	unzip -q $< -d $(OCT_LIBDIR)
-
-$(OCT_INCLUDE)/OCTypes/OCLibrary.h: $(OCT_HEADERS_ARCHIVE)
-	@echo "Extracting OCTypes headers"
-	$(RM) $(OCT_INCLUDE)
-	$(MKDIR_P) $(OCT_INCLUDE)/OCTypes
-	unzip -q $< -d $(OCT_INCLUDE)
-	mv $(OCT_INCLUDE)/*.h $(OCT_INCLUDE)/OCTypes/ 2>/dev/null || true
 
 ##────────────────────────────────────────────────────────────────────────────
 ##  5) RUN BISON / FLEX → $(GEN_DIR)
@@ -265,7 +291,7 @@ clean-docs:
 -include $(DEP)
 
 ##────────────────────────────────────────────────────────────────────────────
-## 11) XCODE target (mirroring OCTypes exactly)
+## 11) XCODE target (mirroring OCTTypes exactly)
 ##────────────────────────────────────────────────────────────────────────────
 
 xcode: clean dirs
