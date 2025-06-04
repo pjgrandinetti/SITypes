@@ -22,11 +22,13 @@ BIN_DIR        := $(BUILD_DIR)/bin
 
 XCODE_BUILD    := build-xcode
 
+
 # OCTypes “third_party” integration
 OCTYPES_DIR    := third_party/OCTypes
 OCT_INCLUDE    := $(OCTYPES_DIR)/include
 OCT_LIBDIR     := $(OCTYPES_DIR)/lib
 
+# THIS LINE ensures the proper include path for OCTypes:
 CPPFLAGS := -DDEBUG -I. -I$(SRC_DIR) -I$(OCT_INCLUDE)
 WARNINGS := -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter \
              -Wno-missing-field-initializers -Wno-unused-function
