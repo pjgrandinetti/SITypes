@@ -105,16 +105,7 @@ int main(int argc, const char * argv[]) {
     TRACK_SCALAR_LEAK(test_SIScalarDoubleValue);
     TRACK_SCALAR_LEAK(test_SIScalarFloatComplexValue);
     TRACK_SCALAR_LEAK(test_SIScalarDoubleComplexValue);
-    // TRACK_SCALAR_LEAK(test_SIScalarMagnitudeValue);
-    // TRACK_SCALAR_LEAK(test_SIScalarArgumentValue);
-    // TRACK_SCALAR_LEAK(test_SIScalarFloatValueInUnit);
-    // TRACK_SCALAR_LEAK(test_SIScalarDoubleValueInUnit);
-    // TRACK_SCALAR_LEAK(test_SIScalarFloatComplexValueInUnit);
-    // TRACK_SCALAR_LEAK(test_SIScalarDoubleComplexValueInUnit);
-    // TRACK_SCALAR_LEAK(test_SIScalarFloatValueInCoherentUnit);
-    // TRACK_SCALAR_LEAK(test_SIScalarDoubleValueInCoherentUnit);
-    // TRACK_SCALAR_LEAK(test_SIScalarFloatComplexValueInCoherentUnit);
-    // TRACK_SCALAR_LEAK(test_SIScalarDoubleComplexValueInCoherentUnit);
+
     TRACK_SCALAR_LEAK(test_SIScalarCreateByConvertingToNumberType);
     TRACK_SCALAR_LEAK(test_SIScalarTakeComplexPart);
     TRACK_SCALAR_LEAK(test_SIScalarCreateByTakingComplexPart);
