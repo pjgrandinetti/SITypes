@@ -492,7 +492,6 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
     builtInMathFunctions funcType = func->funcType;
     SIScalarRef scalar = ScalarNodeEvaluate(func->left, errorString);
     if (NULL == scalar) return NULL;
-    OCAutorelease(scalar);
 
     switch (funcType)
     {
