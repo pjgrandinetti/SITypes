@@ -162,6 +162,12 @@ OCArrayRef SIDimensionalityCreateArrayOfQuantitiesWithSameReducedDimensionality(
 /** @brief Returns all built-in dimensionalities with the same reduced dimensionality. */
 OCArrayRef SIDimensionalityCreateArrayWithSameReducedDimensionality(SIDimensionalityRef theDim);
 
+/** @brief Returns an array of quantity names mapped to the given dimensionality. */
+OCArrayRef SIDimensionalityCreateArrayOfQuantityNames(SIDimensionalityRef dim);
+
+/** @brief Returns all quantity names associated with dimensionalities that reduce to the same form as the input. */
+OCArrayRef SIDimensionalityCreateArrayOfQuantityNamesWithSameReducedDimensionality(SIDimensionalityRef dim);
+
 #pragma mark String Output
 
 /** @brief Prints a concise representation of the dimensionality to stdout. */

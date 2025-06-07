@@ -337,6 +337,25 @@ OCArrayRef SIUnitCreateArrayOfRootUnits(void);
 /** @brief Returns root units for a quantity; sets error on failure. */
 OCArrayRef SIUnitCreateArrayOfRootUnitsForQuantity(OCStringRef quantity, OCStringRef *error);
 
+
+/**
+ * @brief Returns a commonly recognized quantity name associated with the given unit.
+ *
+ * This function uses the unit's dimensionality to look up known quantity names
+ * (e.g., "length", "velocity", "acceleration"). If one or more matches are found,
+ * the first is returned. If no matches are found, the dimensionality's symbolic
+ * representation is returned (e.g., "L T⁻¹").
+ *
+ * The result is a borrowed reference and must not be released by the caller.
+ *
+ * @param theUnit The unit for which to determine an appropriate quantity name.
+ * @return A borrowed OCStringRef representing the guessed quantity name or
+ *         the dimensionality symbol if no match is found.
+ *         Returns NULL only if the unit has no dimensionality or an internal error occurs.
+ *
+ */
+OCStringRef SIUnitGuessQuantityName(SIUnitRef theUnit);
+
 /** @cond INTERNAL */
 /** @brief Cleans up all static and global unit dictionaries. */
 void cleanupUnitsLibraries(void);

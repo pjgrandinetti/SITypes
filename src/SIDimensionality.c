@@ -1822,6 +1822,96 @@ static bool SIDimensionalityHasSameDimensionlessAndDerivedDimensionalities(SIDim
         return false;
     return true;
 }
+// Local comparator for OCStringRef values (case-insensitive sort)
+static int OCStringSort(const void *val1, const void *val2, void *context) {
+    (void)context;
+    OCStringRef str1 = *(const OCStringRef *)val1;
+    OCStringRef str2 = *(const OCStringRef *)val2;
+    return OCStringCompare(str1, str2, kOCCompareCaseInsensitive);
+}
+
+OCArrayRef SIDimensionalityCreateArrayOfQuantityNames(SIDimensionalityRef dim) {
+    if (!dim) return NULL;
+
+    // Lazy initialization of the dimensionality-to-quantity map
+    if (!dimQuantitiesLibrary) {
+        DimensionalityLibraryBuild();
+    }
+
+    OCIndex totalCount = OCDictionaryGetCount(dimQuantitiesLibrary);
+    if (totalCount == 0) return NULL;
+
+    // Retrieve all keys and values from the dictionary
+    OCStringRef keys[totalCount];
+    SIDimensionalityRef values[totalCount];
+    OCDictionaryGetKeysAndValues(dimQuantitiesLibrary,
+                                  (const void **)keys,
+                                  (const void **)values);
+
+    // Collect quantity names associated with the given dimensionality
+    OCStringRef matchingNames[totalCount];
+    OCIndex matchCount = 0;
+    for (OCIndex i = 0; i < totalCount; ++i) {
+        if (SIDimensionalityEqual(values[i], dim)) {
+            matchingNames[matchCount++] = keys[i];
+        }
+    }
+
+    if (matchCount == 0) return NULL;
+
+    // Build mutable result array
+    OCMutableArrayRef result = OCArrayCreateMutable(matchCount, &kOCTypeArrayCallBacks);
+    if (!result) return NULL;
+
+    for (OCIndex i = 0; i < matchCount; ++i) {
+        OCArrayAppendValue(result, matchingNames[i]);
+    }
+
+    // Sort alphabetically (case-insensitive)
+    OCArraySortValues(result,
+                      OCRangeMake(0, matchCount),
+                      OCStringSort,
+                      NULL);
+
+    return result;
+}
+
+
+OCArrayRef SIDimensionalityCreateArrayOfQuantityNamesWithSameReducedDimensionality(SIDimensionalityRef dim) {
+    if (!dim) return NULL;
+
+    OCArrayRef equivalents = SIDimensionalityCreateArrayWithSameReducedDimensionality(dim);
+    if (!equivalents) return NULL;
+
+    OCMutableArrayRef result = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
+    if (!result) {
+        OCRelease(equivalents);
+        return NULL;
+    }
+
+    for (OCIndex i = 0; i < OCArrayGetCount(equivalents); ++i) {
+        SIDimensionalityRef equivDim = OCArrayGetValueAtIndex(equivalents, i);
+        OCArrayRef quantityNames = SIDimensionalityCreateArrayOfQuantityNames(equivDim);
+
+        if (quantityNames && OCArrayGetCount(quantityNames) > 0) {
+            OCArrayAppendArray(result, quantityNames, OCRangeMake(0, OCArrayGetCount(quantityNames)));
+            OCRelease(quantityNames);
+        } else {
+            OCStringRef symbol = SIDimensionalityGetSymbol(equivDim);
+            if (symbol) {
+                OCMutableStringRef fallback = OCStringCreateMutable(0);
+                OCStringAppendCString(fallback, "Dimensionality: ");
+                OCStringAppend(fallback, symbol);
+                OCArrayAppendValue(result, fallback);
+                OCRelease(fallback);
+            }
+        }
+    }
+
+    OCRelease(equivalents);
+    return result;
+}
+
 
 // Add a cleanup function for static dictionaries
 static void cleanupDimensionalityLibraries(void)

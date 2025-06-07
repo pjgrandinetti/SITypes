@@ -637,7 +637,7 @@ bool SIScalarTakeComplexPart(SIMutableScalarRef scalar, complexPart part)
 {
     IF_NO_OBJECT_EXISTS_RETURN(scalar, false);
 
-    bool isComplex = SIQuantityIsComplexType((SIQuantityRef)scalar);
+    // bool isComplex = SIQuantityIsComplexType((SIQuantityRef)scalar);
 
     switch (scalar->type) {
         case kSINumberFloat32Type:

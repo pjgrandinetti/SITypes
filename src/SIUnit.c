@@ -5086,3 +5086,28 @@ bool SIUnitEqual(SIUnitRef theUnit1, SIUnitRef theUnit2)
     OCRelease(symbol2);
     return true;
 }
+
+OCStringRef SIUnitGuessQuantityName(SIUnitRef theUnit)
+{
+    OCStringRef quantityName = NULL;
+
+    SIDimensionalityRef dimensionality = SIUnitGetDimensionality(theUnit);
+    OCArrayRef quantityNames = SIDimensionalityCreateArrayOfQuantityNames(dimensionality);
+
+    if (quantityNames) {
+        if (OCArrayGetCount(quantityNames) > 0) {
+            quantityName = OCArrayGetValueAtIndex(quantityNames, 0); // Borrowed
+        }
+        OCRelease(quantityNames);
+        return quantityName;
+    } else {
+        // Fall back to dimensionality symbol
+        return SIDimensionalityGetSymbol(dimensionality);
+
+        // Optional logic (disabled below)
+        // double multiplier = 1;
+        // SIUnitRef reduced = SIUnitByReducing(theUnit, &multiplier);
+        // if (reduced != theUnit) return SIUnitGuessQuantityName(reduced);
+        // else return SIDimensionalityGetSymbol(dimensionality);
+    }
+}
