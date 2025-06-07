@@ -341,20 +341,28 @@ bool __SIUnitEqual(const void *theType1, const void *theType2)
     if (!OCTypeEqual(theUnit1->dimensionality, theUnit2->dimensionality))
         return false;
 
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 7; ++i)
+    {
         if (theUnit1->num_prefix[i] != theUnit2->num_prefix[i] ||
             theUnit1->den_prefix[i] != theUnit2->den_prefix[i])
             return false;
     }
 
-    if (!OCTypeEqual(theUnit1->symbol, theUnit2->symbol)) return false;
-    if (!OCTypeEqual(theUnit1->root_name, theUnit2->root_name)) return false;
-    if (!OCTypeEqual(theUnit1->root_plural_name, theUnit2->root_plural_name)) return false;
-    if (!OCTypeEqual(theUnit1->root_symbol, theUnit2->root_symbol)) return false;
+    if (!OCTypeEqual(theUnit1->symbol, theUnit2->symbol))
+        return false;
+    if (!OCTypeEqual(theUnit1->root_name, theUnit2->root_name))
+        return false;
+    if (!OCTypeEqual(theUnit1->root_plural_name, theUnit2->root_plural_name))
+        return false;
+    if (!OCTypeEqual(theUnit1->root_symbol, theUnit2->root_symbol))
+        return false;
 
-    if (theUnit1->root_symbol_prefix != theUnit2->root_symbol_prefix) return false;
-    if (theUnit1->is_special_si_symbol != theUnit2->is_special_si_symbol) return false;
-    if (theUnit1->allows_si_prefix != theUnit2->allows_si_prefix) return false;
+    if (theUnit1->root_symbol_prefix != theUnit2->root_symbol_prefix)
+        return false;
+    if (theUnit1->is_special_si_symbol != theUnit2->is_special_si_symbol)
+        return false;
+    if (theUnit1->allows_si_prefix != theUnit2->allows_si_prefix)
+        return false;
 
     if (OCCompareDoubleValues(theUnit1->scale_to_coherent_si, theUnit2->scale_to_coherent_si) != kOCCompareEqualTo)
         return false;
@@ -384,20 +392,68 @@ void __SIUnitFinalize(const void *theType)
 
     if (theUnit->root_symbol)
         OCRelease(theUnit->root_symbol);
-
 }
 
 static OCStringRef __SIUnitCopyFormattingDescription(OCTypeRef theType)
 {
-    if (!theType) return NULL;
+    if (!theType)
+        return NULL;
 
     SIUnitRef theUnit = (SIUnitRef)theType;
-    if (theUnit->symbol) {
+    if (theUnit->symbol)
+    {
         return OCStringCreateCopy(theUnit->symbol);
     }
 
     // Provide a fallback string for better diagnostics
     return OCStringCreateWithCString("<SIUnit>");
+}
+
+static struct __SIUnit *SIUnitAllocate(void);
+
+static void *__SIUnitDeepCopy(const void *obj)
+{
+    if (!obj)
+        return NULL;
+    const SIUnitRef src = (SIUnitRef)obj;
+
+    struct __SIUnit *copy = SIUnitAllocate();
+    if (!copy)
+        return NULL;
+
+    // Copy dimensionality
+    copy->dimensionality = OCTypeDeepCopy(src->dimensionality);
+
+    // Copy prefixes
+    for (int i = 0; i < 7; ++i)
+    {
+        copy->num_prefix[i] = src->num_prefix[i];
+        copy->den_prefix[i] = src->den_prefix[i];
+    }
+
+    // Copy simple fields
+    copy->scale_to_coherent_si = src->scale_to_coherent_si;
+    copy->allows_si_prefix = src->allows_si_prefix;
+    copy->is_special_si_symbol = src->is_special_si_symbol;
+    copy->root_symbol_prefix = src->root_symbol_prefix;
+
+    // Copy strings (OCStringRef)
+    if (src->symbol)
+        copy->symbol = OCStringCreateCopy(src->symbol);
+    if (src->root_name)
+        copy->root_name = OCStringCreateCopy(src->root_name);
+    if (src->root_plural_name)
+        copy->root_plural_name = OCStringCreateCopy(src->root_plural_name);
+    if (src->root_symbol)
+        copy->root_symbol = OCStringCreateCopy(src->root_symbol);
+
+    return (void *)copy;
+}
+
+static void *__SIUnitDeepCopyMutable(const void *obj)
+{
+    // SIUnit is immutable; just return a standard deep copy
+    return __SIUnitDeepCopy(obj);
 }
 
 OCTypeID SIUnitGetTypeID(void)
@@ -413,8 +469,11 @@ static struct __SIUnit *SIUnitAllocate()
                                        SIUnitGetTypeID(),
                                        __SIUnitFinalize,
                                        __SIUnitEqual,
-                                       __SIUnitCopyFormattingDescription);
-    if (!obj) {
+                                       __SIUnitCopyFormattingDescription,
+                                       __SIUnitDeepCopy,
+                                       __SIUnitDeepCopyMutable);
+    if (!obj)
+    {
         fprintf(stderr, "SIUnitAllocate: OCTypeAlloc failed.\n");
         return NULL;
     }
@@ -422,7 +481,8 @@ static struct __SIUnit *SIUnitAllocate()
     // Initialize type-specific fields
     obj->dimensionality = NULL;
 
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 7; i++)
+    {
         obj->num_prefix[i] = kSIPrefixNone;
         obj->den_prefix[i] = kSIPrefixNone;
     }
@@ -480,31 +540,38 @@ SIDimensionalityRef SIUnitGetDimensionality(SIUnitRef theUnit)
     return theUnit->dimensionality;
 }
 
-OCStringRef SIUnitCopyRootName(SIUnitRef theUnit) {
+OCStringRef SIUnitCopyRootName(SIUnitRef theUnit)
+{
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
 
     OCStringRef result = NULL;
 
-    if (SIUnitIsSIBaseUnit(theUnit)) {
-        for (uint8_t i = 0; i <= 6; i++) {
-            if (SIDimensionalityGetNumExpAtIndex(theUnit->dimensionality, i)) {
+    if (SIUnitIsSIBaseUnit(theUnit))
+    {
+        for (uint8_t i = 0; i <= 6; i++)
+        {
+            if (SIDimensionalityGetNumExpAtIndex(theUnit->dimensionality, i))
+            {
                 result = OCStringCreateCopy(baseUnitRootName(i));
                 break;
             }
         }
-    } else {
-        if (theUnit->root_name) {
+    }
+    else
+    {
+        if (theUnit->root_name)
+        {
             result = OCStringCreateCopy(theUnit->root_name);
         }
     }
 
-    if (!result) {
+    if (!result)
+    {
         result = STR("");
     }
 
     return result;
 }
-
 
 OCStringRef SIUnitCopyRootPluralName(SIUnitRef theUnit)
 {
@@ -1216,8 +1283,6 @@ static bool AddAllSIPrefixedUnitsToLibrary(SIUnitRef rootUnit, OCStringRef quant
     return true;
 }
 
-
-
 static void AddNonSIUnitToLibrary(OCStringRef quantity, OCStringRef name, OCStringRef pluralName, OCStringRef symbol, double scale_to_coherent_si)
 {
     AddUnitForQuantityToLibrary(quantity,
@@ -1472,21 +1537,26 @@ void SIUnitsLibrarySetImperialVolumes(bool value)
 }
 
 // Add a cleanup function for static dictionaries and array
-void cleanupUnitsLibraries(void) {
+void cleanupUnitsLibraries(void)
+{
 
-    if(!unitsLibrary) return;
+    if (!unitsLibrary)
+        return;
 
-    if (unitsQuantitiesLibrary) {
+    if (unitsQuantitiesLibrary)
+    {
         OCRelease(unitsQuantitiesLibrary);
         unitsQuantitiesLibrary = NULL;
     }
 
-    if (unitsDimensionalitiesLibrary) {
+    if (unitsDimensionalitiesLibrary)
+    {
         OCRelease(unitsDimensionalitiesLibrary);
         unitsDimensionalitiesLibrary = NULL;
     }
 
-    if (unitsNamesLibrary) {
+    if (unitsNamesLibrary)
+    {
         OCRelease(unitsNamesLibrary);
         unitsNamesLibrary = NULL;
     }
@@ -1495,11 +1565,13 @@ void cleanupUnitsLibraries(void) {
     // to non-static instances.  If this dictionary is released first, then the static instances
     // will have been released and would be invalid in the other dictionaries above.
     OCArrayRef keys = OCDictionaryCreateArrayWithAllKeys((OCDictionaryRef)unitsLibrary);
-    if (keys) {
-        for (uint64_t i = 0; i < OCArrayGetCount(keys); i++) {
+    if (keys)
+    {
+        for (uint64_t i = 0; i < OCArrayGetCount(keys); i++)
+        {
 
-            OCStringRef key = (OCStringRef) OCArrayGetValueAtIndex(keys, i);
-            SIUnitRef unit = (SIUnitRef) OCDictionaryGetValue(unitsLibrary, key);
+            OCStringRef key = (OCStringRef)OCArrayGetValueAtIndex(keys, i);
+            SIUnitRef unit = (SIUnitRef)OCDictionaryGetValue(unitsLibrary, key);
 
             OCDictionaryRemoveValue(unitsLibrary, key);
             OCTypeSetStaticInstance(unit, false);
@@ -1509,10 +1581,7 @@ void cleanupUnitsLibraries(void) {
     }
     OCRelease(unitsLibrary);
     unitsLibrary = NULL;
-   
 }
-
-
 
 void UnitsLibraryCreate()
 {
@@ -4464,10 +4533,11 @@ static SIUnitRef SIUnitFindEquivalentDerivedSIUnit(SIUnitRef input)
                 }
             }
         }
-        if (closest == -1) {
+        if (closest == -1)
+        {
             OCRelease(candidates);
             return input;
-}
+        }
         SIUnitRef result = OCArrayGetValueAtIndex(candidates, closest);
         OCRelease(candidates);
         return result;
@@ -4485,16 +4555,18 @@ SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit)
     if (!candidates)
         return theUnit;
 
-    if (OCArrayGetCount(candidates) == 0) {
+    if (OCArrayGetCount(candidates) == 0)
+    {
         OCRelease(candidates);
         return theUnit;
     }
 
     SIUnitRef best = theUnit;
-    OCStringRef symbol     = SIUnitCopySymbol(theUnit);
+    OCStringRef symbol = SIUnitCopySymbol(theUnit);
     OCStringRef rootSymbol = SIUnitCopyRootSymbol(theUnit);
 
-    if (rootSymbol) {
+    if (rootSymbol)
+    {
         // clean up everything before returning
         OCRelease(symbol);
         OCRelease(rootSymbol);
@@ -4506,16 +4578,19 @@ SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit)
     int64_t length = OCStringGetLength(symbol);
     OCRelease(symbol);
 
-    for (uint64_t i = 0, cnt = OCArrayGetCount(candidates); i < cnt; i++) {
-        SIUnitRef    candidate          = OCArrayGetValueAtIndex(candidates, i);
-        OCStringRef  candidateSymbol    = SIUnitCopySymbol(candidate);
-        OCStringRef  candidateRootSym   = SIUnitCopyRootSymbol(candidate);
+    for (uint64_t i = 0, cnt = OCArrayGetCount(candidates); i < cnt; i++)
+    {
+        SIUnitRef candidate = OCArrayGetValueAtIndex(candidates, i);
+        OCStringRef candidateSymbol = SIUnitCopySymbol(candidate);
+        OCStringRef candidateRootSym = SIUnitCopyRootSymbol(candidate);
 
-        if (candidateRootSym) {
+        if (candidateRootSym)
+        {
             best = candidate;
         }
-        else if (OCStringGetLength(candidateSymbol) < length) {
-            best   = candidate;
+        else if (OCStringGetLength(candidateSymbol) < length)
+        {
+            best = candidate;
             length = OCStringGetLength(candidateSymbol);
         }
 
@@ -5094,13 +5169,17 @@ OCStringRef SIUnitGuessQuantityName(SIUnitRef theUnit)
     SIDimensionalityRef dimensionality = SIUnitGetDimensionality(theUnit);
     OCArrayRef quantityNames = SIDimensionalityCreateArrayOfQuantityNames(dimensionality);
 
-    if (quantityNames) {
-        if (OCArrayGetCount(quantityNames) > 0) {
+    if (quantityNames)
+    {
+        if (OCArrayGetCount(quantityNames) > 0)
+        {
             quantityName = OCArrayGetValueAtIndex(quantityNames, 0); // Borrowed
         }
         OCRelease(quantityNames);
         return quantityName;
-    } else {
+    }
+    else
+    {
         // Fall back to dimensionality symbol
         return SIDimensionalityGetSymbol(dimensionality);
 

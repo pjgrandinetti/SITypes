@@ -69,6 +69,32 @@ static OCStringRef __SIDimensionalityCopyFormattingDescription(OCTypeRef cf)
     return OCStringCreateWithCString("<SIDimensionality>");
 }
 
+static struct __SIDimensionality *SIDimensionalityAllocate(void);
+
+static void *__SIDimensionalityDeepCopy(const void *obj) {
+    if (!obj) return NULL;
+    const struct __SIDimensionality *src = obj;
+
+    // 1) allocate a fresh instance
+    struct __SIDimensionality *copy = SIDimensionalityAllocate();
+    if (!copy) return NULL;
+
+    // 2) copy all exponents
+    memcpy(copy->num_exp, src->num_exp, sizeof(src->num_exp));
+    memcpy(copy->den_exp, src->den_exp, sizeof(src->den_exp));
+
+    // 3) copy the cached symbol string (if any)
+    if (src->symbol)
+        copy->symbol = OCStringCreateCopy(src->symbol);
+
+    return copy;
+}
+
+// Mutable deep‐copy – for dimensionality these are the same
+static void *__SIDimensionalityDeepCopyMutable(const void *obj) {
+    return __SIDimensionalityDeepCopy(obj);
+}
+
 OCTypeID SIDimensionalityGetTypeID(void)
 {
     if (kSIDimensionalityID == _kOCNotATypeID)
@@ -78,11 +104,13 @@ OCTypeID SIDimensionalityGetTypeID(void)
 
 static struct __SIDimensionality *SIDimensionalityAllocate()
 {
-    struct __SIDimensionality *obj = OCTypeAlloc(struct __SIDimensionality,
-                                                 SIDimensionalityGetTypeID(),
-                                                 __SIDimensionalityFinalize,
-                                                 __SIDimensionalityEqual,
-                                                 __SIDimensionalityCopyFormattingDescription);
+struct __SIDimensionality *obj = OCTypeAlloc(struct __SIDimensionality,
+                                             SIDimensionalityGetTypeID(),
+                                             __SIDimensionalityFinalize,
+                                             __SIDimensionalityEqual,
+                                             __SIDimensionalityCopyFormattingDescription,
+                                             __SIDimensionalityDeepCopy,
+                                             __SIDimensionalityDeepCopyMutable);
     if (!obj) {
         fprintf(stderr, "SIDimensionalityAllocate: OCTypeAlloc failed.\n");
         return NULL;

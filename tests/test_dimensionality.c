@@ -2,12 +2,9 @@
 #include <assert.h>
 #include <stdio.h>
 
-void test_dimensionality_0(void) {
+bool test_dimensionality_0(void) {
     printf("Running %s...\n", __func__);
-
     OCStringRef err = NULL;
-
-    // Parse base dimension "L"
     SIDimensionalityRef dimensionality1 = SIDimensionalityForSymbol(STR("L"), &err);
     if (!dimensionality1) {
         if (err) {
@@ -16,14 +13,9 @@ void test_dimensionality_0(void) {
         }
         assert(0 && "Failed to create dimensionality1");
     }
-    // clean up any non-NULL err
     if (err) { OCRelease(err); err = NULL; }
 
-    return;
-    // grab its symbol (this returns an OCStringRef that you don't own)
     OCStringRef symbol1 = SIDimensionalityGetSymbol(dimensionality1);
-
-    // Create by symbol, same thing
     SIDimensionalityRef dimensionality2 = SIDimensionalityWithBaseDimensionSymbol(STR("L"), &err);
     if (!dimensionality2) {
         if (err) {
@@ -34,7 +26,6 @@ void test_dimensionality_0(void) {
     }
     if (err) { OCRelease(err); err = NULL; }
 
-    // compare
     assert(OCStringCompare(symbol1, STR("L"), 0) == kOCCompareEqualTo);
     assert(
         OCStringCompare(
@@ -43,220 +34,430 @@ void test_dimensionality_0(void) {
             0
         ) == kOCCompareEqualTo
     );
-
-    // check exponents
     assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSILengthIndex) == 1);
     assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSIMassIndex) == 0);
-    /* ... etc ... */
 
     printf("%s passed\n", __func__);
-
-    // cleanup the two dimensionality objects
     OCRelease(dimensionality1);
     OCRelease(dimensionality2);
+    return true;
 }
 
-void test_dimensionality_1(void) {
+bool test_dimensionality_1(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
 
-    // Parse complex symbol
     OCStringRef symbol = STR("L•M^2•T^3•I^4•ϴ^5•N^6•J^7/(L^2•M^3•T^4•I^5•ϴ^6•N^7•J^8)");
     SIDimensionalityRef dimensionality = SIDimensionalityForSymbol(symbol, &err);
     if (!dimensionality) {
-        if (err) { printf("Error parsing complex dimensionality: %s\n", OCStringGetCString(err)); OCRelease(err); }
-        assert(0 && "Failed to create dimensionality");
+        if (err) {
+            printf("Error parsing complex dimensionality: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        return false;
     }
-    if (err) { OCRelease(err); err = NULL; }
-    assert(SIDimensionalityGetNumExpAtIndex(dimensionality, kSILengthIndex) == 1);
-    assert(SIDimensionalityGetDenExpAtIndex(dimensionality, kSILengthIndex) == 2);
-    assert(SIDimensionalityReducedExponentAtIndex(dimensionality, kSILengthIndex) == -1);
+    if (err) { OCRelease(err); }
+
+    if (SIDimensionalityGetNumExpAtIndex(dimensionality, kSILengthIndex) != 1) return false;
+    if (SIDimensionalityGetDenExpAtIndex(dimensionality, kSILengthIndex) != 2) return false;
+    if (SIDimensionalityReducedExponentAtIndex(dimensionality, kSILengthIndex) != -1) return false;
+
     printf("%s passed\n", __func__);
     OCRelease(dimensionality);
+    return true;
 }
 
-void test_dimensionality_2(void) {
+bool test_dimensionality_2(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
 
-    // Get force and acceleration dimensionality
     SIDimensionalityRef force = SIDimensionalityForQuantity(kSIQuantityForce, &err);
-    if (!force) { if (err) { printf("Error parsing force quantity: %s\n", OCStringGetCString(err)); OCRelease(err); } assert(0 && "Failed to parse force"); }
-    OCRelease(err); err = NULL;
-    SIDimensionalityRef acceleration = SIDimensionalityForQuantity(kSIQuantityAcceleration, &err);
-    if (!acceleration) { if (err) { printf("Error parsing acceleration quantity: %s\n", OCStringGetCString(err)); OCRelease(err); } assert(0 && "Failed to parse acceleration"); }
-    OCRelease(err); err = NULL;
-    SIDimensionalityRef dimensionality = SIDimensionalityByDividing(force, acceleration);
-    SIDimensionalityRef mass = SIDimensionalityForQuantity(kSIQuantityMass, &err);
-    if (!mass) { if (err) { printf("Error parsing mass quantity: %s\n", OCStringGetCString(err)); OCRelease(err); } assert(0 && "Failed to parse mass"); }
-    OCRelease(err); err = NULL;
+    if (!force) {
+        if (err) {
+            printf("Error parsing force quantity: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        return false;
+    }
+    if (err) { OCRelease(err); err = NULL; }
 
-    assert(SIDimensionalityEqual(dimensionality, mass));
-    printf("%s passed\n", __func__);
+    SIDimensionalityRef acceleration = SIDimensionalityForQuantity(kSIQuantityAcceleration, &err);
+    if (!acceleration) {
+        if (err) {
+            printf("Error parsing acceleration quantity: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        OCRelease(force);
+        return false;
+    }
+    if (err) { OCRelease(err); err = NULL; }
+
+    SIDimensionalityRef dimensionality = SIDimensionalityByDividing(force, acceleration);
+
+    SIDimensionalityRef mass = SIDimensionalityForQuantity(kSIQuantityMass, &err);
+    if (!mass) {
+        if (err) {
+            printf("Error parsing mass quantity: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        OCRelease(force);
+        OCRelease(acceleration);
+        OCRelease(dimensionality);
+        return false;
+    }
+    if (err) { OCRelease(err); }
+
+    bool success = SIDimensionalityEqual(dimensionality, mass);
+    if (!success) {
+        printf("Error: dimensionality of force/acceleration does not equal mass.\n");
+    } else {
+        printf("%s passed\n", __func__);
+    }
+
     OCRelease(force);
     OCRelease(acceleration);
     OCRelease(dimensionality);
     OCRelease(mass);
+
+    return success;
 }
 
-void test_dimensionality_3(void) {
+bool test_dimensionality_3(void) {
     printf("Running %s...\n", __func__);
+    bool success = true;
     OCStringRef err = NULL;
-    // Test equality for commutative symbols
-    SIDimensionalityRef dim1 = SIDimensionalityForSymbol(STR("L*M"), &err);
-    SIDimensionalityRef dim2 = SIDimensionalityForSymbol(STR("M*L"), &err);
-    assert(SIDimensionalityEqual(dim1, dim2));
-    // Test reduced exponents for mixed powers
-    SIDimensionalityRef dim3 = SIDimensionalityForSymbol(STR("L^3*M^-2*T"), &err);
-    assert(SIDimensionalityHasReducedExponents(dim3, 3, -2, 1, 0, 0, 0, 0));
-    // Test dimensionless
-    SIDimensionalityRef dless = SIDimensionalityDimensionless();
-    assert(SIDimensionalityIsDimensionless(dless) && !SIDimensionalityIsDerived(dless));
-    // Test base dimension index and symbol consistency
+
+    SIDimensionalityRef dim1 = NULL, dim2 = NULL, dim3 = NULL, dless = NULL;
+    SIDimensionalityRef bySym = NULL, byIdx = NULL;
+
+    dim1 = SIDimensionalityForSymbol(STR("L*M"), &err);
+    dim2 = SIDimensionalityForSymbol(STR("M*L"), &err);
+    if (!dim1 || !dim2 || !SIDimensionalityEqual(dim1, dim2)) {
+        success = false;
+        goto cleanup;
+    }
+
+    dim3 = SIDimensionalityForSymbol(STR("L^3*M^-2*T"), &err);
+    if (!dim3 || !SIDimensionalityHasReducedExponents(dim3, 3, -2, 1, 0, 0, 0, 0)) {
+        success = false;
+        goto cleanup;
+    }
+
+    dless = SIDimensionalityDimensionless();
+    if (!SIDimensionalityIsDimensionless(dless) || SIDimensionalityIsDerived(dless)) {
+        success = false;
+        goto cleanup;
+    }
+
     for (int i = kSILengthIndex; i <= kSILuminousIntensityIndex; i++) {
         SIDimensionalityRef baseDim = SIDimensionalityForBaseDimensionIndex((SIBaseDimensionIndex)i);
-        assert(SIDimensionalityGetNumExpAtIndex(baseDim, i) == 1);
+        if (!baseDim || SIDimensionalityGetNumExpAtIndex(baseDim, i) != 1) {
+            OCRelease(baseDim);
+            success = false;
+            goto cleanup;
+        }
         for (int j = kSILengthIndex; j <= kSILuminousIntensityIndex; j++) {
-            if (i != j) {
-                assert(SIDimensionalityGetNumExpAtIndex(baseDim, (SIBaseDimensionIndex)j) == 0);
+            if (i != j && SIDimensionalityGetNumExpAtIndex(baseDim, (SIBaseDimensionIndex)j) != 0) {
+                OCRelease(baseDim);
+                success = false;
+                goto cleanup;
             }
         }
         OCRelease(baseDim);
     }
-    // Test WithBaseDimensionSymbol
-    SIDimensionalityRef bySym = SIDimensionalityWithBaseDimensionSymbol(STR("L"), &err);
-    SIDimensionalityRef byIdx = SIDimensionalityForBaseDimensionIndex(kSILengthIndex);
-    assert(SIDimensionalityEqual(bySym, byIdx));
-    OCRelease(bySym);
-    OCRelease(byIdx);
-    OCRelease(dim1);
-    OCRelease(dim2);
-    OCRelease(dim3);
-    OCRelease(dless);
-    printf("%s passed\n", __func__);
+
+    bySym = SIDimensionalityWithBaseDimensionSymbol(STR("L"), &err);
+    byIdx = SIDimensionalityForBaseDimensionIndex(kSILengthIndex);
+    if (!bySym || !byIdx || !SIDimensionalityEqual(bySym, byIdx)) {
+        success = false;
+        goto cleanup;
+    }
+
+cleanup:
+    if (dim1) OCRelease(dim1);
+    if (dim2) OCRelease(dim2);
+    if (dim3) OCRelease(dim3);
+    if (dless) OCRelease(dless);
+    if (bySym) OCRelease(bySym);
+    if (byIdx) OCRelease(byIdx);
+    if (err) OCRelease(err);
+
+    printf("%s %s\n", __func__, success ? "passed" : "failed ***");
+    return success;
 }
 
-void test_dimensionality_show(void) {
+bool test_dimensionality_show(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
+    bool success = true;
+
     // Get dimensionality for force
     SIDimensionalityRef force = SIDimensionalityForQuantity(kSIQuantityForce, &err);
     if (!force) {
-        if (err) { printf("Error obtaining force dimensionality: %s\n", OCStringGetCString(err)); OCRelease(err); }
-        assert(0 && "Failed to get force dimensionality");
+        if (err) {
+            printf("Error obtaining force dimensionality: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        return false;
     }
     if (err) { OCRelease(err); err = NULL; }
-    // Compare symbol to documentation: "L•M/T^2"
+
+    // Compare symbol to expected representation
     OCStringRef sym = SIDimensionalityGetSymbol(force);
-    assert(sym && OCStringCompare(sym, STR("L•M/T^2"), 0) == kOCCompareEqualTo);
-    printf("%s passed\n", __func__);
+    if (!sym || OCStringCompare(sym, STR("L•M/T^2"), 0) != kOCCompareEqualTo) {
+        success = false;
+    }
+
     OCRelease(force);
+
+    if (success) printf("%s passed\n", __func__);
+    return success;
 }
 
-void test_dimensionality_symbol_acceleration(void) {
+bool test_dimensionality_symbol_acceleration(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
-    // Acceleration dimensionality via symbol
+    bool success = true;
+
     SIDimensionalityRef accel = SIDimensionalityForSymbol(STR("L/T^2"), &err);
     if (!accel) {
-        if (err) { printf("Error parsing acceleration symbol: %s\n", OCStringGetCString(err)); OCRelease(err); }
-        assert(0 && "Failed to parse acceleration symbol");
+        if (err) {
+            printf("Error parsing acceleration symbol: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        return false;
     }
     if (err) { OCRelease(err); err = NULL; }
+
     OCStringRef symAccel = SIDimensionalityGetSymbol(accel);
-    assert(symAccel && OCStringCompare(symAccel, STR("L/T^2"), 0) == kOCCompareEqualTo);
-    printf("%s passed\n", __func__);
+    if (!symAccel || OCStringCompare(symAccel, STR("L/T^2"), 0) != kOCCompareEqualTo) {
+        success = false;
+    }
+
     OCRelease(accel);
+    if (success) printf("%s passed\n", __func__);
+    return success;
 }
 
-void test_dimensionality_divide_mass(void) {
+bool test_dimensionality_divide_mass(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
-    // mass = force / acceleration
+    bool success = true;
+
     SIDimensionalityRef force = SIDimensionalityForQuantity(kSIQuantityForce, &err);
-    assert(force && !err && "Failed to get force dimensionality");
+    if (!force || err) {
+        if (err) {
+            printf("Error getting force dimensionality: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        return false;
+    }
+
     SIDimensionalityRef accel = SIDimensionalityForSymbol(STR("L/T^2"), &err);
-    assert(accel && !err && "Failed to get acceleration dimensionality");
+    if (!accel || err) {
+        if (err) {
+            printf("Error getting acceleration dimensionality: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        OCRelease(force);
+        return false;
+    }
+
     SIDimensionalityRef mass = SIDimensionalityByDividing(force, accel);
     OCStringRef symMass = SIDimensionalityGetSymbol(mass);
-    assert(symMass && OCStringCompare(symMass, STR("M"), 0) == kOCCompareEqualTo);
-    printf("%s passed\n", __func__);
+    if (!symMass || OCStringCompare(symMass, STR("M"), 0) != kOCCompareEqualTo) {
+        success = false;
+    }
+
     OCRelease(force);
     OCRelease(accel);
     OCRelease(mass);
+
+    if (success) printf("%s passed\n", __func__);
+    return success;
 }
 
-void test_dimensionality_multiply_work(void) {
+bool test_dimensionality_multiply_work(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
+    bool success = true;
+
     // work = force * distance
     SIDimensionalityRef force = SIDimensionalityForQuantity(kSIQuantityForce, &err);
-    assert(force && !err && "Failed to get force dimensionality");
+    if (!force || err) {
+        if (err) {
+            printf("Error getting force dimensionality: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        return false;
+    }
+
     SIDimensionalityRef dist = SIDimensionalityForQuantity(kSIQuantityLength, &err);
-    assert(dist && !err && "Failed to get distance dimensionality");
+    if (!dist || err) {
+        if (err) {
+            printf("Error getting distance dimensionality: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        OCRelease(force);
+        return false;
+    }
+
     SIDimensionalityRef work = SIDimensionalityByMultiplying(force, dist, &err);
-    assert(work && !err && "Failed to multiply force and distance");
+    if (!work || err) {
+        if (err) {
+            printf("Error multiplying force and distance: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        OCRelease(force);
+        OCRelease(dist);
+        return false;
+    }
+
     OCStringRef symWork = SIDimensionalityGetSymbol(work);
-    assert(symWork && OCStringCompare(symWork, STR("L^2•M/T^2"), 0) == kOCCompareEqualTo);
-    printf("%s passed\n", __func__);
+    if (!symWork || OCStringCompare(symWork, STR("L^2•M/T^2"), 0) != kOCCompareEqualTo) {
+        success = false;
+    }
+
     OCRelease(force);
     OCRelease(dist);
     OCRelease(work);
+
+    if (success) printf("%s passed\n", __func__);
+    return success;
 }
 
-void test_dimensionality_power_area(void) {
+bool test_dimensionality_power_area(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
+    bool success = true;
+
     // area = distance^2
     SIDimensionalityRef dist = SIDimensionalityForQuantity(kSIQuantityLength, &err);
-    assert(dist && !err && "Failed to get distance dimensionality");
+    if (!dist || err) {
+        if (err) {
+            printf("Error getting distance dimensionality: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        return false;
+    }
+
     SIDimensionalityRef area = SIDimensionalityByRaisingToAPower(dist, 2, &err);
-    assert(area && !err && "Failed to raise dimensionality to power");
+    if (!area || err) {
+        if (err) {
+            printf("Error raising dimensionality to power: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        OCRelease(dist);
+        return false;
+    }
+
     OCStringRef symArea = SIDimensionalityGetSymbol(area);
-    assert(symArea && OCStringCompare(symArea, STR("L^2"), 0) == kOCCompareEqualTo);
-    printf("%s passed\n", __func__);
+    if (!symArea || OCStringCompare(symArea, STR("L^2"), 0) != kOCCompareEqualTo) {
+        success = false;
+    }
+
     OCRelease(dist);
     OCRelease(area);
+
+    if (success) printf("%s passed\n", __func__);
+    return success;
 }
 
-void test_dimensionality_reduction_behavior(void) {
+bool test_dimensionality_reduction_behavior(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
-    // Base dimensionalities
+    bool success = true;
+
     SIDimensionalityRef dist = SIDimensionalityForQuantity(kSIQuantityLength, &err);
-    if (!dist) { if (err) { printf("Error obtaining length dimensionality: %s\n", OCStringGetCString(err)); OCRelease(err); } assert(0 && "Failed to get length dimensionality"); }
+    if (!dist || err) {
+        if (err) {
+            printf("Error obtaining length dimensionality: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        return false;
+    }
     OCRelease(err); err = NULL;
-    // angle = dist/dist (reduced)
+
     SIDimensionalityRef angle = SIDimensionalityByDividing(dist, dist);
     OCStringRef symAngle = SIDimensionalityGetSymbol(angle);
-    assert(symAngle && OCStringCompare(symAngle, STR("1"), 0) == kOCCompareEqualTo);
-    // solidAngle = area/area (reduced), area = dist^2
+    if (!symAngle || OCStringCompare(symAngle, STR("1"), 0) != kOCCompareEqualTo) success = false;
+
     SIDimensionalityRef area = SIDimensionalityByRaisingToAPower(dist, 2, &err);
-    if (!area) { if (err) { printf("Error raising to power: %s\n", OCStringGetCString(err)); OCRelease(err); } assert(0 && "Failed to compute area dimensionality"); }
-    if (err) { OCRelease(err); err = NULL; }
+    if (!area || err) {
+        if (err) {
+            printf("Error raising to power: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        OCRelease(dist);
+        OCRelease(angle);
+        return false;
+    }
+    OCRelease(err); err = NULL;
+
     SIDimensionalityRef solidAngle = SIDimensionalityByDividing(area, area);
     OCStringRef symSolid = SIDimensionalityGetSymbol(solidAngle);
-    assert(symSolid && OCStringCompare(symSolid, STR("1"), 0) == kOCCompareEqualTo);
-    // non-reduced versions
+    if (!symSolid || OCStringCompare(symSolid, STR("1"), 0) != kOCCompareEqualTo) success = false;
+
     SIDimensionalityRef angleDerived = SIDimensionalityByDividingWithoutReducing(dist, dist);
     OCStringRef symAD = SIDimensionalityGetSymbol(angleDerived);
-    assert(symAD && OCStringCompare(symAD, STR("L/L"), 0) == kOCCompareEqualTo);
+    if (!symAD || OCStringCompare(symAD, STR("L/L"), 0) != kOCCompareEqualTo) success = false;
+
     SIDimensionalityRef solidDerived = SIDimensionalityByDividingWithoutReducing(area, area);
     OCStringRef symSD = SIDimensionalityGetSymbol(solidDerived);
-    assert(symSD && OCStringCompare(symSD, STR("L^2/L^2"), 0) == kOCCompareEqualTo);
-    // equality checks
-    assert(SIDimensionalityEqual(angle, solidAngle));
-    assert(!SIDimensionalityEqual(angleDerived, solidDerived));
-    assert(SIDimensionalityHasSameReducedDimensionality(angle, solidAngle));
-    assert(SIDimensionalityHasSameReducedDimensionality(angleDerived, solidDerived));
-    // dimensionless test
-    assert(SIDimensionalityIsDimensionless(angleDerived));
-    printf("%s passed\n", __func__);
-    // cleanup
+    if (!symSD || OCStringCompare(symSD, STR("L^2/L^2"), 0) != kOCCompareEqualTo) success = false;
+
+    if (!SIDimensionalityEqual(angle, solidAngle)) success = false;
+    if (SIDimensionalityEqual(angleDerived, solidDerived)) success = false;
+    if (!SIDimensionalityHasSameReducedDimensionality(angle, solidAngle)) success = false;
+    if (!SIDimensionalityHasSameReducedDimensionality(angleDerived, solidDerived)) success = false;
+    if (!SIDimensionalityIsDimensionless(angleDerived)) success = false;
+
+    if (success) printf("%s passed\n", __func__);
+
     OCRelease(dist);
     OCRelease(angle);
     OCRelease(area);
     OCRelease(solidAngle);
     OCRelease(angleDerived);
     OCRelease(solidDerived);
+
+    return success;
+}
+
+bool test_dimensionality_deep_copy(void) {
+    printf("Running %s...\n", __func__);
+    bool success = true;
+    OCStringRef err = NULL;
+
+    SIDimensionalityRef original = NULL;
+    SIDimensionalityRef copy = NULL;
+    SIDimensionalityRef mutableCopy = NULL;
+
+    original = SIDimensionalityForSymbol(STR("L•M^2/T"), &err);
+    if (!original || err) {
+        success = false;
+        goto cleanup;
+    }
+
+    copy = OCTypeDeepCopy(original);
+    if (!copy || !SIDimensionalityEqual(original, copy) || original == copy) {
+        success = false;
+        goto cleanup;
+    }
+
+    mutableCopy = OCTypeDeepCopyMutable(original);
+    if (!mutableCopy || !SIDimensionalityEqual(original, mutableCopy) || original == mutableCopy) {
+        success = false;
+        goto cleanup;
+    }
+
+    // Note: No mutation is attempted here due to lack of a public mutator.
+
+cleanup:
+    if (original) OCRelease(original);
+    if (copy) OCRelease(copy);
+    if (mutableCopy) OCRelease(mutableCopy);
+
+    printf("%s %s\n", __func__, success ? "passed" : "failed");
+    return success;
 }

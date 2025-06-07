@@ -117,6 +117,34 @@ static OCStringRef __SIScalarCopyFormattingDescription(OCTypeRef theType)
     return result;
 }
 
+static SIScalarRef SIScalarCreate(SIUnitRef unit, SINumberType type, void *value);
+static SIMutableScalarRef SIScalarCreateMutable(SIUnitRef unit, SINumberType type, void *value);
+
+static void *__SIScalarDeepCopy(const void *theType) {
+    if (!theType) return NULL;
+    SIScalarRef original = (SIScalarRef)theType;
+
+    SIUnitRef copiedUnit = OCTypeDeepCopy(original->unit);
+    if (!copiedUnit) return NULL;
+
+    SIScalarRef copy = SIScalarCreate(copiedUnit, original->type, (void *)&original->value);
+    OCRelease(copiedUnit);
+    return (void *) copy;
+}
+
+
+static void *__SIScalarDeepCopyMutable(const void *theType) {
+    if (!theType) return NULL;
+    SIScalarRef original = (SIScalarRef)theType;
+
+    SIUnitRef copiedUnit = OCTypeDeepCopy(original->unit);
+    if (!copiedUnit) return NULL;
+
+    SIMutableScalarRef copy = SIScalarCreateMutable(copiedUnit, original->type, (void *)&original->value);
+    OCRelease(copiedUnit);
+    return (void *) copy;
+}
+
 // Expose the formatting description function
 OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar) {
     return __SIScalarCopyFormattingDescription((OCTypeRef) scalar);
@@ -131,11 +159,12 @@ OCTypeID SIScalarGetTypeID(void)
 static struct __SIScalar *SIScalarAllocate(void)
 {
     struct __SIScalar *obj = OCTypeAlloc(struct __SIScalar,
-                                         SIScalarGetTypeID(),
-                                         __SIScalarFinalize,
-                                         __SIScalarEqual,
-                                         __SIScalarCopyFormattingDescription);
-    // Type-specific initialization
+                                        SIScalarGetTypeID(),
+                                        __SIScalarFinalize,
+                                        __SIScalarEqual,
+                                        __SIScalarCopyFormattingDescription,
+                                        __SIScalarDeepCopy,
+                                        __SIScalarDeepCopyMutable);
     obj->unit = NULL;
     obj->type = kSINumberFloat32Type;
     memset(&obj->value, 0, sizeof(obj->value));

@@ -1,15 +1,5 @@
-//
-//  main.c
-//  SILibTests
-//
-//  Created by Philip Grandinetti on 6/13/17.
-//  Copyright © 2017 PhySy Ltd. All rights reserved.
-//
-
-// Using <assert.h> in tests; main just invokes test functions
-
 #include <stdio.h>
-#include "../src/SILibrary.h" // Updated include path to resolve missing header issue
+#include "../src/SILibrary.h"
 #include "test_octypes.h"
 #include "test_dimensionality.h"
 #include "test_unit.h"
@@ -22,53 +12,64 @@
 extern void __lsan_do_leak_check() __attribute__((weak));
 #endif
 
+int failed_tests = 0;
+
 #define TRACK_SCALAR_LEAK(test_fn) do { \
     size_t before = OCLeakCountForType(SIScalarGetTypeID()); \
-    test_fn(); \
+    if (!test_fn()) { \
+        printf("[FAIL] %s\n", #test_fn); \
+        failed_tests++; \
+    } \
     size_t after = OCLeakCountForType(SIScalarGetTypeID()); \
     if (after > before) { \
         printf("[LEAK] %s leaked %zu SIScalar(s)\n", #test_fn, after - before); \
     } \
 } while(0)
 
+#define TRACK(test_fn) do { \
+    if (!test_fn()) { \
+        printf("[FAIL] %s\n", #test_fn); \
+        failed_tests++; \
+    } \
+} while(0)
+
 int main(int argc, const char * argv[]) {
 
-
     printf("=== OCTypes Tests ===\n");
-    octypesTest1();
-    octypesTest2();
-    octypesTest3();
-    octypesTest4();
-    octypesTest5();
-    octypesTest6();
-
+    TRACK(octypesTest1);
+    TRACK(octypesTest2);
+    TRACK(octypesTest3);
+    TRACK(octypesTest4);
+    TRACK(octypesTest5);
+    TRACK(octypesTest6);
 
     printf("\n=== Dimensionality Tests ===\n");
-    test_dimensionality_0();
-    test_dimensionality_1();
-    test_dimensionality_2();
-    test_dimensionality_3();
-    test_dimensionality_show();
-    test_dimensionality_symbol_acceleration();
-    test_dimensionality_divide_mass();
-    test_dimensionality_multiply_work();
-    test_dimensionality_power_area();
-    test_dimensionality_reduction_behavior();
+    TRACK(test_dimensionality_0);
+    TRACK(test_dimensionality_1);
+    TRACK(test_dimensionality_2);
+    TRACK(test_dimensionality_3);
+    TRACK(test_dimensionality_show);
+    TRACK(test_dimensionality_symbol_acceleration);
+    TRACK(test_dimensionality_divide_mass);
+    TRACK(test_dimensionality_multiply_work);
+    TRACK(test_dimensionality_power_area);
+    TRACK(test_dimensionality_reduction_behavior);
+    TRACK(test_dimensionality_deep_copy);
 
     printf("\n=== SIUnit Tests ===\n");
-    test_unit_0();
-    test_unit_1();
-    test_unit_3();
-    test_unit_4();
-    test_unit_5();
-    test_unit_6();
-    test_unit_7();
-    test_unit_8();
-    test_unit_9();
-    test_unit_10();
-    test_unit_11();
-    test_unit_12();
-    test_unit_13();
+    TRACK(test_unit_0);
+    TRACK(test_unit_1);
+    TRACK(test_unit_3);
+    TRACK(test_unit_4);
+    TRACK(test_unit_5);
+    TRACK(test_unit_6);
+    TRACK(test_unit_7);
+    TRACK(test_unit_8);
+    TRACK(test_unit_9);
+    TRACK(test_unit_10);
+    TRACK(test_unit_11);
+    TRACK(test_unit_12);
+    TRACK(test_unit_13);
 
     printf("\n=== SIScalar Parser Tests ===\n");
     TRACK_SCALAR_LEAK(test_scalar_parser_1);
@@ -81,7 +82,6 @@ int main(int argc, const char * argv[]) {
     TRACK_SCALAR_LEAK(test_scalar_parser_8);
     TRACK_SCALAR_LEAK(test_scalar_parser_9);
     TRACK_SCALAR_LEAK(test_scalar_parser_10);
-
 
     printf("\n=== SIScalar Tests ===\n");
     TRACK_SCALAR_LEAK(test_SIScalarGetTypeID);
@@ -105,7 +105,6 @@ int main(int argc, const char * argv[]) {
     TRACK_SCALAR_LEAK(test_SIScalarDoubleValue);
     TRACK_SCALAR_LEAK(test_SIScalarFloatComplexValue);
     TRACK_SCALAR_LEAK(test_SIScalarDoubleComplexValue);
-
     TRACK_SCALAR_LEAK(test_SIScalarCreateByConvertingToNumberType);
     TRACK_SCALAR_LEAK(test_SIScalarTakeComplexPart);
     TRACK_SCALAR_LEAK(test_SIScalarCreateByTakingComplexPart);
@@ -165,9 +164,7 @@ int main(int argc, const char * argv[]) {
     TRACK_SCALAR_LEAK(test_SIScalarCompareReduced);
     TRACK_SCALAR_LEAK(test_SIScalarCompareLoose);
 
-
-    // Print summary message if all tests pass
-    printf("\nAll tests passed\n");
+    printf("\n%d test(s) failed\n", failed_tests);
 
 #ifdef LEAK_SANITIZER
     if (&__lsan_do_leak_check) {
@@ -175,6 +172,5 @@ int main(int argc, const char * argv[]) {
     }
 #endif
 
-   return 0;
-
+    return failed_tests > 0 ? 1 : 0;
 }

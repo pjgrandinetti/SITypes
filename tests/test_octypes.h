@@ -2,11 +2,11 @@
 #define TEST_OCTYPES_H
 
 // Declare all test functions from octypes_tests.c
-void octypesTest1(void);
-void octypesTest2(void);
-void octypesTest3(void);
-void octypesTest4(void);
-void octypesTest5(void);
-void octypesTest6(void);
+bool octypesTest1(void);
+bool octypesTest2(void);
+bool octypesTest3(void);
+bool octypesTest4(void);
+bool octypesTest5(void);
+bool octypesTest6(void);
 
 #endif /* TEST_OCTYPES_H */
