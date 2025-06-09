@@ -538,7 +538,7 @@ SIDimensionalityRef SIDimensionalityByDividing(SIDimensionalityRef theDim1, SIDi
     return SIDimensionalityByReducing(SIDimensionalityByDividingWithoutReducing(theDim1, theDim2));
 }
 
-SIDimensionalityRef SIDimensionalityByRaisingToAPowerWithoutReducing(SIDimensionalityRef theDim, double power, OCStringRef *error)
+SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensionalityRef theDim, double power, OCStringRef *error)
 {
     /*
      *	This routine will create an derived SI Dimensionality formed by the raising theDim to a power.
@@ -593,12 +593,12 @@ SIDimensionalityRef SIDimensionalityByRaisingToAPowerWithoutReducing(SIDimension
                                          num_exp[kSILuminousIntensityIndex], den_exp[kSILuminousIntensityIndex]);
 }
 
-SIDimensionalityRef SIDimensionalityByRaisingToAPower(SIDimensionalityRef theDim, double power, OCStringRef *error)
+SIDimensionalityRef SIDimensionalityByRaisingToPower(SIDimensionalityRef theDim, double power, OCStringRef *error)
 {
     if (error)
         if (*error)
             return NULL;
-    return SIDimensionalityByReducing(SIDimensionalityByRaisingToAPowerWithoutReducing(theDim, power, error));
+    return SIDimensionalityByReducing(SIDimensionalityByRaisingToPowerWithoutReducing(theDim, power, error));
 }
 
 SIDimensionalityRef SIDimensionalityByMultiplyingWithoutReducing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2, OCStringRef *error)
@@ -614,7 +614,7 @@ SIDimensionalityRef SIDimensionalityByMultiplyingWithoutReducing(SIDimensionalit
     IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL);
     IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL);
     if (theDim1 == theDim2)
-        return SIDimensionalityByRaisingToAPowerWithoutReducing(theDim1, 2, error);
+        return SIDimensionalityByRaisingToPowerWithoutReducing(theDim1, 2, error);
 
     uint8_t num_exp[BASE_DIMENSION_COUNT];
     uint8_t den_exp[BASE_DIMENSION_COUNT];
@@ -1972,19 +1972,19 @@ static void cleanupDimensionalityLibraries(void)
 }
 
 void SITypesShutdown(void) {
-#if defined(DEBUG) && !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
+#if !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
     OCReportLeaksForType(SIScalarGetTypeID());
 #endif
 
     cleanupUnitsLibraries();
 
-#if defined(DEBUG) && !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
+#if !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
     OCReportLeaksForType(SIUnitGetTypeID());
 #endif
 
     cleanupDimensionalityLibraries();
 
-#if defined(DEBUG) && !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
+#if !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
     OCReportLeaksForType(SIDimensionalityGetTypeID());
 #endif
 }

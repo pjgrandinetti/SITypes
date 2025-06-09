@@ -238,13 +238,13 @@ SIScalarRef SIScalarCreateByDividing(SIScalarRef input1, SIScalarRef input2, OCS
 bool SIScalarDivide(SIMutableScalarRef target, SIScalarRef input2, OCStringRef *error);
 
 /** @brief Create a new SIScalar by raising a scalar to a power without simplifying the unit. */
-SIScalarRef SIScalarCreateByRaisingToAPowerWithoutReducingUnit(SIScalarRef theScalar, double power, OCStringRef *error);
+SIScalarRef SIScalarCreateByRaisingToPowerWithoutReducingUnit(SIScalarRef theScalar, double power, OCStringRef *error);
 
 /** @brief Raises a mutable scalar to a power without simplifying the unit in place. */
 bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar, double power, OCStringRef *error);
 
 /** @brief Create a new SIScalar by raising a scalar to a power. */
-SIScalarRef SIScalarCreateByRaisingToAPower(SIScalarRef theScalar, double power, OCStringRef *error);
+SIScalarRef SIScalarCreateByRaisingToPower(SIScalarRef theScalar, double power, OCStringRef *error);
 
 /** @brief Raises a mutable scalar to a power in place. */
 bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar, double power, OCStringRef *error);
@@ -358,5 +358,41 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
 OCComparisonResult SIScalarCompareLooseReduced(SIScalarRef theScalar, SIScalarRef theOtherScalar);
 
 OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar);
+
+
+#pragma mark Best‐fit Unit Conversion
+
+/*!
+ @brief  Pick the “best” SI unit for this scalar (so the mantissa is ~1–1000)
+ @param  theScalar   mutable scalar to rescale in-place
+ @param  quantity    a quantity name (e.g. "time", "length", …)
+ @param  outError    on failure, set to an OCStringRef describing the problem
+ @return true on success, false (and *outError) otherwise
+ */
+bool SIScalarBestConversionForQuantity(SIMutableScalarRef theScalar,
+                                       OCStringRef        quantity,
+                                       OCStringRef       *outError);
+
+/*!
+ @brief  For a given scalar, return an array of alternate‐unit scalars and (optionally) string splits
+ @param  theScalar      the input scalar
+ @param  quantity       if non-NULL, only units for that quantity
+ @param  outError       on failure, set to an OCStringRef
+ @result an OCArray of SIScalarRef and OCStringRef entries
+ */
+OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SIScalarRef  theScalar,
+                                                                            OCStringRef  quantity,
+                                                                            OCStringRef *outError);
+
+/*!
+ @brief  Like above, but just returns the units themselves
+ @param  theScalar      the input scalar
+ @param  quantity       if non-NULL, only units for that quantity
+ @param  outError       on failure, set to an OCStringRef
+ @result an OCArray of SIUnitRef entries
+ */
+OCArrayRef SIScalarCreateArrayOfConversionQuantitiesAndUnits(SIScalarRef theScalar,
+                                                             OCStringRef quantity,
+                                                             OCStringRef *outError);
 
 #endif /* SIScalar_h */

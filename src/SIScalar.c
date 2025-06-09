@@ -844,43 +844,79 @@ SIScalarRef SIScalarCreateByConvertingToCoherentUnit(SIScalarRef theScalar, OCSt
     return NULL;
 }
 
-bool SIScalarBestConversionForQuantity(SIMutableScalarRef theScalar, OCStringRef quantity, OCStringRef *error)
+
+#include <float.h>
+#include <math.h>
+
+bool SIScalarBestConversionForQuantity(SIMutableScalarRef theScalar,
+                                       OCStringRef        quantity,
+                                       OCStringRef       *outError)
 {
-    if(error) if(*error) return NULL;
-    if(NULL==quantity) return false;
-    OCArrayRef units = SIUnitCreateArrayOfUnitsForQuantity(quantity);
-    if(units==NULL) return false;
-    
-    SIMutableScalarRef trialScalar = SIScalarCreateMutableCopy(theScalar);
-    
-    if(!SIScalarConvertToUnit(trialScalar, OCArrayGetValueAtIndex(units, 0), error)) {
-        OCRelease(units);
-        OCRelease(trialScalar);
+    if (outError) *outError = NULL;
+    if (!quantity) {
+        if (outError) *outError = STR("quantity is NULL");
         return false;
     }
-    int originalMagnitude = fabs(log10(fabs(SIScalarDoubleValue(theScalar))));
-    int magnitude = originalMagnitude;
-    uint64_t best = 0;
-    for(uint64_t index=1; index<OCArrayGetCount(units); index++) {
-        SIUnitRef unit = OCArrayGetValueAtIndex(units, index);
-        if(!SIScalarConvertToUnit(trialScalar, unit, error)) {
-            OCRelease(trialScalar);
+
+    OCArrayRef units = SIUnitCreateArrayOfUnitsForQuantity(quantity);
+    if (!units) {
+        if (outError) *outError = STR("no units available for quantity");
+        return false;
+    }
+
+    // If exactly zero, nothing to do
+    double v0 = fabs(SIScalarDoubleValueInCoherentUnit(theScalar));
+    if (v0 == 0.0) {
+        OCRelease(units);
+        return true;
+    }
+
+    size_t  nUnits     = OCArrayGetCount(units);
+    int     bestIdx    = -1;
+    double  bestScore  = DBL_MAX;
+
+    // Try each unit
+    for (size_t i = 0; i < nUnits; ++i) {
+        SIUnitRef u = OCArrayGetValueAtIndex(units, i);
+
+        // work on a fresh copy
+        SIMutableScalarRef trial = SIScalarCreateMutableCopy(theScalar);
+        if (!trial) {
+            OCRelease(units);
+            if (outError) *outError = STR("couldn't copy scalar");
+            return false;
+        }
+        if (!SIScalarConvertToUnit(trial, u, outError)) {
+            OCRelease(trial);
             OCRelease(units);
             return false;
         }
-        int trialMagnitude = fabs(log10(fabs(SIScalarDoubleValue(trialScalar))));
-        if(trialMagnitude < magnitude) {
-            best = index;
-            magnitude = trialMagnitude;
+
+        double val = SIScalarDoubleValue(trial);
+        double av  = fabs(val);
+        OCRelease(trial);
+
+        // only consider those in [1,1000)
+        if (av >= 1.0 && av < 1000.0) {
+            double score = fabs(log10(av));
+            if (score < bestScore) {
+                bestScore = score;
+                bestIdx   = (int)i;
+            }
         }
     }
-    bool result = true;
-    if(abs(originalMagnitude - magnitude)>2) {
-        result = SIScalarConvertToUnit(theScalar, OCArrayGetValueAtIndex(units, best), error);
+
+    // if we found a good “[1,1000)” unit, convert to it
+    if (bestIdx >= 0) {
+        SIUnitRef bestU = OCArrayGetValueAtIndex(units, bestIdx);
+        if (!SIScalarConvertToUnit(theScalar, bestU, outError)) {
+            OCRelease(units);
+            return false;
+        }
     }
-    OCRelease(trialScalar);
+
     OCRelease(units);
-    return result;
+    return true;
 }
 
 bool SIScalarAdd(SIMutableScalarRef target, SIScalarRef input2, OCStringRef *error)
@@ -1302,7 +1338,7 @@ bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar, doub
     return false;
 }
 
-SIScalarRef SIScalarCreateByRaisingToAPowerWithoutReducingUnit(SIScalarRef theScalar, double power, OCStringRef *error)
+SIScalarRef SIScalarCreateByRaisingToPowerWithoutReducingUnit(SIScalarRef theScalar, double power, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
     
@@ -1346,7 +1382,7 @@ bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar, double power, OCStringR
     return false;
 }
 
-SIScalarRef SIScalarCreateByRaisingToAPower(SIScalarRef theScalar, double power, OCStringRef *error)
+SIScalarRef SIScalarCreateByRaisingToPower(SIScalarRef theScalar, double power, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
    	IF_NO_OBJECT_EXISTS_RETURN(theScalar,NULL);

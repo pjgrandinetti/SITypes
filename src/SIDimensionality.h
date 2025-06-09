@@ -148,10 +148,10 @@ SIDimensionalityRef SIDimensionalityByDividing(SIDimensionalityRef theDim1, SIDi
 SIDimensionalityRef SIDimensionalityByDividingWithoutReducing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
 
 /** @brief Raises a dimensionality to a real power, reduces exponents. */
-SIDimensionalityRef SIDimensionalityByRaisingToAPower(SIDimensionalityRef theDim, double power, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByRaisingToPower(SIDimensionalityRef theDim, double power, OCStringRef *error);
 
 /** @brief Raises a dimensionality to a real power, without reducing exponents. */
-SIDimensionalityRef SIDimensionalityByRaisingToAPowerWithoutReducing(SIDimensionalityRef theDim, double power, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensionalityRef theDim, double power, OCStringRef *error);
 
 /** @brief Returns all quantity names matching this dimensionality exactly. */
 OCArrayRef SIDimensionalityCreateArrayOfQuantities(SIDimensionalityRef theDim);

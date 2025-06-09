@@ -341,7 +341,7 @@ bool test_dimensionality_power_area(void) {
         return false;
     }
 
-    SIDimensionalityRef area = SIDimensionalityByRaisingToAPower(dist, 2, &err);
+    SIDimensionalityRef area = SIDimensionalityByRaisingToPower(dist, 2, &err);
     if (!area || err) {
         if (err) {
             printf("Error raising dimensionality to power: %s\n", OCStringGetCString(err));
@@ -382,7 +382,7 @@ bool test_dimensionality_reduction_behavior(void) {
     OCStringRef symAngle = SIDimensionalityGetSymbol(angle);
     if (!symAngle || OCStringCompare(symAngle, STR("1"), 0) != kOCCompareEqualTo) success = false;
 
-    SIDimensionalityRef area = SIDimensionalityByRaisingToAPower(dist, 2, &err);
+    SIDimensionalityRef area = SIDimensionalityByRaisingToPower(dist, 2, &err);
     if (!area || err) {
         if (err) {
             printf("Error raising to power: %s\n", OCStringGetCString(err));

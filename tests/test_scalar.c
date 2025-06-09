@@ -1821,28 +1821,28 @@ bool test_SIScalarDivide(void) {
     return true;
 }
 
-bool test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit(void) {
+bool test_SIScalarCreateByRaisingToPowerWithoutReducingUnit(void) {
     SIUnitRef m = SIUnitForUnderivedSymbol(STR("m"));
     if (!m) {
-        printf("test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit failed: Failed to retrieve unit 'm'\n");
+        printf("test_SIScalarCreateByRaisingToPowerWithoutReducingUnit failed: Failed to retrieve unit 'm'\n");
         return false;
     }
 
     SIScalarRef s = SIScalarCreateWithFloat(2.0f, m); // 2 m
     if (!s) {
-        printf("test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit failed: Failed to create base scalar\n");
+        printf("test_SIScalarCreateByRaisingToPowerWithoutReducingUnit failed: Failed to create base scalar\n");
         OCRelease(m);
         return false;
     }
 
     OCStringRef error = NULL;
-    SIScalarRef pow_s = SIScalarCreateByRaisingToAPowerWithoutReducingUnit(s, 3.0, &error);
+    SIScalarRef pow_s = SIScalarCreateByRaisingToPowerWithoutReducingUnit(s, 3.0, &error);
     if (!pow_s) {
         if (error) {
-            printf("test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit failed: Power operation error: %s\n", OCStringGetCString(error));
+            printf("test_SIScalarCreateByRaisingToPowerWithoutReducingUnit failed: Power operation error: %s\n", OCStringGetCString(error));
             OCRelease(error);
         } else {
-            printf("test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit failed: Operation returned NULL without error\n");
+            printf("test_SIScalarCreateByRaisingToPowerWithoutReducingUnit failed: Operation returned NULL without error\n");
         }
         OCRelease(s);
         OCRelease(m);
@@ -1850,7 +1850,7 @@ bool test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit(void) {
     }
 
     if (error != NULL) {
-        printf("test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit failed: Unexpected error string after success\n");
+        printf("test_SIScalarCreateByRaisingToPowerWithoutReducingUnit failed: Unexpected error string after success\n");
         OCRelease(error);
         OCRelease(s);
         OCRelease(pow_s);
@@ -1860,7 +1860,7 @@ bool test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit(void) {
 
     float result = SIScalarFloatValue(pow_s);
     if (fabsf(result - 8.0f) >= 1e-6f) {
-        printf("test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit failed: Expected 8.0f, got %.6f\n", result);
+        printf("test_SIScalarCreateByRaisingToPowerWithoutReducingUnit failed: Expected 8.0f, got %.6f\n", result);
         OCRelease(s);
         OCRelease(pow_s);
         OCRelease(m);
@@ -1870,7 +1870,7 @@ bool test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit(void) {
     OCRelease(s);
     OCRelease(pow_s);
     OCRelease(m);
-    printf("test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit passed\n");
+    printf("test_SIScalarCreateByRaisingToPowerWithoutReducingUnit passed\n");
     return true;
 }
 
@@ -1925,28 +1925,28 @@ bool test_SIScalarRaiseToAPowerWithoutReducingUnit(void) {
 }
 
 
-bool test_SIScalarCreateByRaisingToAPower(void) {
+bool test_SIScalarCreateByRaisingToPower(void) {
     SIUnitRef m = SIUnitForUnderivedSymbol(STR("m"));
     if (!m) {
-        printf("test_SIScalarCreateByRaisingToAPower failed: Failed to retrieve unit 'm'\n");
+        printf("test_SIScalarCreateByRaisingToPower failed: Failed to retrieve unit 'm'\n");
         return false;
     }
 
     SIScalarRef s = SIScalarCreateWithFloat(2.0f, m); // 2 m
     if (!s) {
-        printf("test_SIScalarCreateByRaisingToAPower failed: Failed to create base scalar\n");
+        printf("test_SIScalarCreateByRaisingToPower failed: Failed to create base scalar\n");
         OCRelease(m);
         return false;
     }
 
     OCStringRef error = NULL;
-    SIScalarRef pow_s = SIScalarCreateByRaisingToAPower(s, 3.0, &error);
+    SIScalarRef pow_s = SIScalarCreateByRaisingToPower(s, 3.0, &error);
     if (!pow_s) {
         if (error) {
-            printf("test_SIScalarCreateByRaisingToAPower failed: Power operation error: %s\n", OCStringGetCString(error));
+            printf("test_SIScalarCreateByRaisingToPower failed: Power operation error: %s\n", OCStringGetCString(error));
             OCRelease(error);
         } else {
-            printf("test_SIScalarCreateByRaisingToAPower failed: Operation returned NULL without error message\n");
+            printf("test_SIScalarCreateByRaisingToPower failed: Operation returned NULL without error message\n");
         }
         OCRelease(s);
         OCRelease(m);
@@ -1954,7 +1954,7 @@ bool test_SIScalarCreateByRaisingToAPower(void) {
     }
 
     if (error != NULL) {
-        printf("test_SIScalarCreateByRaisingToAPower failed: Unexpected error string after successful operation\n");
+        printf("test_SIScalarCreateByRaisingToPower failed: Unexpected error string after successful operation\n");
         OCRelease(error);
         OCRelease(s);
         OCRelease(pow_s);
@@ -1964,7 +1964,7 @@ bool test_SIScalarCreateByRaisingToAPower(void) {
 
     float result = SIScalarFloatValue(pow_s);
     if (fabsf(result - 8.0f) >= 1e-6f) {
-        printf("test_SIScalarCreateByRaisingToAPower failed: Expected 8.0f, got %.6f\n", result);
+        printf("test_SIScalarCreateByRaisingToPower failed: Expected 8.0f, got %.6f\n", result);
         OCRelease(s);
         OCRelease(pow_s);
         OCRelease(m);
@@ -1974,7 +1974,7 @@ bool test_SIScalarCreateByRaisingToAPower(void) {
     OCRelease(s);
     OCRelease(pow_s);
     OCRelease(m);
-    printf("test_SIScalarCreateByRaisingToAPower passed\n");
+    printf("test_SIScalarCreateByRaisingToPower passed\n");
     return true;
 }
 
@@ -3582,3 +3582,219 @@ fail:
     return false;
 }
 
+
+
+// -----------------------------------------------------------------------------
+// Test SIScalarBestConversionForQuantity: 0.005 s → 5 ms
+bool test_SIScalarBestConversionForQuantity(void) {
+    SIScalarRef s = SIScalarCreateWithDouble(0.005, SIUnitForUnderivedSymbol(STR("s")));
+    OCStringRef err = NULL;
+
+    bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
+                                                STR("time"),
+                                               &err);
+    if (!ok || err) {
+        printf("test_SIScalarBestConversionForQuantity failed: unexpected error: %s\n",
+               err ? OCStringGetCString(err) : "(null)");
+        return false;
+    }
+
+    /* 1) Compare numeric part with a tolerance */
+    double got = SIScalarDoubleValue(s);
+    if (OCCompareDoubleValuesLoose(got, 5.0) != kOCCompareEqualTo) {
+        printf("test_SIScalarBestConversionForQuantity failed: expected 5.0, got %f\n", got);
+        return false;
+    }
+
+    /* 2) Check that the unit is “ms” */
+    OCStringRef unitSym = SIUnitCopySymbol(SIQuantityGetUnit((SIQuantityRef)s));
+    if (OCStringCompare(unitSym, STR("ms"), 0) != kOCCompareEqualTo) {
+        printf("test_SIScalarBestConversionForQuantity failed: expected unit 'ms', got '%s'\n",
+               OCStringGetCString(unitSym));
+        OCRelease(unitSym);
+        return false;
+    }
+    OCRelease(unitSym);
+    OCRelease(s);
+
+    return true;
+}
+
+
+// -----------------------------------------------------------------------------
+// Test SIScalarBestConversionForQuantity: large value → hours
+bool test_SIScalarBestConversionForQuantity_large(void) {
+    // 36 000 s → 10 h
+    SIScalarRef s = SIScalarCreateWithDouble(36000.0, SIUnitForUnderivedSymbol(STR("s")));
+    OCStringRef err = NULL;
+
+    bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
+                                                STR("time"),
+                                               &err);
+    if (!ok || err) {
+        printf("test_SIScalarBestConversionForQuantity_large failed: unexpected error: %s\n",
+               err ? OCStringGetCString(err) : "(null)");
+        return false;
+    }
+
+    double gotVal = SIScalarDoubleValue(s);
+    if (OCCompareDoubleValuesLoose(gotVal, 10.0) != kOCCompareEqualTo) {
+        printf("test_SIScalarBestConversionForQuantity_large failed: expected 10.0, got %f\n", gotVal);
+        OCRelease(s);
+        return false;
+    }
+
+    OCStringRef unitSym = SIUnitCopySymbol(SIQuantityGetUnit((SIQuantityRef)s));
+    if (OCStringCompare(unitSym, STR("h"), 0) != kOCCompareEqualTo) {
+        printf("test_SIScalarBestConversionForQuantity_large failed: expected unit 'h', got '%s'\n",
+               OCStringGetCString(unitSym));
+        OCRelease(unitSym);
+        OCRelease(s);
+        return false;
+    }
+
+    OCRelease(unitSym);
+    OCRelease(s);
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+// Test SIScalarBestConversionForQuantity: very small value → microseconds
+bool test_SIScalarBestConversionForQuantity_tiny(void) {
+    // 1e-6 s → 1 µs
+    SIScalarRef s = SIScalarCreateWithDouble(0.000001, SIUnitForUnderivedSymbol(STR("s")));
+    OCStringRef err = NULL;
+
+    bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
+                                                STR("time"),
+                                                &err);
+    if (!ok || err) {
+        printf("test_SIScalarBestConversionForQuantity_tiny failed: unexpected error: %s\n",
+               err ? OCStringGetCString(err) : "(null)");
+        return false;
+    }
+
+    double gotVal = SIScalarDoubleValue(s);
+    if (OCCompareDoubleValuesLoose(gotVal, 1.0) != kOCCompareEqualTo) {
+        printf("test_SIScalarBestConversionForQuantity_tiny failed: expected 1.0, got %f\n", gotVal);
+        OCRelease(s);
+        return false;
+    }
+
+    OCStringRef unitSym = SIUnitCopySymbol(SIQuantityGetUnit((SIQuantityRef)s));
+    // expect the micro-sign U+00B5, not Greek-mu
+    if (OCStringCompare(unitSym, STR("µs"), 0) != kOCCompareEqualTo) {
+        printf("test_SIScalarBestConversionForQuantity_tiny failed: expected unit 'µs', got '%s'\n",
+               OCStringGetCString(unitSym));
+        OCRelease(unitSym);
+        OCRelease(s);
+        return false;
+    }
+
+    OCRelease(unitSym);
+    OCRelease(s);
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+// Test SIScalarBestConversionForQuantity: no change when in “good” range
+bool test_SIScalarBestConversionForQuantity_noop(void) {
+    // 2 s stays as seconds
+    SIScalarRef s = SIScalarCreateWithDouble(2.0, SIUnitForUnderivedSymbol(STR("s")));
+    OCStringRef err = NULL;
+
+    bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
+                                                STR("time"),
+                                               &err);
+    if (!ok || err) {
+        printf("test_SIScalarBestConversionForQuantity_noop failed: unexpected error: %s\n",
+               err ? OCStringGetCString(err) : "(null)");
+        return false;
+    }
+
+    double gotVal = SIScalarDoubleValue(s);
+    if (OCCompareDoubleValuesLoose(gotVal, 2.0) != kOCCompareEqualTo) {
+        printf("test_SIScalarBestConversionForQuantity_noop failed: expected 2.0, got %f\n", gotVal);
+        OCRelease(s);
+        return false;
+    }
+
+    OCStringRef unitSym = SIUnitCopySymbol(SIQuantityGetUnit((SIQuantityRef)s));
+    if (OCStringCompare(unitSym, STR("s"), 0) != kOCCompareEqualTo) {
+        printf("test_SIScalarBestConversionForQuantity_noop failed: expected unit 's', got '%s'\n",
+               OCStringGetCString(unitSym));
+        OCRelease(unitSym);
+        OCRelease(s);
+        return false;
+    }
+
+    OCRelease(unitSym);
+    OCRelease(s);
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+// Test SIScalarBestConversionForQuantity: zero → no error, no change
+bool test_SIScalarBestConversionForQuantity_zero(void) {
+    SIScalarRef s = SIScalarCreateWithDouble(0.0, SIUnitForUnderivedSymbol(STR("s")));
+    OCStringRef err = STR("pre-existing");
+    bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
+                                                STR("time"),
+                                               &err);
+    if (!ok || err) {
+        printf("test_SIScalarBestConversionForQuantity_zero failed: unexpected err state\n");
+        OCRelease(s);
+        return false;
+    }
+    // value stays 0, unit stays s
+    if (SIScalarDoubleValue(s) != 0.0) {
+        printf("test_SIScalarBestConversionForQuantity_zero failed: value changed\n");
+        OCRelease(s);
+        return false;
+    }
+    OCStringRef unitSym = SIUnitCopySymbol(SIQuantityGetUnit((SIQuantityRef)s));
+    bool unitOk = (OCStringCompare(unitSym, STR("s"), 0) == kOCCompareEqualTo);
+    OCRelease(unitSym);
+    OCRelease(s);
+    if (!unitOk) {
+        printf("test_SIScalarBestConversionForQuantity_zero failed: unit changed\n");
+        return false;
+    }
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+// Test SIScalarBestConversionForQuantity: negative duration → preserves sign
+bool test_SIScalarBestConversionForQuantity_negative(void) {
+    // –0.002 s → –2 ms
+    SIScalarRef s = SIScalarCreateWithDouble(-0.002, SIUnitForUnderivedSymbol(STR("s")));
+    OCStringRef err = NULL;
+    bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
+                                                STR("time"),
+                                               &err);
+    if (!ok || err) {
+        printf("test_SIScalarBestConversionForQuantity_negative failed: unexpected error\n");
+        OCRelease(s);
+        return false;
+    }
+
+    double gotVal = SIScalarDoubleValue(s);
+    if (OCCompareDoubleValuesLoose(gotVal, -2.0) != kOCCompareEqualTo) {
+        printf("test_SIScalarBestConversionForQuantity_negative failed: expected -2.0, got %f\n", gotVal);
+        OCRelease(s);
+        return false;
+    }
+
+    OCStringRef unitSym = SIUnitCopySymbol(SIQuantityGetUnit((SIQuantityRef)s));
+    if (OCStringCompare(unitSym, STR("ms"), 0) != kOCCompareEqualTo) {
+        printf("test_SIScalarBestConversionForQuantity_negative failed: expected unit 'ms', got '%s'\n",
+               OCStringGetCString(unitSym));
+        OCRelease(unitSym);
+        OCRelease(s);
+        return false;
+    }
+
+    OCRelease(unitSym);
+    OCRelease(s);
+    return true;
+}

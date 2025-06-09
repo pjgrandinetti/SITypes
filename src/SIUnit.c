@@ -4895,7 +4895,7 @@ SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input, double power, d
     IF_NO_OBJECT_EXISTS_RETURN(input, NULL);
     SIUnitRef derivedUnit = SIUnitFindEquivalentDerivedSIUnit(input);
 
-    SIDimensionalityRef dimensionality = SIDimensionalityByRaisingToAPowerWithoutReducing(derivedUnit->dimensionality, power, error);
+    SIDimensionalityRef dimensionality = SIDimensionalityByRaisingToPowerWithoutReducing(derivedUnit->dimensionality, power, error);
     if (error)
         if (*error)
             return NULL;

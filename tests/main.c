@@ -1,40 +1,36 @@
+#include <sanitizer/lsan_interface.h>
 #include <stdio.h>
 #include "../src/SILibrary.h"
-#include "test_octypes.h"
 #include "test_dimensionality.h"
-#include "test_unit.h"
+#include "test_octypes.h"
 #include "test_scalar.h"
 #include "test_scalar_parser.h"
-#include <sanitizer/lsan_interface.h>
-
+#include "test_unit.h"
 #ifdef LEAK_SANITIZER
 #include <sanitizer/lsan_interface.h>
 extern void __lsan_do_leak_check() __attribute__((weak));
 #endif
-
 int failed_tests = 0;
-
-#define TRACK_SCALAR_LEAK(test_fn) do { \
-    size_t before = OCLeakCountForType(SIScalarGetTypeID()); \
-    if (!test_fn()) { \
-        printf("[FAIL] %s\n", #test_fn); \
-        failed_tests++; \
-    } \
-    size_t after = OCLeakCountForType(SIScalarGetTypeID()); \
-    if (after > before) { \
-        printf("[LEAK] %s leaked %zu SIScalar(s)\n", #test_fn, after - before); \
-    } \
-} while(0)
-
-#define TRACK(test_fn) do { \
-    if (!test_fn()) { \
-        printf("[FAIL] %s\n", #test_fn); \
-        failed_tests++; \
-    } \
-} while(0)
-
-int main(int argc, const char * argv[]) {
-
+#define TRACK_SCALAR_LEAK(test_fn)                                                  \
+    do {                                                                            \
+        size_t before = OCLeakCountForType(SIScalarGetTypeID());                    \
+        if (!test_fn()) {                                                           \
+            printf("[FAIL] %s\n", #test_fn);                                        \
+            failed_tests++;                                                         \
+        }                                                                           \
+        size_t after = OCLeakCountForType(SIScalarGetTypeID());                     \
+        if (after > before) {                                                       \
+            printf("[LEAK] %s leaked %zu SIScalar(s)\n", #test_fn, after - before); \
+        }                                                                           \
+    } while (0)
+#define TRACK(test_fn)                       \
+    do {                                     \
+        if (!test_fn()) {                    \
+            printf("[FAIL] %s\n", #test_fn); \
+            failed_tests++;                  \
+        }                                    \
+    } while (0)
+int main(int argc, const char* argv[]) {
     printf("=== OCTypes Tests ===\n");
     TRACK(octypesTest1);
     TRACK(octypesTest2);
@@ -42,7 +38,6 @@ int main(int argc, const char * argv[]) {
     TRACK(octypesTest4);
     TRACK(octypesTest5);
     TRACK(octypesTest6);
-
     printf("\n=== Dimensionality Tests ===\n");
     TRACK(test_dimensionality_0);
     TRACK(test_dimensionality_1);
@@ -55,7 +50,6 @@ int main(int argc, const char * argv[]) {
     TRACK(test_dimensionality_power_area);
     TRACK(test_dimensionality_reduction_behavior);
     TRACK(test_dimensionality_deep_copy);
-
     printf("\n=== SIUnit Tests ===\n");
     TRACK(test_unit_0);
     TRACK(test_unit_1);
@@ -70,7 +64,6 @@ int main(int argc, const char * argv[]) {
     TRACK(test_unit_11);
     TRACK(test_unit_12);
     TRACK(test_unit_13);
-
     printf("\n=== SIScalar Parser Tests ===\n");
     TRACK_SCALAR_LEAK(test_scalar_parser_1);
     TRACK_SCALAR_LEAK(test_scalar_parser_2);
@@ -82,7 +75,6 @@ int main(int argc, const char * argv[]) {
     TRACK_SCALAR_LEAK(test_scalar_parser_8);
     TRACK_SCALAR_LEAK(test_scalar_parser_9);
     TRACK_SCALAR_LEAK(test_scalar_parser_10);
-
     printf("\n=== SIScalar Tests ===\n");
     TRACK_SCALAR_LEAK(test_SIScalarGetTypeID);
     TRACK_SCALAR_LEAK(test_SIScalarCreateCopy);
@@ -126,9 +118,9 @@ int main(int argc, const char * argv[]) {
     TRACK_SCALAR_LEAK(test_SIScalarDivideWithoutReducingUnit);
     TRACK_SCALAR_LEAK(test_SIScalarCreateByDividing);
     TRACK_SCALAR_LEAK(test_SIScalarDivide);
-    TRACK_SCALAR_LEAK(test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByRaisingToPowerWithoutReducingUnit);
     TRACK_SCALAR_LEAK(test_SIScalarRaiseToAPowerWithoutReducingUnit);
-    TRACK_SCALAR_LEAK(test_SIScalarCreateByRaisingToAPower);
+    TRACK_SCALAR_LEAK(test_SIScalarCreateByRaisingToPower);
     TRACK_SCALAR_LEAK(test_SIScalarRaiseToAPower);
     TRACK_SCALAR_LEAK(test_SIScalarCreateByTakingAbsoluteValue);
     TRACK_SCALAR_LEAK(test_SIScalarTakeAbsoluteValue);
@@ -163,14 +155,17 @@ int main(int argc, const char * argv[]) {
     TRACK_SCALAR_LEAK(test_SIScalarCompare);
     TRACK_SCALAR_LEAK(test_SIScalarCompareReduced);
     TRACK_SCALAR_LEAK(test_SIScalarCompareLoose);
-
+    TRACK_SCALAR_LEAK(test_SIScalarBestConversionForQuantity);
+    TRACK_SCALAR_LEAK(test_SIScalarBestConversionForQuantity_large);
+    TRACK_SCALAR_LEAK(test_SIScalarBestConversionForQuantity_tiny);
+    TRACK_SCALAR_LEAK(test_SIScalarBestConversionForQuantity_noop);
+    TRACK_SCALAR_LEAK(test_SIScalarBestConversionForQuantity_zero);
+    TRACK_SCALAR_LEAK(test_SIScalarBestConversionForQuantity_negative);
     printf("\n%d test(s) failed\n", failed_tests);
-
 #ifdef LEAK_SANITIZER
     if (&__lsan_do_leak_check) {
         __lsan_do_leak_check();
     }
 #endif
-
     return failed_tests > 0 ? 1 : 0;
 }

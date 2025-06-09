@@ -208,7 +208,7 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
             {
                 if (SIScalarIsReal(right))
                 {
-                    SIScalarRef theScalar = SIScalarCreateByRaisingToAPowerWithoutReducingUnit(left, power, errorString);
+                    SIScalarRef theScalar = SIScalarCreateByRaisingToPowerWithoutReducingUnit(left, power, errorString);
                     if(theScalar) {
                         OCAutorelease(theScalar);
                     }

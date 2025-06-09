@@ -55,9 +55,9 @@ bool test_SIScalarCreateByDividingWithoutReducingUnit(void);
 bool test_SIScalarDivideWithoutReducingUnit(void);
 bool test_SIScalarCreateByDividing(void);
 bool test_SIScalarDivide(void);
-bool test_SIScalarCreateByRaisingToAPowerWithoutReducingUnit(void);
+bool test_SIScalarCreateByRaisingToPowerWithoutReducingUnit(void);
 bool test_SIScalarRaiseToAPowerWithoutReducingUnit(void);
-bool test_SIScalarCreateByRaisingToAPower(void);
+bool test_SIScalarCreateByRaisingToPower(void);
 bool test_SIScalarRaiseToAPower(void);
 bool test_SIScalarCreateByTakingAbsoluteValue(void);
 bool test_SIScalarTakeAbsoluteValue(void);
@@ -92,5 +92,11 @@ bool test_SIScalarEqual(void);
 bool test_SIScalarCompare(void);
 bool test_SIScalarCompareReduced(void);
 bool test_SIScalarCompareLoose(void);
+bool test_SIScalarBestConversionForQuantity(void);
+bool test_SIScalarBestConversionForQuantity_large(void);
+bool test_SIScalarBestConversionForQuantity_tiny(void);
+bool test_SIScalarBestConversionForQuantity_noop(void);
+bool test_SIScalarBestConversionForQuantity_zero(void);
+bool test_SIScalarBestConversionForQuantity_negative(void);
 
 #endif /* TEST_SCALAR_H */
