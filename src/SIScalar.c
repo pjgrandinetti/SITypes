@@ -269,6 +269,86 @@ SIMutableScalarRef SIScalarCreateMutableWithDoubleComplex(double complex input_v
     return SIScalarCreateMutable(unit, kSINumberFloat64ComplexType, &input_value);
 }
 
+// helper: take a mutable scalar and re‐prefix it so its mantissa ∈ [1,1000)
+static bool __NormalizeScalarMantissaToSI3(SIMutableScalarRef sc) {
+    if (!sc) return false;
+
+    // (1) compute our “raw” magnitude in coherent‐SI units
+    bool wasComplex =
+        (sc->type == kSINumberFloat32ComplexType ||
+         sc->type == kSINumberFloat64ComplexType);
+
+    double raw;
+    if (wasComplex) {
+        // make a temporary copy, convert to coherent, then take its magnitude
+        SIMutableScalarRef tmp = SIScalarCreateMutableCopy(sc);
+        SIUnitRef cohTest =
+            SIUnitFindCoherentSIUnitWithDimensionality(
+                SIUnitGetDimensionality(tmp->unit));
+        SIScalarConvertToUnit(tmp, cohTest, NULL);
+        raw = SIScalarMagnitudeValue(tmp);
+        OCRelease(tmp);
+    } else {
+        raw = SIScalarDoubleValueInCoherentUnit(sc);
+    }
+
+    // zero stays zero
+    if (!(raw > 0.0 || raw < 0.0)) return true;
+
+    // (2) pick nearest multiple-of-3 exponent in [–24, +24]
+    int e3 = (int)floor(log10(fabs(raw)) / 3.0) * 3;
+    if      (e3 >  24) e3 =  24;
+    else if (e3 < -24) e3 = -24;
+
+    // (3) convert *first* into the coherent‐SI unit for this dimensionality
+    SIUnitRef origUnit = SIQuantityGetUnit((SIQuantityRef)sc);
+    SIDimensionalityRef dim = SIUnitGetDimensionality(origUnit);
+    SIUnitRef cohUnit = SIUnitFindCoherentSIUnitWithDimensionality(dim);
+    if (!SIScalarConvertToUnit(sc, cohUnit, NULL)) return false;
+
+    // (4) if prefixes are allowed, apply the matching SI prefix
+    if (SIUnitAllowsSIPrefix(cohUnit)) {
+        static const struct { int exp; const char *sym; } prefixes[] = {
+            {-24,"y"}, {-21,"z"}, {-18,"a"}, {-15,"f"},
+            {-12,"p"}, { -9,"n"}, { -6,"µ"}, { -3,"m"},
+            { +3,"k"}, { +6,"M"}, { +9,"G"}, {+12,"T"},
+            {+15,"P"}, {+18,"E"}, {+21,"Z"}, {+24,"Y"}
+        };
+        const char *preSym = NULL;
+        for (size_t i = 0; i < sizeof(prefixes)/sizeof(*prefixes); ++i) {
+            if (prefixes[i].exp == e3) {
+                preSym = prefixes[i].sym;
+                break;
+            }
+        }
+        if (preSym) {
+            // build the symbol, e.g. "k" + "m" → "km"
+            OCStringRef rootSym = SIUnitCopyRootSymbol(cohUnit);
+            OCMutableStringRef tmp = OCMutableStringCreateWithCString(preSym);
+            OCStringAppend(tmp, rootSym);
+            OCRelease(rootSym);
+
+            // look up the prefixed unit (borrowed reference)
+            SIUnitRef prefixed = SIUnitForUnderivedSymbol(tmp);
+            OCRelease(tmp);
+
+            if (prefixed) {
+                SIScalarConvertToUnit(sc, prefixed, NULL);
+            }
+        }
+    }
+
+    // (5) finish with a 64-bit type, preserving real vs. complex
+    SIScalarSetElementType(
+        sc,
+        wasComplex ? kSINumberFloat64ComplexType
+                   : kSINumberFloat64Type
+    );
+
+    return true;
+}
+
+
 #pragma mark Accessors
 
 void SIScalarSetElementType(SIMutableScalarRef theScalar, SINumberType elementType)
@@ -366,24 +446,28 @@ void SIScalarSetFloatValue(SIMutableScalarRef theScalar, float value)
 {
     theScalar->type= kSINumberFloat32Type;
     theScalar->value.floatValue = value;
+    __NormalizeScalarMantissaToSI3(theScalar);
 }
 
 void SIScalarSetDoubleValue(SIMutableScalarRef theScalar, double value)
 {
     theScalar->type= kSINumberFloat64Type;
     theScalar->value.doubleValue = value;
+    __NormalizeScalarMantissaToSI3(theScalar);
 }
 
 void SIScalarSetFloatComplexValue(SIMutableScalarRef theScalar, float complex value)
 {
     theScalar->type= kSINumberFloat32ComplexType;
     theScalar->value.floatComplexValue = value;
+    __NormalizeScalarMantissaToSI3(theScalar);
 }
 
 void SIScalarSetDoubleComplexValue(SIMutableScalarRef theScalar, double complex value)
 {
     theScalar->type= kSINumberFloat64ComplexType;
     theScalar->value.doubleComplexValue = value;
+    __NormalizeScalarMantissaToSI3(theScalar);
 }
 
 
@@ -728,7 +812,9 @@ SIScalarRef SIScalarCreateByTakingComplexPart(SIScalarRef theScalar, complexPart
 {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar,NULL);
     SIScalarRef result = SIScalarCreateCopy(theScalar);
-    if(SIScalarTakeComplexPart((SIMutableScalarRef) result, part)) return result;
+    if(SIScalarTakeComplexPart((SIMutableScalarRef) result, part)) {
+        return result;
+        }
     OCRelease(result);
     return NULL;
 }
@@ -777,7 +863,9 @@ SIScalarRef SIScalarCreateByReducingUnit(SIScalarRef theScalar)
 {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar,NULL);
     SIScalarRef result = SIScalarCreateCopy(theScalar);
-    if(SIScalarReduceUnit((SIMutableScalarRef) result)) return result;
+    if(SIScalarReduceUnit((SIMutableScalarRef) result)) {
+        return result;
+    }
     if(result) OCRelease(result);
     return NULL;
 }
@@ -821,7 +909,9 @@ SIScalarRef SIScalarCreateByConvertingToUnit(SIScalarRef theScalar, SIUnitRef un
     if(error) if(*error) return NULL;
     IF_NO_OBJECT_EXISTS_RETURN(theScalar,NULL);
     SIScalarRef result = SIScalarCreateCopy(theScalar);
-    if(SIScalarConvertToUnit((SIMutableScalarRef) result, unit, error)) return result;
+    if(SIScalarConvertToUnit((SIMutableScalarRef) result, unit, error)) {
+        return result;
+        }
     if(result) OCRelease(result);
     return NULL;
 }
@@ -1597,7 +1687,6 @@ bool SIScalarTakeNthRoot(SIMutableScalarRef theScalar, uint8_t root, OCStringRef
             if (error) *error = STR("Unsupported number type.");
             return false;
     }
-
     return true;
 }
 
