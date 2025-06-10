@@ -31,11 +31,11 @@ OBJ_DIR        := $(BUILD_DIR)/obj
 GEN_DIR        := $(BUILD_DIR)/gen
 BIN_DIR        := $(BUILD_DIR)/bin
 
-CPPFLAGS := -I. -I$(SRC_DIR) -I$(TP_INCLUDE_DIR)
+CPPFLAGS := -I. -I$(SRC_DIR) -I$(OCT_INCLUDE)
 CFLAGS   := -O3 -Wall -Wextra \
              -Wno-sign-compare -Wno-unused-parameter \
              -Wno-missing-field-initializers -Wno-unused-function \
-             -MMD -MP -I$(TP_INCLUDE_DIR)
+             -MMD -MP -I$(OCT_INCLUDE)
 CFLAGS_DEBUG := -O0 -g -Wall -Wextra -Werror -MMD -MP
 
 # Flex/Bison sources
@@ -158,7 +158,6 @@ $(BIN_DIR)/runTests: libSITypes.a $(TEST_OBJ)
 		-L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) -lm -o $@
 
 # Run tests
-test: CPPFLAGS += -I$(TP_INCLUDE_DIR)
 test: octypes libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests
@@ -168,11 +167,10 @@ test-debug: octypes libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O0 -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests.debug
 
-test-asan: CPPFLAGS += -I$(TP_INCLUDE_DIR)
-test-asan: CFLAGS += -fsanitize=address
-test-asan: libSITypes.a
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(SRC_DIR)/test/test_sitypes.c \
-	libSITypes.a -o test_sitypes_asan
+test-asan: octypes libSITypes.a $(TEST_OBJ)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
+	  -I$(TEST_SRC_DIR) $(TEST_OBJ) -L. -L$(OCT_LIBDIR) \
+	  -lSITypes -lOCTypes -lm -o runTests.asan
 	@./runTests.asan
 
 test-werror: CFLAGS := $(CFLAGS_DEBUG)
