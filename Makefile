@@ -159,17 +159,17 @@ $(BIN_DIR)/runTests: libSITypes.a $(TEST_OBJ)
 
 # Run tests
 test: octypes libSITypes.a $(TEST_OBJ)
-	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
+	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests
 	./runTests
 
 test-debug: octypes libSITypes.a $(TEST_OBJ)
-	$(CC) $(CFLAGS) -g -O0 -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
+	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O0 -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests.debug
 
 test-asan: octypes libSITypes.a $(TEST_OBJ)
-	$(CC) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
-	  -Isrc -Itests $(TEST_OBJ) -L. -L$(OCT_LIBDIR) \
+	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
+	  -I$(TEST_SRC_DIR) $(TEST_OBJ) -L. -L$(OCT_LIBDIR) \
 	  -lSITypes -lOCTypes -lm -o runTests.asan
 	@./runTests.asan
 
