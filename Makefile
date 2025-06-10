@@ -6,11 +6,13 @@
 # Xcode-build directory (ensure xcode target works)
 XCODE_BUILD := build-xcode
 
-# OCTypes “third_party” integration
-# (OCTypes is now a submodule, so update init and submodule commands accordingly)
-OCTYPES_DIR    := third_party/OCTypes
-OCT_INCLUDE    := $(OCTYPES_DIR)/include
-OCT_LIBDIR     := $(OCTYPES_DIR)/lib
+# OCTypes “third_party” integration using unified layout
+TP_DIR         := third_party
+TP_LIB_DIR     := $(TP_DIR)/lib
+TP_INCLUDE_DIR := $(TP_DIR)/include
+
+OCT_INCLUDE    := $(TP_INCLUDE_DIR)/OCTypes
+OCT_LIBDIR     := $(TP_LIB_DIR)
 
 # Tools
 CC      := clang
@@ -83,7 +85,7 @@ else
   GROUP_END   :=
 endif
 
-.PHONY: all dirs octypes prepare test test-debug test-asan run-asan \
+.PHONY: all dirs prepare test test-debug test-asan run-asan \
         test-werror install uninstall clean clean-objects clean-docs synclib docs doxygen html xcode
 
 all: dirs octypes prepare libSITypes.a
@@ -92,31 +94,31 @@ dirs:
 	$(MKDIR_P) $(BUILD_DIR) $(OBJ_DIR) $(GEN_DIR) $(BIN_DIR)
 
 # Download and extract OCTypes
-octypes: $(OCT_LIBDIR)/libOCTypes.a $(OCT_INCLUDE)/OCTypes/OCLibrary.h
+octypes: $(OCT_LIBDIR)/libOCTypes.a $(OCT_INCLUDE)/OCLibrary.h
 
 third_party:
 	@$(MKDIR_P) third_party
 
-$(OCT_LIB_ARCHIVE): | third_party
+$(OCT_LIB_ARCHIVE): | $(TP_DIR)
 	@echo "Fetching OCTypes library: $(OCT_LIB_BIN)"
 	@curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.1/$(OCT_LIB_BIN) -o $@
 
-$(OCT_HEADERS_ARCHIVE): | third_party
+$(OCT_HEADERS_ARCHIVE): | $(TP_DIR)
 	@echo "Fetching OCTypes headers"
 	@curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.1/libOCTypes-headers.zip -o $@
 
-$(OCT_LIBDIR)/libOCTypes.a: $(OCT_LIB_ARCHIVE)
-	@echo "Extracting OCTypes library"
-	@$(RM) -r $(OCT_LIBDIR)
-	@$(MKDIR_P) $(OCT_LIBDIR)
-	@unzip -q $< -d $(OCT_LIBDIR)
+$(TP_LIB_DIR)/libOCTypes.a: $(OCT_LIB_ARCHIVE)
+	@echo "Extracting OCTypes library into $(TP_LIB_DIR)"
+	@$(RM) -r $(TP_LIB_DIR)
+	@$(MKDIR_P) $(TP_LIB_DIR)
+	@unzip -q $< -d $(TP_LIB_DIR)
 
-$(OCT_INCLUDE)/OCTypes/OCLibrary.h: $(OCT_HEADERS_ARCHIVE)
-	@echo "Extracting OCTypes headers"
+$(OCT_INCLUDE)/OCLibrary.h: $(OCT_HEADERS_ARCHIVE)
+	@echo "Extracting OCTypes headers into $(TP_INCLUDE_DIR)/OCTypes"
 	@$(RM) -r $(OCT_INCLUDE)
-	@$(MKDIR_P) $(OCT_INCLUDE)/OCTypes
+	@$(MKDIR_P) $(OCT_INCLUDE)
 	@unzip -q $< -d $(OCT_INCLUDE)
-	@mv $(OCT_INCLUDE)/*.h $(OCT_INCLUDE)/OCTypes/ 2>/dev/null || true
+	# headers are now in $(OCT_INCLUDE)
 
 prepare: $(GEN_H)
 
@@ -179,7 +181,7 @@ INSTALL_DIR := install
 INSTALL_LIB_DIR := $(INSTALL_DIR)/lib
 INSTALL_INC_DIR := $(INSTALL_DIR)/include/SITypes
 
-install: all
+install: libSITypes.a
 	$(MKDIR_P) $(INSTALL_LIB_DIR) $(INSTALL_INC_DIR)
 	cp libSITypes.a $(INSTALL_LIB_DIR)/
 	cp src/*.h $(INSTALL_INC_DIR)/
@@ -199,11 +201,12 @@ clean-docs:
 
 # Copy from installed OCTypes
 synclib:
-	@echo "Copying OCTypes from installed location..."
-	@$(RM) -r third_party/OCTypes
-	@$(MKDIR_P) third_party/OCTypes/lib third_party/OCTypes/include/OCTypes
-	@cp ../OCTypes/install/lib/libOCTypes.a third_party/OCTypes/lib/
-	@cp ../OCTypes/install/include/OCTypes/*.h third_party/OCTypes/include/OCTypes/
+	@echo "Copying OCTypes into third_party/lib and include..."
+	@$(MKDIR_P) third_party
+	@$(RM) -r third_party/lib third_party/include
+	@$(MKDIR_P) third_party/lib third_party/include/OCTypes
+	@cp ../OCTypes/install/lib/libOCTypes.a third_party/lib/
+	@cp ../OCTypes/install/include/OCTypes/*.h third_party/include/OCTypes/
 
 # Docs
 doxygen:

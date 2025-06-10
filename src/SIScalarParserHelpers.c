@@ -1,8 +1,8 @@
 #include "SIScalarParser.h"
-#include <OCTypes/OCLibrary.h> // Corrected include path
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "SILibrary.h"
 #include "SIScalar.h"
 #include "SIDimensionality.h"
 #include "SIUnitParser.h"

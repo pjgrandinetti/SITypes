@@ -26,7 +26,7 @@ struct __SIQuantity;
 struct __SIScalar;
 
 // Include OCTypes base framework
-#include <OCTypes/OCLibrary.h>
+#include <OCLibrary.h>
 
 // Public SITypes API headers
 #include "SIDimensionality.h"

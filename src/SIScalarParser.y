@@ -1,5 +1,4 @@
 %{
-    #include <OCTypes/OCLibrary.h>
     #include "SILibrary.h"
     #include "SIScalarParser.h"
     #include <ctype.h>
