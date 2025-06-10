@@ -31,7 +31,7 @@ OBJ_DIR        := $(BUILD_DIR)/obj
 GEN_DIR        := $(BUILD_DIR)/gen
 BIN_DIR        := $(BUILD_DIR)/bin
 
-CPPFLAGS := -I. -I$(SRC_DIR) -I$(OCT_INCLUDE)
+CPPFLAGS := -I. -I$(SRC_DIR) -I$(TP_INCLUDE_DIR) -I$(OCT_INCLUDE)
 CFLAGS   := -O3 -Wall -Wextra \
              -Wno-sign-compare -Wno-unused-parameter \
              -Wno-missing-field-initializers -Wno-unused-function \
@@ -222,7 +222,7 @@ docs: html
 # Include generated dependency files
 -include $(DEP)
 ##────────────────────────────────────────────────────────────────────────────
-## 11) XCODE target (mirroring OCTTypes exactly)
+## 11) XCODE target
 ##────────────────────────────────────────────────────────────────────────────
 
 xcode: clean dirs
