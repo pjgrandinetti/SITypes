@@ -12,13 +12,13 @@
 #include "SIScalar.h"
 #include "SIUnitParser.h"
 
-typedef const struct __scalarNode * ScalarNodeRef;
-typedef const struct __scalarValue * NumberRef;
-typedef const struct __scalarNodeMathFunction * ScalarNodeMathFunctionRef;
-typedef const struct __scalarNodeConstantFunction * ScalarNodeConstantFunctionRef;
-typedef const struct __scalarNodeSymbol * ScalarNodeSymbolRef;
-typedef const struct __scalarNodeAssignment * ScalarNodeAssignmentRef;
-typedef const struct __symbol * SymbolRef;
+typedef const struct impl_scalarNode * ScalarNodeRef;
+typedef const struct impl_scalarValue * NumberRef;
+typedef const struct impl_scalarNodeMathFunction * ScalarNodeMathFunctionRef;
+typedef const struct impl_scalarNodeConstantFunction * ScalarNodeConstantFunctionRef;
+typedef const struct impl_scalarNodeSymbol * ScalarNodeSymbolRef;
+typedef const struct impl_scalarNodeAssignment * ScalarNodeAssignmentRef;
+typedef const struct impl_symbol * SymbolRef;
 
 
 typedef enum builtInMathFunctions {

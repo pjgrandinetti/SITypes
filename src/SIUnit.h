@@ -146,7 +146,7 @@ typedef enum {
 #define kSIGravityAcceleration      9.80665
 
 /** @brief Type of a reference to immutable SIUnit. */
-typedef const struct __SIUnit * SIUnitRef;
+typedef const struct impl_SIUnit * SIUnitRef;
 
 /** @endcond */
 

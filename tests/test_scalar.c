@@ -476,7 +476,7 @@ bool test_SIScalarGetValue(void) {
         return false;
     }
 
-    __SINumber n = SIScalarGetValue(s);
+    impl_SINumber n = SIScalarGetValue(s);
     if (n.floatValue != 7.0f) {
         printf("test_SIScalarGetValue failed: Expected value 7.0f, got %.6f\n", n.floatValue);
         OCRelease(s);

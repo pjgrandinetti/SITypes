@@ -12,7 +12,7 @@
 #include <math.h> // For floor, isnan, erf, erfc, log, sqrt, pow, fabs, log10
 #include "SILibrary.h"
 
-static OCTypeID kSIUnitID = _kOCNotATypeID;
+static OCTypeID kSIUnitID = kOCNotATypeID;
 
 #define UNIT_NOT_FOUND -1
 
@@ -24,9 +24,9 @@ OCMutableArrayRef unitsNamesLibrary = NULL;
 bool imperialVolumes = false;
 
 // SIUnit Opaque Type
-struct __SIUnit
+struct impl_SIUnit
 {
-    OCBase _base;
+    OCBase base;
 
     // SIUnit Type attributes
     // Attributes needed to describe all Derived SI Units, including
@@ -325,7 +325,7 @@ static OCStringRef baseUnitSymbol(const uint8_t index)
         return baseUnitRootSymbol(index);
 }
 
-bool __SIUnitEqual(const void *theType1, const void *theType2)
+bool impl_SIUnitEqual(const void *theType1, const void *theType2)
 {
     IF_NO_OBJECT_EXISTS_RETURN(theType1, false);
     IF_NO_OBJECT_EXISTS_RETURN(theType2, false);
@@ -333,7 +333,7 @@ bool __SIUnitEqual(const void *theType1, const void *theType2)
     SIUnitRef theUnit1 = (SIUnitRef)theType1;
     SIUnitRef theUnit2 = (SIUnitRef)theType2;
 
-    if (theUnit1->_base.typeID != theUnit2->_base.typeID)
+    if (theUnit1->base.typeID != theUnit2->base.typeID)
         return false;
     if (theUnit1 == theUnit2)
         return true;
@@ -370,7 +370,7 @@ bool __SIUnitEqual(const void *theType1, const void *theType2)
     return true;
 }
 
-void __SIUnitFinalize(const void *theType)
+void impl_SIUnitFinalize(const void *theType)
 {
     if (NULL == theType)
         return;
@@ -394,7 +394,7 @@ void __SIUnitFinalize(const void *theType)
         OCRelease(theUnit->root_symbol);
 }
 
-static OCStringRef __SIUnitCopyFormattingDescription(OCTypeRef theType)
+static OCStringRef impl_SIUnitCopyFormattingDescription(OCTypeRef theType)
 {
     if (!theType)
         return NULL;
@@ -409,15 +409,15 @@ static OCStringRef __SIUnitCopyFormattingDescription(OCTypeRef theType)
     return OCStringCreateWithCString("<SIUnit>");
 }
 
-static struct __SIUnit *SIUnitAllocate(void);
+static struct impl_SIUnit *SIUnitAllocate(void);
 
-static void *__SIUnitDeepCopy(const void *obj)
+static void *impl_SIUnitDeepCopy(const void *obj)
 {
     if (!obj)
         return NULL;
     const SIUnitRef src = (SIUnitRef)obj;
 
-    struct __SIUnit *copy = SIUnitAllocate();
+    struct impl_SIUnit *copy = SIUnitAllocate();
     if (!copy)
         return NULL;
 
@@ -450,28 +450,28 @@ static void *__SIUnitDeepCopy(const void *obj)
     return (void *)copy;
 }
 
-static void *__SIUnitDeepCopyMutable(const void *obj)
+static void *impl_SIUnitDeepCopyMutable(const void *obj)
 {
     // SIUnit is immutable; just return a standard deep copy
-    return __SIUnitDeepCopy(obj);
+    return impl_SIUnitDeepCopy(obj);
 }
 
 OCTypeID SIUnitGetTypeID(void)
 {
-    if (kSIUnitID == _kOCNotATypeID)
+    if (kSIUnitID == kOCNotATypeID)
         kSIUnitID = OCRegisterType("SIUnit");
     return kSIUnitID;
 }
 
-static struct __SIUnit *SIUnitAllocate()
+static struct impl_SIUnit *SIUnitAllocate()
 {
-    struct __SIUnit *obj = OCTypeAlloc(struct __SIUnit,
+    struct impl_SIUnit *obj = OCTypeAlloc(struct impl_SIUnit,
                                        SIUnitGetTypeID(),
-                                       __SIUnitFinalize,
-                                       __SIUnitEqual,
-                                       __SIUnitCopyFormattingDescription,
-                                       __SIUnitDeepCopy,
-                                       __SIUnitDeepCopyMutable);
+                                       impl_SIUnitFinalize,
+                                       impl_SIUnitEqual,
+                                       impl_SIUnitCopyFormattingDescription,
+                                       impl_SIUnitDeepCopy,
+                                       impl_SIUnitDeepCopyMutable);
     if (!obj)
     {
         fprintf(stderr, "SIUnitAllocate: OCTypeAlloc failed.\n");
@@ -854,7 +854,7 @@ static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
                               double scale_to_coherent_si)
 {
     // Initialize object
-    struct __SIUnit *theUnit = SIUnitAllocate();
+    struct impl_SIUnit *theUnit = SIUnitAllocate();
     if (NULL == theUnit)
         return NULL;
 

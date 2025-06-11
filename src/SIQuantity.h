@@ -58,13 +58,13 @@ typedef enum { // Anonymous enum
  * @typedef SIQuantityRef
  * @brief Reference to a SIQuantity object.
  */
-typedef const struct __SIQuantity * SIQuantityRef;
+typedef const struct impl_SIQuantity * SIQuantityRef;
 
 /**
  * @typedef SIMutableQuantityRef
  * @brief Reference to a mutable SIQuantity object.
  */
-typedef struct __SIQuantity * SIMutableQuantityRef;
+typedef struct impl_SIQuantity * SIMutableQuantityRef;
 /** @endcond */
 
 /**

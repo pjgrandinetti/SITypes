@@ -12,41 +12,41 @@
 #include "SIScalarConstants.h"
 #include "SIScalarParser.h"
 
-struct __symbol
+struct impl_symbol
 {
     char *name;
     SIScalarRef value;
-} __symbol;
+} impl_symbol;
 
 #define NHASH 9997
-struct __symbol symbolTable[NHASH];
+struct impl_symbol symbolTable[NHASH];
 
-struct __scalarNode
+struct impl_scalarNode
 {
     int nodeType;
     ScalarNodeRef left;
     ScalarNodeRef right;
-} __scalarNode;
+} impl_scalarNode;
 
-struct __scalarValue
+struct impl_scalarValue
 {
     int nodeType;
     SIScalarRef number;
-} __scalarValue;
+} impl_scalarValue;
 
-struct __scalarNodeMathFunction
+struct impl_scalarNodeMathFunction
 {
     int nodeType;
     ScalarNodeRef left;
     builtInMathFunctions funcType;
-} __scalarNodeMathFunction;
+} impl_scalarNodeMathFunction;
 
-struct __scalarNodeConstantFunction
+struct impl_scalarNodeConstantFunction
 {
     int nodeType;
     builtInConstantFunctions funcType;
     OCMutableStringRef string;
-} __scalarNodeConstantFunction;
+} impl_scalarNodeConstantFunction;
 
 SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
 {
@@ -281,7 +281,7 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
 
 ScalarNodeRef ScalarNodeCreateInnerNode(int nodeType, ScalarNodeRef left, ScalarNodeRef right)
 {
-    struct __scalarNode *node = malloc(sizeof(struct __scalarNode));
+    struct impl_scalarNode *node = malloc(sizeof(struct impl_scalarNode));
     if(NULL == node)
     {
         fprintf(stderr, "ScalarNodeCreateInnerNode: Memory allocation failed.\n");
@@ -295,7 +295,7 @@ ScalarNodeRef ScalarNodeCreateInnerNode(int nodeType, ScalarNodeRef left, Scalar
 
 ScalarNodeRef ScalarNodeCreateMathFunction(builtInMathFunctions funcType, ScalarNodeRef left)
 {
-    struct __scalarNodeMathFunction *node = malloc(sizeof(struct __scalarNodeMathFunction));
+    struct impl_scalarNodeMathFunction *node = malloc(sizeof(struct impl_scalarNodeMathFunction));
     if(NULL == node)
     {
         fprintf(stderr, "ScalarNodeCreateMathFunction: Memory allocation failed.\n");
@@ -309,7 +309,7 @@ ScalarNodeRef ScalarNodeCreateMathFunction(builtInMathFunctions funcType, Scalar
 
 ScalarNodeRef ScalarNodeCreateConstantFunction(builtInConstantFunctions funcType, OCMutableStringRef string)
 {
-    struct __scalarNodeConstantFunction *node = malloc(sizeof(struct __scalarNodeConstantFunction));
+    struct impl_scalarNodeConstantFunction *node = malloc(sizeof(struct impl_scalarNodeConstantFunction));
     if(NULL == node)
     {
         fprintf(stderr, "ScalarNodeCreateConstantFunction: Memory allocation failed.\n");
@@ -323,7 +323,7 @@ ScalarNodeRef ScalarNodeCreateConstantFunction(builtInConstantFunctions funcType
 
 ScalarNodeRef ScalarNodeCreateNumberLeaf(SIScalarRef number)
 {
-    struct __scalarValue *leaf = malloc(sizeof(struct __scalarValue));
+    struct impl_scalarValue *leaf = malloc(sizeof(struct impl_scalarValue));
     if(NULL == leaf)
     {
         fprintf(stderr, "ScalarNodeCreateNumberLeaf: Memory allocation failed.\n");

@@ -49,7 +49,7 @@ extern "C" {
 
 /** @cond INTERNAL */
 /** @brief Type of a reference to immutable SIDimensionality. */
-typedef const struct __SIDimensionality * SIDimensionalityRef;
+typedef const struct impl_SIDimensionality * SIDimensionalityRef;
 /** @brief Index constants for the seven SI base dimensions. */
 typedef enum {
     kSILengthIndex = 0,

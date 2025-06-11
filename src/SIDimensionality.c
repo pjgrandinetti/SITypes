@@ -13,12 +13,12 @@
 
 #define BASE_DIMENSION_COUNT 7
 
-static OCTypeID kSIDimensionalityID = _kOCNotATypeID;
+static OCTypeID kSIDimensionalityID = kOCNotATypeID;
 
 // SIDimensionality Opaque Type
-struct __SIDimensionality
+struct impl_SIDimensionality
 {
-    OCBase _base;
+    OCBase base;
 
     // SIDimensionality Type attributes  - order of declaration is essential
     uint8_t num_exp[BASE_DIMENSION_COUNT];
@@ -26,7 +26,7 @@ struct __SIDimensionality
     OCStringRef symbol;
 };
 
-static bool __SIDimensionalityEqual(const void *theType1, const void *theType2)
+static bool impl_SIDimensionalityEqual(const void *theType1, const void *theType2)
 {
     if (theType1 == theType2) return true;
     if (theType1 == NULL || theType2 == NULL) return false;
@@ -34,7 +34,7 @@ static bool __SIDimensionalityEqual(const void *theType1, const void *theType2)
     SIDimensionalityRef dim1 = (SIDimensionalityRef)theType1;
     SIDimensionalityRef dim2 = (SIDimensionalityRef)theType2;
 
-    if (dim1->_base.typeID != dim2->_base.typeID)
+    if (dim1->base.typeID != dim2->base.typeID)
         return false;
 
     for (int i = 0; i < BASE_DIMENSION_COUNT; ++i) {
@@ -45,7 +45,7 @@ static bool __SIDimensionalityEqual(const void *theType1, const void *theType2)
     return true;
 }
 
-static void __SIDimensionalityFinalize(const void *theType)
+static void impl_SIDimensionalityFinalize(const void *theType)
 {
     if (theType == NULL)
         return;
@@ -56,7 +56,7 @@ static void __SIDimensionalityFinalize(const void *theType)
         OCRelease(theDim->symbol);
 }
 
-static OCStringRef __SIDimensionalityCopyFormattingDescription(OCTypeRef cf)
+static OCStringRef impl_SIDimensionalityCopyFormattingDescription(OCTypeRef cf)
 {
     if (cf == NULL) return NULL;
 
@@ -69,14 +69,14 @@ static OCStringRef __SIDimensionalityCopyFormattingDescription(OCTypeRef cf)
     return OCStringCreateWithCString("<SIDimensionality>");
 }
 
-static struct __SIDimensionality *SIDimensionalityAllocate(void);
+static struct impl_SIDimensionality *SIDimensionalityAllocate(void);
 
-static void *__SIDimensionalityDeepCopy(const void *obj) {
+static void *impl_SIDimensionalityDeepCopy(const void *obj) {
     if (!obj) return NULL;
-    const struct __SIDimensionality *src = obj;
+    const struct impl_SIDimensionality *src = obj;
 
     // 1) allocate a fresh instance
-    struct __SIDimensionality *copy = SIDimensionalityAllocate();
+    struct impl_SIDimensionality *copy = SIDimensionalityAllocate();
     if (!copy) return NULL;
 
     // 2) copy all exponents
@@ -91,26 +91,26 @@ static void *__SIDimensionalityDeepCopy(const void *obj) {
 }
 
 // Mutable deep‐copy – for dimensionality these are the same
-static void *__SIDimensionalityDeepCopyMutable(const void *obj) {
-    return __SIDimensionalityDeepCopy(obj);
+static void *impl_SIDimensionalityDeepCopyMutable(const void *obj) {
+    return impl_SIDimensionalityDeepCopy(obj);
 }
 
 OCTypeID SIDimensionalityGetTypeID(void)
 {
-    if (kSIDimensionalityID == _kOCNotATypeID)
+    if (kSIDimensionalityID == kOCNotATypeID)
         kSIDimensionalityID = OCRegisterType("SIDimensionality");
     return kSIDimensionalityID;
 }
 
-static struct __SIDimensionality *SIDimensionalityAllocate()
+static struct impl_SIDimensionality *SIDimensionalityAllocate()
 {
-struct __SIDimensionality *obj = OCTypeAlloc(struct __SIDimensionality,
+struct impl_SIDimensionality *obj = OCTypeAlloc(struct impl_SIDimensionality,
                                              SIDimensionalityGetTypeID(),
-                                             __SIDimensionalityFinalize,
-                                             __SIDimensionalityEqual,
-                                             __SIDimensionalityCopyFormattingDescription,
-                                             __SIDimensionalityDeepCopy,
-                                             __SIDimensionalityDeepCopyMutable);
+                                             impl_SIDimensionalityFinalize,
+                                             impl_SIDimensionalityEqual,
+                                             impl_SIDimensionalityCopyFormattingDescription,
+                                             impl_SIDimensionalityDeepCopy,
+                                             impl_SIDimensionalityDeepCopyMutable);
     if (!obj) {
         fprintf(stderr, "SIDimensionalityAllocate: OCTypeAlloc failed.\n");
         return NULL;
@@ -279,7 +279,7 @@ static SIDimensionalityRef SIDimensionalityCreate(
     uint8_t luminous_intensity_num_exp, uint8_t luminous_intensity_den_exp)
 {
     // Initialize object
-    struct __SIDimensionality *theDim = SIDimensionalityAllocate();
+    struct impl_SIDimensionality *theDim = SIDimensionalityAllocate();
     if (NULL == theDim)
         return NULL;
 
@@ -659,7 +659,7 @@ OCArrayRef SIDimensionalityCreateArrayOfQuantities(SIDimensionalityRef theDim)
     uint64_t i = 0;
     for (uint64_t index = 0; index < totalCount; index++)
     {
-        if (__SIDimensionalityEqual(dimens[index], theDim))
+        if (impl_SIDimensionalityEqual(dimens[index], theDim))
         {
             quantities[i++] = keys[index];
         }

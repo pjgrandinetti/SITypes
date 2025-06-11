@@ -57,16 +57,16 @@
  */
 
  /** @cond INTERNAL */
-typedef union __SINumber
+typedef union impl_SINumber
 {
     float   floatValue;
     double  doubleValue;
     float complex floatComplexValue;
     double complex doubleComplexValue;
-} __SINumber;
+} impl_SINumber;
 
-typedef const struct __SIScalar *SIScalarRef;
-typedef struct __SIScalar *SIMutableScalarRef;
+typedef const struct impl_SIScalar *SIScalarRef;
+typedef struct impl_SIScalar *SIMutableScalarRef;
 /** @endcond */
 
 /** @brief Returns the unique type identifier for SIScalar objects. */
@@ -110,7 +110,7 @@ SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef 
 #pragma mark Accessors
 
 /** @brief Retrieves the numeric value of a SIScalar instance. */
-__SINumber SIScalarGetValue(SIScalarRef theScalar);
+impl_SINumber SIScalarGetValue(SIScalarRef theScalar);
 
 /** @brief Sets the numeric value of a mutable scalar to a float. */
 void SIScalarSetFloatValue(SIMutableScalarRef theScalar, float value);

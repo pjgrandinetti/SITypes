@@ -12,21 +12,21 @@
 #include <math.h>   // For math functions like nan, fabsf, log10, pow, etc.
 #include <string.h>
 
-static OCTypeID kSIScalarID = _kOCNotATypeID;
+static OCTypeID kSIScalarID = kOCNotATypeID;
 
 // SIScalar Opaque Type
-struct __SIScalar {
-    OCBase _base;
+struct impl_SIScalar {
+    OCBase base;
 
-    // __SIQuantity Type attributes
+    // impl_SIQuantity Type attributes
     SIUnitRef       unit;
     SINumberType    type;
 
-    // __SIScalar Type attributes
-    __SINumber      value;
+    // impl_SIScalar Type attributes
+    impl_SINumber      value;
 };
 
-static bool __SIScalarEqual(const void *theType1, const void *theType2)
+static bool impl_SIScalarEqual(const void *theType1, const void *theType2)
 {
     if (theType1 == theType2)
         return true;
@@ -36,7 +36,7 @@ static bool __SIScalarEqual(const void *theType1, const void *theType2)
     SIScalarRef s1 = (SIScalarRef)theType1;
     SIScalarRef s2 = (SIScalarRef)theType2;
 
-    if (s1->_base.typeID != s2->_base.typeID)
+    if (s1->base.typeID != s2->base.typeID)
         return false;
     if (s1->type != s2->type)
         return false;
@@ -57,7 +57,7 @@ static bool __SIScalarEqual(const void *theType1, const void *theType2)
     }
 }
 
-static void __SIScalarFinalize(const void *theType)
+static void impl_SIScalarFinalize(const void *theType)
 {
     if (theType == NULL) return;
 
@@ -67,11 +67,11 @@ static void __SIScalarFinalize(const void *theType)
     if (scalar->unit) {
         OCRelease(scalar->unit);
         // Cast away const to allow nulling the field
-        ((struct __SIScalar *)scalar)->unit = NULL;
+        ((struct impl_SIScalar *)scalar)->unit = NULL;
     }
 }
 
-static OCStringRef __SIScalarCopyFormattingDescription(OCTypeRef theType)
+static OCStringRef impl_SIScalarCopyFormattingDescription(OCTypeRef theType)
 {
     if (!theType) return OCStringCreateWithCString("(null)");
 
@@ -120,7 +120,7 @@ static OCStringRef __SIScalarCopyFormattingDescription(OCTypeRef theType)
 static SIScalarRef SIScalarCreate(SIUnitRef unit, SINumberType type, void *value);
 static SIMutableScalarRef SIScalarCreateMutable(SIUnitRef unit, SINumberType type, void *value);
 
-static void *__SIScalarDeepCopy(const void *theType) {
+static void *impl_SIScalarDeepCopy(const void *theType) {
     if (!theType) return NULL;
     SIScalarRef original = (SIScalarRef)theType;
 
@@ -133,7 +133,7 @@ static void *__SIScalarDeepCopy(const void *theType) {
 }
 
 
-static void *__SIScalarDeepCopyMutable(const void *theType) {
+static void *impl_SIScalarDeepCopyMutable(const void *theType) {
     if (!theType) return NULL;
     SIScalarRef original = (SIScalarRef)theType;
 
@@ -147,24 +147,24 @@ static void *__SIScalarDeepCopyMutable(const void *theType) {
 
 // Expose the formatting description function
 OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar) {
-    return __SIScalarCopyFormattingDescription((OCTypeRef) scalar);
+    return impl_SIScalarCopyFormattingDescription((OCTypeRef) scalar);
 }
 
 OCTypeID SIScalarGetTypeID(void)
 {
-    if(kSIScalarID == _kOCNotATypeID) kSIScalarID = OCRegisterType("SIScalar");
+    if(kSIScalarID == kOCNotATypeID) kSIScalarID = OCRegisterType("SIScalar");
     return kSIScalarID;
 }
 
-static struct __SIScalar *SIScalarAllocate(void)
+static struct impl_SIScalar *SIScalarAllocate(void)
 {
-    struct __SIScalar *obj = OCTypeAlloc(struct __SIScalar,
+    struct impl_SIScalar *obj = OCTypeAlloc(struct impl_SIScalar,
                                         SIScalarGetTypeID(),
-                                        __SIScalarFinalize,
-                                        __SIScalarEqual,
-                                        __SIScalarCopyFormattingDescription,
-                                        __SIScalarDeepCopy,
-                                        __SIScalarDeepCopyMutable);
+                                        impl_SIScalarFinalize,
+                                        impl_SIScalarEqual,
+                                        impl_SIScalarCopyFormattingDescription,
+                                        impl_SIScalarDeepCopy,
+                                        impl_SIScalarDeepCopyMutable);
     obj->unit = NULL;
     obj->type = kSINumberFloat32Type;
     memset(&obj->value, 0, sizeof(obj->value));
@@ -176,7 +176,7 @@ SIScalarRef SIScalarCreate(SIUnitRef unit, SINumberType type, void *value)
 {
     if (!value) return NULL;
 
-    struct __SIScalar *scalar = SIScalarAllocate();
+    struct impl_SIScalar *scalar = SIScalarAllocate();
     if (!scalar) return NULL;
 
     scalar->type = type;
@@ -437,7 +437,7 @@ void SIScalarSetElementType(SIMutableScalarRef theScalar, SINumberType elementTy
 }
 
 
-__SINumber SIScalarGetValue(SIScalarRef theScalar)
+impl_SINumber SIScalarGetValue(SIScalarRef theScalar)
 {
     return theScalar->value;
 }

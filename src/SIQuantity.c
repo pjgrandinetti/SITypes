@@ -10,10 +10,10 @@
 #include <stdio.h> // For printf used in IF_NO_OBJECT_EXISTS_RETURN macro
 
 // SIQuantity Opaque Type
-struct __SIQuantity {
-    OCBase _base;
+struct impl_SIQuantity {
+    OCBase base;
 
-    // __SIQuantity Type attributes
+    // impl_SIQuantity Type attributes
     SIUnitRef       unit;
     SINumberType    type;
 };

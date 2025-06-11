@@ -20,10 +20,10 @@
 #include <string.h> // Needed for memset, strcmp, etc.
 
 // Forward declarations for all opaque types used across SITypes
-struct __SIDimensionality;
-struct __SIUnit;
-struct __SIQuantity;
-struct __SIScalar;
+struct impl_SIDimensionality;
+struct impl_SIUnit;
+struct impl_SIQuantity;
+struct impl_SIScalar;
 
 // Include OCTypes base framework
 #include <OCLibrary.h>
