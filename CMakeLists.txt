@@ -154,13 +154,19 @@ enable_testing()
 file(GLOB SITYPE_TEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c
 )
-add_executable(runTests ${SITYPE_TEST_SOURCES})
-target_include_directories(runTests PRIVATE
+add_executable(SITypes_runTests ${SITYPE_TEST_SOURCES})
+target_include_directories(SITypes_runTests PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/OCTypes/src
+    ${CMAKE_BINARY_DIR}/OCTypes
 )
-target_link_libraries(runTests PRIVATE SITypes)
-add_test(NAME runTests COMMAND runTests)
+target_link_libraries(SITypes_runTests PRIVATE
+    OCTypes
+    SITypes
+    m
+)
+add_test(NAME SITypes_runTests COMMAND SITypes_runTests)
 
 # -------------------------------------------------------------------
 # 9) (Optional) Organize Xcode groups so headers & sources appear under their own folders

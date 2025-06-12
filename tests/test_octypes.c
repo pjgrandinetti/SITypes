@@ -1,6 +1,4 @@
 #include "../src/SILibrary.h" // Updated include path to resolve missing header issue
-#include "OCTypes/OCArray.h"
-#include "OCTypes/OCNumber.h"
 #include <assert.h>
 
 bool octypesTest1(void) {

@@ -225,11 +225,14 @@ docs: html
 ## 11) XCODE target
 ##────────────────────────────────────────────────────────────────────────────
 
+# Workspace root (one level up) for combined CMake configuration
+ROOT_DIR := $(shell cd $(dir $(firstword $(MAKEFILE_LIST))).. && pwd)
+
 xcode: clean dirs
-	@echo "Generating Xcode project in $(XCODE_BUILD)/ ..."
+	@echo "Generating combined SITypes+OCTypes Xcode project in $(XCODE_BUILD)/ ..."
 	@mkdir -p $(XCODE_BUILD)
-	@cmake -G "Xcode" -S . -B $(XCODE_BUILD)
-	@echo "✅ Xcode project created: $(XCODE_BUILD)/SITypes.xcodeproj"
+	@cmake -G "Xcode" -S $(ROOT_DIR) -B $(XCODE_BUILD)
+	@echo "✅ Combined Xcode project created: $(XCODE_BUILD)/$(notdir $(ROOT_DIR)).xcodeproj"
 
 xcode-open: xcode
 	@echo "Opening SITypes Xcode project..."
