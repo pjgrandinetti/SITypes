@@ -167,5 +167,7 @@ int main(int argc, const char* argv[]) {
         __lsan_do_leak_check();
     }
 #endif
+
+    SITypesShutdown();
     return failed_tests > 0 ? 1 : 0;
 }
