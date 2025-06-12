@@ -19,6 +19,8 @@
 #include <stdbool.h>
 #include <string.h> // Needed for memset, strcmp, etc.
 
+#define SILIB_TYPES_COUNT 3 // Total number of types in SITypes
+
 // Forward declarations for all opaque types used across SITypes
 struct impl_SIDimensionality;
 struct impl_SIUnit;

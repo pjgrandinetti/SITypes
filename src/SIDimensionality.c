@@ -1991,11 +1991,12 @@ void SITypesShutdown(void) {
 }
 
 // In SITypes (e.g. in src/SITypesCleanup.c)
-__attribute__((destructor(500)))
-void SICTypes_cleanup(void) {
-    fprintf(stderr, "Cleaning up SITypes...\n");
-    SITypesShutdown();
-    fprintf(stderr, "Cleaning up OCTypes...\n");
-    OCTypesShutdown();
-}
+// __attribute__((destructor(500)))
+// void SITypes_cleanup(void) {
+//     if(OCTypeIDTableGetCount() == SILIB_TYPES_COUNT + OCLIB_TYPES_COUNT)
+//     fprintf(stderr, "Cleaning up SITypes...\n");
+//     SITypesShutdown();
+//     fprintf(stderr, "Cleaning up OCTypes...\n");
+//     OCTypesShutdown();
+// }
 

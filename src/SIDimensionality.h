@@ -11,6 +11,8 @@
 
 #include "SILibrary.h"
 
+void SITypesShutdown(void);
+
 /*!
  * @file SIDimensionality.h
  * @brief Interface for representing and manipulating SI physical dimensionalities.
