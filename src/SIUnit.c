@@ -1539,7 +1539,7 @@ void SIUnitsLibrarySetImperialVolumes(bool value)
 // Add a cleanup function for static dictionaries and array
 void cleanupUnitsLibraries(void)
 {
-
+    fprintf(stderr, "Cleaning up units libraries...\n");
     if (!unitsLibrary)
         return;
 

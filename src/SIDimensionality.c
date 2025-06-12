@@ -1944,6 +1944,7 @@ OCArrayRef SIDimensionalityCreateArrayOfQuantityNamesWithSameReducedDimensionali
 // Add a cleanup function for static dictionaries
 static void cleanupDimensionalityLibraries(void)
 {
+    fprintf(stderr, "Cleaning up dimensionality libraries...\n");
     if (!dimLibrary) return;
 
     // 1) First tear down dimQuantitiesLibrary if you haven’t already
