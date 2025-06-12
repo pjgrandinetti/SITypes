@@ -1941,7 +1941,7 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
                 
                 if(unit && fahrenheit!=unit && celsius !=unit) {
                     SIScalarRef newScalar = SIScalarCreateByConvertingToUnit(theScalar, unit, error);
-                    if(*error) {
+                    if (error && *error) {
                         if(newScalar) OCRelease(newScalar);
                         if(units) OCRelease(units);
                         return NULL;
