@@ -46,12 +46,13 @@ typedef enum complexPart {
  * @ingroup SIQuantity
  */
 typedef enum { // Anonymous enum
-    kSINumberTypeInvalid = 0,
     kSINumberFloat32Type = Float32Type,
     kSINumberFloat64Type = Float64Type,
     kSINumberFloat32ComplexType = Float32ComplexType,
     kSINumberFloat64ComplexType = Float64ComplexType
 } SINumberType;
+
+#define kSINumberTypeInvalid 0
 
 /** @cond INTERNAL */
 
