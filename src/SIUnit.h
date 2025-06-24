@@ -125,7 +125,7 @@ typedef enum {
 #define kSIMuonMass                 1.883531627459132e-28
 #define kSIAtomicMassConstant       1.6605390666050e-27
 #define kSIAlphaParticleMass        6.64465723082e-27
-#define kSIGravitaionalConstant     6.6743015e-11
+#define kSIGravitationalConstant     6.6743015e-11
 
 #define kSIElectricConstant         8.854187817620389e-12  // Defined as 1/sqrt(c_0^2*µ_0)
 
@@ -155,6 +155,8 @@ typedef const struct impl_SIUnit * SIUnitRef;
 /** @brief Returns the unique type identifier for SIUnit objects. */
 OCTypeID SIUnitGetTypeID(void);
 
+cJSON *SIUnitCreateJSON(SIUnitRef unit);
+
 /** @brief Gets the physical dimensionality for a unit. */
 SIDimensionalityRef SIUnitGetDimensionality(SIUnitRef theUnit);
 
@@ -177,7 +179,7 @@ OCStringRef SIUnitCopyRootSymbol(SIUnitRef theUnit);
 bool SIUnitAllowsSIPrefix(SIUnitRef theUnit);
 
 /** @brief Gets the default SI prefix for the unit’s base symbol. */
-SIPrefix SIUnitCopyRootSymbolPrefix(SIUnitRef theUnit);
+SIPrefix SIUnitGetRootSymbolPrefix(SIUnitRef theUnit);
 
 /** @brief Checks if the unit’s root symbol is a special-case SI symbol. */
 bool SIUnitGetIsSpecialSISymbol(SIUnitRef theUnit);
@@ -246,8 +248,8 @@ OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
 /** @brief Gets scale factor to convert value in this unit to coherent SI unit. */
 double SIUnitScaleToCoherentSIUnit(SIUnitRef theUnit);
 
-/** @brief Creates the derived symbol for a unit. */
-OCStringRef SIUnitCreateDerivedSymbol(SIUnitRef theUnit);
+/** @brief Creates the symbol for a unit. */
+OCStringRef SIUnitCreateSymbol(SIUnitRef theUnit);
 
 /** @brief Finds a coherent SI unit for a given dimensionality. */
 SIUnitRef SIUnitFindCoherentSIUnitWithDimensionality(SIDimensionalityRef theDimensionality);
@@ -283,10 +285,10 @@ SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input, double power, d
 SIUnitRef SIUnitFindWithName(OCStringRef input);
 
 /** @brief Finds a unit by underived (base) symbol. */
-SIUnitRef SIUnitForUnderivedSymbol(OCStringRef symbol);
+SIUnitRef SIUnitFindWithUnderivedSymbol(OCStringRef symbol);
 
 /** @brief Parses a symbol and returns the corresponding unit, updating multiplier. */
-SIUnitRef SIUnitForSymbol(OCStringRef symbol, double *unit_multiplier, OCStringRef *error);
+SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, OCStringRef *error);
 
 /** @brief Creates array of all units defined for a given quantity. */
 OCArrayRef SIUnitCreateArrayForQuantity(OCStringRef quantity);
@@ -317,7 +319,7 @@ bool SIUnitsLibraryImperialVolumes(void);
 void SIUnitsLibrarySetImperialVolumes(bool value);
 
 /** @brief Returns a mutable copy of the current units library. */
-OCMutableDictionaryRef SIUnitGetLibrary(void);
+OCMutableDictionaryRef SIUnitGetUnitsLib(void);
 
 /** @brief Replaces the global units library. */
 void SIUnitSetLibrary(OCMutableDictionaryRef newUnitsLibrary);

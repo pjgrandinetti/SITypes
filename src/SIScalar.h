@@ -80,6 +80,17 @@ SIScalarRef SIScalarCreateCopy(SIScalarRef theScalar);
 /** @brief Creates a mutable deep copy of a SIScalar object. */
 SIMutableScalarRef SIScalarCreateMutableCopy(SIScalarRef theScalar);
 
+
+/**
+ * @file SIScalarJSON.h
+ * @brief Convert between SIScalarRef and cJSON representations.
+ */
+
+cJSON *SIScalarCreateJSON(SIScalarRef scalar);
+
+SIScalarRef SIScalarCreateFromJSON(cJSON *json);
+
+
 /** @brief Creates an immutable SIScalar from a float value and SI unit. */
 SIScalarRef SIScalarCreateWithFloat(float input_value, SIUnitRef unit);
 
@@ -181,7 +192,7 @@ bool SIScalarTakeComplexPart(SIMutableScalarRef theScalar, complexPart part);
 SIScalarRef SIScalarCreateByTakingComplexPart(SIScalarRef theScalar, complexPart part);
 
 /** @brief Parse a numeric string with unit and create a SIScalar. */
-SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error);
+SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error);
 
 /** @brief Create a new SIScalar with its unit exponents reduced to lowest integers. */
 SIScalarRef SIScalarCreateByReducingUnit(SIScalarRef theScalar);

@@ -47,7 +47,7 @@ extern int siu_scan_string(const char *);
 extern void siulex_destroy(void);
 bool siu_syntax_error;
 
-SIUnitRef SIUnitForParsedSymbol(OCStringRef string, double *unit_multiplier, OCStringRef *error)
+SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multiplier, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
     

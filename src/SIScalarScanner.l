@@ -88,7 +88,7 @@ STRING \[[()a-zA-Z][()a-zA-Z0-9]*\*?[()a-zA-Z0-9]*\]
 "t_½"         {sislval.const_fn = BC_Isotope_HalfLife; return CONST_FUNC;}
 
 "&hbar" {double multiplier = 1;
-    SIUnitRef unit = SIUnitForSymbol(STR("ℏ"),&multiplier, &scalarError);
+    SIUnitRef unit = SIUnitFromExpression(STR("ℏ"),&multiplier, &scalarError);
     sislval.d = (SIScalarRef) OCAutorelease(SIScalarCreateWithDouble(multiplier,unit));
     return SCALAR;}
 
@@ -135,7 +135,7 @@ I[ ]*\*[ ]*{REALNUMBER} {
 {UNIT} {
     OCStringRef string = OCStringCreateWithCString(yytext);
     double unit_multiplier = 1;
-    SIUnitRef unit = SIUnitForSymbol(string, &unit_multiplier, &scalarError);
+    SIUnitRef unit = SIUnitFromExpression(string, &unit_multiplier, &scalarError);
     if(unit == NULL) {
         if(string) OCRelease(string);
         yyterminate();
@@ -185,7 +185,7 @@ I[ ]*\*[ ]*{REALNUMBER}[ ]*/{UNIT} {
 <together>{UNIT} {
     OCStringRef string = OCStringCreateWithCString(yytext);
     double unit_multiplier = 1;
-    SIUnitRef unit = SIUnitForSymbol(string, &unit_multiplier,&scalarError);
+    SIUnitRef unit = SIUnitFromExpression(string, &unit_multiplier,&scalarError);
     if(unit==NULL) {
         if(string) OCRelease(string);
         yyterminate();

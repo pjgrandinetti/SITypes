@@ -47,11 +47,11 @@ extern int sid_scan_string(const char *);
 extern void sidlex_destroy(void);
 
 bool sid_syntax_error;
-SIDimensionalityRef SIDimensionalityForSymbol(OCStringRef string, OCStringRef *error)
+SIDimensionalityRef SIDimensionalityParseExpression(OCStringRef expression, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
 
-    OCMutableStringRef  mutString = OCStringCreateMutableCopy(string);
+    OCMutableStringRef  mutString = OCStringCreateMutableCopy(expression);
     OCStringTrimWhitespace(mutString);
     
     if(OCStringGetLength(mutString) == 1) {

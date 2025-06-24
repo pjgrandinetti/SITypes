@@ -613,7 +613,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = cacos(SIScalarDoubleComplexValue(scalar));
-            SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
             return result;
@@ -630,7 +630,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = cacosh(SIScalarDoubleComplexValue(scalar));
-            SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
             return result;
@@ -648,7 +648,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = casin(SIScalarDoubleComplexValue(scalar));
-            SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
             return result;
@@ -665,7 +665,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar)))
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-            SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
             double complex value = casinh(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
@@ -683,7 +683,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar)))
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-            SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
             double complex value = catan(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
@@ -701,7 +701,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar)))
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-            SIUnitRef unit = SIUnitForUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
             double complex value = catanh(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
@@ -878,7 +878,7 @@ SIUnitRef ConversionWithDefinedUnit(OCMutableStringRef mutString, double *unit_m
                 OCRelease(conversions);
                 return NULL;
             }
-            SIUnitRef finalUnit = SIUnitForSymbol(secondString, unit_multiplier, errorString);
+            SIUnitRef finalUnit = SIUnitFromExpression(secondString, unit_multiplier, errorString);
             if (finalUnit)
             {
                 OCStringReplaceAll(mutString, firstString);

@@ -28,7 +28,7 @@ static bool SIPeriodicTableCreateMolarMassLibrary(OCStringRef *errorString)
     molarMassLibrary  = OCDictionaryCreateMutable(0);
     
     double multiplier = 1.0;
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("g/mol"), &multiplier, errorString);
+    SIUnitRef unit = SIUnitFromExpressionInternal(STR("g/mol"), &multiplier, errorString);
     
     for(int64_t index=0;index<118;index++) {
         SIScalarRef value = SIScalarCreateWithDouble(atomicMass[index]*multiplier,unit);
@@ -196,7 +196,7 @@ static void SIPeriodicTableIsotopeHalfLifeLibrary(void)
 {
     isotopeHalfLifeLibrary  = OCDictionaryCreateMutable(0);
     
-    SIUnitRef unit = SIUnitForUnderivedSymbol(STR("s"));
+    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("s"));
     
     for(int64_t index=0;index<3181;index++) {
         SIScalarRef value = SIScalarCreateWithDouble(isotopeHalfLife[index],unit);
@@ -231,7 +231,7 @@ static void SIPeriodicTableIsotopeLifetimeLibrary(void)
 {
     isotopeLifetimeLibrary  = OCDictionaryCreateMutable(0);
     
-    SIUnitRef unit = SIUnitForUnderivedSymbol(STR("s"));
+    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("s"));
     
     for(int64_t index=0;index<3181;index++) {
         SIScalarRef value = SIScalarCreateWithDouble(isotopeLifeTime[index],unit);
@@ -301,7 +301,7 @@ static bool SIPeriodicTableNuclearElectricQuadrupoleMomentLibrary(OCStringRef *e
     nuclearElectricQuadrupoleMomentLibrary = OCDictionaryCreateMutable(0);
     
     double multiplier = 1.0;
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("b"), &multiplier, errorString);
+    SIUnitRef unit = SIUnitFromExpressionInternal(STR("b"), &multiplier, errorString);
     
     for(int64_t index=0;index<3181;index++) {
         if(quadMoment[index] != -99) {
@@ -341,7 +341,7 @@ static bool SIPeriodicTableNuclearMagneticDipoleMomentLibrary(OCStringRef *error
     nuclearMagneticMomentLibrary  = OCDictionaryCreateMutable(0);
     
     double multiplier = 1.0;
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("µ_N"), &multiplier, errorString);
+    SIUnitRef unit = SIUnitFromExpressionInternal(STR("µ_N"), &multiplier, errorString);
     
     for(int64_t index=0;index<3181;index++) {
         if(isotopeSpin[index] != -99) {
@@ -416,7 +416,7 @@ static bool SIPeriodicTableNuclearGyromagneticRatioLibrary(OCStringRef *errorStr
     nuclearGyromagneticRatioLibrary  = OCDictionaryCreateMutable(0);
     
     double multiplier = 1.0;
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("rad/(s•T)"), &multiplier, errorString);
+    SIUnitRef unit = SIUnitFromExpressionInternal(STR("rad/(s•T)"), &multiplier, errorString);
     
     for(int64_t index=0;index<3181;index++) {
         if(isotopeMagneticMoment[index] && isotopeSpin[index] != -99) {
@@ -446,7 +446,7 @@ SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSym
     OCStringLowercase(lowerCaseKey);
     SIScalarRef magneticMoment = (SIScalarRef) OCDictionaryGetValue(nuclearMagneticMomentLibrary, lowerCaseKey);
     SIScalarRef spin = (SIScalarRef) OCDictionaryGetValue(isotopeSpinLibrary, lowerCaseKey);
-    SIScalarRef hbar = SIScalarCreateWithOCString(STR("ℏ"), errorString);
+    SIScalarRef hbar = SIScalarCreateFromExpression(STR("ℏ"), errorString);
     
     OCRelease(lowerCaseKey);
     if((NULL == magneticMoment || NULL == spin || NULL == hbar ) && errorString!=NULL) {
@@ -461,7 +461,7 @@ SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSym
     if(SIScalarDoubleValue(spin)>0) SIScalarMultiplyByDimensionlessRealConstant(gyromagneticRatio, 1./SIScalarDoubleValue(spin));
     
     double multiplier = 1;
-    SIUnitRef unit = SIUnitForSymbol(STR("rad/(s•T)"), &multiplier, errorString);
+    SIUnitRef unit = SIUnitFromExpression(STR("rad/(s•T)"), &multiplier, errorString);
     SIScalarConvertToUnit(gyromagneticRatio, unit, errorString);
     
     return gyromagneticRatio;
@@ -480,7 +480,7 @@ SIScalarRef SIPeriodicTableCreateNMRFrequency(OCStringRef isotopeSymbol, OCStrin
     SIScalarMultiplyByDimensionlessRealConstant(nmr, 1./6.283185307179586);
     
     double multiplier = 1;
-    SIUnitRef unit = SIUnitForSymbol(STR("MHz/T"), &multiplier, errorString);
+    SIUnitRef unit = SIUnitFromExpression(STR("MHz/T"), &multiplier, errorString);
     SIScalarConvertToUnit(nmr, unit, errorString);
     return nmr;
 }

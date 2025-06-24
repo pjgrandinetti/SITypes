@@ -39,5 +39,6 @@ struct impl_SIScalar;
 #include "SIScalar.h"
 #include "SIScalarConstants.h"
 
+void SITypesShutdown(void);
 
 #endif /* SILibrary_h */

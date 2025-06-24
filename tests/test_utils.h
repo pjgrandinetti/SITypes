@@ -1,9 +1,15 @@
 #ifndef TEST_UTILS_H
 #define TEST_UTILS_H
 
-#include "../src/SILibrary.h"
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <math.h>   // For fabs, fabsf, creal, cimag
+#include <complex.h> // For complex numbers and I macro
+#include "SILibrary.h"
+
 
 /**
  * @brief Check for parsing errors and handle them consistently

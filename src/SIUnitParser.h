@@ -13,7 +13,7 @@
 extern OCStringRef unitError;
 
 /**
- @function SIUnitForParsedSymbol
+ @function SIUnitFromExpressionInternal
  @abstract Returns the SI unit for a parsed symbol string.
  @discussion This function always returns a valid SI unit, even when parsing non-SI units like "in", "lb", or "lbf". 
              For non-SI units, it returns the equivalent SI unit and sets the unit_multiplier to the appropriate 
@@ -25,6 +25,6 @@ extern OCStringRef unitError;
  @param error Pointer to an OCStringRef to receive error messages.
  @result The equivalent SI unit as SIUnitRef, or NULL on error.
  */
-SIUnitRef SIUnitForParsedSymbol(OCStringRef string, double *unit_multiplier, OCStringRef *error);
+SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multiplier, OCStringRef *error);
 
 #endif

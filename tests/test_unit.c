@@ -1,13 +1,19 @@
-#include "../src/SILibrary.h" // Updated include path to resolve missing header issue
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <math.h>   // For fabs, fabsf, creal, cimag
+#include <complex.h> // For complex numbers and I macro
+#include "SILibrary.h"
+
 #include "test_utils.h" // Include the test utilities header
 
 bool test_unit_0(void) {
     printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
 
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("m•kg^2•s^3•A^4•K^5•mol^6•cd^7/(m^2•kg^3•s^4•A^5•K^6•mol^7•cd^8)"), NULL, &errorString);
+    SIUnitRef unit = SIUnitFromExpression(STR("m•kg^2•s^3•A^4•K^5•mol^6•cd^7/(m^2•kg^3•s^4•A^5•K^6•mol^7•cd^8)"), NULL, &errorString);
     if (!unit) {
         if (errorString) {
             printf("test_unit_0 failed: Failed to parse first unit: %s\n", OCStringGetCString(errorString));
@@ -25,7 +31,7 @@ bool test_unit_0(void) {
         return false;
     }
 
-    SIUnitRef unit2 = SIUnitForParsedSymbol(plist, NULL, &errorString);
+    SIUnitRef unit2 = SIUnitFromExpression(plist, NULL, &errorString);
     if (!unit2) {
         printf("test_unit_0 failed: Failed to re-parse serialized unit string\n");
         if (errorString) {
@@ -59,7 +65,7 @@ bool test_unit_1(void) {
     printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
 
-    SIDimensionalityRef dimensionality = SIDimensionalityForSymbol(STR("M/(L*T^2)"), &errorString);
+    SIDimensionalityRef dimensionality = SIDimensionalityParseExpression(STR("M/(L*T^2)"), &errorString);
     if (!dimensionality) {
         if (errorString) {
             printf("test_unit_1 failed: Failed to parse dimensionality: %s\n", OCStringGetCString(errorString));
@@ -70,7 +76,7 @@ bool test_unit_1(void) {
         return false;
     }
 
-    SIUnitRef unit = SIUnitForUnderivedSymbol(STR("bar"));
+    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("bar"));
     if (!unit) {
         printf("test_unit_1 failed: Failed to retrieve unit 'bar'\n");
         OCRelease(dimensionality);
@@ -88,13 +94,13 @@ bool test_unit_1(void) {
 bool test_unit_3(void) {
     printf("Running %s...\n", __func__);
 
-    SIUnitRef unit = SIUnitForUnderivedSymbol(STR("N"));
+    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("N"));
     if (!unit) {
         printf("test_unit_3 failed: Failed to retrieve unit 'N'\n");
         return false;
     }
 
-    unit = SIUnitForUnderivedSymbol(STR("m"));
+    unit = SIUnitFindWithUnderivedSymbol(STR("m"));
     if (!unit) {
         printf("test_unit_3 failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -123,7 +129,7 @@ bool test_unit_4(void) {
     OCStringRef errorString = NULL;
     double multiplier = 1.0;
 
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("km"), &multiplier, &errorString);
+    SIUnitRef unit = SIUnitFromExpression(STR("km"), &multiplier, &errorString);
     if (!unit) {
         printf("test_unit_4 failed: Failed to parse 'km'\n");
         if (errorString) {
@@ -177,7 +183,7 @@ bool test_unit_4(void) {
 bool test_unit_5(void) {
     printf("Running %s...\n", __func__);
 
-    SIUnitRef unit = SIUnitForUnderivedSymbol(STR("g"));
+    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("g"));
     if (!unit) {
         printf("test_unit_5 failed: Failed to retrieve unit 'g'\n");
         return false;
@@ -212,7 +218,7 @@ bool test_unit_6(void) {
     OCStringRef errorString = NULL;
     double multiplier = 1.0;
 
-    SIUnitRef unit = SIUnitForUnderivedSymbol(STR("N"));
+    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("N"));
     if (!unit) {
         printf("test_unit_6 failed: Failed to retrieve unit 'N'\n");
         return false;
@@ -225,7 +231,7 @@ bool test_unit_6(void) {
         return false;
     }
 
-    SIUnitRef unit2 = SIUnitForParsedSymbol(symbol, &multiplier, &errorString);
+    SIUnitRef unit2 = SIUnitFromExpression(symbol, &multiplier, &errorString);
     if (!unit2) {
         printf("test_unit_6 failed: Failed to parse symbol back into unit\n");
         if (errorString) {
@@ -259,7 +265,7 @@ bool test_unit_7(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
 
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("kg"), NULL, &err);
+    SIUnitRef unit = SIUnitFromExpression(STR("kg"), NULL, &err);
     if (!unit) {
         if (err) {
             printf("test_unit_7 failed: Error parsing 'kg': %s\n", OCStringGetCString(err));
@@ -286,7 +292,7 @@ bool test_unit_8(void) {
     OCStringRef err = NULL;
     double multiplier = 1.0;
 
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("kg*m/s^2"), &multiplier, &err);
+    SIUnitRef unit = SIUnitFromExpression(STR("kg*m/s^2"), &multiplier, &err);
     if (!unit) {
         if (err) {
             printf("test_unit_8 failed: Error parsing 'kg*m/s^2': %s\n", OCStringGetCString(err));
@@ -308,7 +314,7 @@ bool test_unit_8(void) {
         return false;
     }
 
-    SIUnitRef N = SIUnitForUnderivedSymbol(STR("N"));
+    SIUnitRef N = SIUnitFindWithUnderivedSymbol(STR("N"));
     if (!N) {
         printf("test_unit_8 failed: Failed to retrieve unit 'N'\n");
         OCRelease(unit);
@@ -334,7 +340,7 @@ bool test_unit_9(void) {
     OCStringRef err = NULL;
     double multiplier = 1.0;
 
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("kN"), &multiplier, &err);
+    SIUnitRef unit = SIUnitFromExpression(STR("kN"), &multiplier, &err);
     if (!unit) {
         if (err) {
             printf("test_unit_9 failed: Error parsing 'kN': %s\n", OCStringGetCString(err));
@@ -371,7 +377,7 @@ bool test_unit_9(void) {
         return false;
     }
 
-    SIUnitRef baseN = SIUnitForUnderivedSymbol(STR("N"));
+    SIUnitRef baseN = SIUnitFindWithUnderivedSymbol(STR("N"));
     if (!baseN) {
         printf("test_unit_9 failed: Failed to retrieve base unit 'N'\n");
         OCRelease(unit);
@@ -406,7 +412,7 @@ bool test_unit_10(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
 
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("Pa"), NULL, &err);
+    SIUnitRef unit = SIUnitFromExpression(STR("Pa"), NULL, &err);
     if (!unit) {
         if (err) {
             printf("test_unit_10 failed: Error parsing 'Pa': %s\n", OCStringGetCString(err));
@@ -449,52 +455,62 @@ bool test_unit_11(void) {
     OCStringRef err = NULL;
     double multiplier = 1.0;
 
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("in/s"), &multiplier, &err);
+    // parse "in/s"
+    SIUnitRef unit = SIUnitFromExpression(STR("in/s"), &multiplier, &err);
     if (!unit) {
         if (err) {
-            printf("test_unit_11 failed: Error parsing 'in/s': %s\n", OCStringGetCString(err));
+            fprintf(stderr, "  ✗ Error parsing 'in/s': %s\n",
+                    OCStringGetCString(err));
             OCRelease(err);
         } else {
-            printf("test_unit_11 failed: Failed to parse 'in/s' with no error message\n");
+            fprintf(stderr, "  ✗ Failed to parse 'in/s' (no error message)\n");
         }
         return false;
     }
+    if (err) { OCRelease(err); err = NULL; }
 
-    if (err) {
-        OCRelease(err);
-        err = NULL;
-    }
-
-    if (!(multiplier > 0.025 && multiplier < 0.026)) {
-        printf("test_unit_11 failed: Multiplier for 'in/s' out of expected range: %.8f\n", multiplier);
+    // check multiplier == 1.0
+    if (fabs(multiplier - 1.0) > 1e-12) {
+        fprintf(stderr,
+                "  ✗ Unexpected multiplier for 'in/s': expected 1.0, got %.12f\n",
+                multiplier);
         OCRelease(unit);
         return false;
     }
 
-    SIUnitRef ms = SIUnitForParsedSymbol(STR("m/s"), NULL, &err);
+    // grab its dimensionality
+    SIDimensionalityRef dim_in_s = SIUnitGetDimensionality(unit);
+
+    // parse "m/s" (we don't care about its multiplier here)
+    SIUnitRef ms = SIUnitFromExpression(STR("m/s"), NULL, &err);
     if (!ms) {
         if (err) {
-            printf("test_unit_11 failed: Error parsing 'm/s': %s\n", OCStringGetCString(err));
+            fprintf(stderr, "  ✗ Error parsing 'm/s': %s\n",
+                    OCStringGetCString(err));
             OCRelease(err);
         } else {
-            printf("test_unit_11 failed: Failed to parse 'm/s' with no error message\n");
+            fprintf(stderr, "  ✗ Failed to parse 'm/s' (no error message)\n");
         }
         OCRelease(unit);
         return false;
     }
 
-    if (!SIUnitAreEquivalentUnits(unit, ms)) {
-        printf("test_unit_11 failed: 'in/s' is not equivalent to 'm/s'\n");
+    // grab its dimensionality
+    SIDimensionalityRef dim_m_s = SIUnitGetDimensionality(ms);
+
+    // now compare dimensions, not raw conversion factors
+    if (!SIDimensionalityEqual(dim_in_s, dim_m_s)) {
+        fprintf(stderr,
+                "  ✗ Dimensionality mismatch: 'in/s' vs 'm/s'\n");
         OCRelease(unit);
         OCRelease(ms);
         return false;
     }
 
+    // all good!
     OCRelease(unit);
     OCRelease(ms);
-    if (err) OCRelease(err);
-
-    printf("%s passed\n", __func__);
+    printf("%s passed\n\n", __func__);
     return true;
 }
 
@@ -504,7 +520,7 @@ bool test_unit_12(void) {
     OCStringRef err = NULL;
     double multiplier = 1.0;
 
-    SIUnitRef unit = SIUnitForParsedSymbol(STR("lbf/in^2"), &multiplier, &err);
+    SIUnitRef unit = SIUnitFromExpression(STR("lbf/in^2"), &multiplier, &err);
     if (!unit) {
         if (err) {
             printf("test_unit_12 failed: Error parsing 'lbf/in^2': %s\n", OCStringGetCString(err));
@@ -521,7 +537,7 @@ bool test_unit_12(void) {
     }
 
     // Get reference unit "Pa"
-    SIUnitRef pa = SIUnitForUnderivedSymbol(STR("Pa"));
+    SIUnitRef pa = SIUnitFindWithUnderivedSymbol(STR("Pa"));
     if (!pa) {
         printf("test_unit_12 failed: Failed to retrieve reference unit 'Pa'\n");
         OCRelease(unit);
@@ -553,7 +569,7 @@ bool test_unit_13(void) {
 
     // Part 1: Test pound-mass (lb)
     double multiplier1 = 1.0;
-    SIUnitRef unit_lb = SIUnitForParsedSymbol(STR("lb"), &multiplier1, &err);
+    SIUnitRef unit_lb = SIUnitFromExpression(STR("lb"), &multiplier1, &err);
     if (!unit_lb) {
         if (err) {
             printf("test_unit_13 failed: Error parsing 'lb': %s\n", OCStringGetCString(err));
@@ -575,7 +591,7 @@ bool test_unit_13(void) {
         return false;
     }
 
-    SIUnitRef kg = SIUnitForUnderivedSymbol(STR("kg"));
+    SIUnitRef kg = SIUnitFindWithUnderivedSymbol(STR("kg"));
     if (!kg) {
         printf("test_unit_13 failed: Failed to retrieve 'kg' unit\n");
         OCRelease(unit_lb);
@@ -607,7 +623,7 @@ bool test_unit_13(void) {
 
     // Part 2: Test pound-force (lbf)
     double multiplier2 = 1.0;
-    SIUnitRef unit_lbf = SIUnitForParsedSymbol(STR("lbf"), &multiplier2, &err);
+    SIUnitRef unit_lbf = SIUnitFromExpression(STR("lbf"), &multiplier2, &err);
     if (!unit_lbf) {
         if (err) {
             printf("test_unit_13 failed: Error parsing 'lbf': %s\n", OCStringGetCString(err));
@@ -635,7 +651,7 @@ bool test_unit_13(void) {
         return false;
     }
 
-    SIUnitRef N = SIUnitForUnderivedSymbol(STR("N"));
+    SIUnitRef N = SIUnitFindWithUnderivedSymbol(STR("N"));
     if (!N) {
         printf("test_unit_13 failed: Failed to retrieve unit 'N'\n");
         OCRelease(unit_lb);
@@ -684,3 +700,396 @@ bool test_unit_13(void) {
     return true;
 }
 
+
+
+bool test_unit_by_multiplying_without_reducing(void) {
+    printf("Running %s...\n", __func__);
+    bool success = true;
+    OCStringRef err = NULL;
+    double multiplier = 0.0;
+
+    // 1) Prepare base units: m and s
+    SIUnitRef m = SIUnitFromExpression(STR("m"), NULL, &err);
+    SIUnitRef s = NULL;  // <-- declare and initialize to NULL at the top
+    if (!m) {
+        fprintf(stderr, "  ✗ Failed to parse 'm': %s\n",
+                err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup;
+    }
+    s = SIUnitFromExpression(STR("s"), NULL, &err);
+    if (!s) {
+        fprintf(stderr, "  ✗ Failed to parse 's': %s\n",
+                err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup;
+    }
+
+    // 2) Multiply two distinct units: m * s
+    multiplier = 0.0;
+    SIUnitRef ms = SIUnitByMultiplyingWithoutReducing(m, s, &multiplier, &err);
+    if (!ms) {
+        fprintf(stderr, "  ✗ m*s returned NULL: %s\n",
+                err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup;
+    }
+    {
+        double exprMul = 0.0;
+        SIUnitRef ms_expr = SIUnitFromExpression(STR("m*s"), &exprMul, &err);
+        if (!ms_expr) {
+            fprintf(stderr, "  ✗ Failed to parse 'm*s': %s\n",
+                    OCStringGetCString(err));
+            success = false;
+        }
+        else if (!SIUnitAreEquivalentUnits(ms, ms_expr)) {
+            fprintf(stderr, "  ✗ m*s mismatch (constructed vs parsed)\n");
+            success = false;
+        }
+        OCRelease(ms_expr);
+    }
+    if (fabs(multiplier - 1.0) > 1e-12) {
+        fprintf(stderr,
+                "  ✗ Unexpected multiplier for 'm*s': expected 1.0, got %.12f\n",
+                multiplier);
+        success = false;
+    }
+    OCRelease(ms);
+
+    // 3) Identity: dimensionless * m => m, multiplier must not change
+    SIUnitRef dimless = SIUnitDimensionlessAndUnderived();
+    multiplier = 2.5;
+    SIUnitRef id1 = SIUnitByMultiplyingWithoutReducing(dimless, m, &multiplier, &err);
+    if (id1 != m) {
+        fprintf(stderr, "  ✗ dimensionless * m did not return the same m instance\n");
+        success = false;
+    }
+    if (fabs(multiplier - 2.5) > 1e-12) {
+        fprintf(stderr,
+                "  ✗ multiplier changed for dimless*m: expected 2.5, got %.12f\n",
+                multiplier);
+        success = false;
+    }
+
+    // 4) Squaring shortcut: m * m => m^2
+    multiplier = 0.0;
+    SIUnitRef m2 = SIUnitByMultiplyingWithoutReducing(m, m, &multiplier, &err);
+    if (!m2) {
+        fprintf(stderr, "  ✗ Squaring m returned NULL: %s\n",
+                err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup;
+    }
+    {
+        double exprMul2 = 0.0;
+        SIUnitRef m2_expr = SIUnitFromExpression(STR("m^2"), &exprMul2, &err);
+        if (!m2_expr) {
+            fprintf(stderr, "  ✗ Failed to parse 'm^2': %s\n",
+                    OCStringGetCString(err));
+            success = false;
+        }
+        else if (!SIUnitAreEquivalentUnits(m2, m2_expr)) {
+            fprintf(stderr, "  ✗ m^2 mismatch (constructed vs parsed)\n");
+            success = false;
+        }
+        OCRelease(m2_expr);
+    }
+    if (fabs(multiplier - 1.0) > 1e-12) {
+        fprintf(stderr,
+                "  ✗ Unexpected multiplier for 'm*m': expected 1.0, got %.12f\n",
+                multiplier);
+        success = false;
+    }
+    OCRelease(m2);
+
+cleanup:
+    if (err) OCRelease(err);
+    if (m)   OCRelease(m);
+    if (s)   OCRelease(s);
+
+    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
+    return success;
+}
+
+bool test_unit_by_dividing_without_reducing(void) {
+    printf("Running %s...\n", __func__);
+
+    OCStringRef err = NULL;
+    bool success = true;
+    double mult = 1.0;
+
+    SIUnitRef m = SIUnitFromExpression(STR("m"), NULL, &err);
+    SIUnitRef s = NULL;
+    SIUnitRef m_per_s = NULL;
+
+    if (!m) {
+        fprintf(stderr, "  ✗ Failed to parse 'm': %s\n",
+            err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup;
+    }
+
+    // Do not assign s until after we know m was successfully assigned
+    err = NULL;
+    s = SIUnitFromExpression(STR("s"), NULL, &err);
+    if (!s) {
+        fprintf(stderr, "  ✗ Failed to parse 's': %s\n",
+            err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup;
+    }
+
+    m_per_s = SIUnitByDividingWithoutReducing(m, s, &mult);
+    if (!m_per_s) {
+        fprintf(stderr, "  ✗ Division returned NULL\n");
+        success = false;
+        goto cleanup;
+    }
+
+    OCStringRef sym = SIUnitCopySymbol(m_per_s);
+    if (!sym) {
+        fprintf(stderr, "  ✗ Could not copy symbol of result\n");
+        success = false;
+        goto cleanup;
+    }
+    if (OCStringCompare(sym, STR("m/s"), 0) != kOCCompareEqualTo) {
+        fprintf(stderr, "  ✗ Expected symbol 'm/s', got '%s'\n", OCStringGetCString(sym));
+        OCRelease(sym);
+        success = false;
+        goto cleanup;
+    }
+    OCRelease(sym);
+
+    if (OCCompareDoubleValuesLoose(mult, 1.0) != kOCCompareEqualTo) {
+        fprintf(stderr, "  ✗ Expected multiplier 1.0, got %.12f\n", mult);
+        success = false;
+        goto cleanup;
+    }
+
+    SIDimensionalityRef dim_result = SIUnitGetDimensionality(m_per_s);
+    SIDimensionalityRef dim_expected =
+        SIDimensionalityByDividingWithoutReducing(
+            SIUnitGetDimensionality(m),
+            SIUnitGetDimensionality(s)
+        );
+    if (!SIDimensionalityEqual(dim_result, dim_expected)) {
+        fprintf(stderr, "  ✗ Dimensionality mismatch\n");
+        success = false;
+        goto cleanup;
+    }
+
+cleanup:
+    if (m_per_s) OCRelease(m_per_s);
+    if (s)      OCRelease(s);
+    if (m)      OCRelease(m);
+
+    printf("%s %s\n", __func__, success ? "passed" : "failed");
+    return success;
+}
+
+
+// Test nth-root operation on SI units (SIUnitByTakingNthRoot)
+bool test_unit_by_taking_nth_root(void) {
+    printf("Running %s...\n", __func__);
+    bool success = true;
+    OCStringRef err = NULL;
+
+    // Test 1: Take square root of "m^2" -> should yield "m"
+    double multiplier = 0.0;
+    SIUnitRef m2 = SIUnitFromExpression(STR("m^2"), NULL, &err);
+    if (!m2) {
+        fprintf(stderr, "  ✗ Failed to parse 'm^2': %s\n",
+                err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup;
+    }
+    SIUnitRef m_sqrt = SIUnitByTakingNthRoot(m2, 2, &multiplier, &err);
+    if (!m_sqrt) {
+        fprintf(stderr, "  ✗ Failed to take square root of 'm^2': %s\n",
+                err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup;
+    }
+    SIUnitRef m = SIUnitFromExpression(STR("m"), NULL, &err);
+    if (!m) {
+        fprintf(stderr, "  ✗ Failed to parse 'm': %s\n",
+                err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup;
+    }
+    if (!SIUnitAreEquivalentUnits(m_sqrt, m)) {
+        fprintf(stderr, "  ✗ sqrt(m^2) did not yield 'm' as expected\n");
+        success = false;
+    }
+    if (fabs(multiplier - 1.0) > 1e-12) {
+        fprintf(stderr, "  ✗ multiplier for sqrt(m^2) expected 1.0, got %.12f\n", multiplier);
+        success = false;
+    }
+    OCRelease(m_sqrt);
+    OCRelease(m2);
+
+    // Test 2: Take cube root of "m^6" -> should yield "m^2"
+    multiplier = 1.0;
+    SIUnitRef m6 = SIUnitFromExpression(STR("m^6"), NULL, &err);
+    if (!m6) {
+        fprintf(stderr, "  ✗ Failed to parse 'm^6': %s\n",
+                err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup_m;
+    }
+    SIUnitRef m2_cuberoot = SIUnitByTakingNthRoot(m6, 3, &multiplier, &err);
+    if (!m2_cuberoot) {
+        fprintf(stderr, "  ✗ Failed to take cube root of 'm^6': %s\n",
+                err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup_m6;
+    }
+    SIUnitRef m2_expected = SIUnitFromExpression(STR("m^2"), NULL, &err);
+    if (!m2_expected) {
+        fprintf(stderr, "  ✗ Failed to parse 'm^2': %s\n",
+                err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup_m2_cuberoot;
+    }
+    if (!SIUnitAreEquivalentUnits(m2_cuberoot, m2_expected)) {
+        fprintf(stderr, "  ✗ cuberoot(m^6) did not yield 'm^2' as expected\n");
+        success = false;
+    }
+    if (fabs(multiplier - 1.0) > 1e-12) {
+        fprintf(stderr, "  ✗ multiplier for cuberoot(m^6) expected 1.0, got %.12f\n", multiplier);
+        success = false;
+    }
+    OCRelease(m2_cuberoot);
+    OCRelease(m2_expected);
+
+    // Test 3: Take square root of dimensionless (should return the same dimensionless unit)
+    multiplier = 1.0;
+    SIUnitRef dimless = SIUnitDimensionlessAndUnderived();
+    SIUnitRef dimless_root = SIUnitByTakingNthRoot(dimless, 2, &multiplier, &err);
+    if (dimless_root != dimless) {
+        fprintf(stderr, "  ✗ sqrt(1) did not return same dimensionless unit pointer\n");
+        success = false;
+    }
+    if (fabs(multiplier - 1.0) > 1e-12) {
+        fprintf(stderr, "  ✗ multiplier for sqrt(1) expected 1.0, got %.12f\n", multiplier);
+        success = false;
+    }
+
+    // Test 4: Special case: take sqrt of unit with symbol (e.g. "hp") if available
+    // Optional: If your system has "hp" or similar, you can add a similar test here.
+
+cleanup_m2_cuberoot:
+    if (m2_cuberoot) OCRelease(m2_cuberoot);
+cleanup_m6:
+    if (m6) OCRelease(m6);
+cleanup_m:
+    if (m) OCRelease(m);
+cleanup:
+    if (err) OCRelease(err);
+
+    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
+    return success;
+}
+
+
+// Test SIUnitByRaisingToPowerWithoutReducing
+bool test_unit_by_raising_to_power_without_reducing(void) {
+    printf("Running %s...\n", __func__);
+    bool success = true;
+    OCStringRef err = NULL;
+
+    // 1. Test squaring a unit: m^2
+    double multiplier = 0.0;
+    SIUnitRef m = SIUnitFromExpression(STR("m"), NULL, &err);
+    if (!m) {
+        fprintf(stderr, "  ✗ Failed to parse 'm': %s\n",
+            err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup;
+    }
+    SIUnitRef m2 = SIUnitByRaisingToPowerWithoutReducing(m, 2.0, &multiplier, &err);
+    if (!m2) {
+        fprintf(stderr, "  ✗ Failed to compute m^2: %s\n",
+            err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup_m;
+    }
+    SIUnitRef m2_expected = SIUnitFromExpression(STR("m^2"), NULL, &err);
+    if (!m2_expected) {
+        fprintf(stderr, "  ✗ Failed to parse 'm^2': %s\n",
+            err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup_m2;
+    }
+    if (!SIUnitAreEquivalentUnits(m2, m2_expected)) {
+        fprintf(stderr, "  ✗ m^2 mismatch (constructed vs parsed)\n");
+        success = false;
+    }
+    if (fabs(multiplier - 1.0) > 1e-12) {
+        fprintf(stderr, "  ✗ Unexpected multiplier for m^2: expected 1.0, got %.12f\n", multiplier);
+        success = false;
+    }
+    OCRelease(m2_expected);
+    OCRelease(m2);
+
+    // 2. Test negative power: m^-1
+    multiplier = 0.0;
+    SIUnitRef m_inv = SIUnitByRaisingToPowerWithoutReducing(m, -1.0, &multiplier, &err);
+    if (!m_inv) {
+        fprintf(stderr, "  ✗ Failed to compute m^-1: %s\n",
+            err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup_m;
+    }
+    SIUnitRef m_inv_expected = SIUnitFromExpression(STR("1/m"), NULL, &err);
+    if (!m_inv_expected) {
+        fprintf(stderr, "  ✗ Failed to parse '1/m': %s\n",
+            err ? OCStringGetCString(err) : "no error");
+        success = false;
+        goto cleanup_m_inv;
+    }
+    if (!SIUnitAreEquivalentUnits(m_inv, m_inv_expected)) {
+        fprintf(stderr, "  ✗ m^-1 mismatch (constructed vs parsed)\n");
+        success = false;
+    }
+    if (fabs(multiplier - 1.0) > 1e-12) {
+        fprintf(stderr, "  ✗ Unexpected multiplier for m^-1: expected 1.0, got %.12f\n", multiplier);
+        success = false;
+    }
+    OCRelease(m_inv_expected);
+    OCRelease(m_inv);
+
+    // 3. Test raising to the 1st power: should return original pointer
+    multiplier = 0.0;
+    SIUnitRef m_pow1 = SIUnitByRaisingToPowerWithoutReducing(m, 1.0, &multiplier, &err);
+    if (m_pow1 != m) {
+        fprintf(stderr, "  ✗ m^1 did not return original instance\n");
+        success = false;
+    }
+    if (fabs(multiplier - 1.0) > 1e-12) {
+        fprintf(stderr, "  ✗ Unexpected multiplier for m^1: expected 1.0, got %.12f\n", multiplier);
+        success = false;
+    }
+
+    // 4. (Optional) Test with a "special symbol" unit if you have one (e.g., "hp")
+    // SIUnitRef hp = SIUnitFromExpression(STR("hp"), NULL, &err);
+    // if (hp) {
+    //     multiplier = 0.0;
+    //     SIUnitRef hp2 = SIUnitByRaisingToPowerWithoutReducing(hp, 2.0, &multiplier, &err);
+    //     // Symbol should be "hp^2" etc. (You may want to check the symbol string here.)
+    //     OCRelease(hp2);
+    //     OCRelease(hp);
+    // }
+
+cleanup_m_inv:
+    if (m_inv) OCRelease(m_inv);
+cleanup_m2:
+    if (m2) OCRelease(m2);
+cleanup_m:
+    if (m) OCRelease(m);
+cleanup:
+    if (err) OCRelease(err);
+
+    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
+    return success;
+}

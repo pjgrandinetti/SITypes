@@ -1,14 +1,18 @@
-#include "../src/SILibrary.h" // Ensure correct path to SI functions and types
-#include "test_utils.h" // Include the new test utils header
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include "SILibrary.h"
+
+#include "test_utils.h" // Include the new test utils header
 
 bool test_scalar_parser_1(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
 
     // Part 1: 4.3 eV parsing
-    SIScalarRef scalar = SIScalarCreateWithOCString(STR("4.3 eV"), &err);
+    SIScalarRef scalar = SIScalarCreateFromExpression(STR("4.3 eV"), &err);
     if (!scalar) {
         if (err) {
             printf("Error parsing scalar '4.3 eV': %s\n", OCStringGetCString(err));
@@ -22,7 +26,7 @@ bool test_scalar_parser_1(void) {
         err = NULL;
     }
 
-    SIUnitRef evUnit = SIUnitForUnderivedSymbol(STR("eV"));
+    SIUnitRef evUnit = SIUnitFindWithUnderivedSymbol(STR("eV"));
     SIScalarRef expected1 = SIScalarCreateWithFloatComplex(4.3, evUnit);
     if (!expected1) {
         printf("%s failed: Failed to create expected scalar\n", __func__);
@@ -41,7 +45,7 @@ bool test_scalar_parser_1(void) {
     OCRelease(scalar);
 
     // Part 2: mass = force / acceleration
-    SIScalarRef acceleration = SIScalarCreateWithOCString(STR("9.8 m/s^2"), &err);
+    SIScalarRef acceleration = SIScalarCreateFromExpression(STR("9.8 m/s^2"), &err);
     if (!acceleration) {
         if (err) {
             printf("Error parsing acceleration: %s\n", OCStringGetCString(err));
@@ -55,7 +59,7 @@ bool test_scalar_parser_1(void) {
         err = NULL;
     }
 
-    SIScalarRef force = SIScalarCreateWithOCString(STR("500 N"), &err);
+    SIScalarRef force = SIScalarCreateFromExpression(STR("500 N"), &err);
     if (!force) {
         if (err) {
             printf("Error parsing force: %s\n", OCStringGetCString(err));
@@ -86,7 +90,7 @@ bool test_scalar_parser_1(void) {
         err = NULL;
     }
 
-    SIScalarRef expected2 = SIScalarCreateWithOCString(STR("51.0204081632653 kg"), &err);
+    SIScalarRef expected2 = SIScalarCreateFromExpression(STR("51.0204081632653 kg"), &err);
     if (!expected2) {
         if (err) {
             printf("Error parsing expected mass: %s\n", OCStringGetCString(err));
@@ -127,7 +131,7 @@ bool test_scalar_parser_2(void) {
     OCStringRef err = NULL;
 
     // force
-    SIScalarRef force = SIScalarCreateWithOCString(STR("500 N"), &err);
+    SIScalarRef force = SIScalarCreateFromExpression(STR("500 N"), &err);
     if (!force) {
         if (err) {
             printf("Error parsing force: %s\n", OCStringGetCString(err));
@@ -142,7 +146,7 @@ bool test_scalar_parser_2(void) {
     }
 
     // accel
-    SIScalarRef accel = SIScalarCreateWithOCString(STR("9.8 m/s^2"), &err);
+    SIScalarRef accel = SIScalarCreateFromExpression(STR("9.8 m/s^2"), &err);
     if (!accel) {
         if (err) {
             printf("Error parsing acceleration: %s\n", OCStringGetCString(err));
@@ -175,7 +179,7 @@ bool test_scalar_parser_2(void) {
     }
 
     // combined expression
-    SIScalarRef mass2 = SIScalarCreateWithOCString(STR("500 N/(9.8 m/s^2)"), &err);
+    SIScalarRef mass2 = SIScalarCreateFromExpression(STR("500 N/(9.8 m/s^2)"), &err);
     if (!mass2) {
         if (err) {
             printf("Error parsing combined mass: %s\n", OCStringGetCString(err));
@@ -222,7 +226,7 @@ bool test_scalar_parser_3(void) {
     OCStringRef err = NULL;
 
     // Parse "2^3"
-    SIScalarRef res1 = SIScalarCreateWithOCString(STR("2^3"), &err);
+    SIScalarRef res1 = SIScalarCreateFromExpression(STR("2^3"), &err);
     if (!res1) {
         if (err) {
             printf("Error parsing exponent: %s\n", OCStringGetCString(err));
@@ -237,7 +241,7 @@ bool test_scalar_parser_3(void) {
     }
 
     // Parse "8"
-    SIScalarRef res2 = SIScalarCreateWithOCString(STR("8"), &err);
+    SIScalarRef res2 = SIScalarCreateFromExpression(STR("8"), &err);
     if (!res2) {
         if (err) {
             printf("Error parsing literal: %s\n", OCStringGetCString(err));
@@ -273,7 +277,7 @@ bool test_scalar_parser_4(void) {
     OCStringRef err = NULL;
 
     // Parse expression with implicit multiplication
-    SIScalarRef s = SIScalarCreateWithOCString(STR("(2+3)(4+1)"), &err);
+    SIScalarRef s = SIScalarCreateFromExpression(STR("(2+3)(4+1)"), &err);
     if (!s) {
         if (err) {
             printf("Error parsing implicit multiplication: %s\n", OCStringGetCString(err));
@@ -288,7 +292,7 @@ bool test_scalar_parser_4(void) {
     }
 
     // Parse expected value
-    SIScalarRef e = SIScalarCreateWithOCString(STR("25"), &err);
+    SIScalarRef e = SIScalarCreateFromExpression(STR("25"), &err);
     if (!e) {
         if (err) {
             printf("Error parsing expected result: %s\n", OCStringGetCString(err));
@@ -324,7 +328,7 @@ bool test_scalar_parser_5(void) {
     OCStringRef err = NULL;
 
     // √(9) m
-    SIScalarRef r1 = SIScalarCreateWithOCString(STR("√(9) m"), &err);
+    SIScalarRef r1 = SIScalarCreateFromExpression(STR("√(9) m"), &err);
     if (!r1) {
         if (err) {
             printf("Error parsing root: %s\n", OCStringGetCString(err));
@@ -339,7 +343,7 @@ bool test_scalar_parser_5(void) {
     }
 
     // 3 m
-    SIScalarRef r2 = SIScalarCreateWithOCString(STR("3 m"), &err);
+    SIScalarRef r2 = SIScalarCreateFromExpression(STR("3 m"), &err);
     if (!r2) {
         if (err) {
             printf("Error parsing comparison scalar for root: %s\n", OCStringGetCString(err));
@@ -365,7 +369,7 @@ bool test_scalar_parser_5(void) {
     OCRelease(r2);
 
     // ∛(8) kg
-    SIScalarRef r3 = SIScalarCreateWithOCString(STR("∛(8) kg"), &err);
+    SIScalarRef r3 = SIScalarCreateFromExpression(STR("∛(8) kg"), &err);
     if (!r3) {
         if (err) {
             printf("Error parsing cubert: %s\n", OCStringGetCString(err));
@@ -380,7 +384,7 @@ bool test_scalar_parser_5(void) {
     }
 
     // 2 kg
-    SIScalarRef r4 = SIScalarCreateWithOCString(STR("2 kg"), &err);
+    SIScalarRef r4 = SIScalarCreateFromExpression(STR("2 kg"), &err);
     if (!r4) {
         if (err) {
             printf("Error parsing comparison scalar for cubert: %s\n", OCStringGetCString(err));
@@ -414,7 +418,7 @@ bool test_scalar_parser_6(void) {
     OCStringRef err = NULL;
 
     // Multiplication test
-    SIScalarRef d1 = SIScalarCreateWithOCString(STR("6×2 kg"), &err);
+    SIScalarRef d1 = SIScalarCreateFromExpression(STR("6×2 kg"), &err);
     if (!d1) {
         if (err) {
             printf("Error parsing multiplication: %s\n", OCStringGetCString(err));
@@ -428,7 +432,7 @@ bool test_scalar_parser_6(void) {
         err = NULL;
     }
 
-    SIScalarRef d2 = SIScalarCreateWithOCString(STR("12 kg"), &err);
+    SIScalarRef d2 = SIScalarCreateFromExpression(STR("12 kg"), &err);
     if (!d2) {
         if (err) {
             printf("Error parsing comparison scalar for multiplication: %s\n", OCStringGetCString(err));
@@ -444,7 +448,7 @@ bool test_scalar_parser_6(void) {
     }
 
     // Division test
-    SIScalarRef d3 = SIScalarCreateWithOCString(STR("(12 ÷ 4) m"), &err);
+    SIScalarRef d3 = SIScalarCreateFromExpression(STR("(12 ÷ 4) m"), &err);
     if (!d3) {
         if (err) {
             printf("Error parsing division: %s\n", OCStringGetCString(err));
@@ -459,7 +463,7 @@ bool test_scalar_parser_6(void) {
         err = NULL;
     }
 
-    SIScalarRef d4 = SIScalarCreateWithOCString(STR("3 m"), &err);
+    SIScalarRef d4 = SIScalarCreateFromExpression(STR("3 m"), &err);
     if (!d4) {
         if (err) {
             printf("Error parsing comparison scalar for division: %s\n", OCStringGetCString(err));
@@ -475,7 +479,7 @@ bool test_scalar_parser_6(void) {
     }
 
     // Minus sign test
-    SIScalarRef d5 = SIScalarCreateWithOCString(STR("−5 m"), &err);
+    SIScalarRef d5 = SIScalarCreateFromExpression(STR("−5 m"), &err);
     if (!d5) {
         if (err) {
             printf("Error parsing minus sign: %s\n", OCStringGetCString(err));
@@ -490,7 +494,7 @@ bool test_scalar_parser_6(void) {
         err = NULL;
     }
 
-    SIScalarRef d6 = SIScalarCreateWithOCString(STR("-5 m"), &err);
+    SIScalarRef d6 = SIScalarCreateFromExpression(STR("-5 m"), &err);
     if (!d6) {
         if (err) {
             printf("Error parsing comparison scalar for minus: %s\n", OCStringGetCString(err));
@@ -525,7 +529,7 @@ bool test_scalar_parser_7(void) {
     OCStringRef err = NULL;
 
     // Parse "5 µm"
-    SIScalarRef m1 = SIScalarCreateWithOCString(STR("5 µm"), &err);
+    SIScalarRef m1 = SIScalarCreateFromExpression(STR("5 µm"), &err);
     if (!m1) {
         if (err) {
             printf("Error parsing micro prefix: %s\n", OCStringGetCString(err));
@@ -540,7 +544,7 @@ bool test_scalar_parser_7(void) {
     }
 
     // Expected scalar
-    SIUnitRef micron = SIUnitForUnderivedSymbol(STR("µm"));
+    SIUnitRef micron = SIUnitFindWithUnderivedSymbol(STR("µm"));
     SIScalarRef m2 = SIScalarCreateWithFloatComplex(5.0, micron);
     if (!m2) {
         OCRelease(m1);
@@ -568,7 +572,7 @@ bool test_scalar_parser_8(void) {
     OCStringRef err = NULL;
 
     // Parse "1 quartertsp"
-    SIScalarRef q = SIScalarCreateWithOCString(STR("1 quartertsp"), &err);
+    SIScalarRef q = SIScalarCreateFromExpression(STR("1 quartertsp"), &err);
     if (!q) {
         if (err) {
             printf("Error parsing unit 'quartertsp': %s\n", OCStringGetCString(err));
@@ -583,7 +587,7 @@ bool test_scalar_parser_8(void) {
     }
 
     // Create expected scalar
-    SIUnitRef qUnit = SIUnitForUnderivedSymbol(STR("quartertsp"));
+    SIUnitRef qUnit = SIUnitFindWithUnderivedSymbol(STR("quartertsp"));
     SIScalarRef qExp = SIScalarCreateWithFloatComplex(1.0, qUnit);
     if (!qExp) {
         OCRelease(q);
@@ -612,7 +616,7 @@ bool test_scalar_parser_9(void) {
     OCStringRef err = NULL;
 
     // Try to parse invalid expression
-    SIScalarRef bad = SIScalarCreateWithOCString(STR("2+"), &err);
+    SIScalarRef bad = SIScalarCreateFromExpression(STR("2+"), &err);
     if (bad != NULL || err == NULL) {
         printf("%s failed: Error detection failed for malformed expression '2+'\n", __func__);
         if (err) OCRelease(err);
@@ -632,7 +636,7 @@ bool test_scalar_parser_10(void) {
     OCStringRef err = NULL;
 
     // n
-    SIScalarRef n = SIScalarCreateWithOCString(STR("0.078 mol"), &err);
+    SIScalarRef n = SIScalarCreateFromExpression(STR("0.078 mol"), &err);
     if (!n) {
         if (err) {
             printf("Error parsing n: %s\n", OCStringGetCString(err));
@@ -644,7 +648,7 @@ bool test_scalar_parser_10(void) {
     if (err) { OCRelease(err); err = NULL; }
 
     // R
-    SIScalarRef R = SIScalarCreateWithOCString(STR("R"), &err);
+    SIScalarRef R = SIScalarCreateFromExpression(STR("R"), &err);
     if (!R) {
         if (err) {
             printf("Error parsing R: %s\n", OCStringGetCString(err));
@@ -657,7 +661,7 @@ bool test_scalar_parser_10(void) {
     if (err) { OCRelease(err); err = NULL; }
 
     // T
-    SIScalarRef T = SIScalarCreateWithOCString(STR("298.15 K"), &err);
+    SIScalarRef T = SIScalarCreateFromExpression(STR("298.15 K"), &err);
     if (!T) {
         if (err) {
             printf("Error parsing T: %s\n", OCStringGetCString(err));
@@ -670,7 +674,7 @@ bool test_scalar_parser_10(void) {
     if (err) { OCRelease(err); err = NULL; }
 
     // V
-    SIScalarRef V = SIScalarCreateWithOCString(STR("42.0 mL"), &err);
+    SIScalarRef V = SIScalarCreateFromExpression(STR("42.0 mL"), &err);
     if (!V) {
         if (err) {
             printf("Error parsing V: %s\n", OCStringGetCString(err));
@@ -722,7 +726,7 @@ bool test_scalar_parser_10(void) {
     if (err) { OCRelease(err); err = NULL; }
 
     // Expected result
-    SIScalarRef expected = SIScalarCreateWithOCString(STR("4603777.340690149 Pa"), &err);
+    SIScalarRef expected = SIScalarCreateFromExpression(STR("4603777.340690149 Pa"), &err);
     if (!expected) {
         if (err) {
             printf("Error parsing expected pressure: %s\n", OCStringGetCString(err));

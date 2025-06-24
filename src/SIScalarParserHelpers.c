@@ -204,7 +204,7 @@ insertAsterisks(OCMutableStringRef original)
 }
 
 
-SIScalarRef SIScalarCreateWithOCString(OCStringRef string, OCStringRef *error)
+SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
 

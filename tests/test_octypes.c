@@ -1,5 +1,9 @@
-#include "../src/SILibrary.h" // Updated include path to resolve missing header issue
 #include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include "SILibrary.h"
 
 bool octypesTest1(void) {
     printf("Running %s...\n", __func__);

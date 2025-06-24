@@ -99,7 +99,7 @@ SIScalarRef SIPeriodicTableCreateFormulaMass(OCStringRef formula, OCStringRef *e
             OCStringAppend(calculation, STR(")"));
         }
 
-        result = SIScalarCreateWithOCString(calculation, error);
+        result = SIScalarCreateFromExpression(calculation, error);
     }
 
     OCRelease(calculation);

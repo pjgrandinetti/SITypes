@@ -26,6 +26,12 @@ struct impl_SIScalar {
     impl_SINumber      value;
 };
 
+OCTypeID SIScalarGetTypeID(void)
+{
+    if(kSIScalarID == kOCNotATypeID) kSIScalarID = OCRegisterType("SIScalar");
+    return kSIScalarID;
+}
+
 static bool impl_SIScalarEqual(const void *theType1, const void *theType2)
 {
     if (theType1 == theType2)
@@ -149,11 +155,8 @@ static void *impl_SIScalarDeepCopyMutable(const void *theType) {
 OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar) {
     return impl_SIScalarCopyFormattingDescription((OCTypeRef) scalar);
 }
-
-OCTypeID SIScalarGetTypeID(void)
-{
-    if(kSIScalarID == kOCNotATypeID) kSIScalarID = OCRegisterType("SIScalar");
-    return kSIScalarID;
+static cJSON *impl_SIScalarCopyJSON(const void *obj) {
+    return SIScalarCreateJSON((SIScalarRef)obj);
 }
 
 static struct impl_SIScalar *SIScalarAllocate(void)
@@ -163,6 +166,7 @@ static struct impl_SIScalar *SIScalarAllocate(void)
                                         impl_SIScalarFinalize,
                                         impl_SIScalarEqual,
                                         impl_SIScalarCopyFormattingDescription,
+                                        impl_SIScalarCopyJSON,
                                         impl_SIScalarDeepCopy,
                                         impl_SIScalarDeepCopyMutable);
     obj->unit = NULL;
@@ -210,6 +214,32 @@ static SIMutableScalarRef SIScalarCreateMutable(SIUnitRef unit,  SINumberType el
 {
     return (SIMutableScalarRef) SIScalarCreate(unit, elementType, value);
 }
+
+cJSON *SIScalarCreateJSON(SIScalarRef scalar) {
+    if (!scalar) return cJSON_CreateNull();
+    OCStringRef stringValue = SIScalarCreateStringValue(scalar);
+    if (!stringValue) {
+        fprintf(stderr, "SIScalarCreateJSON: Failed to get symbol.\n");
+        return cJSON_CreateNull();
+    }
+    const char *s = OCStringGetCString(stringValue);
+    cJSON *node = cJSON_CreateString(s ? s : "");
+    OCRelease(stringValue);
+    return node;
+}
+SIScalarRef SIScalarCreateFromJSON(cJSON *json) {
+    if (!json || !cJSON_IsString(json)) return NULL;
+    const char *str = json->valuestring;
+    if (!str) return NULL;
+    OCStringRef expressions = OCStringCreateWithCString(str);
+    if (!expressions) return NULL;
+    OCStringRef err = NULL;
+    SIScalarRef scalar = SIScalarCreateFromExpression(expressions, &err);
+    OCRelease(expressions);
+    OCRelease(err);
+    return scalar;
+}
+
 
 /*
  @function SIScalarCreateCopy
@@ -329,7 +359,7 @@ static bool __NormalizeScalarMantissaToSI3(SIMutableScalarRef sc) {
             OCRelease(rootSym);
 
             // look up the prefixed unit (borrowed reference)
-            SIUnitRef prefixed = SIUnitForUnderivedSymbol(tmp);
+            SIUnitRef prefixed = SIUnitFindWithUnderivedSymbol(tmp);
             OCRelease(tmp);
 
             if (prefixed) {
@@ -798,7 +828,7 @@ bool SIScalarTakeComplexPart(SIMutableScalarRef scalar, complexPart part)
             }
 
             if (part == kSIArgumentPart)
-                scalar->unit = SIUnitForUnderivedSymbol(STR("rad"));
+                scalar->unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
 
             return true;
         }
@@ -1864,7 +1894,7 @@ static OCStringRef SIScalarCreateStringValueSplitByUnits(SIScalarRef theScalar, 
     if(scalar) OCRelease(scalar);
     
     if(doubleCheck) {
-        SIScalarRef check = SIScalarCreateWithOCString(stringValue, error);
+        SIScalarRef check = SIScalarCreateFromExpression(stringValue, error);
         if(check) {
             if(SIScalarCompare(theScalar, check)==kOCCompareEqualTo) {
                 OCRelease(check);
@@ -1896,8 +1926,8 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
 {
     if(error) if(*error) return NULL;
     OCMutableArrayRef result = OCArrayCreateMutable(0,&kOCTypeArrayCallBacks);
-    SIUnitRef fahrenheit = SIUnitForUnderivedSymbol(STR("°F"));
-    SIUnitRef celsius = SIUnitForUnderivedSymbol(STR("°C"));
+    SIUnitRef fahrenheit = SIUnitFindWithUnderivedSymbol(STR("°F"));
+    SIUnitRef celsius = SIUnitFindWithUnderivedSymbol(STR("°C"));
     
     if(SIDimensionalityHasSameReducedDimensionality(SIDimensionalityForQuantity(kSIQuantityTemperature,NULL), SIQuantityGetUnitDimensionality((SIQuantityRef)  theScalar))) {
         SIUnitRef theUnit = SIQuantityGetUnit((SIQuantityRef) theScalar);
@@ -1964,13 +1994,13 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
             OCRelease(units);
         }
         if(SIDimensionalityHasSameReducedDimensionality(SIDimensionalityForQuantity(kSIQuantityTime,NULL), SIQuantityGetUnitDimensionality((SIQuantityRef)  theScalar)) && SIScalarIsReal(theScalar)) {
-            SIUnitRef unit1 = SIUnitForUnderivedSymbol(STR("yr"));
-            SIUnitRef unit2 = SIUnitForUnderivedSymbol(STR("month"));
-            SIUnitRef unit3 = SIUnitForUnderivedSymbol(STR("wk"));
-            SIUnitRef unit4 = SIUnitForUnderivedSymbol(STR("d"));
-            SIUnitRef unit5 = SIUnitForUnderivedSymbol(STR("h"));
-            SIUnitRef unit6 = SIUnitForUnderivedSymbol(STR("min"));
-            SIUnitRef unit7 = SIUnitForUnderivedSymbol(STR("s"));
+            SIUnitRef unit1 = SIUnitFindWithUnderivedSymbol(STR("yr"));
+            SIUnitRef unit2 = SIUnitFindWithUnderivedSymbol(STR("month"));
+            SIUnitRef unit3 = SIUnitFindWithUnderivedSymbol(STR("wk"));
+            SIUnitRef unit4 = SIUnitFindWithUnderivedSymbol(STR("d"));
+            SIUnitRef unit5 = SIUnitFindWithUnderivedSymbol(STR("h"));
+            SIUnitRef unit6 = SIUnitFindWithUnderivedSymbol(STR("min"));
+            SIUnitRef unit7 = SIUnitFindWithUnderivedSymbol(STR("s"));
             SIUnitRef theUnits[7] = {unit1,unit2,unit3,unit4, unit5, unit6, unit7};
             OCArrayRef units = OCArrayCreate((const void **) theUnits, 7,&kOCTypeArrayCallBacks);
             OCStringRef stringValue = SIScalarCreateStringValueSplitByUnits(theScalar, units, true, error);
@@ -1981,15 +2011,15 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
             }
         }
         if(SIDimensionalityHasSameReducedDimensionality(SIDimensionalityForQuantity(kSIQuantityVolume,NULL), SIQuantityGetUnitDimensionality((SIQuantityRef)  theScalar)) && SIScalarIsReal(theScalar)) {
-            SIUnitRef unit1 = SIUnitForUnderivedSymbol(STR("gal"));
-            SIUnitRef unit2 = SIUnitForUnderivedSymbol(STR("qt"));
-            SIUnitRef unit3 = SIUnitForUnderivedSymbol(STR("pt"));
-            SIUnitRef unit4 = SIUnitForUnderivedSymbol(STR("cup"));
-            SIUnitRef unit5 = SIUnitForUnderivedSymbol(STR("floz"));
-            SIUnitRef unit6 = SIUnitForUnderivedSymbol(STR("tbsp"));
-            SIUnitRef unit7 = SIUnitForUnderivedSymbol(STR("tsp"));
-            SIUnitRef unit8 = SIUnitForUnderivedSymbol(STR("halftsp"));
-            SIUnitRef unit9 = SIUnitForUnderivedSymbol(STR("quartertsp"));
+            SIUnitRef unit1 = SIUnitFindWithUnderivedSymbol(STR("gal"));
+            SIUnitRef unit2 = SIUnitFindWithUnderivedSymbol(STR("qt"));
+            SIUnitRef unit3 = SIUnitFindWithUnderivedSymbol(STR("pt"));
+            SIUnitRef unit4 = SIUnitFindWithUnderivedSymbol(STR("cup"));
+            SIUnitRef unit5 = SIUnitFindWithUnderivedSymbol(STR("floz"));
+            SIUnitRef unit6 = SIUnitFindWithUnderivedSymbol(STR("tbsp"));
+            SIUnitRef unit7 = SIUnitFindWithUnderivedSymbol(STR("tsp"));
+            SIUnitRef unit8 = SIUnitFindWithUnderivedSymbol(STR("halftsp"));
+            SIUnitRef unit9 = SIUnitFindWithUnderivedSymbol(STR("quartertsp"));
             SIUnitRef theUnits[9] = {unit1,unit2,unit3,unit4, unit5, unit6, unit7,unit8,unit9};
             OCArrayRef units = OCArrayCreate((const void **) theUnits, 9,&kOCTypeArrayCallBacks);
             OCStringRef stringValue = SIScalarCreateStringValueSplitByUnits(theScalar, units, false, error);
@@ -2000,9 +2030,9 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
             }
         }
         if(SIDimensionalityHasSameReducedDimensionality(SIDimensionalityForQuantity(kSIQuantityLength,NULL), SIQuantityGetUnitDimensionality((SIQuantityRef)  theScalar)) && SIScalarIsReal(theScalar)) {
-            SIUnitRef unit1 = SIUnitForUnderivedSymbol(STR("mi"));
-            SIUnitRef unit2 = SIUnitForUnderivedSymbol(STR("ft"));
-            SIUnitRef unit3 = SIUnitForUnderivedSymbol(STR("in"));
+            SIUnitRef unit1 = SIUnitFindWithUnderivedSymbol(STR("mi"));
+            SIUnitRef unit2 = SIUnitFindWithUnderivedSymbol(STR("ft"));
+            SIUnitRef unit3 = SIUnitFindWithUnderivedSymbol(STR("in"));
             SIUnitRef theUnits[3] = {unit1,unit2,unit3};
             OCArrayRef units = OCArrayCreate((const void **) theUnits, 3,&kOCTypeArrayCallBacks);
             OCStringRef stringValue = SIScalarCreateStringValueSplitByUnits(theScalar, units, false, error);
@@ -2013,10 +2043,10 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
             }
         }
         if(SIDimensionalityHasSameReducedDimensionality(SIDimensionalityForQuantity(kSIQuantityLength,NULL), SIQuantityGetUnitDimensionality((SIQuantityRef)  theScalar)) && SIScalarIsReal(theScalar)) {
-            SIUnitRef unit1 = SIUnitForUnderivedSymbol(STR("mi"));
-            SIUnitRef unit2 = SIUnitForUnderivedSymbol(STR("yd"));
-            SIUnitRef unit3 = SIUnitForUnderivedSymbol(STR("ft"));
-            SIUnitRef unit4 = SIUnitForUnderivedSymbol(STR("in"));
+            SIUnitRef unit1 = SIUnitFindWithUnderivedSymbol(STR("mi"));
+            SIUnitRef unit2 = SIUnitFindWithUnderivedSymbol(STR("yd"));
+            SIUnitRef unit3 = SIUnitFindWithUnderivedSymbol(STR("ft"));
+            SIUnitRef unit4 = SIUnitFindWithUnderivedSymbol(STR("in"));
             SIUnitRef theUnits[4] = {unit1,unit2,unit3,unit4};
             OCArrayRef units = OCArrayCreate((const void **) theUnits, 4,&kOCTypeArrayCallBacks);
             OCStringRef stringValue = SIScalarCreateStringValueSplitByUnits(theScalar, units, false, error);
@@ -2030,9 +2060,9 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
             }
         }
         if(SIDimensionalityHasSameReducedDimensionality(SIDimensionalityForQuantity(kSIQuantityMass,NULL), SIQuantityGetUnitDimensionality((SIQuantityRef)  theScalar)) && SIScalarIsReal(theScalar)) {
-            SIUnitRef unit1 = SIUnitForUnderivedSymbol(STR("ton"));
-            SIUnitRef unit2 = SIUnitForUnderivedSymbol(STR("lb"));
-            SIUnitRef unit3 = SIUnitForUnderivedSymbol(STR("oz"));
+            SIUnitRef unit1 = SIUnitFindWithUnderivedSymbol(STR("ton"));
+            SIUnitRef unit2 = SIUnitFindWithUnderivedSymbol(STR("lb"));
+            SIUnitRef unit3 = SIUnitFindWithUnderivedSymbol(STR("oz"));
             SIUnitRef theUnits[3] = {unit1,unit2,unit3};
             OCArrayRef units = OCArrayCreate((const void **) theUnits, 3,&kOCTypeArrayCallBacks);
             OCStringRef stringValue = SIScalarCreateStringValueSplitByUnits(theScalar, units, false, error);
@@ -2043,10 +2073,10 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
             }
         }
         if(SIDimensionalityHasSameReducedDimensionality(SIDimensionalityForQuantity(kSIQuantityMass,NULL), SIQuantityGetUnitDimensionality((SIQuantityRef)  theScalar)) && SIScalarIsReal(theScalar)) {
-            SIUnitRef unit1 = SIUnitForUnderivedSymbol(STR("ton"));
-            SIUnitRef unit2 = SIUnitForUnderivedSymbol(STR("st"));
-            SIUnitRef unit3 = SIUnitForUnderivedSymbol(STR("lb"));
-            SIUnitRef unit4 = SIUnitForUnderivedSymbol(STR("oz"));
+            SIUnitRef unit1 = SIUnitFindWithUnderivedSymbol(STR("ton"));
+            SIUnitRef unit2 = SIUnitFindWithUnderivedSymbol(STR("st"));
+            SIUnitRef unit3 = SIUnitFindWithUnderivedSymbol(STR("lb"));
+            SIUnitRef unit4 = SIUnitFindWithUnderivedSymbol(STR("oz"));
             SIUnitRef theUnits[4] = {unit1,unit2,unit3,unit4};
             OCArrayRef units = OCArrayCreate((const void **) theUnits, 4,&kOCTypeArrayCallBacks);
             OCStringRef stringValue = SIScalarCreateStringValueSplitByUnits(theScalar, units, false, error);
@@ -2131,7 +2161,7 @@ bool SIScalarValidateProposedStringValue(SIScalarRef theScalar, OCStringRef prop
     if(error) if(*error) return false;
    	IF_NO_OBJECT_EXISTS_RETURN(theScalar,false);
    	IF_NO_OBJECT_EXISTS_RETURN(proposedStringValue,false);
-    SIScalarRef proposedValue = SIScalarCreateWithOCString(proposedStringValue,error);
+    SIScalarRef proposedValue = SIScalarCreateFromExpression(proposedStringValue,error);
     if(error) if(*error) OCRelease(*error);
     if(proposedValue==NULL) {
         if(error) {

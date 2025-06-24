@@ -65,7 +65,7 @@ typedef enum {
 /** @endcond */
 
 /** @brief Parse an SI dimensionality expression into a cached, immutable object. */
-SIDimensionalityRef SIDimensionalityForSymbol(OCStringRef symbol, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityParseExpression(OCStringRef expression, OCStringRef *error);
 
 #pragma mark Accessors
 
@@ -83,6 +83,28 @@ uint8_t SIDimensionalityGetDenExpAtIndex(SIDimensionalityRef theDim, SIBaseDimen
 
 /** @brief Gets the reduced exponent (num - den) for a base dimension. */
 int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDim, SIBaseDimensionIndex index);
+
+/**
+ * @brief Create a JSON representation of an SIDimensionality.
+ *
+ * The returned JSON is a string node containing the canonical symbol,
+ * e.g., "m/s^2". Caller owns the returned cJSON object.
+ *
+ * @param dim An SIDimensionalityRef instance.
+ * @return A cJSON string object, or cJSON null on failure.
+ */
+cJSON *SIDimensionalityCreateJSON(SIDimensionalityRef dim);
+
+/**
+ * @brief Create an SIDimensionality object from a JSON string node.
+ *
+ * The input must be a JSON string representing a valid dimensionality symbol,
+ * e.g., "m/s^2". If parsing fails, returns NULL.
+ *
+ * @param json A cJSON string object.
+ * @return An SIDimensionalityRef or NULL on failure.
+ */
+SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json);
 
 #pragma mark Tests
 

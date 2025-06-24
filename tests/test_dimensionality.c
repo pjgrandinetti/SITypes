@@ -1,11 +1,15 @@
-#include "../src/SILibrary.h"
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include "SILibrary.h"
+
 
 bool test_dimensionality_0(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
-    SIDimensionalityRef dimensionality1 = SIDimensionalityForSymbol(STR("L"), &err);
+    SIDimensionalityRef dimensionality1 = SIDimensionalityParseExpression(STR("L"), &err);
     if (!dimensionality1) {
         if (err) {
             printf("Error parsing dimensionality 'L': %s\n", OCStringGetCString(err));
@@ -48,7 +52,7 @@ bool test_dimensionality_1(void) {
     OCStringRef err = NULL;
 
     OCStringRef symbol = STR("L•M^2•T^3•I^4•ϴ^5•N^6•J^7/(L^2•M^3•T^4•I^5•ϴ^6•N^7•J^8)");
-    SIDimensionalityRef dimensionality = SIDimensionalityForSymbol(symbol, &err);
+    SIDimensionalityRef dimensionality = SIDimensionalityParseExpression(symbol, &err);
     if (!dimensionality) {
         if (err) {
             printf("Error parsing complex dimensionality: %s\n", OCStringGetCString(err));
@@ -130,14 +134,14 @@ bool test_dimensionality_3(void) {
     SIDimensionalityRef dim1 = NULL, dim2 = NULL, dim3 = NULL, dless = NULL;
     SIDimensionalityRef bySym = NULL, byIdx = NULL;
 
-    dim1 = SIDimensionalityForSymbol(STR("L*M"), &err);
-    dim2 = SIDimensionalityForSymbol(STR("M*L"), &err);
+    dim1 = SIDimensionalityParseExpression(STR("L*M"), &err);
+    dim2 = SIDimensionalityParseExpression(STR("M*L"), &err);
     if (!dim1 || !dim2 || !SIDimensionalityEqual(dim1, dim2)) {
         success = false;
         goto cleanup;
     }
 
-    dim3 = SIDimensionalityForSymbol(STR("L^3*M^-2*T"), &err);
+    dim3 = SIDimensionalityParseExpression(STR("L^3*M^-2*T"), &err);
     if (!dim3 || !SIDimensionalityHasReducedExponents(dim3, 3, -2, 1, 0, 0, 0, 0)) {
         success = false;
         goto cleanup;
@@ -219,7 +223,7 @@ bool test_dimensionality_symbol_acceleration(void) {
     OCStringRef err = NULL;
     bool success = true;
 
-    SIDimensionalityRef accel = SIDimensionalityForSymbol(STR("L/T^2"), &err);
+    SIDimensionalityRef accel = SIDimensionalityParseExpression(STR("L/T^2"), &err);
     if (!accel) {
         if (err) {
             printf("Error parsing acceleration symbol: %s\n", OCStringGetCString(err));
@@ -253,7 +257,7 @@ bool test_dimensionality_divide_mass(void) {
         return false;
     }
 
-    SIDimensionalityRef accel = SIDimensionalityForSymbol(STR("L/T^2"), &err);
+    SIDimensionalityRef accel = SIDimensionalityParseExpression(STR("L/T^2"), &err);
     if (!accel || err) {
         if (err) {
             printf("Error getting acceleration dimensionality: %s\n", OCStringGetCString(err));
@@ -429,35 +433,59 @@ bool test_dimensionality_deep_copy(void) {
     bool success = true;
     OCStringRef err = NULL;
 
+    /* initialize everything to NULL */
     SIDimensionalityRef original = NULL;
-    SIDimensionalityRef copy = NULL;
-    SIDimensionalityRef mutableCopy = NULL;
+    SIDimensionalityRef copy     = NULL;
+    SIDimensionalityRef mcopy    = NULL;
 
-    original = SIDimensionalityForSymbol(STR("L•M^2/T"), &err);
+    /* parse */
+    original = SIDimensionalityParseExpression(STR("L•M^2/T"), &err);
     if (!original || err) {
+        fprintf(stderr,
+                "  ✗ PARSE failed: %s\n",
+                err ? OCStringGetCString(err) : "returned NULL");
         success = false;
         goto cleanup;
     }
 
+    /* Deep-copy (immutable) */
     copy = OCTypeDeepCopy(original);
-    if (!copy || !SIDimensionalityEqual(original, copy) || original == copy) {
+    if (!copy) {
+        fprintf(stderr, "  ✗ OCTypeDeepCopy returned NULL\n");
+        success = false;
+        goto cleanup;
+    }
+    if (copy != original) {
+        fprintf(stderr,
+                "  ✗ OCTypeDeepCopy returned a new instance (copy=%p) but expected the singleton original=%p\n",
+                (void*)copy, (void*)original);
         success = false;
         goto cleanup;
     }
 
-    mutableCopy = OCTypeDeepCopyMutable(original);
-    if (!mutableCopy || !SIDimensionalityEqual(original, mutableCopy) || original == mutableCopy) {
+    /* Deep-copy (mutable) */
+    mcopy = OCTypeDeepCopyMutable(original);
+    if (!mcopy) {
+        fprintf(stderr, "  ✗ OCTypeDeepCopyMutable returned NULL\n");
+        success = false;
+        goto cleanup;
+    }
+    if (mcopy != original) {
+        fprintf(stderr,
+                "  ✗ OCTypeDeepCopyMutable returned a new instance (mcopy=%p) but expected the singleton original=%p\n",
+                (void*)mcopy, (void*)original);
         success = false;
         goto cleanup;
     }
 
-    // Note: No mutation is attempted here due to lack of a public mutator.
+    printf("  ✓ Both DeepCopy and DeepCopyMutable returned the singleton instance\n");
 
 cleanup:
+    if (err)      OCRelease(err);
     if (original) OCRelease(original);
-    if (copy) OCRelease(copy);
-    if (mutableCopy) OCRelease(mutableCopy);
+    if (copy)     OCRelease(copy);
+    if (mcopy)    OCRelease(mcopy);
 
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
+    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
     return success;
 }

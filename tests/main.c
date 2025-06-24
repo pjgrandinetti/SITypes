@@ -1,6 +1,10 @@
 #include <sanitizer/lsan_interface.h>
 #include <stdio.h>
-#include "../src/SILibrary.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include "SILibrary.h"
+
 #include "test_dimensionality.h"
 #include "test_octypes.h"
 #include "test_scalar.h"
@@ -64,6 +68,13 @@ int main(int argc, const char* argv[]) {
     TRACK(test_unit_11);
     TRACK(test_unit_12);
     TRACK(test_unit_13);
+    TRACK(test_unit_by_multiplying_without_reducing);
+    TRACK(test_unit_by_dividing_without_reducing);
+    TRACK(test_unit_by_taking_nth_root);
+    TRACK(test_unit_by_raising_to_power_without_reducing);
+
+
+
     printf("\n=== SIScalar Parser Tests ===\n");
     TRACK_SCALAR_LEAK(test_scalar_parser_1);
     TRACK_SCALAR_LEAK(test_scalar_parser_2);
@@ -161,6 +172,15 @@ int main(int argc, const char* argv[]) {
     TRACK_SCALAR_LEAK(test_SIScalarBestConversionForQuantity_noop);
     TRACK_SCALAR_LEAK(test_SIScalarBestConversionForQuantity_zero);
     TRACK_SCALAR_LEAK(test_SIScalarBestConversionForQuantity_negative);
+
+    TRACK_SCALAR_LEAK(test_SIScalarWriteReadJSON_simple);
+    TRACK_SCALAR_LEAK(test_SIScalarWriteReadJSON_negative);
+    TRACK_SCALAR_LEAK(test_SIScalarWriteReadJSON_complex_unit);
+    TRACK_SCALAR_LEAK(test_SIScalarWriteReadJSON_array_and_dictionary);
+
+
+
+
     printf("\n%d test(s) failed\n", failed_tests);
 #ifdef LEAK_SANITIZER
     if (&__lsan_do_leak_check) {
