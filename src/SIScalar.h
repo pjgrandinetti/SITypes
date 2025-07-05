@@ -64,9 +64,6 @@ typedef union impl_SINumber
     float complex floatComplexValue;
     double complex doubleComplexValue;
 } impl_SINumber;
-
-typedef const struct impl_SIScalar *SIScalarRef;
-typedef struct impl_SIScalar *SIMutableScalarRef;
 /** @endcond */
 
 /** @brief Returns the unique type identifier for SIScalar objects. */

@@ -21,11 +21,15 @@
 
 #define SILIB_TYPES_COUNT 3 // Total number of types in SITypes
 
-// Forward declarations for all opaque types used across SITypes
-struct impl_SIDimensionality;
-struct impl_SIUnit;
-struct impl_SIQuantity;
-struct impl_SIScalar;
+/** @cond INTERNAL */
+// Centralized Ref typedefs
+typedef const struct impl_SIDimensionality * SIDimensionalityRef;
+typedef const struct impl_SIUnit * SIUnitRef;
+typedef const struct impl_SIQuantity * SIQuantityRef;
+typedef const struct impl_SIScalar *SIScalarRef;
+typedef struct impl_SIScalar *SIMutableScalarRef;
+/** @endcond */
+
 
 // Include OCTypes base framework
 #include <OCLibrary.h>
