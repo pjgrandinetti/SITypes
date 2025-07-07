@@ -75,7 +75,7 @@ SIUnitRef SIQuantityGetUnit(SIQuantityRef quantity);
  * @param quantity The quantity.
  * @param unit The unit.
  */
-void SIQuantitySetUnit(SIMutableQuantityRef quantity, SIUnitRef unit);
+bool SIQuantitySetUnit(SIMutableQuantityRef quantity, SIUnitRef unit);
 
 /**
  * @brief Returns the quantity's dimensionality.

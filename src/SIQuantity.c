@@ -24,12 +24,13 @@ SIUnitRef SIQuantityGetUnit(SIQuantityRef quantity)
     return theQuantity->unit;
 }
 
-void SIQuantitySetUnit(SIMutableQuantityRef quantity, SIUnitRef unit)
+bool SIQuantitySetUnit(SIMutableQuantityRef quantity, SIUnitRef unit)
 {
-    IF_NO_OBJECT_EXISTS_RETURN(quantity,);
-    IF_NO_OBJECT_EXISTS_RETURN(unit,);
+    IF_NO_OBJECT_EXISTS_RETURN(quantity,false);
+    IF_NO_OBJECT_EXISTS_RETURN(unit,false);
     SIMutableQuantityRef theQuantity = (SIMutableQuantityRef) quantity;
     theQuantity->unit = unit;
+    return true;
 }
 
 SIDimensionalityRef SIQuantityGetUnitDimensionality(SIQuantityRef quantity)
