@@ -48,8 +48,8 @@ typedef enum complexPart {
 typedef enum { // Anonymous enum
     kSINumberFloat32Type = Float32Type,
     kSINumberFloat64Type = Float64Type,
-    kSINumberFloat32ComplexType = Float32ComplexType,
-    kSINumberFloat64ComplexType = Float64ComplexType
+    kSINumberComplex64Type = Complex64Type,
+    kSINumberComplex128Type = Complex128Type
 } SINumberType;
 
 #define kSINumberTypeInvalid 0

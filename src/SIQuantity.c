@@ -58,7 +58,7 @@ bool SIQuantityHasElementType(SIQuantityRef quantity, SINumberType elementType)
 bool SIQuantityIsComplexType(SIQuantityRef theQuantity)
 {
     IF_NO_OBJECT_EXISTS_RETURN(theQuantity,false);
-    if(theQuantity->type==kSINumberFloat32ComplexType || theQuantity->type==kSINumberFloat64ComplexType) return true;
+    if(theQuantity->type==kSINumberComplex64Type || theQuantity->type==kSINumberComplex128Type) return true;
     return false;
 }
 
@@ -108,10 +108,10 @@ bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2)
                      return kSINumberFloat32Type;
                  case kSINumberFloat64Type:
                      return kSINumberFloat64Type;
-                 case kSINumberFloat32ComplexType:
-                     return kSINumberFloat32ComplexType;
-                 case kSINumberFloat64ComplexType:
-                     return kSINumberFloat64ComplexType;
+                 case kSINumberComplex64Type:
+                     return kSINumberComplex64Type;
+                 case kSINumberComplex128Type:
+                     return kSINumberComplex128Type;
              }
          }
          case kSINumberFloat64Type: {
@@ -120,27 +120,27 @@ bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2)
                      return kSINumberFloat64Type;
                  case kSINumberFloat64Type:
                      return kSINumberFloat64Type;
-                     return kSINumberFloat64ComplexType;
-                 case kSINumberFloat32ComplexType:
-                     return kSINumberFloat64ComplexType;
-                 case kSINumberFloat64ComplexType:
-                     return kSINumberFloat64ComplexType;
+                     return kSINumberComplex128Type;
+                 case kSINumberComplex64Type:
+                     return kSINumberComplex128Type;
+                 case kSINumberComplex128Type:
+                     return kSINumberComplex128Type;
              }
          }
-         case kSINumberFloat32ComplexType: {
+         case kSINumberComplex64Type: {
              switch (quantity2->type) {
                  case kSINumberFloat32Type:
-                     return kSINumberFloat32ComplexType;
+                     return kSINumberComplex64Type;
                  case kSINumberFloat64Type:
-                     return kSINumberFloat64ComplexType;
-                 case kSINumberFloat32ComplexType:
-                     return kSINumberFloat32ComplexType;
-                 case kSINumberFloat64ComplexType:
-                     return kSINumberFloat64ComplexType;
+                     return kSINumberComplex128Type;
+                 case kSINumberComplex64Type:
+                     return kSINumberComplex64Type;
+                 case kSINumberComplex128Type:
+                     return kSINumberComplex128Type;
              }
          }
-         case kSINumberFloat64ComplexType:
-             return kSINumberFloat64ComplexType;
+         case kSINumberComplex128Type:
+             return kSINumberComplex128Type;
      }
  }
 
