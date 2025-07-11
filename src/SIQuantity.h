@@ -28,10 +28,6 @@
 /**
  * @enum complexPart
  * @brief Parts of a complex number.
- * @var kSIRealPart Real part of complex number.
- * @var kSIImaginaryPart Imaginary part of complex number.
- * @var kSIMagnitudePart Magnitude part of complex number.
- * @var kSIArgumentPart Argument part of complex number.
  */
 typedef enum complexPart {
     kSIRealPart,        /**< Real part of complex number. */
@@ -43,7 +39,7 @@ typedef enum complexPart {
 /**
  * @enum SINumberType
  * @brief valid number types for SIQuantity.
- * @ingroup SIQuantity
+ * @ingroup SIQuantities
  */
 typedef enum { // Anonymous enum
     kSINumberFloat32Type = Float32Type,
