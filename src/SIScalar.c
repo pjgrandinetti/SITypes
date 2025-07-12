@@ -38,11 +38,11 @@ static bool impl_SIScalarEqual(const void *theType1, const void *theType2) {
     if (!OCTypeEqual(s1->unit, s2->unit))
         return false;
     switch (s1->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             return s1->value.floatValue == s2->value.floatValue;
         case kSINumberFloat64Type:
             return s1->value.doubleValue == s2->value.doubleValue;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             return s1->value.floatComplexValue == s2->value.floatComplexValue;
         case kSINumberComplex128Type:
             return s1->value.doubleComplexValue == s2->value.doubleComplexValue;
@@ -66,7 +66,7 @@ static OCStringRef impl_SIScalarCopyFormattingDescription(OCTypeRef theType) {
     OCStringRef unitDesc = scalar->unit ? OCTypeCopyFormattingDesc(scalar->unit) : STR("");
     OCStringRef result = NULL;
     switch (scalar->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             result = OCStringCreateWithFormat(STR("%f %@"),
                                               scalar->value.floatValue,
                                               unitDesc);
@@ -76,7 +76,7 @@ static OCStringRef impl_SIScalarCopyFormattingDescription(OCTypeRef theType) {
                                               scalar->value.doubleValue,
                                               unitDesc);
             break;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             result = OCStringCreateWithFormat(STR("%f+I•%f %@"),
                                               crealf(scalar->value.floatComplexValue),
                                               cimagf(scalar->value.floatComplexValue),
@@ -137,13 +137,13 @@ SIScalarRef SIScalarCreate(SIUnitRef unit, SINumberType type, void *value) {
     if (!scalar) return NULL;
     scalar->type = type;
     switch (type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             scalar->value.floatValue = *(float *)value;
             break;
         case kSINumberFloat64Type:
             scalar->value.doubleValue = *(double *)value;
             break;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             scalar->value.floatComplexValue = *(float complex *)value;
             break;
         case kSINumberComplex128Type:
@@ -886,7 +886,7 @@ bool SIScalarAdd(SIMutableScalarRef target, SIScalarRef input2, OCStringRef *err
         case kSINumberFloat64Type:
             value = SIScalarDoubleValueInUnit(input2, target->unit, NULL);
             break;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             value = SIScalarFloatComplexValueInUnit(input2, target->unit, NULL);
             break;
         case kSINumberComplex128Type:
@@ -897,13 +897,13 @@ bool SIScalarAdd(SIMutableScalarRef target, SIScalarRef input2, OCStringRef *err
     }
     // Add value to target
     switch (target->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             target->value.floatValue += crealf(value);
             return true;
         case kSINumberFloat64Type:
             target->value.doubleValue += creal(value);
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             target->value.floatComplexValue += (float complex)value;
             return true;
         case kSINumberComplex128Type:
@@ -943,7 +943,7 @@ bool SIScalarSubtract(SIMutableScalarRef target, SIScalarRef input2, OCStringRef
         case kSINumberFloat64Type:
             value = SIScalarDoubleValueInUnit(input2, target->unit, NULL);
             break;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             value = SIScalarFloatComplexValueInUnit(input2, target->unit, NULL);
             break;
         case kSINumberComplex128Type:
@@ -954,13 +954,13 @@ bool SIScalarSubtract(SIMutableScalarRef target, SIScalarRef input2, OCStringRef
     }
     // Subtract value from target
     switch (target->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             target->value.floatValue -= crealf(value);
             return true;
         case kSINumberFloat64Type:
             target->value.doubleValue -= creal(value);
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             target->value.floatComplexValue -= (float complex)value;
             return true;
         case kSINumberComplex128Type:
@@ -991,13 +991,13 @@ bool SIScalarMultiplyWithoutReducingUnit(SIMutableScalarRef target, SIScalarRef 
     // Extract numeric value from input2
     double complex multiplier;
     switch (input2->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             multiplier = input2->value.floatValue;
             break;
         case kSINumberFloat64Type:
             multiplier = input2->value.doubleValue;
             break;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             multiplier = input2->value.floatComplexValue;
             break;
         case kSINumberComplex128Type:
@@ -1009,13 +1009,13 @@ bool SIScalarMultiplyWithoutReducingUnit(SIMutableScalarRef target, SIScalarRef 
     multiplier *= unit_multiplier;
     // Multiply into target
     switch (target->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             target->value.floatValue *= crealf(multiplier);
             return true;
         case kSINumberFloat64Type:
             target->value.doubleValue *= creal(multiplier);
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             target->value.floatComplexValue *= (float complex)multiplier;
             return true;
         case kSINumberComplex128Type:
@@ -1045,13 +1045,13 @@ bool SIScalarMultiply(SIMutableScalarRef target, SIScalarRef input2, OCStringRef
     // Extract numeric multiplier from input2
     double complex multiplier;
     switch (input2->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             multiplier = input2->value.floatValue;
             break;
         case kSINumberFloat64Type:
             multiplier = input2->value.doubleValue;
             break;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             multiplier = input2->value.floatComplexValue;
             break;
         case kSINumberComplex128Type:
@@ -1063,13 +1063,13 @@ bool SIScalarMultiply(SIMutableScalarRef target, SIScalarRef input2, OCStringRef
     multiplier *= unit_multiplier;
     // Apply multiplication to target
     switch (target->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             target->value.floatValue *= crealf(multiplier);
             return true;
         case kSINumberFloat64Type:
             target->value.doubleValue *= creal(multiplier);
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             target->value.floatComplexValue *= (float complex)multiplier;
             return true;
         case kSINumberComplex128Type:
@@ -1099,13 +1099,13 @@ bool SIScalarDivideWithoutReducingUnit(SIMutableScalarRef target, SIScalarRef in
     // Extract divisor
     double complex divisor;
     switch (input2->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             divisor = input2->value.floatValue;
             break;
         case kSINumberFloat64Type:
             divisor = input2->value.doubleValue;
             break;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             divisor = input2->value.floatComplexValue;
             break;
         case kSINumberComplex128Type:
@@ -1122,13 +1122,13 @@ bool SIScalarDivideWithoutReducingUnit(SIMutableScalarRef target, SIScalarRef in
     double complex factor = unit_multiplier / divisor;
     // Apply division
     switch (target->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             target->value.floatValue *= crealf(factor);
             return true;
         case kSINumberFloat64Type:
             target->value.doubleValue *= creal(factor);
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             target->value.floatComplexValue *= (float complex)factor;
             return true;
         case kSINumberComplex128Type:
@@ -1149,13 +1149,13 @@ bool SIScalarDivide(SIMutableScalarRef target, SIScalarRef input2, OCStringRef *
     // Get divisor
     double complex divisor;
     switch (input2->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             divisor = input2->value.floatValue;
             break;
         case kSINumberFloat64Type:
             divisor = input2->value.doubleValue;
             break;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             divisor = input2->value.floatComplexValue;
             break;
         case kSINumberComplex128Type:
@@ -1173,13 +1173,13 @@ bool SIScalarDivide(SIMutableScalarRef target, SIScalarRef input2, OCStringRef *
     double complex factor = unit_multiplier / divisor;
     // Apply division (multiply by reciprocal)
     switch (target->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             target->value.floatValue *= crealf(factor);
             return true;
         case kSINumberFloat64Type:
             target->value.doubleValue *= creal(factor);
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             target->value.floatComplexValue *= (float complex)factor;
             return true;
         case kSINumberComplex128Type:
@@ -1221,13 +1221,13 @@ bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar, doub
     IF_NO_OBJECT_EXISTS_RETURN(unit, false);
     theScalar->unit = unit;
     switch (theScalar->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             theScalar->value.floatValue = pow(theScalar->value.floatValue, power) * unit_multiplier;
             return true;
         case kSINumberFloat64Type:
             theScalar->value.doubleValue = pow(theScalar->value.doubleValue, power) * unit_multiplier;
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             theScalar->value.floatComplexValue = cpow(theScalar->value.floatComplexValue, power) * unit_multiplier;
             return true;
         case kSINumberComplex128Type:
@@ -1259,13 +1259,13 @@ bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar, double power, OCStringR
     }
     theScalar->unit = unit;
     switch (theScalar->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             theScalar->value.floatValue = pow(theScalar->value.floatValue, power) * unit_multiplier;
             return true;
         case kSINumberFloat64Type:
             theScalar->value.doubleValue = pow(theScalar->value.doubleValue, power) * unit_multiplier;
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             theScalar->value.floatComplexValue = cpow(theScalar->value.floatComplexValue, power) * unit_multiplier;
             return true;
         case kSINumberComplex128Type:
@@ -1288,13 +1288,13 @@ bool SIScalarTakeAbsoluteValue(SIMutableScalarRef theScalar, OCStringRef *error)
         if (*error) return false;
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
     switch (theScalar->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             theScalar->value.floatValue = fabsf(theScalar->value.floatValue);
             return true;
         case kSINumberFloat64Type:
             theScalar->value.doubleValue = fabs(theScalar->value.doubleValue);
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             theScalar->value.floatComplexValue = cabsf(theScalar->value.floatComplexValue);
             return true;
         case kSINumberComplex128Type:
@@ -1341,13 +1341,13 @@ SIScalarRef SIScalarCreateByGammaFunctionWithoutReducingUnit(SIScalarRef theScal
 bool SIScalarMultiplyByDimensionlessRealConstant(SIMutableScalarRef theScalar, double constant) {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
     switch (theScalar->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             theScalar->value.floatValue *= constant;
             return true;
         case kSINumberFloat64Type:
             theScalar->value.doubleValue *= constant;
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             theScalar->value.floatComplexValue *= constant;
             return true;
         case kSINumberComplex128Type:
@@ -1370,7 +1370,7 @@ bool SIScalarMultiplyByDimensionlessComplexConstant(SIMutableScalarRef theScalar
     bool isComplex = (cimag(constant) != 0.0);
     double realPart = creal(constant);
     switch (theScalar->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             if (isComplex) {
                 theScalar->type = kSINumberComplex64Type;
                 theScalar->value.floatComplexValue = (float complex)(theScalar->value.floatValue * constant);
@@ -1386,7 +1386,7 @@ bool SIScalarMultiplyByDimensionlessComplexConstant(SIMutableScalarRef theScalar
                 theScalar->value.doubleValue *= realPart;
             }
             return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             theScalar->value.floatComplexValue *= (float complex)constant;
             return true;
         case kSINumberComplex128Type:
@@ -1405,12 +1405,10 @@ SIScalarRef SIScalarCreateByMultiplyingByDimensionlessComplexConstant(SIScalarRe
 bool SIScalarConjugate(SIMutableScalarRef theScalar) {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
     switch (theScalar->type) {
-            //		case kOCNumberSInt32Type:
-            //		case kOCNumberSInt64Type:
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
         case kSINumberFloat64Type:
             return true;
-        case kOCNumberComplex64Type: {
+        case kSINumberComplex64Type: {
             theScalar->value.floatComplexValue = creal(theScalar->value.floatComplexValue) - I * cimag(theScalar->value.floatComplexValue);
             return true;
         }
@@ -1439,13 +1437,13 @@ bool SIScalarTakeNthRoot(SIMutableScalarRef theScalar, uint8_t root, OCStringRef
     theScalar->unit = newUnit;
     double reciprocal = 1.0 / root;
     switch (theScalar->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             theScalar->value.floatValue = powf(theScalar->value.floatValue, reciprocal) * multiplier;
             break;
         case kSINumberFloat64Type:
             theScalar->value.doubleValue = pow(theScalar->value.doubleValue, reciprocal) * multiplier;
             break;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             theScalar->value.floatComplexValue = cpowf(theScalar->value.floatComplexValue, reciprocal) * multiplier;
             break;
         case kSINumberComplex128Type:
@@ -1474,7 +1472,7 @@ bool SIScalarTakeLog10(SIMutableScalarRef theScalar, OCStringRef *error) {
         }
     }
     switch (theScalar->type) {
-        case kOCNumberFloat32Type: {
+        case kSINumberFloat32Type: {
             theScalar->value.floatValue = log10f(theScalar->value.floatValue);
             break;
         }
@@ -1482,7 +1480,7 @@ bool SIScalarTakeLog10(SIMutableScalarRef theScalar, OCStringRef *error) {
             theScalar->value.doubleValue = log10(theScalar->value.doubleValue);
             break;
         }
-        case kOCNumberComplex64Type: {
+        case kSINumberComplex64Type: {
             theScalar->value.floatComplexValue = clogf(theScalar->value.floatComplexValue) / logf(10);
             break;
         }
@@ -1496,7 +1494,7 @@ bool SIScalarTakeLog10(SIMutableScalarRef theScalar, OCStringRef *error) {
 bool SIScalarZeroPart(SIMutableScalarRef theScalar, complexPart part) {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
     switch (theScalar->type) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             if (part == kSIRealPart || part == kSIMagnitudePart) {
                 theScalar->value.floatValue = 0;
                 return true;
@@ -1510,7 +1508,7 @@ bool SIScalarZeroPart(SIMutableScalarRef theScalar, complexPart part) {
             }
             if (part == kSIImaginaryPart || part == kSIArgumentPart) return true;
             break;
-        case kOCNumberComplex64Type: {
+        case kSINumberComplex64Type: {
             if (part == kSIMagnitudePart) {
                 theScalar->value.floatComplexValue = 0;
                 return true;
@@ -1891,8 +1889,8 @@ OCStringRef SIScalarCreateNumericStringValue(SIScalarRef theScalar) {
     if (theScalar == NULL) return STR("");
     OCStringRef stringValue = NULL;
     switch (theScalar->type) {
-        case kOCNumberFloat32Type:
-        case kOCNumberComplex64Type:
+        case kSINumberFloat32Type:
+        case kSINumberComplex64Type:
             stringValue = SIScalarCreateNumericStringValueWithFormat(theScalar, STR("%.7g"));
             break;
         case kSINumberFloat64Type:
@@ -1910,8 +1908,8 @@ OCStringRef SIScalarCreateStringValue(SIScalarRef theScalar) {
         return OCNumberCreateStringValue((OCNumberRef)((OCTypeRef)theScalar));
     }
     switch (theScalar->type) {
-        case kOCNumberFloat32Type:
-        case kOCNumberComplex64Type:
+        case kSINumberFloat32Type:
+        case kSINumberComplex64Type:
             stringValue = SIScalarCreateStringValueWithFormat(theScalar, STR("%.7g"));
             break;
         case kSINumberFloat64Type:
@@ -1931,7 +1929,7 @@ OCStringRef SIScalarCreateStringValueForPart(SIScalarRef theScalar, complexPart 
 OCStringRef SIScalarCreateNumericStringValueWithFormat(SIScalarRef theScalar, OCStringRef format) {
     if (theScalar == NULL) return STR("");
     switch (theScalar->type) {
-        case kOCNumberFloat32Type: {
+        case kSINumberFloat32Type: {
             float value = SIScalarFloatValue(theScalar);
             if (OCCompareFloatValues(value, 0.0) == kOCCompareEqualTo) value = 0.0;
             OCStringRef numericString = OCFloatCreateStringValue(value);
@@ -1943,7 +1941,7 @@ OCStringRef SIScalarCreateNumericStringValueWithFormat(SIScalarRef theScalar, OC
             OCStringRef numericString = OCDoubleComplexCreateStringValue(value, format);
             return numericString;
         }
-        case kOCNumberComplex64Type: {
+        case kSINumberComplex64Type: {
             float complex value = SIScalarFloatComplexValue(theScalar);
             OCMutableStringRef cf_string = OCStringCreateMutable(0);
             if (crealf(value) != 0.0 && cimagf(value) != 0.0) OCStringAppend(cf_string, STR("("));
@@ -1978,7 +1976,7 @@ OCStringRef SIScalarCreateStringValueWithFormat(SIScalarRef theScalar, OCStringR
     if (theScalar == NULL) return STR("");
     OCStringRef unit_symbol = SIScalarCreateUnitString(theScalar);
     switch (theScalar->type) {
-        case kOCNumberFloat32Type: {
+        case kSINumberFloat32Type: {
             float value = SIScalarFloatValue(theScalar);
             if (OCCompareFloatValues(value, 0.0) == kOCCompareEqualTo) value = 0.0;
             OCStringRef numericString = OCFloatCreateStringValue(value);
@@ -2006,7 +2004,7 @@ OCStringRef SIScalarCreateStringValueWithFormat(SIScalarRef theScalar, OCStringR
             OCRelease(unit_symbol);
             return cf_string;
         }
-        case kOCNumberComplex64Type: {
+        case kSINumberComplex64Type: {
             float complex value = SIScalarFloatComplexValue(theScalar);
             OCMutableStringRef cf_string = OCStringCreateMutable(0);
             if (crealf(value) != 0.0 && cimagf(value) != 0.0) OCStringAppend(cf_string, STR("("));
@@ -2077,11 +2075,11 @@ bool SIScalarIsZero(SIScalarRef theScalar) {
 bool SIScalarIsInfinite(SIScalarRef theScalar) {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
     switch (SIQuantityGetElementType((SIQuantityRef)theScalar)) {
-        case kOCNumberFloat32Type:
+        case kSINumberFloat32Type:
             if (isinf(theScalar->value.floatValue)) return true;
         case kSINumberFloat64Type:
             if (isinf(theScalar->value.doubleValue)) return true;
-        case kOCNumberComplex64Type:
+        case kSINumberComplex64Type:
             if (isinf(crealf(theScalar->value.floatComplexValue))) return true;
             if (isinf(cimagf(theScalar->value.floatComplexValue))) return true;
         case kSINumberComplex128Type:
@@ -2107,7 +2105,7 @@ bool SIScalarEqual(SIScalarRef input1, SIScalarRef input2) {
     if (input1->type != input2->type) return false;
     if (!SIUnitEqual(input1->unit, input2->unit)) return false;
     switch (input1->type) {
-        case kOCNumberFloat32Type: {
+        case kSINumberFloat32Type: {
             if (input1->value.floatValue != input2->value.floatValue) return false;
             break;
         }
@@ -2115,7 +2113,7 @@ bool SIScalarEqual(SIScalarRef input1, SIScalarRef input2) {
             if (input1->value.doubleValue != input2->value.doubleValue) return false;
             break;
         }
-        case kOCNumberComplex64Type: {
+        case kSINumberComplex64Type: {
             if (input1->value.floatComplexValue != input2->value.floatComplexValue) return false;
             break;
         }
@@ -2142,9 +2140,9 @@ OCComparisonResult SIScalarCompare(SIScalarRef theScalar, SIScalarRef theOtherSc
     SIScalarConvertToUnit(theOtherConverted, SIQuantityGetUnit((SIQuantityRef)theScalar), NULL);
     OCComparisonResult result = kOCCompareError;
     switch (theScalar->type) {
-        case kOCNumberFloat32Type: {
+        case kSINumberFloat32Type: {
             switch (theOtherConverted->type) {
-                case kOCNumberFloat32Type: {
+                case kSINumberFloat32Type: {
                     result = OCCompareFloatValues((float)theScalar->value.floatValue, (float)theOtherConverted->value.floatValue);
                     break;
                 }
@@ -2152,7 +2150,7 @@ OCComparisonResult SIScalarCompare(SIScalarRef theScalar, SIScalarRef theOtherSc
                     result = OCCompareFloatValues((float)theScalar->value.floatValue, (float)theOtherConverted->value.doubleValue);
                     break;
                 }
-                case kOCNumberComplex64Type: {
+                case kSINumberComplex64Type: {
                     if (!SIScalarIsReal(theOtherConverted)) {
                         result = kOCCompareNoSingleValue;
                         break;
@@ -2173,7 +2171,7 @@ OCComparisonResult SIScalarCompare(SIScalarRef theScalar, SIScalarRef theOtherSc
         }
         case kSINumberFloat64Type: {
             switch (theOtherConverted->type) {
-                case kOCNumberFloat32Type: {
+                case kSINumberFloat32Type: {
                     result = OCCompareFloatValues((float)theScalar->value.doubleValue, (float)theOtherConverted->value.floatValue);
                     break;
                 }
@@ -2181,7 +2179,7 @@ OCComparisonResult SIScalarCompare(SIScalarRef theScalar, SIScalarRef theOtherSc
                     result = OCCompareDoubleValues((double)theScalar->value.doubleValue, (double)theOtherConverted->value.doubleValue);
                     break;
                 }
-                case kOCNumberComplex64Type: {
+                case kSINumberComplex64Type: {
                     if (!SIScalarIsReal(theOtherConverted)) {
                         result = kOCCompareNoSingleValue;
                         break;
@@ -2200,9 +2198,9 @@ OCComparisonResult SIScalarCompare(SIScalarRef theScalar, SIScalarRef theOtherSc
             }
             break;
         }
-        case kOCNumberComplex64Type: {
+        case kSINumberComplex64Type: {
             switch (theOtherConverted->type) {
-                case kOCNumberFloat32Type: {
+                case kSINumberFloat32Type: {
                     if (!SIScalarIsReal(theScalar)) {
                         result = kOCCompareNoSingleValue;
                         break;
@@ -2218,7 +2216,7 @@ OCComparisonResult SIScalarCompare(SIScalarRef theScalar, SIScalarRef theOtherSc
                     result = OCCompareFloatValues((float)crealf(theScalar->value.floatComplexValue), (float)theOtherConverted->value.doubleValue);
                     break;
                 }
-                case kOCNumberComplex64Type: {
+                case kSINumberComplex64Type: {
                     OCComparisonResult realResult = OCCompareFloatValues((float)crealf(theScalar->value.floatComplexValue), (float)crealf(theOtherConverted->value.floatComplexValue));
                     OCComparisonResult imagResult = OCCompareFloatValues((float)cimagf(theScalar->value.floatComplexValue), (float)cimagf(theOtherConverted->value.floatComplexValue));
                     if (realResult == kOCCompareEqualTo && imagResult == kOCCompareEqualTo)
@@ -2241,7 +2239,7 @@ OCComparisonResult SIScalarCompare(SIScalarRef theScalar, SIScalarRef theOtherSc
         }
         case kSINumberComplex128Type: {
             switch (theOtherConverted->type) {
-                case kOCNumberFloat32Type: {
+                case kSINumberFloat32Type: {
                     if (!SIScalarIsReal(theScalar)) {
                         result = kOCCompareNoSingleValue;
                         break;
@@ -2257,7 +2255,7 @@ OCComparisonResult SIScalarCompare(SIScalarRef theScalar, SIScalarRef theOtherSc
                     result = OCCompareDoubleValues((double)creal(theScalar->value.doubleComplexValue), (double)theOtherConverted->value.doubleValue);
                     break;
                 }
-                case kOCNumberComplex64Type: {
+                case kSINumberComplex64Type: {
                     OCComparisonResult realResult = OCCompareFloatValues((float)creal(theScalar->value.doubleComplexValue), (float)crealf(theOtherConverted->value.floatComplexValue));
                     OCComparisonResult imagResult = OCCompareFloatValues((float)cimag(theScalar->value.doubleComplexValue), (float)cimagf(theOtherConverted->value.floatComplexValue));
                     if (realResult == kOCCompareEqualTo && imagResult == kOCCompareEqualTo)
@@ -2301,9 +2299,9 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
     SIScalarConvertToUnit(theOtherConverted, SIQuantityGetUnit((SIQuantityRef)theScalar), NULL);
     OCComparisonResult result = kOCCompareError;
     switch (theScalar->type) {
-        case kOCNumberFloat32Type: {
+        case kSINumberFloat32Type: {
             switch (theOtherConverted->type) {
-                case kOCNumberFloat32Type: {
+                case kSINumberFloat32Type: {
                     result = OCCompareFloatValuesLoose((float)theScalar->value.floatValue, (float)theOtherConverted->value.floatValue);
                     break;
                 }
@@ -2311,7 +2309,7 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
                     result = OCCompareFloatValuesLoose((float)theScalar->value.floatValue, (float)theOtherConverted->value.doubleValue);
                     break;
                 }
-                case kOCNumberComplex64Type: {
+                case kSINumberComplex64Type: {
                     if (!SIScalarIsReal(theOtherConverted)) {
                         result = kOCCompareNoSingleValue;
                         break;
@@ -2332,7 +2330,7 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
         }
         case kSINumberFloat64Type: {
             switch (theOtherConverted->type) {
-                case kOCNumberFloat32Type: {
+                case kSINumberFloat32Type: {
                     result = OCCompareFloatValuesLoose((float)theScalar->value.doubleValue, (float)theOtherConverted->value.floatValue);
                     break;
                 }
@@ -2340,7 +2338,7 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
                     result = OCCompareDoubleValuesLoose((double)theScalar->value.doubleValue, (double)theOtherConverted->value.doubleValue);
                     break;
                 }
-                case kOCNumberComplex64Type: {
+                case kSINumberComplex64Type: {
                     if (!SIScalarIsReal(theOtherConverted)) {
                         result = kOCCompareNoSingleValue;
                         break;
@@ -2359,9 +2357,9 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
             }
             break;
         }
-        case kOCNumberComplex64Type: {
+        case kSINumberComplex64Type: {
             switch (theOtherConverted->type) {
-                case kOCNumberFloat32Type: {
+                case kSINumberFloat32Type: {
                     if (!SIScalarIsReal(theScalar)) {
                         result = kOCCompareNoSingleValue;
                         break;
@@ -2377,7 +2375,7 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
                     result = OCCompareFloatValuesLoose((float)crealf(theScalar->value.floatComplexValue), (float)theOtherConverted->value.doubleValue);
                     break;
                 }
-                case kOCNumberComplex64Type: {
+                case kSINumberComplex64Type: {
                     OCComparisonResult realResult = OCCompareFloatValuesLoose((float)crealf(theScalar->value.floatComplexValue), (float)crealf(theOtherConverted->value.floatComplexValue));
                     OCComparisonResult imagResult = OCCompareFloatValuesLoose((float)cimagf(theScalar->value.floatComplexValue), (float)cimagf(theOtherConverted->value.floatComplexValue));
                     if (realResult == kOCCompareEqualTo && imagResult == kOCCompareEqualTo)
@@ -2400,7 +2398,7 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
         }
         case kSINumberComplex128Type: {
             switch (theOtherConverted->type) {
-                case kOCNumberFloat32Type: {
+                case kSINumberFloat32Type: {
                     if (!SIScalarIsReal(theScalar)) {
                         result = kOCCompareNoSingleValue;
                         break;
@@ -2416,7 +2414,7 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
                     result = OCCompareDoubleValuesLoose((double)creal(theScalar->value.doubleComplexValue), (double)theOtherConverted->value.doubleValue);
                     break;
                 }
-                case kOCNumberComplex64Type: {
+                case kSINumberComplex64Type: {
                     OCComparisonResult realResult = OCCompareFloatValuesLoose((float)creal(theScalar->value.doubleComplexValue), (float)crealf(theOtherConverted->value.floatComplexValue));
                     OCComparisonResult imagResult = OCCompareFloatValuesLoose((float)cimag(theScalar->value.doubleComplexValue), (float)cimag(theOtherConverted->value.floatComplexValue));
                     if (realResult == kOCCompareEqualTo && imagResult == kOCCompareEqualTo)
