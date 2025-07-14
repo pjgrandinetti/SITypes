@@ -2214,7 +2214,6 @@ void SIUnitsLibrarySetImperialVolumes(bool value) {
 bool SIUnitsCreateLibraries(void) {
     setlocale(LC_ALL, "");
     const struct lconv *const currentlocale = localeconv();
-    printf("In the current locale, the default currency symbol is: %s\n", currentlocale->currency_symbol);
     unitsLibrary = OCDictionaryCreateMutable(0);
     unitsQuantitiesLibrary = OCDictionaryCreateMutable(0);
     unitsDimensionalitiesLibrary = OCDictionaryCreateMutable(0);
