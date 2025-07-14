@@ -12,19 +12,23 @@ on:
 
 jobs:
   build:
-    name: Build & Test (${{ matrix.os }})
+    name: Build & Test (${{ matrix.label }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
           - os: ubuntu-latest
             arch: x86_64
+            label: ubuntu-latest.x64
           - os: ubuntu-latest
             arch: arm64
+            label: ubuntu-latest.arm64
           - os: macos-latest
             arch: x86_64
+            label: macos-latest
           - os: windows-latest
             arch: x86_64
+            label: windows-latest
 
     steps:
       - name: Checkout repository
@@ -46,13 +50,7 @@ jobs:
             -v ${{ github.workspace }}:/src -w /src ubuntu:22.04 bash -lc "\
               apt-get update && apt-get install -y curl clang make flex bison unzip && \
               make clean && make && \
-              mkdir -p artifacts/linux_arm64 && cp libSITypes.a artifacts/linux_arm64/"
-      - name: Upload ARM64 artifact
-        if: matrix.arch == 'arm64'
-        uses: actions/upload-artifact@v4
-        with:
-          name: libSITypes-linux-arm64
-          path: artifacts/linux_arm64/libSITypes.a
+              cp libSITypes.a libSITypes.a"
 
       - name: Build & test on Linux/macOS
         if: runner.os != 'Windows' && matrix.arch == 'x86_64'
@@ -62,7 +60,7 @@ jobs:
           # libSITypes.a is generated at project root
 
       - name: Set up MSYS2 & MinGW (Windows)
-        if: runner.os == 'Windows' && matrix.arch == 'x86_64'
+        if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
@@ -75,7 +73,7 @@ jobs:
             unzip
 
       - name: Build on Windows
-        if: runner.os == 'Windows' && matrix.arch == 'x86_64'
+        if: runner.os == 'Windows'
         shell: msys2 {0}
         run: |
           make clean
@@ -87,10 +85,9 @@ jobs:
           # libSITypes.a is generated at project root
 
       - name: Upload library artifact
-        if: matrix.arch == 'x86_64'
         uses: actions/upload-artifact@v4
         with:
-          name: libSITypes-${{ matrix.os }}
+          name: libSITypes-${{ matrix.label }}
           path: libSITypes.a
 
       # Package & upload public headers on Ubuntu only
