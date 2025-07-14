@@ -64,15 +64,15 @@ TEST_OBJ       := $(patsubst $(TEST_SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(TEST_C_FILES))
 UNAME_S := $(shell uname -s)
 ARCH := $(shell uname -m)
 ifeq ($(UNAME_S),Darwin)
-  OCT_LIB_BIN := libOCTypes-libOCTypes-macos-latest.zip
+  OCT_LIB_BIN := libOCTypes-macos-latest.zip
 else ifeq ($(UNAME_S),Linux)
   ifeq ($(ARCH),aarch64)
-    OCT_LIB_BIN := libOCTypes-libOCTypes-ubuntu-latest.arm64.zip
+    OCT_LIB_BIN := libOCTypes-ubuntu-latest.arm64.zip
   else
-    OCT_LIB_BIN := libOCTypes-libOCTypes-ubuntu-latest.x64.zip
+    OCT_LIB_BIN := libOCTypes-ubuntu-latest.x64.zip
   endif
 else ifneq ($(findstring MINGW,$(UNAME_S)),)
-  OCT_LIB_BIN := libOCTypes-libOCTypes-windows-latest.zip
+  OCT_LIB_BIN := libOCTypes-windows-latest.zip
 endif
 OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_ARCHIVE := third_party/libOCTypes-headers.zip
