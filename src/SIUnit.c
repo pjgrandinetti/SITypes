@@ -1483,7 +1483,6 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
 }
 // Add a cleanup function for static dictionaries and array
 void cleanupUnitsLibraries(void) {
-    fprintf(stderr, "Cleaning up units libraries...\n");
     if (!unitsLibrary)
         return;
     if (unitsQuantitiesLibrary) {

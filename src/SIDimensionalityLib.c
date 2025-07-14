@@ -477,7 +477,6 @@ static OCDictionaryRef SIDimensionalityCopyDimensionalityLibrary(void) {
 }
 // Add a cleanup function for static dictionaries
 void cleanupDimensionalityLibraries(void) {
-    fprintf(stderr, "Cleaning up dimensionality libraries...\n");
     if (!dimLibrary) return;
     // 1) First tear down dimQuantitiesLibrary if you haven’t already
     if (dimQuantitiesLibrary) {
