@@ -46,27 +46,45 @@ static OCStringRef impl_SIDimensionalityCopyFormattingDescription(OCTypeRef cf) 
     return OCStringCreateWithCString("<SIDimensionality>");
 }
 static void *
-impl_SIDimensionalityDeepCopy(const void *obj) {
-    if (!obj) return NULL;
-    SIDimensionalityRef src = (SIDimensionalityRef)obj;
-    // 1) Serialize to a plain OCDictionary
-    OCDictionaryRef dict = SIDimensionalityCopyDictionary(src);
-    if (!dict) return NULL;
-    // 2) Re-hydrate (and intern) from the dictionary
-    OCStringRef error = NULL;
-    SIDimensionalityRef copy = SIDimensionalityFromDictionary(dict, &error);
-    OCRelease(dict);
-    if (!copy) {
-        if (error) {
-            fprintf(stderr,
-                    "SIDimensionalityDeepCopy: CreateFromDictionary failed: %s\n",
-                    OCStringGetCString(error));
-            OCRelease(error);
-        }
+impl_SIDimensionalityDeepCopy(const void *obj)
+{
+    if (obj == NULL) {
         return NULL;
     }
-    return (void *) copy;
+
+    // Raw-access to the exponent arrays
+    const struct impl_SIDimensionality *src =
+        (const struct impl_SIDimensionality *)obj;
+
+    // Intern (or create) the SIDimensionality with the same numerator/denominator exponents
+    SIDimensionalityRef copy =
+        SIDimensionalityWithExponentArrays(src->num_exp, src->den_exp);
+
+    // copy may be NULL if exponents were invalid
+    return (void *)copy;
 }
+
+// static void * impl_SIDimensionalityDeepCopy(const void *obj) {
+//     if (!obj) return NULL;
+//     SIDimensionalityRef src = (SIDimensionalityRef)obj;
+//     // 1) Serialize to a plain OCDictionary
+//     OCDictionaryRef dict = SIDimensionalityCopyDictionary(src);
+//     if (!dict) return NULL;
+//     // 2) Re-hydrate (and intern) from the dictionary
+//     OCStringRef error = NULL;
+//     SIDimensionalityRef copy = SIDimensionalityFromDictionary(dict, &error);
+//     OCRelease(dict);
+//     if (!copy) {
+//         if (error) {
+//             fprintf(stderr,
+//                     "SIDimensionalityDeepCopy: CreateFromDictionary failed: %s\n",
+//                     OCStringGetCString(error));
+//             OCRelease(error);
+//         }
+//         return NULL;
+//     }
+//     return (void *) copy;
+// }
 // mutable‐copy is the same for this “interned” type
 static void *
 impl_SIDimensionalityDeepCopyMutable(const void *obj) {
