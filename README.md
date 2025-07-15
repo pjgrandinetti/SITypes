@@ -1,5 +1,9 @@
 # SITypes
 
+![CI Status](https://github.com/pjgrandinetti/SITypes/actions/workflows/ci.yml/badge.svg)
+[![Documentation Status](https://readthedocs.org/projects/SITypes/badge/?version=latest)](https://SITypes.readthedocs.io/en/latest/?badge=latest)
+
+
 Physical quantities appear in nearly every aspect of our daily lives. An athlete checks her wristwatch to measure the physical quantity of time elapsed during a race. A doctor measures the physical quantity of temperature inside a patient's mouth and the physical quantities of pressure: systolic and diastolic. A merchant uses a scale to measure the physical quantity of mass for a piece of cheese.
 
 A physical quantity is not just a numerical value, but also includes another essential attribute: a unit. Surprisingly, many scientific software libraries ignore this essential attribute, while others simply relegate it into meta-data, leaving the burden or tracking units and dimensionality to the programmer.
