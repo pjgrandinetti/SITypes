@@ -1,4 +1,6 @@
+#ifdef LEAK_SANITIZER
 #include <sanitizer/lsan_interface.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,7 +13,6 @@
 #include "test_scalar_parser.h"
 #include "test_unit.h"
 #ifdef LEAK_SANITIZER
-#include <sanitizer/lsan_interface.h>
 extern void __lsan_do_leak_check() __attribute__((weak));
 #endif
 int failed_tests = 0;
