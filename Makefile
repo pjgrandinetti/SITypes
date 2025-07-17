@@ -101,11 +101,11 @@ third_party:
 
 $(OCT_LIB_ARCHIVE): | $(TP_DIR)
 	@echo "Fetching OCTypes library: $(OCT_LIB_BIN)"
-	@curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.1/$(OCT_LIB_BIN) -o $@
+	@curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.0/$(OCT_LIB_BIN) -o $@
 
 $(OCT_HEADERS_ARCHIVE): | $(TP_DIR)
 	@echo "Fetching OCTypes headers"
-	@curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.1/libOCTypes-headers.zip -o $@
+	@curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.0/libOCTypes-headers.zip -o $@
 
 $(TP_LIB_DIR)/libOCTypes.a: $(OCT_LIB_ARCHIVE)
 	@echo "Extracting OCTypes library into $(TP_LIB_DIR)"
