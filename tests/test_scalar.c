@@ -52,8 +52,8 @@ static int cross_platform_mkstemp(char *template) {
     // Copy the generated filename back to template
     strcpy(template, filename);
     
-    // Create and open the file
-    int fd = _open(filename, _O_RDWR | _O_CREAT | _O_EXCL | _O_TEMPORARY, _S_IREAD | _S_IWRITE);
+    // Create and open the file (use standard Windows permissions)
+    int fd = _open(filename, _O_RDWR | _O_CREAT | _O_EXCL | _O_TEMPORARY, 0600);
     
     free(filename);
     free(temp_dir);
