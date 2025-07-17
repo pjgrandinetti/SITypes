@@ -32,11 +32,11 @@ GEN_DIR        := $(BUILD_DIR)/gen
 BIN_DIR        := $(BUILD_DIR)/bin
 
 CPPFLAGS := -I. -I$(SRC_DIR) -I$(TP_INCLUDE_DIR) -I$(OCT_INCLUDE)
-CFLAGS   := -O3 -Wall -Wextra \
+CFLAGS   := -fPIC -O3 -Wall -Wextra \
              -Wno-sign-compare -Wno-unused-parameter \
              -Wno-missing-field-initializers -Wno-unused-function \
              -MMD -MP -I$(OCT_INCLUDE)
-CFLAGS_DEBUG := -O0 -g -Wall -Wextra -Werror -MMD -MP
+CFLAGS_DEBUG := -fPIC -O0 -g -Wall -Wextra -Werror -MMD -MP
 
 # Flex/Bison sources
 LEX_SRC        := $(wildcard $(SRC_DIR)/*.l)
