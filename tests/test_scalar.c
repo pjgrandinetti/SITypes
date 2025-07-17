@@ -3,12 +3,70 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#ifndef _WIN32
 #include <unistd.h> // for mkstemp, close
+#else
+#include <windows.h>
+#include <io.h>
+#include <direct.h>
+#include <fcntl.h>
+#endif
 #include <math.h>   // For fabs, fabsf, creal, cimag
 #include <complex.h> // For complex numbers and I macro
 #include "SILibrary.h"
 
 #include "test_utils.h"
+
+// Cross-platform path length definitions
+#ifdef _WIN32
+#ifndef PATH_MAX
+#define PATH_MAX MAX_PATH
+#endif
+#else
+#include <limits.h>  // for PATH_MAX on Unix systems
+#endif
+
+// Cross-platform helper functions
+#ifdef _WIN32
+static const char* get_temp_dir(void) {
+    static char temp_dir[MAX_PATH];
+    DWORD len = GetTempPathA(MAX_PATH, temp_dir);
+    if (len > 0 && len < MAX_PATH) {
+        // Remove trailing backslash if present
+        if (temp_dir[len-1] == '\\') {
+            temp_dir[len-1] = '\0';
+        }
+        return temp_dir;
+    }
+    return "C:\\temp";  // fallback
+}
+
+static int cross_platform_mkstemp(char *template) {
+    char *temp_dir = _strdup(get_temp_dir());
+    char *filename = _tempnam(temp_dir, "siscalar_");
+    if (!filename) {
+        free(temp_dir);
+        return -1;
+    }
+    
+    // Copy the generated filename back to template
+    strcpy(template, filename);
+    
+    // Create and open the file
+    int fd = _open(filename, _O_RDWR | _O_CREAT | _O_EXCL | _O_TEMPORARY, _S_IREAD | _S_IWRITE);
+    
+    free(filename);
+    free(temp_dir);
+    return fd;
+}
+
+#define mkstemp cross_platform_mkstemp
+#define close _close
+#define TEMP_DIR get_temp_dir()
+
+#else
+#define TEMP_DIR "/tmp"
+#endif
 
 
 static SIUnitRef mps_unit(void) {
@@ -3821,7 +3879,8 @@ bool test_SIScalarWriteReadJSON_simple(void) {
     SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
     SIScalarRef scalar = SIScalarCreateWithFloat(42.5f, m);
 
-    char tmpl[] = "/tmp/siscalar_jsonXXXXXX";
+    char tmpl[PATH_MAX];
+    snprintf(tmpl, PATH_MAX, "%s/siscalar_jsonXXXXXX", TEMP_DIR);
     int fd = mkstemp(tmpl);
     if (fd < 0) {
         printf("test_SIScalarWriteReadJSON_simple failed: could not create temp file\n");
@@ -3873,7 +3932,8 @@ bool test_SIScalarWriteReadJSON_negative(void) {
     SIUnitRef kg = SIUnitFindWithUnderivedSymbol(STR("kg"));
     SIScalarRef scalar = SIScalarCreateWithFloat(-17.25f, kg);
 
-    char tmpl[] = "/tmp/siscalar_jsonXXXXXX";
+    char tmpl[PATH_MAX];
+    snprintf(tmpl, PATH_MAX, "%s/siscalar_jsonXXXXXX", TEMP_DIR);
     int fd = mkstemp(tmpl);
     if (fd < 0) {
         printf("test_SIScalarWriteReadJSON_negative failed: could not create temp file\n");
@@ -3927,7 +3987,8 @@ bool test_SIScalarWriteReadJSON_complex_unit(void) {
     SIUnitRef ms2 = SIUnitFromExpression(STR("m/s^2"), &multiplier, &err);
     SIScalarRef scalar = SIScalarCreateWithFloat(9.81f, ms2);
 
-    char tmpl[] = "/tmp/siscalar_jsonXXXXXX";
+    char tmpl[PATH_MAX];
+    snprintf(tmpl, PATH_MAX, "%s/siscalar_jsonXXXXXX", TEMP_DIR);
     int fd = mkstemp(tmpl);
     if (fd < 0) {
         printf("test_SIScalarWriteReadJSON_complex_unit failed: could not create temp file\n");
@@ -4006,7 +4067,8 @@ bool test_SIScalarWriteReadJSON_array_and_dictionary(void) {
     OCDictionarySetValue(dict, STR("duration"), s3);
 
     // --- Test array serialization ---
-    char arr_tmpl[] = "/tmp/siscalar_array_jsonXXXXXX";
+    char arr_tmpl[PATH_MAX];
+    snprintf(arr_tmpl, PATH_MAX, "%s/siscalar_array_jsonXXXXXX", TEMP_DIR);
     int arr_fd = mkstemp(arr_tmpl);
     if (arr_fd < 0) {
         printf("%s failed: could not create temp file for array\n", __func__);
@@ -4038,7 +4100,8 @@ bool test_SIScalarWriteReadJSON_array_and_dictionary(void) {
     OCRemoveItem(arr_tmpl, NULL);
 
     // --- Test dictionary serialization ---
-    char dict_tmpl[] = "/tmp/siscalar_dict_jsonXXXXXX";
+    char dict_tmpl[PATH_MAX];
+    snprintf(dict_tmpl, PATH_MAX, "%s/siscalar_dict_jsonXXXXXX", TEMP_DIR);
     int dict_fd = mkstemp(dict_tmpl);
     if (dict_fd < 0) {
         printf("%s failed: could not create temp file for dictionary\n", __func__);
