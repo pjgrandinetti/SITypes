@@ -51,7 +51,9 @@ The dimensionality of any physical quantity, ``q``, can then be expressed in ter
 
 where the lower-case Greek symbols represent integers called the dimensional exponents. The dimensionality of any physical quantity can be represented as a point in the space of dimensional exponents (:math:`\alpha`, :math:`\beta`, :math:`\gamma`, :math:`\delta`, :math:`\epsilon`, :math:`\zeta`, :math:`\eta`). Physical quantities with different meanings can have the same dimensionality. For example, the thermodynamic quantities *entropy* and *heat capacity* are different physical quantities having the same physical dimensions. Only physical quantities with the same dimensionality can be added. With the operation of multiplication, the physical dimensions form a mathematical group.
 
-There also exists numerous dimensionless quantities of importance, such as *plane angle* which has dimensionality of ``L/L``, or *solid angle* with a dimensionality of ``L^2/L^2``. It is sometimes necessary to distinguish between these different types of dimensionless quantities. Representing dimensionless dimensionalities requires us to split each dimension exponent into numerator and denominator exponents. Thus, we redefine our set of dimensionalities to incorporate numerator and denominator exponents,
+There also exists numerous dimensionless quantities of importance, such as *plane angle* which has 
+dimensionality of ``L/L``, or *solid angle* with a dimensionality of ``L^2/L^2``. It is 
+sometimes necessary to distinguish between these different types of dimensionless quantities. Representing dimensionless dimensionalities requires us to split each dimension exponent into numerator and denominator exponents. Thus, we redefine our set of dimensionalities to incorporate numerator and denominator exponents,
 
 .. math::
    :label: eq:dimensionalitySymbol
