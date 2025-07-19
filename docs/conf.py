@@ -49,8 +49,9 @@ breathe_default_project = 'SITypes'
 
 html_theme = 'sphinx_rtd_theme'
 
-# If you have no static files at all (you removed _static), clear this:
-html_static_path = []
+# Add custom CSS files
+html_static_path = ['_static']
+html_css_files = ['custom.css']
 
 # ——— Breathe/C domain fixes ———
 # Ensure that C files and headers use the C domain in Sphinx/breathe
