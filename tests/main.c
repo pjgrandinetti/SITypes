@@ -73,6 +73,7 @@ int main(int argc, const char* argv[]) {
     TRACK(test_unit_by_dividing_without_reducing);
     TRACK(test_unit_by_taking_nth_root);
     TRACK(test_unit_by_raising_to_power_without_reducing);
+    TRACK(test_unit_unicode_normalization);
 
 
 

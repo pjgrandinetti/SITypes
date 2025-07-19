@@ -19,5 +19,6 @@ bool test_unit_by_multiplying_without_reducing(void);
 bool test_unit_by_dividing_without_reducing(void);
 bool test_unit_by_taking_nth_root(void);
 bool test_unit_by_raising_to_power_without_reducing(void);
+bool test_unit_unicode_normalization(void);
 
 #endif /* TEST_UNIT_H */

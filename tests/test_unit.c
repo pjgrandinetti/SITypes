@@ -1093,3 +1093,129 @@ cleanup:
     printf("%s %s\n\n", __func__, success ? "passed" : "failed");
     return success;
 }
+
+
+bool test_unit_unicode_normalization(void) {
+    printf("Running %s...\n", __func__);
+    bool success = true;
+    OCStringRef errorString = NULL;
+
+    // Test Unicode normalization: Greek letter mu (μ, U+03BC) should be normalized to micro sign (µ, U+00B5)
+    printf("Testing Unicode normalization: Greek mu (μ) → micro sign (µ)\n");
+    
+    // Test 1: Create unit with Greek letter mu (μm)
+    SIUnitRef unit_greek_mu = SIUnitFromExpression(STR("μm"), NULL, &errorString);
+    if (!unit_greek_mu) {
+        printf("test_unit_unicode_normalization failed: Failed to parse unit with Greek mu 'μm'\n");
+        if (errorString) {
+            printf("Error: %s\n", OCStringGetCString(errorString));
+            OCRelease(errorString);
+            errorString = NULL;
+        }
+        success = false;
+    } else {
+        printf("✓ Successfully parsed unit with Greek mu 'μm'\n");
+        
+        // Get the symbol and verify it's normalized to micro sign
+        OCStringRef symbol_greek = SIUnitCopySymbol(unit_greek_mu);
+        if (symbol_greek) {
+            printf("  Symbol from Greek mu: '%s'\n", OCStringGetCString(symbol_greek));
+            
+            // Test 2: Create unit with micro sign (µm) for comparison
+            SIUnitRef unit_micro_sign = SIUnitFromExpression(STR("µm"), NULL, &errorString);
+            if (!unit_micro_sign) {
+                printf("test_unit_unicode_normalization failed: Failed to parse unit with micro sign 'µm'\n");
+                if (errorString) {
+                    printf("Error: %s\n", OCStringGetCString(errorString));
+                    OCRelease(errorString);
+                    errorString = NULL;
+                }
+                success = false;
+            } else {
+                printf("✓ Successfully parsed unit with micro sign 'µm'\n");
+                
+                OCStringRef symbol_micro = SIUnitCopySymbol(unit_micro_sign);
+                if (symbol_micro) {
+                    printf("  Symbol from micro sign: '%s'\n", OCStringGetCString(symbol_micro));
+                    
+                    // Test 3: Both symbols should be identical after normalization
+                    if (OCStringCompare(symbol_greek, symbol_micro, 0) == kOCCompareEqualTo) {
+                        printf("✓ Unicode normalization working: both symbols are identical\n");
+                    } else {
+                        printf("✗ Unicode normalization failed: symbols differ\n");
+                        printf("  Greek mu symbol:  '%s'\n", OCStringGetCString(symbol_greek));
+                        printf("  Micro sign symbol: '%s'\n", OCStringGetCString(symbol_micro));
+                        success = false;
+                    }
+                    
+                    // Test 4: Units should be equal
+                    if (SIUnitEqual(unit_greek_mu, unit_micro_sign)) {
+                        printf("✓ Units are equal after normalization\n");
+                    } else {
+                        printf("✗ Units are not equal after normalization\n");
+                        success = false;
+                    }
+                    
+                    OCRelease(symbol_micro);
+                } else {
+                    printf("test_unit_unicode_normalization failed: Failed to get symbol from micro sign unit\n");
+                    success = false;
+                }
+                OCRelease(unit_micro_sign);
+            }
+            OCRelease(symbol_greek);
+        } else {
+            printf("test_unit_unicode_normalization failed: Failed to get symbol from Greek mu unit\n");
+            success = false;
+        }
+        OCRelease(unit_greek_mu);
+    }
+    
+    // Test 5: Test other Unicode normalizations
+    printf("\nTesting other Unicode normalizations:\n");
+    
+    // Test multiplication sign (×) normalization
+    SIUnitRef unit_mult = SIUnitFromExpression(STR("m×s"), NULL, &errorString);
+    if (unit_mult) {
+        printf("✓ Successfully parsed 'm×s' (multiplication sign)\n");
+        OCStringRef mult_symbol = SIUnitCopySymbol(unit_mult);
+        if (mult_symbol) {
+            printf("  Symbol: '%s'\n", OCStringGetCString(mult_symbol));
+            OCRelease(mult_symbol);
+        }
+        OCRelease(unit_mult);
+    } else {
+        printf("✗ Failed to parse 'm×s' (multiplication sign)\n");
+        if (errorString) {
+            printf("Error: %s\n", OCStringGetCString(errorString));
+            OCRelease(errorString);
+            errorString = NULL;
+        }
+        success = false;
+    }
+    
+    // Test division sign (÷) normalization  
+    SIUnitRef unit_div = SIUnitFromExpression(STR("m÷s"), NULL, &errorString);
+    if (unit_div) {
+        printf("✓ Successfully parsed 'm÷s' (division sign)\n");
+        OCStringRef div_symbol = SIUnitCopySymbol(unit_div);
+        if (div_symbol) {
+            printf("  Symbol: '%s'\n", OCStringGetCString(div_symbol));
+            OCRelease(div_symbol);
+        }
+        OCRelease(unit_div);
+    } else {
+        printf("✗ Failed to parse 'm÷s' (division sign)\n");
+        if (errorString) {
+            printf("Error: %s\n", OCStringGetCString(errorString));
+            OCRelease(errorString);
+            errorString = NULL;
+        }
+        success = false;
+    }
+
+    if (errorString) OCRelease(errorString);
+
+    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
+    return success;
+}

@@ -61,8 +61,15 @@ SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multipli
     }
     
     OCStringFindAndReplace2(mutString,STR("•"),STR("*"));
-    
-    
+    OCStringFindAndReplace2(mutString, STR("×"), STR("*"));
+    OCStringFindAndReplace2(mutString, STR("÷"), STR("/"));
+    OCStringFindAndReplace2(mutString, STR("−"), STR("-"));
+    OCStringFindAndReplace2(mutString, STR("+"), STR("+"));
+    OCStringFindAndReplace2(mutString, STR("μ"), STR("µ"));
+    OCStringFindAndReplace2(mutString, STR("γ"), STR("𝛾"));
+    OCStringFindAndReplace2(mutString, STR("º"), STR("°"));
+    OCStringFindAndReplace2(mutString, STR("h_p"), STR("h_P"));
+    OCStringFindAndReplace2(mutString, STR("ɣ"), STR("𝛾"));
     
     final_unit = NULL;
     unitError = NULL;
