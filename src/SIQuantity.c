@@ -40,18 +40,18 @@ SIDimensionalityRef SIQuantityGetUnitDimensionality(SIQuantityRef quantity)
     return SIUnitGetDimensionality(theQuantity->unit);
 }
 
-SINumberType SIQuantityGetElementType(SIQuantityRef quantity)
+SINumberType SIQuantityGetNumericType(SIQuantityRef quantity)
 {
     IF_NO_OBJECT_EXISTS_RETURN(quantity,kSINumberFloat32Type);
     SIQuantityRef theQuantity = (SIQuantityRef) quantity;
     return theQuantity->type;
 }
 
-bool SIQuantityHasElementType(SIQuantityRef quantity, SINumberType elementType)
+bool SIQuantityHasNumericType(SIQuantityRef quantity, SINumberType numericType)
 {
     IF_NO_OBJECT_EXISTS_RETURN(quantity,NULL);
     SIQuantityRef theQuantity = (SIQuantityRef) quantity;
-    if(elementType != theQuantity->type) return false;
+    if(numericType != theQuantity->type) return false;
     return true;
 }
 
@@ -97,7 +97,7 @@ bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2)
 }
 
 
- SINumberType SIQuantityBestElementType(SIQuantityRef input1, SIQuantityRef input2)
+ SINumberType SIQuantityBestNumericType(SIQuantityRef input1, SIQuantityRef input2)
  {
      SIQuantityRef quantity1 = (SIQuantityRef) input1;
      SIQuantityRef quantity2 = (SIQuantityRef) input2;
@@ -144,14 +144,14 @@ bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2)
      }
  }
 
-SINumberType SIQuantityLargerElementType(SIQuantityRef input1, SIQuantityRef input2)
+SINumberType SIQuantityLargerNumericType(SIQuantityRef input1, SIQuantityRef input2)
 {
     SIQuantityRef quantity1 = (SIQuantityRef) input1;
     SIQuantityRef quantity2 = (SIQuantityRef) input2;
     return (quantity1->type > quantity2->type) ? quantity1->type: quantity2->type;
 }
 
-SINumberType SIQuantitySmallerElementType(SIQuantityRef input1, SIQuantityRef input2)
+SINumberType SIQuantitySmallerNumericType(SIQuantityRef input1, SIQuantityRef input2)
 {
     SIQuantityRef quantity1 = (SIQuantityRef) input1;
     SIQuantityRef quantity2 = (SIQuantityRef) input2;

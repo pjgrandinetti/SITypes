@@ -83,9 +83,9 @@ SIDimensionalityRef SIQuantityGetUnitDimensionality(SIQuantityRef quantity);
 /**
  * @brief Returns the type used by a quantity to store its values.
  * @param quantity The quantity.
- * @return The element type. Possible values are kSINumberFloatType, kSINumberDoubleType, kSINumberFloatComplexType, and kSINumberDoubleComplexType.
+ * @return The numeric type. Possible values are kSINumberFloatType, kSINumberDoubleType, kSINumberFloatComplexType, and kSINumberDoubleComplexType.
  */
-SINumberType SIQuantityGetElementType(SIQuantityRef quantity);
+SINumberType SIQuantityGetNumericType(SIQuantityRef quantity);
 
 /**
  * @brief Returns size (in bytes) of a quantity element.
@@ -95,12 +95,12 @@ SINumberType SIQuantityGetElementType(SIQuantityRef quantity);
 int SIQuantityElementSize(SIQuantityRef quantity);
 
 /**
- * @brief Tests if quantity has a specific element type.
+ * @brief Tests if quantity has a specific numeric type.
  * @param quantity The quantity.
- * @param elementType The element type.
+ * @param numericType The numeric type.
  * @return True or false.
  */
-bool SIQuantityHasElementType(SIQuantityRef quantity, SINumberType elementType);
+bool SIQuantityHasNumericType(SIQuantityRef quantity, SINumberType numericType);
 
 /**
  * @brief Tests if quantity has a complex element type.
@@ -134,28 +134,28 @@ bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2)
 bool SIQuantityHasSameReducedDimensionality(SIQuantityRef input1, SIQuantityRef input2);
 
 /**
- * @brief Returns larger element type for the two input quantities.
+ * @brief Returns larger numeric type for the two input quantities.
  * @param input1 The first SIQuantity.
  * @param input2 The second SIQuantity.
  * @return The larger SINumberType of the two quantities.
  */
-SINumberType SIQuantityLargerElementType(SIQuantityRef input1, SIQuantityRef input2);
+SINumberType SIQuantityLargerNumericType(SIQuantityRef input1, SIQuantityRef input2);
 
 /**
- * @brief Returns smaller element type for the two input quantities.
+ * @brief Returns smaller numeric type for the two input quantities.
  * @param input1 The first SIQuantity.
  * @param input2 The second SIQuantity.
  * @return The smaller SINumberType of the two quantities.
  */
-SINumberType SIQuantitySmallerElementType(SIQuantityRef input1, SIQuantityRef input2);
+SINumberType SIQuantitySmallerNumericType(SIQuantityRef input1, SIQuantityRef input2);
 
 /**
- * @brief Returns the best element type for the two input quantities.
+ * @brief Returns the best numeric type for the two input quantities.
  * @param input1 The first SIQuantity.
  * @param input2 The second SIQuantity.
  * @return The best SINumberType from the two quantities.
- * @details Returns the best element type for the two input quantities which loses no precision
- * when the quantities are combined in any way: add, subtract, multiply, divide. Input element
+ * @details Returns the best numeric type for the two input quantities which loses no precision
+ * when the quantities are combined in any way: add, subtract, multiply, divide. Input numeric
  * types and outputs are:
  *
  * (float and float) => float
@@ -178,6 +178,6 @@ SINumberType SIQuantitySmallerElementType(SIQuantityRef input1, SIQuantityRef in
  *
  * (double complex and double complex) => double complex
  */
-SINumberType SIQuantityBestElementType(SIQuantityRef input1, SIQuantityRef input2);
+SINumberType SIQuantityBestNumericType(SIQuantityRef input1, SIQuantityRef input2);
 
 #endif /* SIQuantity_h */

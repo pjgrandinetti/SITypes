@@ -132,8 +132,8 @@ void SIScalarSetFloatComplexValue(SIMutableScalarRef theScalar, float complex va
 /** @brief Sets the numeric value of a mutable scalar to a double complex. */
 void SIScalarSetDoubleComplexValue(SIMutableScalarRef theScalar, double complex value);
 
-/** @brief Sets the element type indicator for a mutable scalar. */
-void SIScalarSetElementType(SIMutableScalarRef theScalar, SINumberType elementType);
+/** @brief Sets the numeric type indicator for a mutable scalar. */
+void SIScalarSetNumericType(SIMutableScalarRef theScalar, SINumberType numericType);
 
 /** @brief Retrieves the scalar’s value as a float. */
 float SIScalarFloatValue(SIScalarRef theScalar);
@@ -179,8 +179,8 @@ double complex SIScalarDoubleComplexValueInCoherentUnit(SIScalarRef theScalar);
 
 #pragma mark Operations
 
-/** @brief Converts the numeric representation to a specified element type. */
-SIScalarRef SIScalarCreateByConvertingToNumberType(SIScalarRef theScalar, SINumberType elementType);
+/** @brief Converts the numeric representation to a specified numeric type. */
+SIScalarRef SIScalarCreateByConvertingToNumberType(SIScalarRef theScalar, SINumberType numericType);
 
 /** @brief Replace the numeric value of a mutable scalar with one of its complex components. */
 bool SIScalarTakeComplexPart(SIMutableScalarRef theScalar, complexPart part);

@@ -327,7 +327,7 @@ bool test_SIScalarCreateWithDouble(void) {
     OCRelease(unitStr);
 
     // Verify the number type is correct (should be double)
-    if (SIQuantityGetElementType((SIQuantityRef)s) != kSINumberFloat64Type) {
+    if (SIQuantityGetNumericType((SIQuantityRef)s) != kSINumberFloat64Type) {
         printf("test_SIScalarCreateWithDouble failed: Scalar number type is not double\n");
         OCRelease(s);
         return false;
@@ -374,7 +374,7 @@ bool test_SIScalarCreateMutableWithDouble(void) {
     OCRelease(unitStr);
 
     // Verify the number type is correct
-    if (SIQuantityGetElementType((SIQuantityRef)m) != kSINumberFloat64Type) {
+    if (SIQuantityGetNumericType((SIQuantityRef)m) != kSINumberFloat64Type) {
         printf("test_SIScalarCreateMutableWithDouble failed: Incorrect number type (expected double)\n");
         OCRelease(m);
         return false;
@@ -684,7 +684,7 @@ bool test_SIScalarSetElementType(void) {
         return false;
     }
 
-    SIScalarSetElementType(m, kSINumberFloat64Type);
+    SIScalarSetNumericType(m, kSINumberFloat64Type);
 
     // Verify value was preserved after type change
     if (fabs(SIScalarDoubleValue(m) - 1.0) >= 1e-9) {

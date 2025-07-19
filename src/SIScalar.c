@@ -284,20 +284,20 @@ static bool __NormalizeScalarMantissaToSI3(SIMutableScalarRef sc) {
         }
     }
     // (5) finish with a 64-bit type, preserving real vs. complex
-    SIScalarSetElementType(
+    SIScalarSetNumericType(
         sc,
         wasComplex ? kSINumberComplex128Type
                    : kSINumberFloat64Type);
     return true;
 }
 #pragma mark Accessors
-void SIScalarSetElementType(SIMutableScalarRef theScalar, SINumberType elementType) {
+void SIScalarSetNumericType(SIMutableScalarRef theScalar, SINumberType numericType) {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, );
     switch (theScalar->type) {
         case kSINumberFloat32Type: {
             float value = theScalar->value.floatValue;
-            theScalar->type = elementType;
-            switch (elementType) {
+            theScalar->type = numericType;
+            switch (numericType) {
                 case kSINumberFloat32Type:
                     theScalar->value.floatValue = value;
                     return;
@@ -315,8 +315,8 @@ void SIScalarSetElementType(SIMutableScalarRef theScalar, SINumberType elementTy
         }
         case kSINumberFloat64Type: {
             double value = theScalar->value.doubleValue;
-            theScalar->type = elementType;
-            switch (elementType) {
+            theScalar->type = numericType;
+            switch (numericType) {
                 case kSINumberFloat32Type:
                     theScalar->value.floatValue = value;
                     return;
@@ -334,8 +334,8 @@ void SIScalarSetElementType(SIMutableScalarRef theScalar, SINumberType elementTy
         }
         case kSINumberComplex64Type: {
             float complex value = theScalar->value.floatComplexValue;
-            theScalar->type = elementType;
-            switch (elementType) {
+            theScalar->type = numericType;
+            switch (numericType) {
                 case kSINumberFloat32Type:
                     theScalar->value.floatValue = value;
                     return;
@@ -353,8 +353,8 @@ void SIScalarSetElementType(SIMutableScalarRef theScalar, SINumberType elementTy
         }
         case kSINumberComplex128Type: {
             double complex value = theScalar->value.doubleComplexValue;
-            theScalar->type = elementType;
-            switch (elementType) {
+            theScalar->type = numericType;
+            switch (numericType) {
                 case kSINumberFloat32Type:
                     theScalar->value.floatValue = value;
                     return;
@@ -630,10 +630,10 @@ double complex SIScalarDoubleComplexValueInUnit(SIScalarRef theScalar, SIUnitRef
     return nan(NULL);
 }
 #pragma mark Operations
-SIScalarRef SIScalarCreateByConvertingToNumberType(SIScalarRef theScalar, SINumberType elementType) {
+SIScalarRef SIScalarCreateByConvertingToNumberType(SIScalarRef theScalar, SINumberType numericType) {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, NULL);
     SIScalarRef result = SIScalarCreateCopy(theScalar);
-    SIScalarSetElementType((SIMutableScalarRef)result, elementType);
+    SIScalarSetNumericType((SIMutableScalarRef)result, numericType);
     return result;
 }
 bool SIScalarTakeComplexPart(SIMutableScalarRef scalar, complexPart part) {
@@ -918,7 +918,7 @@ SIScalarRef SIScalarCreateByAdding(SIScalarRef input1, SIScalarRef input2, OCStr
         if (*error) return NULL;
     IF_NO_OBJECT_EXISTS_RETURN(input1, NULL);
     IF_NO_OBJECT_EXISTS_RETURN(input2, NULL);
-    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestElementType((SIQuantityRef)input1, (SIQuantityRef)input2));
+    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestNumericType((SIQuantityRef)input1, (SIQuantityRef)input2));
     if (SIScalarAdd((SIMutableScalarRef)result, input2, error)) return result;
     OCRelease(result);
     return NULL;
@@ -975,7 +975,7 @@ SIScalarRef SIScalarCreateBySubtracting(SIScalarRef input1, SIScalarRef input2, 
         if (*error) return NULL;
     IF_NO_OBJECT_EXISTS_RETURN(input1, NULL);
     IF_NO_OBJECT_EXISTS_RETURN(input2, NULL);
-    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestElementType((SIQuantityRef)input1, (SIQuantityRef)input2));
+    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestNumericType((SIQuantityRef)input1, (SIQuantityRef)input2));
     if (SIScalarSubtract((SIMutableScalarRef)result, input2, error)) return result;
     OCRelease(result);
     return NULL;
@@ -1030,7 +1030,7 @@ SIScalarRef SIScalarCreateByMultiplyingWithoutReducingUnit(SIScalarRef input1, S
         if (*error) return false;
     IF_NO_OBJECT_EXISTS_RETURN(input1, false);
     IF_NO_OBJECT_EXISTS_RETURN(input2, false);
-    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestElementType((SIQuantityRef)input1, (SIQuantityRef)input2));
+    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestNumericType((SIQuantityRef)input1, (SIQuantityRef)input2));
     SIScalarMultiplyWithoutReducingUnit((SIMutableScalarRef)result, input2, error);
     return result;
 }
@@ -1084,7 +1084,7 @@ SIScalarRef SIScalarCreateByMultiplying(SIScalarRef input1, SIScalarRef input2, 
         if (*error) return false;
     IF_NO_OBJECT_EXISTS_RETURN(input1, NULL);
     IF_NO_OBJECT_EXISTS_RETURN(input2, NULL);
-    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestElementType((SIQuantityRef)input1, (SIQuantityRef)input2));
+    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestNumericType((SIQuantityRef)input1, (SIQuantityRef)input2));
     SIScalarMultiply((SIMutableScalarRef)result, input2, error);
     return result;
 }
@@ -1194,7 +1194,7 @@ SIScalarRef SIScalarCreateByDividingWithoutReducingUnit(SIScalarRef input1, SISc
         if (*error) return NULL;
     IF_NO_OBJECT_EXISTS_RETURN(input1, NULL);
     IF_NO_OBJECT_EXISTS_RETURN(input2, NULL);
-    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestElementType((SIQuantityRef)input1, (SIQuantityRef)input2));
+    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestNumericType((SIQuantityRef)input1, (SIQuantityRef)input2));
     if (SIScalarDivideWithoutReducingUnit((SIMutableScalarRef)result, input2, error)) return result;
     OCRelease(result);
     return NULL;
@@ -1204,7 +1204,7 @@ SIScalarRef SIScalarCreateByDividing(SIScalarRef input1, SIScalarRef input2, OCS
         if (*error) return NULL;
     IF_NO_OBJECT_EXISTS_RETURN(input1, NULL);
     IF_NO_OBJECT_EXISTS_RETURN(input2, NULL);
-    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestElementType((SIQuantityRef)input1, (SIQuantityRef)input2));
+    SIScalarRef result = SIScalarCreateByConvertingToNumberType(input1, SIQuantityBestNumericType((SIQuantityRef)input1, (SIQuantityRef)input2));
     if (SIScalarDivide((SIMutableScalarRef)result, input2, error)) return result;
     OCRelease(result);
     return NULL;
@@ -2074,7 +2074,7 @@ bool SIScalarIsZero(SIScalarRef theScalar) {
 }
 bool SIScalarIsInfinite(SIScalarRef theScalar) {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
-    switch (SIQuantityGetElementType((SIQuantityRef)theScalar)) {
+    switch (SIQuantityGetNumericType((SIQuantityRef)theScalar)) {
         case kSINumberFloat32Type:
             if (isinf(theScalar->value.floatValue)) return true;
         case kSINumberFloat64Type:
