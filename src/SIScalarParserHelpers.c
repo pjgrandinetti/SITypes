@@ -11,6 +11,7 @@ extern bool sis_syntax_error;
 extern ScalarNodeRef sis_root;
 
 extern SIScalarRef result;
+extern OCStringRef scalarError;
 
 extern int sis_scan_string(const char *);
 extern int sisparse(void);
@@ -255,6 +256,9 @@ SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
         // Create a local autorelease pool
         OCAutoreleasePoolRef pool = OCAutoreleasePoolCreate();
         sis_syntax_error = false;
+        scalarErrorString = NULL;  // Reset error string from previous parse attempts
+        scalarError = NULL;  // Reset bison parser error from previous parse attempts
+        result = NULL;  // Reset result from previous parse attempts
         sis_scan_string(cString);
         sisparse();
         sislex_destroy();

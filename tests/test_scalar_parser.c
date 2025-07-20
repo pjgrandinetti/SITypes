@@ -761,3 +761,110 @@ bool test_scalar_parser_10(void) {
     printf("%s passed\n", __func__);
     return true;
 }
+
+bool test_scalar_parser_11(void) {
+    printf("Running %s...\n", __func__);
+    OCStringRef err = NULL;
+
+    // Test parser recovery after bad expression
+    // This test checks if the parser properly recovers after parsing an invalid expression
+
+    // Step 1: Parse a valid expression first
+    SIScalarRef scalar1 = SIScalarCreateFromExpression(STR("42.0 Hz"), &err);
+    if (!scalar1) {
+        if (err) {
+            printf("Error parsing valid expression '42.0 Hz': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse initial valid expression\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+    OCRelease(scalar1);
+
+    // Step 2: Try to parse an invalid expression (should fail)
+    SIScalarRef scalar_bad = SIScalarCreateFromExpression(STR("invalid syntax here"), &err);
+    if (scalar_bad) {
+        printf("%s failed: Invalid expression unexpectedly succeeded\n", __func__);
+        OCRelease(scalar_bad);
+        return false;
+    }
+    // Clean up error from invalid parse
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    // Step 3: Parse another valid expression - this should succeed if parser recovered
+    SIScalarRef scalar2 = SIScalarCreateFromExpression(STR("100.0 Hz"), &err);
+    if (!scalar2) {
+        if (err) {
+            printf("Error parsing valid expression after invalid parse '100.0 Hz': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Parser did not recover after invalid expression\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    // Verify the value is correct
+    SIUnitRef hzUnit = SIUnitFindWithUnderivedSymbol(STR("Hz"));
+    SIScalarRef expected = SIScalarCreateWithFloatComplex(100.0, hzUnit);
+    if (!expected) {
+        printf("%s failed: Failed to create expected scalar\n", __func__);
+        OCRelease(scalar2);
+        return false;
+    }
+
+    if (SIScalarCompare(scalar2, expected) != kOCCompareEqualTo) {
+        printf("%s failed: Scalar value mismatch after parser recovery\n", __func__);
+        OCRelease(expected);
+        OCRelease(scalar2);
+        return false;
+    }
+
+    // Step 4: Try one more complex sequence to ensure robustness
+    // Invalid expression followed by a more complex valid expression
+    SIScalarRef scalar_bad2 = SIScalarCreateFromExpression(STR("completely@#$%invalid&*()"), &err);
+    if (scalar_bad2) {
+        printf("%s failed: Second invalid expression unexpectedly succeeded\n", __func__);
+        OCRelease(scalar_bad2);
+        OCRelease(expected);
+        OCRelease(scalar2);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    // Complex valid expression after error
+    SIScalarRef scalar3 = SIScalarCreateFromExpression(STR("3.14159 * 2.0 m"), &err);
+    if (!scalar3) {
+        if (err) {
+            printf("Error parsing complex expression after invalid parse: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Parser did not recover for complex expression\n", __func__);
+        OCRelease(expected);
+        OCRelease(scalar2);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    // Cleanup
+    OCRelease(expected);
+    OCRelease(scalar2);
+    OCRelease(scalar3);
+    printf("%s passed\n", __func__);
+    return true;
+}
