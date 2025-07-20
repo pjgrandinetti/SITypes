@@ -203,7 +203,13 @@ bool SIScalarConvertToUnit(SIMutableScalarRef theScalar, SIUnitRef unit, OCStrin
 /** @brief Create a new SIScalar by converting to another unit of the same dimensionality. */
 SIScalarRef SIScalarCreateByConvertingToUnit(SIScalarRef theScalar, SIUnitRef unit, OCStringRef *error);
 
-/** @brief Convert a mutable scalar to its coherent SI unit in place. */
+/** @brief Create a new SIScalar by converting to another unit (given its string representation) of the same dimensionality. */
+bool SIScalarConvertToUnitWithString(SIMutableScalarRef theScalar, OCStringRef unitString, OCStringRef *error);
+
+/** @brief Convert a mutable scalar’s value and unit to another compatible unit given the unit string. */
+SIScalarRef SIScalarCreateByConvertingToUnitWithString(SIScalarRef theScalar, OCStringRef unitString, OCStringRef *error);
+
+    /** @brief Convert a mutable scalar to its coherent SI unit in place. */
 bool SIScalarConvertToCoherentUnit(SIMutableScalarRef theScalar, OCStringRef *error);
 
 /** @brief Create a new SIScalar by converting to its coherent SI unit. */

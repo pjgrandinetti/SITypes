@@ -777,12 +777,63 @@ bool SIScalarConvertToUnit(SIMutableScalarRef theScalar, SIUnitRef unit, OCStrin
     }
     return false;
 }
+
+bool SIScalarConvertToUnitWithString(SIMutableScalarRef theScalar, OCStringRef unitString, OCStringRef *error) {
+    if (error)
+        if (*error) return false;
+    IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
+    double conversion = 1.0;
+    SIUnitRef unit = SIUnitFromExpression(unitString, &conversion, error);
+    if (!unit) {
+        if (error == NULL) return false;
+        *error = STR("Invalid unit string.");
+        return false;
+    }
+    if (!SIDimensionalityHasSameReducedDimensionality(SIUnitGetDimensionality(theScalar->unit), SIUnitGetDimensionality(unit))) {
+        if (error == NULL) return false;
+        *error = STR("Incompatible Dimensionalities.");
+        return false;
+    }
+    conversion *= SIUnitConversion(theScalar->unit, unit);
+    theScalar->unit = unit;
+    switch (theScalar->type) {
+        case kSINumberFloat32Type: {
+            theScalar->value.floatValue = theScalar->value.floatValue * conversion;
+            return true;
+        }
+        case kSINumberFloat64Type: {
+            theScalar->value.doubleValue = theScalar->value.doubleValue * conversion;
+            return true;
+        }
+        case kSINumberComplex64Type: {
+            theScalar->value.floatComplexValue = theScalar->value.floatComplexValue * conversion;
+            return true;
+        }
+        case kSINumberComplex128Type: {
+            theScalar->value.doubleComplexValue = theScalar->value.doubleComplexValue * conversion;
+            return true;
+        }
+    }
+    return false;
+}
+
 SIScalarRef SIScalarCreateByConvertingToUnit(SIScalarRef theScalar, SIUnitRef unit, OCStringRef *error) {
     if (error)
         if (*error) return NULL;
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, NULL);
     SIScalarRef result = SIScalarCreateCopy(theScalar);
     if (SIScalarConvertToUnit((SIMutableScalarRef)result, unit, error)) {
+        return result;
+    }
+    if (result) OCRelease(result);
+    return NULL;
+}
+SIScalarRef SIScalarCreateByConvertingToUnitWithString(SIScalarRef theScalar, OCStringRef unitString, OCStringRef *error) {
+    if (error)
+        if (*error) return NULL;
+    IF_NO_OBJECT_EXISTS_RETURN(theScalar, NULL);
+    SIScalarRef result = SIScalarCreateCopy(theScalar);
+    if (SIScalarConvertToUnitWithString((SIMutableScalarRef)result, unitString, error)) {
         return result;
     }
     if (result) OCRelease(result);
