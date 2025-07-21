@@ -671,16 +671,16 @@ bool test_SIScalarSetDoubleComplexValue(void) {
     return true;
 }
 
-bool test_SIScalarSetElementType(void) {
+bool test_SIScalarSetNumericType(void) {
     SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarSetElementType failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarSetNumericType failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
         return false;
     }
 
     SIMutableScalarRef m = SIScalarCreateMutableWithFloat(1.0f, u);
     if (!m) {
-        printf("test_SIScalarSetElementType failed: Failed to create mutable scalar\n");
+        printf("test_SIScalarSetNumericType failed: Failed to create mutable scalar\n");
         return false;
     }
 
@@ -688,14 +688,14 @@ bool test_SIScalarSetElementType(void) {
 
     // Verify value was preserved after type change
     if (fabs(SIScalarDoubleValue(m) - 1.0) >= 1e-9) {
-        printf("test_SIScalarSetElementType failed: Value not preserved after changing type (expected 1.0, got %.12f)\n",
+        printf("test_SIScalarSetNumericType failed: Value not preserved after changing type (expected 1.0, got %.12f)\n",
                SIScalarDoubleValue(m));
         OCRelease(m);
         return false;
     }
 
     OCRelease(m);
-    printf("test_SIScalarSetElementType passed\n");
+    printf("test_SIScalarSetNumericType passed\n");
     return true;
 }
 

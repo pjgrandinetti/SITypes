@@ -19,7 +19,7 @@ bool test_SIScalarSetFloatValue(void);
 bool test_SIScalarSetDoubleValue(void);
 bool test_SIScalarSetFloatComplexValue(void);
 bool test_SIScalarSetDoubleComplexValue(void);
-bool test_SIScalarSetElementType(void);
+bool test_SIScalarSetNumericType(void);
 bool test_SIScalarFloatValue(void);
 bool test_SIScalarDoubleValue(void);
 bool test_SIScalarFloatComplexValue(void);

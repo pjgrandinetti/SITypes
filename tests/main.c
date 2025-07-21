@@ -107,7 +107,7 @@ int main(int argc, const char* argv[]) {
     TRACK_SCALAR_LEAK(test_SIScalarSetDoubleValue);
     TRACK_SCALAR_LEAK(test_SIScalarSetFloatComplexValue);
     TRACK_SCALAR_LEAK(test_SIScalarSetDoubleComplexValue);
-    TRACK_SCALAR_LEAK(test_SIScalarSetElementType);
+    TRACK_SCALAR_LEAK(test_SIScalarSetNumericType);
     TRACK_SCALAR_LEAK(test_SIScalarFloatValue);
     TRACK_SCALAR_LEAK(test_SIScalarDoubleValue);
     TRACK_SCALAR_LEAK(test_SIScalarFloatComplexValue);
