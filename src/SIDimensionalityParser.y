@@ -75,6 +75,18 @@ SIDimensionalityRef SIDimensionalityParseExpression(OCStringRef expression, OCSt
         sidlex_destroy();
         OCRelease(mutString);
     }
+    
+    // Check for syntax errors and reject the parse if any occurred
+    if(sid_syntax_error) {
+        if(final_dimensionality) {
+            OCRelease(final_dimensionality);
+            final_dimensionality = NULL;
+        }
+        if(!dimensionalityError) {
+            dimensionalityError = STR("Invalid expression: addition and subtraction are not valid in dimensional analysis");
+        }
+    }
+    
     if(dimensionalityError) *error = dimensionalityError;
     
     return final_dimensionality;

@@ -13,5 +13,6 @@ bool test_dimensionality_multiply_work(void);
 bool test_dimensionality_power_area(void);
 bool test_dimensionality_reduction_behavior(void);
 bool test_dimensionality_deep_copy(void);
+bool test_dimensionality_parser_strictness(void);
 
 #endif /* TEST_DIMENSIONALITY_H */

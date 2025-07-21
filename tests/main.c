@@ -55,6 +55,7 @@ int main(int argc, const char* argv[]) {
     TRACK(test_dimensionality_power_area);
     TRACK(test_dimensionality_reduction_behavior);
     TRACK(test_dimensionality_deep_copy);
+    TRACK(test_dimensionality_parser_strictness);
     printf("\n=== SIUnit Tests ===\n");
     TRACK(test_unit_0);
     TRACK(test_unit_1);
