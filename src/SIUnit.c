@@ -551,6 +551,38 @@ SIUnitCreateFromDictionary(OCDictionaryRef dict) {
     return u;
 }
 
+bool SIUnitIsCoherentSIBaseUnit(SIUnitRef theUnit)
+{
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit,false);
+    
+    // Non-SI units return false
+    if(theUnit->scale_to_coherent_si != 1.) return false;
+    
+    // To be an SI base unit all the denominator exponents must be 0
+    // and all numerator exponents are zero except one, which is 1
+	if(theUnit->root_symbol==NULL) {
+		for(int i=0;i<7;i++) if(SIDimensionalityGetDenExpAtIndex(theUnit->dimensionality, i) !=0) return false;
+        int count = 0;
+        int index = -1;
+		for(int i=0;i<7;i++) {
+            uint8_t numeratorExponent = SIDimensionalityGetNumExpAtIndex(theUnit->dimensionality, i);
+            if(numeratorExponent>1) return false;
+            if(numeratorExponent<0) return false;
+            if(numeratorExponent==1) {
+                index = i;
+                count++;
+            }
+        }
+        // To be a coherent base unit ...
+        // All prefixes must be kSIPrefixNone, except mass, which is kSIPrefixKilo (for kilogram)
+        if(index==1 && count==1 && theUnit->num_prefix[index]==kSIPrefixKilo) return true;
+		else if(count==1 && theUnit->num_prefix[index]==kSIPrefixNone) return true;
+	}
+	return false;
+}
+
+
+
 /**
  * Only true if it’s a pure SI base unit (m, kg, s, A, K, mol, cd); false otherwise.
  */
