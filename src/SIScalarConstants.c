@@ -67,7 +67,7 @@ static bool SIPeriodicTableCreateMolarMassLibrary(OCStringRef *errorString)
     molarMassLibrary  = OCDictionaryCreateMutable(0);
     
     double multiplier = 1.0;
-    SIUnitRef unit = SIUnitFromExpressionInternal(STR("g/mol"), &multiplier, errorString);
+    SIUnitRef unit = SIUnitFromExpression(STR("g/mol"), &multiplier, errorString);
     
     for(int64_t index=0;index<118;index++) {
         SIScalarRef value = SIScalarCreateWithDouble(atomicMass[index]*multiplier,unit);
@@ -339,8 +339,7 @@ static bool SIPeriodicTableNuclearElectricQuadrupoleMomentLibrary(OCStringRef *e
     if(errorString) if(*errorString) return false;
     nuclearElectricQuadrupoleMomentLibrary = OCDictionaryCreateMutable(0);
     
-    double multiplier = 1.0;
-    SIUnitRef unit = SIUnitFromExpressionInternal(STR("b"), &multiplier, errorString);
+    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("b"));
     
     for(int64_t index=0;index<3181;index++) {
         if(quadMoment[index] != -99) {
@@ -379,8 +378,7 @@ static bool SIPeriodicTableNuclearMagneticDipoleMomentLibrary(OCStringRef *error
     if(errorString) if(*errorString) return false;
     nuclearMagneticMomentLibrary  = OCDictionaryCreateMutable(0);
     
-    double multiplier = 1.0;
-    SIUnitRef unit = SIUnitFromExpressionInternal(STR("µ_N"), &multiplier, errorString);
+    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("µ_N"));
     
     for(int64_t index=0;index<3181;index++) {
         if(isotopeSpin[index] != -99) {
@@ -455,7 +453,7 @@ static bool SIPeriodicTableNuclearGyromagneticRatioLibrary(OCStringRef *errorStr
     nuclearGyromagneticRatioLibrary  = OCDictionaryCreateMutable(0);
     
     double multiplier = 1.0;
-    SIUnitRef unit = SIUnitFromExpressionInternal(STR("rad/(s•T)"), &multiplier, errorString);
+    SIUnitRef unit = SIUnitFromExpression(STR("rad/(s•T)"), &multiplier, errorString);
     
     for(int64_t index=0;index<3181;index++) {
         if(isotopeMagneticMoment[index] && isotopeSpin[index] != -99) {
@@ -485,15 +483,14 @@ SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSym
     OCStringLowercase(lowerCaseKey);
     SIScalarRef magneticMoment = (SIScalarRef) OCDictionaryGetValue(nuclearMagneticMomentLibrary, lowerCaseKey);
     SIScalarRef spin = (SIScalarRef) OCDictionaryGetValue(isotopeSpinLibrary, lowerCaseKey);
-    SIScalarRef hbar = SIScalarCreateFromExpression(STR("ℏ"), errorString);
-    
+
+    SIScalarRef hbar = SIScalarCreateWithDouble(1,SIUnitFindWithUnderivedSymbol(STR("ℏ")));
     OCRelease(lowerCaseKey);
     if(NULL == magneticMoment || NULL == spin || NULL == hbar ) {
         if(hbar) OCRelease(hbar);
         if(errorString) *errorString = STR("Symbol not found");
         return NULL;
     }
-    
     
     SIMutableScalarRef gyromagneticRatio = SIScalarCreateMutableCopy(magneticMoment);
     SIScalarDivide(gyromagneticRatio, hbar, errorString);
