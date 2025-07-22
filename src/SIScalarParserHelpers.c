@@ -262,7 +262,8 @@ SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
         sis_scan_string(cString);
         sisparse();
         sislex_destroy();
-        if (!sis_syntax_error && sis_root) {
+        
+        if (!sis_syntax_error && result) {
             out = SIScalarCreateCopy(result);
         }
         OCAutoreleasePoolRelease(pool);
@@ -300,7 +301,6 @@ SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
     } else {
         if (error) *error = STR("Syntax Error");
     }
-    if(out) OCRetain(out);
     return out;
 }
 

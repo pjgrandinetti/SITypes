@@ -1047,57 +1047,52 @@ bool test_nmr_functions(void) {
     }
     OCRelease(h1_moment);
 
-    // Test 3: Check gyromagnetic ratio 𝛾_I[H1] (this should fail currently)
+    // Test 3: Check gyromagnetic ratio 𝛾_I[H1]
     printf("  Testing 𝛾_I[H1]...\n");
     SIScalarRef h1_gamma = SIScalarCreateFromExpression(STR("𝛾_I[H1]"), &err);
     if (!h1_gamma) {
         printf("Error parsing '𝛾_I[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
-        printf("    This suggests the library still isn't working\n");
+        printf("%s failed: 𝛾_I[H1] parser not working\n", __func__);
         if (err) OCRelease(err);
-        err = NULL;
-    } else {
-        double gamma_value = SIScalarDoubleValue(h1_gamma);
-        printf("    𝛾_I[H1] = %f rad/(s·T)\n", gamma_value);
-        if (gamma_value == 0.0) {
-            printf("    WARNING: Got zero value - library may be empty or lookup failed\n");
-        }
-        OCRelease(h1_gamma);
+        return false;
     }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+    
+    double gamma_value = SIScalarDoubleValue(h1_gamma);
+    printf("    𝛾_I[H1] = %f rad/(s·T)\n", gamma_value);
+    if (fabs(gamma_value - 267522191.787411) > 1e6) {
+        printf("%s failed: Expected 𝛾_I[H1] ≈ 267522191.787411, got %f\n", __func__, gamma_value);
+        OCRelease(h1_gamma);
+        return false;
+    }
+    OCRelease(h1_gamma);
 
-    // Test 4: Check NMR frequency nmr[H1] (this should also fail currently)
+    // Test 4: Check NMR frequency nmr[H1]
     printf("  Testing nmr[H1]...\n");
     SIScalarRef h1_nmr = SIScalarCreateFromExpression(STR("nmr[H1]"), &err);
     if (!h1_nmr) {
         printf("Error parsing 'nmr[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
-        printf("    This suggests the library still isn't working\n");
+        printf("%s failed: nmr[H1] parser not working\n", __func__);
         if (err) OCRelease(err);
-        err = NULL;
-    } else {
-        double nmr_value = SIScalarDoubleValue(h1_nmr);
-        printf("    nmr[H1] = %f MHz/T\n", nmr_value);
-        if (nmr_value == 0.0) {
-            printf("    WARNING: Got zero value - NMR calculation failed\n");
-        }
-        OCRelease(h1_nmr);
+        return false;
     }
-
-    // Test 5: Test library initialization status
-    printf("  Testing library initialization...\n");
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
     
-    // Call the gyromagnetic ratio creation function directly to see what happens
-    SIScalarRef gyro_direct = SIPeriodicTableCreateIsotopeGyromagneticRatio(STR("H1"), &err);
-    if (!gyro_direct) {
-        printf("Direct gyromagnetic ratio creation failed: %s\n", err ? OCStringGetCString(err) : "Unknown error");
-        printf("    This confirms the library initialization issue\n");
-        if (err) OCRelease(err);
-        err = NULL;
-    } else {
-        printf("    Direct gyromagnetic ratio creation succeeded!\n");
-        double gyro_value = SIScalarDoubleValue(gyro_direct);
-        printf("    Direct 𝛾_I[H1] = %f rad/(s·T)\n", gyro_value);
-        OCRelease(gyro_direct);
+    double nmr_value = SIScalarDoubleValue(h1_nmr);
+    printf("    nmr[H1] = %f MHz/T\n", nmr_value);
+    if (fabs(nmr_value - 42.576) > 1.0) {
+        printf("%s failed: Expected nmr[H1] ≈ 42.576 MHz/T, got %f\n", __func__, nmr_value);
+        OCRelease(h1_nmr);
+        return false;
     }
+    OCRelease(h1_nmr);
 
-    printf("%s completed\n", __func__);
+    printf("%s passed\n", __func__);
     return true;
 }

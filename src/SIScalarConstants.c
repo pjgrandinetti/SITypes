@@ -489,6 +489,7 @@ SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSym
     
     OCRelease(lowerCaseKey);
     if(NULL == magneticMoment || NULL == spin || NULL == hbar ) {
+        if(hbar) OCRelease(hbar);
         if(errorString) *errorString = STR("Symbol not found");
         return NULL;
     }
@@ -502,7 +503,9 @@ SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSym
     
     double multiplier = 1;
     SIUnitRef unit = SIUnitFromExpression(STR("rad/(s•T)"), &multiplier, errorString);
-    SIScalarConvertToUnit(gyromagneticRatio, unit, errorString);
+    if (unit) {
+        SIScalarConvertToUnit(gyromagneticRatio, unit, errorString);
+    }
     
     return gyromagneticRatio;
 }
@@ -517,6 +520,7 @@ SIScalarRef SIPeriodicTableCreateNMRFrequency(OCStringRef isotopeSymbol, OCStrin
         return NULL;
     }
     SIMutableScalarRef nmr = SIScalarCreateMutableCopy(gyro);
+    OCRelease(gyro);  // Release the gyro scalar after copying it
     SIScalarMultiplyByDimensionlessRealConstant(nmr, 1./6.283185307179586);
     
     double multiplier = 1;
