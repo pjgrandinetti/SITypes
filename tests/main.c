@@ -90,6 +90,7 @@ int main(int argc, const char* argv[]) {
     TRACK_SCALAR_LEAK(test_scalar_parser_9);
     TRACK_SCALAR_LEAK(test_scalar_parser_10);
     TRACK_SCALAR_LEAK(test_scalar_parser_11);
+    TRACK_SCALAR_LEAK(test_scalar_parser_12);
     printf("\n=== SIScalar Tests ===\n");
     TRACK_SCALAR_LEAK(test_SIScalarGetTypeID);
     TRACK_SCALAR_LEAK(test_SIScalarCreateCopy);

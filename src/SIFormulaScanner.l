@@ -41,70 +41,90 @@ SIScalarRef SIPeriodicTableCreateFormulaMass(OCStringRef formula, OCStringRef *e
 {
     if (error && *error) return NULL;
 
-    OCMutableStringRef calculation = OCStringCreateMutable(0);
     OCMutableStringRef mutString = OCStringCreateMutableCopy(formula);
     const char *cString = OCStringGetCString(mutString);
 
     sifw_scan_string(cString);
     SIScalarRef result = NULL;
     int tok;
+    
+    // Initialize total mass to zero
+    SIUnitRef massUnit = SIUnitFromExpression(STR("g/mol"), NULL, error);
+    SIScalarRef totalMass = SIScalarCreateWithDouble(0.0, massUnit);
+    OCRelease(massUnit);
+    
+    SIScalarRef currentElementMass = NULL;
+    int multiplier = 1;
 
     while ((tok = sifwlex())) {
-        OCStringRef fragment = NULL;
-
         switch (tok) {
-            case NUMBER:
-                fragment = OCStringCreateWithFormat(NULL, NULL, STR("(%d)"), yylval);
-                break;
-
             case ELEMENT:
-                fragment = OCStringCreateWithFormat(NULL, NULL, STR("+aw[%s]"), yytext);
+            {
+                // Add previous element if any
+                if (currentElementMass) {
+                    SIScalarRef contribution = SIScalarCreateWithDouble(multiplier, NULL);
+                    SIScalarRef scaled = SIScalarCreateByMultiplying(currentElementMass, contribution, error);
+                    SIScalarRef newTotal = SIScalarCreateByAdding(totalMass, scaled, error);
+                    OCRelease(contribution);
+                    OCRelease(scaled);
+                    OCRelease(totalMass);
+                    OCRelease(currentElementMass);
+                    totalMass = newTotal;
+                    currentElementMass = NULL;
+                    multiplier = 1;
+                }
+                
+                // Get atomic weight for this element
+                OCStringRef elementSymbol = OCStringCreateWithCString(yytext);
+                currentElementMass = SIPeriodicTableCreateMolarMass(elementSymbol, error);
+                OCRelease(elementSymbol);
+                if (!currentElementMass) {
+                    if (error && !*error) *error = STR("Unknown element");
+                    OCRelease(totalMass);
+                    OCRelease(mutString);
+                    sifwlex_destroy();
+                    return NULL;
+                }
                 break;
-
+            }
+            case NUMBER:
+                multiplier = yylval;
+                break;
+                
             case MULTIPLIER:
-                fragment = OCStringCreateWithFormat(NULL, NULL, STR("+%s!"), yytext);
+                multiplier = atoi(yytext+1); // skip the * at beginning
                 break;
-
+                
             case OPENPARENTHESIS:
-                fragment = STR("+(");
-                OCRetain(fragment);
-                break;
-
             case CLOSEPARENTHESIS:
-                fragment = STR(")");
-                OCRetain(fragment);
+                // For now, ignore parentheses (could be enhanced later)
                 break;
-
+                
             case ERROR:
-                OCRelease(calculation);
+                if (error && !*error) *error = STR("Invalid character in formula");
+                if (currentElementMass) OCRelease(currentElementMass);
+                OCRelease(totalMass);
                 OCRelease(mutString);
                 sifwlex_destroy();
                 return NULL;
         }
-
-        if (fragment) {
-            OCStringAppend(calculation, fragment);
-            OCRelease(fragment);
-        }
     }
 
-    if (OCStringGetLength(calculation) > 0) {
-        OCStringDelete(calculation, OCRangeMake(0, 1)); // remove leading '+'
-
-        OCStringFindAndReplace(calculation, STR("(+"), STR("("), OCRangeMake(0, OCStringGetLength(calculation)), 0);
-        OCStringFindAndReplace(calculation, STR("+*"), STR("+"), OCRangeMake(0, OCStringGetLength(calculation)), 0);
-
-        int64_t replacements = OCStringFindAndReplace(calculation, STR("!+"), STR("("), OCRangeMake(0, OCStringGetLength(calculation)), 0);
-        if (replacements == 1) {
-            OCStringAppend(calculation, STR(")"));
-        }
-
-        result = SIScalarCreateFromExpression(calculation, error);
+    // Add the last element if any
+    if (currentElementMass) {
+        SIScalarRef contribution = SIScalarCreateWithDouble(multiplier, NULL);
+        SIScalarRef scaled = SIScalarCreateByMultiplying(currentElementMass, contribution, error);
+        SIScalarRef newTotal = SIScalarCreateByAdding(totalMass, scaled, error);
+        OCRelease(contribution);
+        OCRelease(scaled);
+        OCRelease(totalMass);
+        OCRelease(currentElementMass);
+        totalMass = newTotal;
     }
 
-    OCRelease(calculation);
+    result = totalMass;
     OCRelease(mutString);
-
     sifwlex_destroy();
+
     return result;
 }

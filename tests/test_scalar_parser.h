@@ -12,6 +12,7 @@ bool test_scalar_parser_8(void);
 bool test_scalar_parser_9(void);
 bool test_scalar_parser_10(void);
 bool test_scalar_parser_11(void);
+bool test_scalar_parser_12(void);
 
 #endif /* TEST_SCALAR_PARSER_H */
 

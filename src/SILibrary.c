@@ -1,7 +1,10 @@
 #include "SILibrary.h"
 #include "SIDimensionalityPrivate.h"
+#include "SIScalarConstants.h"
 
 void SITypesShutdown(void) {
+    cleanupScalarConstantsLibraries();
+
     #if !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
     OCReportLeaksForType(SIScalarGetTypeID());
     #endif

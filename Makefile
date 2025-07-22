@@ -86,7 +86,46 @@ else
 endif
 
 .PHONY: all dirs prepare test test-debug test-asan run-asan \
-        test-werror install uninstall clean clean-objects clean-docs synclib docs doxygen html xcode
+        test-werror install uninstall clean clean-objects clean-docs synclib docs doxygen html xcode help
+
+help:
+	@echo "SITypes Makefile - Available targets:"
+	@echo ""
+	@echo "Building:"
+	@echo "  all            Build the complete SITypes library (default)"
+	@echo "  libSITypes.a   Build only the static library"
+	@echo "  dirs           Create build directories"
+	@echo "  prepare        Generate parser/scanner files"
+	@echo "  octypes        Download and extract OCTypes dependencies"
+	@echo ""
+	@echo "Testing:"
+	@echo "  test           Build and run all tests"
+	@echo "  test-debug     Build tests with debug symbols (-g -O0)"
+	@echo "  test-asan      Build and run tests with AddressSanitizer"
+	@echo "  test-werror    Build with strict warnings (-Werror)"
+	@echo ""
+	@echo "Development:"
+	@echo "  install        Install library and headers to install/"
+	@echo "  synclib        Copy OCTypes from ../OCTypes/install/"
+	@echo "  xcode          Generate Xcode project"
+	@echo "  xcode-open     Generate and open Xcode project"
+	@echo "  xcode-run      Build using Xcode (requires Xcode tools)"
+	@echo ""
+	@echo "Documentation:"
+	@echo "  docs           Build complete documentation (Doxygen + Sphinx)"
+	@echo "  doxygen        Generate Doxygen XML documentation"
+	@echo "  html           Build Sphinx HTML documentation"
+	@echo ""
+	@echo "Cleaning:"
+	@echo "  clean          Remove all build artifacts"
+	@echo "  clean-objects  Remove only object files"
+	@echo "  clean-docs     Remove only documentation files"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make           # Build everything"
+	@echo "  make test      # Build and run tests"
+	@echo "  make clean all # Clean rebuild"
+	@echo "  make help      # Show this help"
 
 all: dirs octypes prepare libSITypes.a
 

@@ -868,3 +868,133 @@ bool test_scalar_parser_11(void) {
     printf("%s passed\n", __func__);
     return true;
 }
+
+bool test_scalar_parser_12(void) {
+    printf("Running %s...\n", __func__);
+    OCStringRef err = NULL;
+
+    // Test formula weight function fw[CH4]
+    SIScalarRef methane_fw = SIScalarCreateFromExpression(STR("fw[CH4]"), &err);
+    if (!methane_fw) {
+        if (err) {
+            printf("Error parsing 'fw[CH4]': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: fw[CH4] function not working\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    // Check that we got a reasonable value for methane formula weight (~16.043 g/mol)
+    double value = SIScalarDoubleValue(methane_fw);
+    if (value < 16.0 || value > 16.1) {
+        printf("%s failed: fw[CH4] gave unexpected value %.6f (expected ~16.043)\n", __func__, value);
+        OCRelease(methane_fw);
+        return false;
+    }
+
+    // Check that the units are correct (should be g/mol)
+    SIUnitRef unit = SIQuantityGetUnit((SIQuantityRef) methane_fw);
+    OCStringRef unit_symbol = SIUnitCopySymbol(unit);
+    const char* symbol_str = OCStringGetCString(unit_symbol);
+    if (strcmp(symbol_str, "g/mol") != 0) {
+        printf("%s failed: fw[CH4] units are '%s' (expected 'g/mol')\n", __func__, symbol_str);
+        OCRelease(unit_symbol);
+        OCRelease(methane_fw);
+        return false;
+    }
+    OCRelease(unit_symbol);
+
+    // Test formula weight function fw[H2O]
+    SIScalarRef water_fw = SIScalarCreateFromExpression(STR("fw[H2O]"), &err);
+    if (!water_fw) {
+        if (err) {
+            printf("Error parsing 'fw[H2O]': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: fw[H2O] function not working\n", __func__);
+        OCRelease(methane_fw);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    // Check that we got a reasonable value for water formula weight (~18.015 g/mol)
+    double water_value = SIScalarDoubleValue(water_fw);
+    if (water_value < 18.0 || water_value > 18.1) {
+        printf("%s failed: fw[H2O] gave unexpected value %.6f (expected ~18.015)\n", __func__, water_value);
+        OCRelease(water_fw);
+        OCRelease(methane_fw);
+        return false;
+    }
+
+    // Test formula weight function fw[CO2]
+    SIScalarRef co2_fw = SIScalarCreateFromExpression(STR("fw[CO2]"), &err);
+    if (!co2_fw) {
+        if (err) {
+            printf("Error parsing 'fw[CO2]': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: fw[CO2] function not working\n", __func__);
+        OCRelease(water_fw);
+        OCRelease(methane_fw);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    // Check that we got a reasonable value for CO2 formula weight (~44.01 g/mol)
+    double co2_value = SIScalarDoubleValue(co2_fw);
+    if (co2_value < 44.0 || co2_value > 44.1) {
+        printf("%s failed: fw[CO2] gave unexpected value %.6f (expected ~44.01)\n", __func__, co2_value);
+        OCRelease(co2_fw);
+        OCRelease(water_fw);
+        OCRelease(methane_fw);
+        return false;
+    }
+
+    // Test calculation using formula weight
+    SIScalarRef moles_calc = SIScalarCreateFromExpression(STR("18 g / fw[H2O]"), &err);
+    if (!moles_calc) {
+        if (err) {
+            printf("Error parsing '18 g / fw[H2O]': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: calculation using fw[H2O] not working\n", __func__);
+        OCRelease(co2_fw);
+        OCRelease(water_fw);
+        OCRelease(methane_fw);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    // Check that we got approximately 1 mol
+    double moles_value = SIScalarDoubleValue(moles_calc);
+    if (moles_value < 0.99 || moles_value > 1.01) {
+        printf("%s failed: 18 g / fw[H2O] gave unexpected value %.6f (expected ~1.0)\n", __func__, moles_value);
+        OCRelease(moles_calc);
+        OCRelease(co2_fw);
+        OCRelease(water_fw);
+        OCRelease(methane_fw);
+        return false;
+    }
+
+    // Cleanup
+    OCRelease(moles_calc);
+    OCRelease(co2_fw);
+    OCRelease(water_fw);
+    OCRelease(methane_fw);
+    
+    printf("%s passed\n", __func__);
+    return true;
+}

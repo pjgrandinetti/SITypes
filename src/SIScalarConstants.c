@@ -21,6 +21,45 @@ OCMutableDictionaryRef nuclearMagneticMomentLibrary = NULL;
 OCMutableDictionaryRef nuclearElectricQuadrupoleMomentLibrary = NULL;
 OCMutableDictionaryRef nuclearGyromagneticRatioLibrary = NULL;
 
+void cleanupScalarConstantsLibraries() {
+    if (molarMassLibrary) {
+        OCRelease(molarMassLibrary);
+        molarMassLibrary = NULL;
+    }
+    if (isotopeAbundanceLibrary) {
+        OCRelease(isotopeAbundanceLibrary);
+        isotopeAbundanceLibrary = NULL;
+    }
+    if (isotopeStableLibrary) {
+        OCRelease(isotopeStableLibrary);
+        isotopeStableLibrary = NULL;
+    }
+    if (isotopeSpinLibrary) {
+        OCRelease(isotopeSpinLibrary);
+        isotopeSpinLibrary = NULL;
+    }
+    if (isotopeLifetimeLibrary) {
+        OCRelease(isotopeLifetimeLibrary);
+        isotopeLifetimeLibrary = NULL;
+    }
+    if (isotopeHalfLifeLibrary) {
+        OCRelease(isotopeHalfLifeLibrary);
+        isotopeHalfLifeLibrary = NULL;
+    }
+    if (nuclearMagneticMomentLibrary) {
+        OCRelease(nuclearMagneticMomentLibrary);
+        nuclearMagneticMomentLibrary = NULL;
+    }
+    if (nuclearElectricQuadrupoleMomentLibrary) {
+        OCRelease(nuclearElectricQuadrupoleMomentLibrary);
+        nuclearElectricQuadrupoleMomentLibrary = NULL;
+    }
+    if (nuclearGyromagneticRatioLibrary) {
+        OCRelease(nuclearGyromagneticRatioLibrary);
+        nuclearGyromagneticRatioLibrary = NULL;
+    }
+}
+
 static bool SIPeriodicTableCreateMolarMassLibrary(OCStringRef *errorString)
 {
     if(errorString) if(*errorString) return false;

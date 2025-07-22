@@ -154,4 +154,10 @@ SIScalarRef SIPeriodicTableCreateNMRFrequency(OCStringRef isotopeSymbol, OCStrin
  */
 SIScalarRef SIPeriodicTableCreateFormulaMass(OCStringRef formula, OCStringRef *errorString);
 
+/**
+ * @brief Cleanup function for scalar constants libraries.
+ * @details Releases global scalar constants libraries to prevent memory leaks.
+ */
+void cleanupScalarConstantsLibraries(void);
+
 #endif
