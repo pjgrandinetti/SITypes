@@ -998,3 +998,106 @@ bool test_scalar_parser_12(void) {
     printf("%s passed\n", __func__);
     return true;
 }
+
+bool test_nmr_functions(void) {
+    printf("Running %s...\n", __func__);
+    OCStringRef err = NULL;
+
+    // Test 1: Check that spin[H1] works (baseline test)
+    printf("  Testing spin[H1]...\n");
+    SIScalarRef h1_spin = SIScalarCreateFromExpression(STR("spin[H1]"), &err);
+    if (!h1_spin) {
+        printf("Error parsing 'spin[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
+        if (err) OCRelease(err);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+    
+    double spin_value = SIScalarDoubleValue(h1_spin);
+    printf("    spin[H1] = %f\n", spin_value);
+    if (fabs(spin_value - 0.5) > 1e-10) {
+        printf("%s failed: Expected spin[H1] = 0.5, got %f\n", __func__, spin_value);
+        OCRelease(h1_spin);
+        return false;
+    }
+    OCRelease(h1_spin);
+
+    // Test 2: Check magnetic dipole moment μ_I[H1]
+    printf("  Testing μ_I[H1]...\n");
+    SIScalarRef h1_moment = SIScalarCreateFromExpression(STR("μ_I[H1]"), &err);
+    if (!h1_moment) {
+        printf("Error parsing 'μ_I[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
+        if (err) OCRelease(err);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+    
+    double moment_value = SIScalarDoubleValue(h1_moment);
+    printf("    μ_I[H1] = %f µ_N\n", moment_value);
+    if (fabs(moment_value - 2.79284739) > 1e-6) {
+        printf("%s failed: Expected μ_I[H1] ≈ 2.79284739, got %f\n", __func__, moment_value);
+        OCRelease(h1_moment);
+        return false;
+    }
+    OCRelease(h1_moment);
+
+    // Test 3: Check gyromagnetic ratio 𝛾_I[H1] (this should fail currently)
+    printf("  Testing 𝛾_I[H1]...\n");
+    SIScalarRef h1_gamma = SIScalarCreateFromExpression(STR("𝛾_I[H1]"), &err);
+    if (!h1_gamma) {
+        printf("Error parsing '𝛾_I[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
+        printf("    This suggests the library still isn't working\n");
+        if (err) OCRelease(err);
+        err = NULL;
+    } else {
+        double gamma_value = SIScalarDoubleValue(h1_gamma);
+        printf("    𝛾_I[H1] = %f rad/(s·T)\n", gamma_value);
+        if (gamma_value == 0.0) {
+            printf("    WARNING: Got zero value - library may be empty or lookup failed\n");
+        }
+        OCRelease(h1_gamma);
+    }
+
+    // Test 4: Check NMR frequency nmr[H1] (this should also fail currently)
+    printf("  Testing nmr[H1]...\n");
+    SIScalarRef h1_nmr = SIScalarCreateFromExpression(STR("nmr[H1]"), &err);
+    if (!h1_nmr) {
+        printf("Error parsing 'nmr[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
+        printf("    This suggests the library still isn't working\n");
+        if (err) OCRelease(err);
+        err = NULL;
+    } else {
+        double nmr_value = SIScalarDoubleValue(h1_nmr);
+        printf("    nmr[H1] = %f MHz/T\n", nmr_value);
+        if (nmr_value == 0.0) {
+            printf("    WARNING: Got zero value - NMR calculation failed\n");
+        }
+        OCRelease(h1_nmr);
+    }
+
+    // Test 5: Test library initialization status
+    printf("  Testing library initialization...\n");
+    
+    // Call the gyromagnetic ratio creation function directly to see what happens
+    SIScalarRef gyro_direct = SIPeriodicTableCreateIsotopeGyromagneticRatio(STR("H1"), &err);
+    if (!gyro_direct) {
+        printf("Direct gyromagnetic ratio creation failed: %s\n", err ? OCStringGetCString(err) : "Unknown error");
+        printf("    This confirms the library initialization issue\n");
+        if (err) OCRelease(err);
+        err = NULL;
+    } else {
+        printf("    Direct gyromagnetic ratio creation succeeded!\n");
+        double gyro_value = SIScalarDoubleValue(gyro_direct);
+        printf("    Direct 𝛾_I[H1] = %f rad/(s·T)\n", gyro_value);
+        OCRelease(gyro_direct);
+    }
+
+    printf("%s completed\n", __func__);
+    return true;
+}

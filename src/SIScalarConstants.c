@@ -480,16 +480,17 @@ SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSym
     
     if(NULL==nuclearMagneticMomentLibrary) SIPeriodicTableNuclearMagneticDipoleMomentLibrary(errorString);
     if(NULL==isotopeSpinLibrary) SIPeriodicTableIsotopeSpinLibrary();
-
-    OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy( isotopeSymbol);
+    
+    OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(isotopeSymbol);
     OCStringLowercase(lowerCaseKey);
     SIScalarRef magneticMoment = (SIScalarRef) OCDictionaryGetValue(nuclearMagneticMomentLibrary, lowerCaseKey);
     SIScalarRef spin = (SIScalarRef) OCDictionaryGetValue(isotopeSpinLibrary, lowerCaseKey);
     SIScalarRef hbar = SIScalarCreateFromExpression(STR("ℏ"), errorString);
     
     OCRelease(lowerCaseKey);
-    if((NULL == magneticMoment || NULL == spin || NULL == hbar ) && errorString!=NULL) {
-        *errorString = STR("Symbol not found");
+    if(NULL == magneticMoment || NULL == spin || NULL == hbar ) {
+        if(errorString) *errorString = STR("Symbol not found");
+        return NULL;
     }
     
     
