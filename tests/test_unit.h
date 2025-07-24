@@ -15,6 +15,7 @@ bool test_unit_10(void);
 bool test_unit_11(void);
 bool test_unit_12(void);
 bool test_unit_13(void);
+bool test_unit_14(void);
 bool test_unit_by_multiplying_without_reducing(void);
 bool test_unit_by_dividing_without_reducing(void);
 bool test_unit_by_taking_nth_root(void);
