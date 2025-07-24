@@ -38,6 +38,7 @@ typedef struct impl_SIScalar *SIMutableScalarRef;
 #include "SIDimensionality.h"
 #include "SIDimensionalityParser.h"
 #include "SIUnit.h"
+#include "SIUnitKey.h"
 #include "SIUnitParser.h"
 #include "SIQuantity.h"
 #include "SIScalar.h"

@@ -20,5 +20,11 @@ bool test_unit_by_dividing_without_reducing(void);
 bool test_unit_by_taking_nth_root(void);
 bool test_unit_by_raising_to_power_without_reducing(void);
 bool test_unit_unicode_normalization(void);
+bool test_unit_registration(void);
+bool test_unit_canonical_expressions(void);
+bool test_unit_from_expression_equivalence(void);
+
+// Library key tests
+bool test_library_key_comprehensive(void);
 
 #endif /* TEST_UNIT_H */

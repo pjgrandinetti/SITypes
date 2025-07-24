@@ -51,25 +51,14 @@ SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multipli
 {
     if(error) if(*error) return NULL;
     
-    OCMutableStringRef  mutString = OCStringCreateMutableCopy(string);
-    OCStringTrimWhitespace (mutString);
+    // Use the shared normalization function for parsing
+    OCMutableStringRef mutString = SIUnitCreateNormalizedExpression(string, false);
     if(OCStringGetLength(string) == 1 && (
     (OCStringCompare(string,STR("1"),0) == kOCCompareEqualTo) ||(OCStringCompare(string,STR(" "),0) == kOCCompareEqualTo)
     )) {
         OCRelease(mutString);
         return SIUnitDimensionlessAndUnderived();
     }
-    
-    OCStringFindAndReplace2(mutString,STR("•"),STR("*"));
-    OCStringFindAndReplace2(mutString, STR("×"), STR("*"));
-    OCStringFindAndReplace2(mutString, STR("÷"), STR("/"));
-    OCStringFindAndReplace2(mutString, STR("−"), STR("-"));
-    OCStringFindAndReplace2(mutString, STR("+"), STR("+"));
-    OCStringFindAndReplace2(mutString, STR("μ"), STR("µ"));
-    OCStringFindAndReplace2(mutString, STR("γ"), STR("𝛾"));
-    OCStringFindAndReplace2(mutString, STR("º"), STR("°"));
-    OCStringFindAndReplace2(mutString, STR("h_p"), STR("h_P"));
-    OCStringFindAndReplace2(mutString, STR("ɣ"), STR("𝛾"));
     
     final_unit = NULL;
     unitError = NULL;

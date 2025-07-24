@@ -34,6 +34,7 @@ struct impl_SIUnit {
     double scale_to_coherent_si;
 
     OCStringRef symbol; // Symbol of unit is generated.
+    OCStringRef key; // Key for unit in library
 };
 
 
@@ -276,6 +277,8 @@ void impl_SIUnitFinalize(const void *theType) {
         OCRelease(theUnit->dimensionality);
     if (theUnit->symbol)
         OCRelease(theUnit->symbol);
+    if (theUnit->key)
+        OCRelease(theUnit->key);
     if (theUnit->root_name)
         OCRelease(theUnit->root_name);
     if (theUnit->root_plural_name)
@@ -314,14 +317,10 @@ static void *impl_SIUnitDeepCopy(const void *obj) {
     copy->is_special_si_symbol = src->is_special_si_symbol;
     copy->root_symbol_prefix = src->root_symbol_prefix;
     // Copy strings (OCStringRef)
-    if (src->symbol)
-        copy->symbol = OCStringCreateCopy(src->symbol);
-    if (src->root_name)
-        copy->root_name = OCStringCreateCopy(src->root_name);
-    if (src->root_plural_name)
-        copy->root_plural_name = OCStringCreateCopy(src->root_plural_name);
-    if (src->root_symbol)
-        copy->root_symbol = OCStringCreateCopy(src->root_symbol);
+    if (src->symbol) copy->symbol = OCStringCreateCopy(src->symbol);
+    if (src->root_name) copy->root_name = OCStringCreateCopy(src->root_name);
+    if (src->root_plural_name) copy->root_plural_name = OCStringCreateCopy(src->root_plural_name);
+    if (src->root_symbol) copy->root_symbol = OCStringCreateCopy(src->root_symbol);
     return (void *)copy;
 }
 static void *impl_SIUnitDeepCopyMutable(const void *obj) {
@@ -393,7 +392,48 @@ static struct impl_SIUnit *SIUnitAllocate() {
  */
 
 
+OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool forLibraryLookup) {
+    if (!expression) return NULL;
+    
+    OCMutableStringRef normalized = OCStringCreateMutableCopy(expression);
+    if (!normalized) return NULL;
+    
+    // Replace Unicode multiplication and division symbols with ASCII equivalents
+    OCStringFindAndReplace2(normalized, STR("×"), STR("*"));
+    OCStringFindAndReplace2(normalized, STR("·"), STR("*"));
+    OCStringFindAndReplace2(normalized, STR("⋅"), STR("*"));  // Dot operator
+    OCStringFindAndReplace2(normalized, STR("∙"), STR("*"));  // Bullet operator
+    OCStringFindAndReplace2(normalized, STR("÷"), STR("/"));
+    OCStringFindAndReplace2(normalized, STR("∕"), STR("/"));  // Division slash
+    OCStringFindAndReplace2(normalized, STR("⁄"), STR("/"));  // Fraction slash
+    
+    // Normalize Unicode mu characters to standard micro sign (µ = U+00B5)
+    OCStringFindAndReplace2(normalized, STR("μ"), STR("µ"));  // Greek Small Letter Mu (U+03BC)
+    OCStringFindAndReplace2(normalized, STR("Μ"), STR("µ"));  // Greek Capital Letter Mu (U+039C) 
+    OCStringFindAndReplace2(normalized, STR("ɥ"), STR("µ"));  // Latin Small Letter Turned H (U+0265) - sometimes confused
+    OCStringFindAndReplace2(normalized, STR("𝜇"), STR("µ"));  // Mathematical Italic Small Mu (U+1D707)
+    OCStringFindAndReplace2(normalized, STR("𝝁"), STR("µ"));  // Mathematical Bold Small Mu (U+1D741)
+    OCStringFindAndReplace2(normalized, STR("𝝻"), STR("µ"));  // Mathematical Bold Italic Small Mu (U+1D77B)
 
+    // Remove spaces around operators for consistent formatting
+    OCStringFindAndReplace2(normalized, STR(" * "), STR("*"));
+    OCStringFindAndReplace2(normalized, STR(" / "), STR("/"));
+    OCStringFindAndReplace2(normalized, STR(" ^ "), STR("^"));
+    
+    // Trim leading/trailing whitespace
+    OCStringTrimWhitespace(normalized);
+    
+    if (forLibraryLookup) {
+        // For library lookup, replace * with • for consistent symbol representation
+        OCStringFindAndReplace2(normalized, STR("*"), STR("•"));
+    }
+    else {
+        // For display, replace • with * for multiplication
+        OCStringFindAndReplace2(normalized, STR("•"), STR("*"));
+    }
+    
+    return normalized;
+}
 
 static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
                               const SIPrefix num_prefix[BASE_DIMENSION_COUNT], const SIPrefix den_prefix[BASE_DIMENSION_COUNT],
@@ -462,8 +502,9 @@ static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
     theUnit->dimensionality = dimensionality;
     memcpy(theUnit->num_prefix, num_prefix, sizeof(SIPrefix) * BASE_DIMENSION_COUNT);
     memcpy(theUnit->den_prefix, den_prefix, sizeof(SIPrefix) * BASE_DIMENSION_COUNT);
-    // Construct unit symbol
+    // Construct unit symbol and key
     theUnit->symbol = SIUnitCreateSymbol(theUnit);
+    theUnit->key = SIUnitCreateLibraryKey(theUnit->symbol);
     return (SIUnitRef)theUnit;
 }
 // –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -492,6 +533,7 @@ static OCDictionaryRef SIUnitCopyDictionary(const void *obj) {
     OCRelease(denArr);
     // 3) all the OCStringRef fields
     OCDictionaryAddValue(dict, STR("symbol"), OCStringCreateCopy(u->symbol));
+    OCDictionaryAddValue(dict, STR("key"), OCStringCreateCopy(u->key));
     OCDictionaryAddValue(dict, STR("root_name"), OCStringCreateCopy(u->root_name));
     OCDictionaryAddValue(dict, STR("root_plural_name"), OCStringCreateCopy(u->root_plural_name));
     OCDictionaryAddValue(dict, STR("root_symbol"), OCStringCreateCopy(u->root_symbol));
@@ -1185,16 +1227,24 @@ static SIUnitRef AddUnitForQuantityToLibrary(OCStringRef quantity,
         OCStringShow(quantity);
         return NULL;
     }
+    // In this function we override the SIUnitCreateLibraryKey and use the symbol as the key.
+    // This is because this function is only called by for the predefined units and not by the user.
+    OCRelease(unit->key);  // release the key created by SIUnitCreate
+
+    struct impl_SIUnit *mutable_unit = (struct impl_SIUnit *)unit;
+    mutable_unit->key = OCStringCreateCopy(unit->symbol);  // use the symbol as the key
+
     OCMutableDictionaryRef unitsLib = SIUnitGetUnitsLib();
     // Add unit to units library dictionary
-    if (OCDictionaryContainsKey(unitsLib, unit->symbol)) {
-        fprintf(stderr, "WARNING - Cannot add unit to library because symbol already is present\n");
+    if (OCDictionaryContainsKey(unitsLib, unit->key)) {
+        fprintf(stderr, "WARNING - Cannot add unit to library because symbol already is present: ");
         OCStringShow(unit->symbol);
+        fprintf(stderr, "\n");
         OCRelease(unit);
-        return OCDictionaryGetValue(unitsLib, unit->symbol);
+        return OCDictionaryGetValue(unitsLib, unit->key);
     }
     OCTypeSetStaticInstance(unit, true);
-    OCDictionaryAddValue(unitsLib, unit->symbol, unit);
+    OCDictionaryAddValue(unitsLib, unit->key, unit);
     OCRelease(unit);
     // Append unit to mutable array value associated with quantity key inside quanity library dictionary
     {
@@ -1488,31 +1538,59 @@ static OCComparisonResult unitNameLengthSort(const void *val1, const void *val2,
     return result;
 }
 SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, OCStringRef *error) {
-    if (error)
-        if (*error) return NULL;
+    if (error && *error) return NULL;
+    
     OCMutableDictionaryRef unitsLib = SIUnitGetUnitsLib();
     if (!unitsLib) {
         fprintf(stderr, "ERROR: couldn't initialize units library - out of memory?\n");
         return NULL;
     }
+    
     if (NULL == expression) {
         if (error) {
             *error = STR("Unknown unit symbol");
         }
         return NULL;
     }
+    
     IF_NO_OBJECT_EXISTS_RETURN(unitsLibrary, NULL);
-    if (OCStringCompare(expression, STR(" "), 0) == kOCCompareEqualTo)
+    
+    if (OCStringCompare(expression, STR(" "), 0) == kOCCompareEqualTo) {
+        if (unit_multiplier) *unit_multiplier = 1.0;
         return SIUnitDimensionlessAndUnderived();
-    OCMutableStringRef mutSymbol = OCStringCreateMutableCopy(expression);
-    OCStringTrimWhitespace(mutSymbol);
-    OCStringFindAndReplace2(mutSymbol, STR("*"), STR("•"));
-    SIUnitRef unit = OCDictionaryGetValue(unitsLibrary, mutSymbol);
-    OCRelease(mutSymbol);
-    if (unit)
+    }
+    
+    // Try library lookup first
+    OCStringRef key = SIUnitCreateLibraryKey(expression);
+    SIUnitRef unit = OCDictionaryGetValue(unitsLibrary, key);
+    if (unit) {
+        if (unit_multiplier) *unit_multiplier = 1.0;
+        OCRelease(key);
         return unit;
-    return SIUnitFromExpressionInternal(expression, unit_multiplier, error);
+    }
+    
+    // Parse the expression if not found in library
+    double multiplier = 1.0;  // Default multiplier
+    OCStringRef canonical_expr = SIUnitCreateLibraryKey(expression);
+    unit = SIUnitFromExpressionInternal(canonical_expr, &multiplier, error);
+    if(unit && multiplier != 1.0) {
+        SIDimensionalityRef dimensionality = SIUnitGetDimensionality(unit);
+        OCStringRef dimensionalitySymbol = SIDimensionalityGetSymbol(dimensionality);
+        AddNonSIUnitToLibrary(dimensionalitySymbol, NULL, NULL, key, multiplier);
+        unit = (SIUnitRef) OCDictionaryGetValue(unitsLibrary, key);
+        if (unit_multiplier) *unit_multiplier = 1.0;
+        OCRelease(key);
+        OCRelease(canonical_expr);
+        return unit;
+    }
+    if (unit_multiplier) *unit_multiplier = multiplier;
+
+    OCRelease(key);
+    OCRelease(canonical_expr);
+    // error returned from SIUnitFromExpressionInternal
+    return unit;
 }
+
 // Add a cleanup function for static dictionaries and array
 void cleanupUnitsLibraries(void) {
     if (!unitsLibrary)
@@ -1529,9 +1607,9 @@ void cleanupUnitsLibraries(void) {
         OCRelease(unitsNamesLibrary);
         unitsNamesLibrary = NULL;
     }
-    // This dictionary must be released last, as it converts all units from static instances
-    // to non-static instances.  If this dictionary is released first, then the static instances
-    // will have been released and would be invalid in the other dictionaries above.
+    
+    // Simple approach: clear static flags on all units, then let OCDictionary handle cleanup
+    // OCDictionary should only release each unique pointer once, regardless of how many keys point to it
     OCArrayRef keys = OCDictionaryCreateArrayWithAllKeys((OCDictionaryRef)unitsLibrary);
     if (keys) {
         for (uint64_t i = 0; i < OCArrayGetCount(keys); i++) {
@@ -1543,6 +1621,8 @@ void cleanupUnitsLibraries(void) {
         }
         OCRelease(keys);
     }
+    
+    // OCDictionary should handle duplicate pointers correctly during its own cleanup
     OCRelease(unitsLibrary);
     unitsLibrary = NULL;
 }
@@ -1550,22 +1630,25 @@ SIUnitRef SIUnitFindWithUnderivedSymbol(OCStringRef symbol) {
     if (NULL == symbol) {
         return NULL;
     }
-    if (NULL == unitsLibrary)
-        SIUnitsCreateLibraries();
+    if (NULL == unitsLibrary) SIUnitsCreateLibraries();
     IF_NO_OBJECT_EXISTS_RETURN(unitsLibrary, NULL);
-    SIUnitRef unit = OCDictionaryGetValue(unitsLibrary, symbol);
+    OCStringRef key = SIUnitCreateLibraryKey(symbol);
+    SIUnitRef unit = OCDictionaryGetValue(unitsLibrary, key);
+    OCRelease(key);
     return unit;
 }
 bool SIUnitsLibraryRemoveUnitWithSymbol(OCStringRef symbol) {
-    if (NULL == unitsLibrary)
-        SIUnitsCreateLibraries();
-    if (OCDictionaryContainsKey(unitsLibrary, symbol)) {
-        SIUnitRef unit = (SIUnitRef)OCDictionaryGetValue(unitsLibrary, symbol);
-        OCDictionaryRemoveValue(unitsLibrary, symbol);
+    if (NULL == unitsLibrary) SIUnitsCreateLibraries();
+    OCStringRef key = SIUnitCreateLibraryKey(symbol);
+    if (OCDictionaryContainsKey(unitsLibrary, key)) {
+        SIUnitRef unit = (SIUnitRef)OCDictionaryGetValue(unitsLibrary, key);
+        OCDictionaryRemoveValue(unitsLibrary, key);
         OCTypeSetStaticInstance(unit, false);
         OCRelease(unit);
+        OCRelease(key);
         return true;
     }
+    OCRelease(key);
     return false;
 }
 static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
@@ -1578,19 +1661,29 @@ static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
                                       bool allows_si_prefix,
                                       bool is_special_si_symbol,
                                       double scale_to_coherent_si) {
-    SIUnitRef theUnit = SIUnitCreate(dimensionality, num_prefix, den_prefix, root_name, root_plural_name, root_symbol, root_symbol_prefix, allows_si_prefix, is_special_si_symbol, scale_to_coherent_si);
-    if (NULL == theUnit)
-        return NULL;
+    
     if (NULL == unitsLibrary) SIUnitsCreateLibraries();
-    if (OCDictionaryContainsKey(unitsLibrary, theUnit->symbol)) {
-        SIUnitRef existingUnit = OCDictionaryGetValue(unitsLibrary, theUnit->symbol);
-        OCRelease(theUnit);
+    
+    // Create a temporary unit to get its key, then check if equivalent exists
+    SIUnitRef tempUnit = SIUnitCreate(dimensionality, num_prefix, den_prefix, 
+                                      root_name, root_plural_name, root_symbol, 
+                                      root_symbol_prefix, allows_si_prefix, 
+                                      is_special_si_symbol, scale_to_coherent_si);
+    if (NULL == tempUnit)
+        return NULL;
+    
+    // Check if unit with this key already exists
+    if (OCDictionaryContainsKey(unitsLibrary, tempUnit->key)) {
+        SIUnitRef existingUnit = OCDictionaryGetValue(unitsLibrary, tempUnit->key);
+        OCRelease(tempUnit);  // Discard the temporary unit
         return existingUnit;
     }
-    OCTypeSetStaticInstance(theUnit, true);
-    OCDictionaryAddValue(unitsLibrary, theUnit->symbol, theUnit);
-    OCRelease(theUnit);
-    return theUnit;
+    
+    // No existing unit found, so add this fresh unit to library
+    OCTypeSetStaticInstance(tempUnit, true);
+    OCDictionaryAddValue(unitsLibrary, tempUnit->key, tempUnit);
+    OCRelease(tempUnit);
+    return tempUnit;
 }
 SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
@@ -2623,6 +2716,7 @@ bool SIUnitsCreateLibraries(void) {
 #pragma mark kSIQuantityMassConcentration
     AddSpecialSIUnit(kSIQuantityMassConcentration, STR("gram per liter"), STR("grams per liter"), STR("g/L"));
     AddNonSIUnitWithPrefixesToLibrary(kSIQuantityMassConcentration, STR("gram per milliliter"), STR("grams per milliliter"), STR("g/mL"), 1e3);
+    AddNonSIUnitWithPrefixesToLibrary(kSIQuantityMassConcentration, STR("gram per cubic centimeter"), STR("grams per cubic centimeter"), STR("g/cm^3"), 1e3);
     AddNonSIUnitWithPrefixesToLibrary(kSIQuantityMassConcentration, STR("gram per microliter"), STR("grams per microliter"), STR("g/µL"), 1e6);
 //
 #pragma mark kSIQuantityForce
@@ -3128,6 +3222,20 @@ cJSON *SIUnitCreateJSON(SIUnitRef unit) {
         cJSON_AddNullToObject(json, "root_plural_name");
 
     // 5) the “symbol” and its own prefix (Ω, lb, Å, etc)
+    if(unit->symbol)
+        cJSON_AddStringToObject(json,
+                                "symbol",
+                                OCStringGetCString(unit->symbol));
+    else
+        cJSON_AddNullToObject(json, "symbol");
+
+    if(unit->key)
+        cJSON_AddStringToObject(json,
+                                "key",
+                                OCStringGetCString(unit->key));
+    else
+        cJSON_AddNullToObject(json, "key");
+
     if (unit->root_symbol)
         cJSON_AddStringToObject(json,
                                 "root_symbol",
@@ -3194,6 +3302,16 @@ SIUnitRef SIUnitFromJSON(cJSON *json) {
     if (rp && cJSON_IsString(rp) && rp->valuestring)
         root_plural = OCStringCreateWithCString(rp->valuestring);
 
+    // 5) symbol + key
+    OCStringRef symbol = NULL, key = NULL;
+    cJSON *s = cJSON_GetObjectItem(json, "symbol");
+    if (s && cJSON_IsString(s) && s->valuestring)
+        symbol = OCStringCreateWithCString(s->valuestring);
+    
+    cJSON *k = cJSON_GetObjectItem(json, "key");
+    if (k && cJSON_IsString(k) && k->valuestring)
+        key = OCStringCreateWithCString(k->valuestring);
+
     // 5) root symbol + prefix
     OCStringRef root_symbol = NULL;
     cJSON *rs = cJSON_GetObjectItem(json, "root_symbol");
@@ -3222,6 +3340,12 @@ SIUnitRef SIUnitFromJSON(cJSON *json) {
         is_special_si_symbol,
         scale
     );
+// Cast away const to override the auto-generated symbol and key
+    struct impl_SIUnit *mutable_u = (struct impl_SIUnit *)u;
+    if (mutable_u->symbol) OCRelease(mutable_u->symbol);
+    if (mutable_u->key) OCRelease(mutable_u->key);
+    mutable_u->symbol = symbol;
+    mutable_u->key = key;
 
     // 8) clean up temporary OCStringRefs
     if (root_name)        OCRelease(root_name);

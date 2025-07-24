@@ -12,6 +12,9 @@
 #include "test_scalar.h"
 #include "test_scalar_parser.h"
 #include "test_unit.h"
+#include "test_unit_from_expression_robust.h"
+#include "test_duplicate_units.h"
+#include "test_library_key.h"
 #ifdef LEAK_SANITIZER
 extern void __lsan_do_leak_check() __attribute__((weak));
 #endif
@@ -63,7 +66,15 @@ int main(int argc, const char* argv[]) {
     TRACK(test_unit_by_taking_nth_root);
     TRACK(test_unit_by_raising_to_power_without_reducing);
     TRACK(test_unit_unicode_normalization);
-
+    TRACK(test_unit_registration);
+    TRACK(test_unit_canonical_expressions);
+    TRACK(test_unit_from_expression_equivalence);
+    
+    printf("\n=== SIUnitCreateLibraryKey Comprehensive Tests ===\n");
+    TRACK(test_library_key_comprehensive);
+    
+    printf("\n=== SIUnitFromExpression Robust Tests ===\n");
+    TRACK(test_unit_from_expression_robust);
 
 
     printf("\n=== SIScalar Parser Tests ===\n");
@@ -174,6 +185,9 @@ int main(int argc, const char* argv[]) {
     TRACK(test_SIScalarWriteReadJSON_complex_unit);
     TRACK(test_SIScalarWriteReadJSON_array_and_dictionary);
 
+    printf("\n=== Duplicate Units Tests ===\n");
+    TRACK(test_create_potential_duplicates);
+    TRACK(test_check_for_duplicate_units);
 
     if (failures) {
         fprintf(stderr, "\n%d test(s) failed.\n", failures);

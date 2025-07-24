@@ -355,6 +355,8 @@ OCArrayRef SIUnitCreateArrayOfRootUnitsForQuantity(OCStringRef quantity, OCStrin
  */
 OCStringRef SIUnitGuessQuantityName(SIUnitRef theUnit);
 
+
+OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool forLibraryLookup);
 /** @cond INTERNAL */
 /** @brief Cleans up all static and global unit dictionaries. */
 void cleanupUnitsLibraries(void);

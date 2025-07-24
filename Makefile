@@ -85,8 +85,8 @@ else
   GROUP_END   :=
 endif
 
-.PHONY: all dirs prepare test test-debug test-asan run-asan \
-        test-werror install uninstall clean clean-objects clean-docs synclib docs doxygen html xcode help
+.PHONY: all dirs prepare test test-debug test-asan \
+        test-werror install clean clean-objects clean-docs synclib docs doxygen html xcode xcode-open xcode-run octypes help
 
 help:
 	@echo "SITypes Makefile - Available targets:"
@@ -132,32 +132,51 @@ all: dirs octypes prepare libSITypes.a
 dirs:
 	$(MKDIR_P) $(BUILD_DIR) $(OBJ_DIR) $(GEN_DIR) $(BIN_DIR)
 
-# Download and extract OCTypes
+# Download and extract OCTypes (only if not already present)
 octypes: $(OCT_LIBDIR)/libOCTypes.a $(OCT_INCLUDE)/OCLibrary.h
 
 third_party:
 	@$(MKDIR_P) third_party
 
 $(OCT_LIB_ARCHIVE): | $(TP_DIR)
-	@echo "Fetching OCTypes library: $(OCT_LIB_BIN)"
-	@curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.0/$(OCT_LIB_BIN) -o $@
+	@if [ ! -f $(TP_LIB_DIR)/libOCTypes.a ]; then \
+		echo "Fetching OCTypes library: $(OCT_LIB_BIN)"; \
+		curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.0/$(OCT_LIB_BIN) -o $@; \
+	fi
 
 $(OCT_HEADERS_ARCHIVE): | $(TP_DIR)
-	@echo "Fetching OCTypes headers"
-	@curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.0/libOCTypes-headers.zip -o $@
+	@if [ ! -f $(OCT_INCLUDE)/OCLibrary.h ]; then \
+		echo "Fetching OCTypes headers"; \
+		curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.0/libOCTypes-headers.zip -o $@; \
+	fi
 
-$(TP_LIB_DIR)/libOCTypes.a: $(OCT_LIB_ARCHIVE)
-	@echo "Extracting OCTypes library into $(TP_LIB_DIR)"
-	@$(RM) -r $(TP_LIB_DIR)
-	@$(MKDIR_P) $(TP_LIB_DIR)
-	@unzip -q $< -d $(TP_LIB_DIR)
+$(TP_LIB_DIR)/libOCTypes.a: | $(TP_DIR)
+	@if [ ! -f $@ ]; then \
+		if [ ! -f $(OCT_LIB_ARCHIVE) ]; then \
+			echo "Fetching OCTypes library: $(OCT_LIB_BIN)"; \
+			curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.0/$(OCT_LIB_BIN) -o $(OCT_LIB_ARCHIVE); \
+		fi; \
+		echo "Extracting OCTypes library into $(TP_LIB_DIR)"; \
+		$(RM) -r $(TP_LIB_DIR); \
+		$(MKDIR_P) $(TP_LIB_DIR); \
+		unzip -q $(OCT_LIB_ARCHIVE) -d $(TP_LIB_DIR); \
+	else \
+		echo "OCTypes library already exists at $@"; \
+	fi
 
-$(OCT_INCLUDE)/OCLibrary.h: $(OCT_HEADERS_ARCHIVE)
-	@echo "Extracting OCTypes headers into $(TP_INCLUDE_DIR)/OCTypes"
-	@$(RM) -r $(OCT_INCLUDE)
-	@$(MKDIR_P) $(OCT_INCLUDE)
-	@unzip -q $< -d $(OCT_INCLUDE)
-	# headers are now in $(OCT_INCLUDE)
+$(OCT_INCLUDE)/OCLibrary.h: | $(TP_DIR)
+	@if [ ! -f $@ ]; then \
+		if [ ! -f $(OCT_HEADERS_ARCHIVE) ]; then \
+			echo "Fetching OCTypes headers"; \
+			curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.0/libOCTypes-headers.zip -o $(OCT_HEADERS_ARCHIVE); \
+		fi; \
+		echo "Extracting OCTypes headers into $(TP_INCLUDE_DIR)/OCTypes"; \
+		$(RM) -r $(OCT_INCLUDE); \
+		$(MKDIR_P) $(OCT_INCLUDE); \
+		unzip -q $(OCT_HEADERS_ARCHIVE) -d $(OCT_INCLUDE); \
+	else \
+		echo "OCTypes headers already exist at $(OCT_INCLUDE)"; \
+	fi
 
 prepare: $(GEN_H)
 

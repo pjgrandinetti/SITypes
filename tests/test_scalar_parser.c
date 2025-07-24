@@ -1052,7 +1052,6 @@ bool test_nmr_functions(void) {
     SIScalarRef h1_gamma = SIScalarCreateFromExpression(STR("𝛾_I[H1]"), &err);
     if (!h1_gamma) {
         printf("Error parsing '𝛾_I[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
-        printf("%s failed: 𝛾_I[H1] parser not working\n", __func__);
         if (err) OCRelease(err);
         return false;
     }
@@ -1070,12 +1069,11 @@ bool test_nmr_functions(void) {
     }
     OCRelease(h1_gamma);
 
-    // Test 4: Check NMR frequency nmr[H1]
+    // Test 4: Check NMR frequency nmr[H1] 
     printf("  Testing nmr[H1]...\n");
     SIScalarRef h1_nmr = SIScalarCreateFromExpression(STR("nmr[H1]"), &err);
     if (!h1_nmr) {
         printf("Error parsing 'nmr[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
-        printf("%s failed: nmr[H1] parser not working\n", __func__);
         if (err) OCRelease(err);
         return false;
     }

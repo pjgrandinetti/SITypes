@@ -28,4 +28,18 @@ extern OCStringRef unitError;
  */
 SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multiplier, OCStringRef *error);
 
+/**
+ * @brief Normalize a unit symbol string for consistent parsing and library lookup.
+ * 
+ * This function applies all character normalizations used throughout the SITypes system:
+ * - Trims whitespace
+ * - Converts Unicode characters to standard forms (×→*, ÷→/, −→-, etc.)
+ * - Optionally converts * to • for library storage format
+ * 
+ * @param expression The unit symbol string to normalize.
+ * @param forLibraryStorage If true, converts * to • for library storage; if false, converts • to * for parsing.
+ * @result A normalized mutable string that must be released by the caller.
+ */
+OCMutableStringRef SIUnitCreateNormalizedSymbol(OCStringRef expression, bool forLibraryStorage);
+
 #endif
