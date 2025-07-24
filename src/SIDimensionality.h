@@ -169,11 +169,11 @@ SIDimensionalityRef SIDimensionalityByDividing(SIDimensionalityRef theDim1, SIDi
 /** @brief Divides one dimensionality by another, does not reduce exponents. */
 SIDimensionalityRef SIDimensionalityByDividingWithoutReducing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
 
-/** @brief Raises a dimensionality to a real power, reduces exponents. */
-SIDimensionalityRef SIDimensionalityByRaisingToPower(SIDimensionalityRef theDim, double power, OCStringRef *error);
+/** @brief Create a new dimensionality by raising to a power and reducing exponents to lowest terms. */
+SIDimensionalityRef SIDimensionalityByRaisingToPower(SIDimensionalityRef theDim, int power, OCStringRef *error);
 
-/** @brief Raises a dimensionality to a real power, without reducing exponents. */
-SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensionalityRef theDim, double power, OCStringRef *error);
+/** @brief Create a new dimensionality by raising to a power without reducing exponents. */
+SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensionalityRef theDim, int power, OCStringRef *error);
 
 /** @brief Returns all quantity names matching this dimensionality exactly. */
 OCArrayRef SIDimensionalityCreateArrayOfQuantities(SIDimensionalityRef theDim);

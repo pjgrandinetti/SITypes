@@ -21,6 +21,7 @@ typedef struct {
 static ComponentList *positive_components = NULL;
 static ComponentList *negative_components = NULL;
 static bool in_denominator = false;
+static bool fractional_power_error = false;
 
 // Function prototypes
 static void init_component_lists(void);
@@ -44,6 +45,7 @@ static void init_component_lists(void) {
     negative_components->components = malloc(negative_components->capacity * sizeof(UnitComponent));
     
     in_denominator = false;
+    fractional_power_error = false;
 }
 
 // Free component lists
@@ -299,6 +301,13 @@ static int extract_power_from_token(OCStringRef token, OCStringRef *base_token) 
     // Extract power (after caret)
     char *power_str = caret + 1;
     
+    // Check for fractional powers - reject them
+    if (strchr(power_str, '.')) {
+        // Found a decimal point in the power - this is not allowed
+        fractional_power_error = true;
+        return -9999; // Special error code for fractional powers
+    }
+    
     // Handle parentheses around power: m^(-1) or m^(2)
     if (*power_str == '(') {
         char *close_paren = strchr(power_str, ')');
@@ -308,6 +317,13 @@ static int extract_power_from_token(OCStringRef token, OCStringRef *base_token) 
             char *paren_content = malloc(paren_len + 1);
             strncpy(paren_content, power_str + 1, paren_len);
             paren_content[paren_len] = '\0';
+            
+            // Check for fractional powers in parentheses
+            if (strchr(paren_content, '.')) {
+                free(paren_content);
+                fractional_power_error = true;
+                return -9999; // Special error code for fractional powers
+            }
             
             int power = atoi(paren_content);
             free(paren_content);
@@ -412,6 +428,15 @@ static void parse_expression_manually(const char *expr) {
             OCStringRef base_token;
             int power = extract_power_from_token(token, &base_token);
             
+            // Check for fractional power error
+            if (power == -9999) {
+                // Fractional power detected - clean up and return without adding component
+                OCRelease(base_token);
+                // Set a global error flag or handle the error appropriately
+                // For now, we'll skip this component which will result in an incomplete key
+                continue;
+            }
+            
             // Trim the base token
             OCStringRef final_token = trim_whitespace_and_parens(base_token);
             
@@ -451,6 +476,15 @@ OCStringRef SIUnitCreateLibraryKey(OCStringRef expression) {
     
     // Parse the expression
     parse_expression_manually(expr_cstr);
+    
+    // Check for fractional power error
+    if (fractional_power_error) {
+        // Clean up component lists
+        free_component_lists();
+        // Release the normalized expression
+        OCRelease(normalized_expression);
+        return NULL; // Return NULL to indicate error
+    }
     
     // Create library key from components
     OCStringRef library_key = create_library_key();

@@ -19,6 +19,7 @@
 
 %token <unit> UNIT
 %token <iVal> INTEGER
+%token DECIMAL
 %type <unit> exp calclist
 %left '*' '/'
 %left '^'
@@ -31,6 +32,11 @@ exp: '(' exp ')' {$$ = $2;}
 | exp '*' exp {$$ = SIUnitByMultiplyingWithoutReducing($1,$3,unit_multiplier_ref, &unitError);}
 | exp '/' exp {$$ = SIUnitByDividingWithoutReducing($1,$3,unit_multiplier_ref);}
 | exp '^' INTEGER {$$ = SIUnitByRaisingToPowerWithoutReducing($1,$3,unit_multiplier_ref, &unitError);}
+| exp '^' DECIMAL {
+    unitError = STR("Fractional powers are not allowed in unit expressions");
+    yyerror("Fractional powers are not allowed");
+    $$ = NULL;
+}
 | INTEGER '/' exp {
     if($1 == 1) {$$ = SIUnitByRaisingToPowerWithoutReducing($3,-1,unit_multiplier_ref, &unitError);}
     else  {
@@ -72,7 +78,25 @@ SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multipli
         siulex_destroy();
         OCRelease(mutString);
     }
-    if(unitError) *error = unitError;
+    // Check for any errors and set appropriate error message
+    fprintf(stderr, "DEBUG: After parsing - unitError=%p, siu_syntax_error=%d\n", 
+            (void*)unitError, siu_syntax_error);
+    if(unitError) {
+        fprintf(stderr, "DEBUG: unitError message = '%s'\n", OCStringGetCString(unitError));
+    }
+    
+    if(siu_syntax_error || unitError) {
+        if(error) {
+            if(unitError) {
+                // Prefer specific semantic error messages over generic syntax error
+                *error = unitError;
+            } else if(!(*error)) {
+                // Only set generic syntax error if no specific error was set
+                *error = STR("Invalid expression: syntax error");
+            }
+        }
+        return NULL;
+    }
     return final_unit;
 }
 

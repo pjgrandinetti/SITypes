@@ -1898,7 +1898,7 @@ bool test_SIScalarCreateByRaisingToPowerWithoutReducingUnit(void) {
     }
 
     OCStringRef error = NULL;
-    SIScalarRef pow_s = SIScalarCreateByRaisingToPowerWithoutReducingUnit(s, 3.0, &error);
+    SIScalarRef pow_s = SIScalarCreateByRaisingToPowerWithoutReducingUnit(s, 3, &error);
     if (!pow_s) {
         if (error) {
             printf("test_SIScalarCreateByRaisingToPowerWithoutReducingUnit failed: Power operation error: %s\n", OCStringGetCString(error));
@@ -1951,7 +1951,7 @@ bool test_SIScalarRaiseToAPowerWithoutReducingUnit(void) {
     }
 
     OCStringRef error = NULL;
-    bool success = SIScalarRaiseToAPowerWithoutReducingUnit(target, 3.0, &error);
+    bool success = SIScalarRaiseToAPowerWithoutReducingUnit(target, 3, &error);
     if (!success) {
         if (error) {
             printf("test_SIScalarRaiseToAPowerWithoutReducingUnit failed: Power operation error: %s\n", OCStringGetCString(error));
@@ -2002,7 +2002,7 @@ bool test_SIScalarCreateByRaisingToPower(void) {
     }
 
     OCStringRef error = NULL;
-    SIScalarRef pow_s = SIScalarCreateByRaisingToPower(s, 3.0, &error);
+    SIScalarRef pow_s = SIScalarCreateByRaisingToPower(s, 3, &error);
     if (!pow_s) {
         if (error) {
             printf("test_SIScalarCreateByRaisingToPower failed: Power operation error: %s\n", OCStringGetCString(error));
@@ -2055,7 +2055,7 @@ bool test_SIScalarRaiseToAPower(void) {
     }
 
     OCStringRef error = NULL;
-    bool success = SIScalarRaiseToAPower(target, 3.0, &error);
+    bool success = SIScalarRaiseToAPower(target, 3, &error);
     if (!success) {
         if (error) {
             printf("test_SIScalarRaiseToAPower failed: Power operation error: %s\n", OCStringGetCString(error));

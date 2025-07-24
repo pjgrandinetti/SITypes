@@ -1562,17 +1562,39 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     
     // Try library lookup first
     OCStringRef key = SIUnitCreateLibraryKey(expression);
+    if (!key) {
+        // NULL key indicates fractional power error
+        if (error) {
+            *error = STR("Fractional powers are not allowed in unit expressions");
+        }
+        return NULL;
+    }
     SIUnitRef unit = OCDictionaryGetValue(unitsLibrary, key);
     if (unit) {
+        fprintf(stderr, "DEBUG: Found in library - key='%s'\n", OCStringGetCString(key));
         if (unit_multiplier) *unit_multiplier = 1.0;
         OCRelease(key);
         return unit;
     }
-    
+    fprintf(stderr, "DEBUG: Not found in library, parsing expression: '%s'\n", OCStringGetCString(expression));
+    fprintf(stderr, "DEBUG: Point A\n");
+
     // Parse the expression if not found in library
     double multiplier = 1.0;  // Default multiplier
+    fprintf(stderr, "DEBUG: Point B\n");
     OCStringRef canonical_expr = SIUnitCreateLibraryKey(expression);
+    if (!canonical_expr) {
+        // NULL canonical_expr indicates fractional power error
+        if (error) {
+            *error = STR("Fractional powers are not allowed in unit expressions");
+        }
+        OCRelease(key);
+        return NULL;
+    }
+    fprintf(stderr, "DEBUG: Point C - canonical_expr='%s'\n", OCStringGetCString(canonical_expr));
+    fprintf(stderr, "DEBUG: Point D - About to call SIUnitFromExpressionInternal...\n");
     unit = SIUnitFromExpressionInternal(canonical_expr, &multiplier, error);
+    fprintf(stderr, "DEBUG: Point E - After SIUnitFromExpressionInternal - unit=%p\n", (void*)unit);
     if(unit && multiplier != 1.0) {
         SIDimensionalityRef dimensionality = SIUnitGetDimensionality(unit);
         OCStringRef dimensionalitySymbol = SIDimensionalityGetSymbol(dimensionality);
@@ -1991,12 +2013,16 @@ SIUnitRef SIUnitByTakingNthRoot(SIUnitRef input,
     return theUnit;
 }
 SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input,
-                                                double power,
+                                                int power,
                                                 double *unit_multiplier,
                                                 OCStringRef *error) {
     if (error && *error)  // if an earlier error is pending, bail out
         return NULL;
     IF_NO_OBJECT_EXISTS_RETURN(input, NULL);
+    
+    // Convert int power to double for internal calculations
+    double power_double = (double)power;
+    
     // 1) Compute the new dimensionality
     SIDimensionalityRef dimensionality =
         SIDimensionalityByRaisingToPowerWithoutReducing(input->dimensionality,
@@ -2011,13 +2037,10 @@ SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input,
         OCStringAppend(sym, prefixSymbolForSIPrefix(input->root_symbol_prefix));
         OCStringAppend(sym, input->root_symbol);
         if (power != 1) {
-            if (floor(power) == power)
-                OCStringAppendFormat(sym, STR("^%d"), (int)power);
-            else
-                OCStringAppendFormat(sym, STR("^%g"), power);
+            OCStringAppendFormat(sym, STR("^%d"), power);
         }
         // new scale = (old scale)^power
-        double newScale = pow(input->scale_to_coherent_si, power);
+        double newScale = pow(input->scale_to_coherent_si, power_double);
         // create a brand-new SIUnit with exactly the same per-dimensional prefixes
         SIUnitRef theUnit = SIUnitWithParameters(
             dimensionality,
@@ -2053,11 +2076,11 @@ SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input,
     }
     if (unit_multiplier) {
         if (*unit_multiplier == 0.0) *unit_multiplier = 1.0;
-        *unit_multiplier *= pow(SIUnitScaleToCoherentSIUnit(input), power) / SIUnitScaleToCoherentSIUnit(result);
+        *unit_multiplier *= pow(SIUnitScaleToCoherentSIUnit(input), power_double) / SIUnitScaleToCoherentSIUnit(result);
     }
     return result;
 }
-SIUnitRef SIUnitByRaisingToPower(SIUnitRef input, double power, double *unit_multiplier, OCStringRef *error) {
+SIUnitRef SIUnitByRaisingToPower(SIUnitRef input, int power, double *unit_multiplier, OCStringRef *error) {
     if (error)
         if (*error)
             return NULL;

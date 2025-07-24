@@ -273,10 +273,10 @@ SIUnitRef SIUnitByDividing(SIUnitRef theUnit1, SIUnitRef theUnit2, double *unit_
 SIUnitRef SIUnitByDividingWithoutReducing(SIUnitRef theUnit1, SIUnitRef theUnit2, double *unit_multiplier);
 
 /** @brief Raises a unit to a power, reduces exponents, updates multiplier, with error. */
-SIUnitRef SIUnitByRaisingToPower(SIUnitRef input, double power, double *unit_multiplier, OCStringRef *error);
+SIUnitRef SIUnitByRaisingToPower(SIUnitRef input, int power, double *unit_multiplier, OCStringRef *error);
 
 /** @brief Raises a unit to a power without reducing exponents, with error. */
-SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input, double power, double *unit_multiplier, OCStringRef *error);
+SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input, int power, double *unit_multiplier, OCStringRef *error);
 
 /** @brief Finds a unit by canonical name. */
 SIUnitRef SIUnitFindWithName(OCStringRef input);

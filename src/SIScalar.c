@@ -1260,10 +1260,11 @@ SIScalarRef SIScalarCreateByDividing(SIScalarRef input1, SIScalarRef input2, OCS
     OCRelease(result);
     return NULL;
 }
-bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar, double power, OCStringRef *error) {
+bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar, int power, OCStringRef *error) {
     if (error)
         if (*error) return false;
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
+    double power_double = (double)power;
     double unit_multiplier = 1;
     SIUnitRef unit = SIUnitByRaisingToPowerWithoutReducing(theScalar->unit, power, &unit_multiplier, error);
     if (error) {
@@ -1273,21 +1274,21 @@ bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar, doub
     theScalar->unit = unit;
     switch (theScalar->type) {
         case kSINumberFloat32Type:
-            theScalar->value.floatValue = pow(theScalar->value.floatValue, power) * unit_multiplier;
+            theScalar->value.floatValue = pow(theScalar->value.floatValue, power_double) * unit_multiplier;
             return true;
         case kSINumberFloat64Type:
-            theScalar->value.doubleValue = pow(theScalar->value.doubleValue, power) * unit_multiplier;
+            theScalar->value.doubleValue = pow(theScalar->value.doubleValue, power_double) * unit_multiplier;
             return true;
         case kSINumberComplex64Type:
-            theScalar->value.floatComplexValue = cpow(theScalar->value.floatComplexValue, power) * unit_multiplier;
+            theScalar->value.floatComplexValue = cpow(theScalar->value.floatComplexValue, power_double) * unit_multiplier;
             return true;
         case kSINumberComplex128Type:
-            theScalar->value.doubleComplexValue = cpow(theScalar->value.doubleComplexValue, power) * unit_multiplier;
+            theScalar->value.doubleComplexValue = cpow(theScalar->value.doubleComplexValue, power_double) * unit_multiplier;
             return true;
     }
     return false;
 }
-SIScalarRef SIScalarCreateByRaisingToPowerWithoutReducingUnit(SIScalarRef theScalar, double power, OCStringRef *error) {
+SIScalarRef SIScalarCreateByRaisingToPowerWithoutReducingUnit(SIScalarRef theScalar, int power, OCStringRef *error) {
     if (error)
         if (*error) return NULL;
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, NULL);
@@ -1296,13 +1297,14 @@ SIScalarRef SIScalarCreateByRaisingToPowerWithoutReducingUnit(SIScalarRef theSca
     if (result) OCRelease(result);
     return NULL;
 }
-bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar, double power, OCStringRef *error) {
+bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar, int power, OCStringRef *error) {
     if (error)
         if (*error) return false;
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
     // Rules for multiplication and division:
     //	- returned SIScalar with have whichever elementType is greatest of two method arguments
     //	- returned SIScalar unit will be in coherent SI units
+    double power_double = (double)power;
     double unit_multiplier = 1;
     SIUnitRef unit = SIUnitByRaisingToPower(theScalar->unit, power, &unit_multiplier, error);
     if (error) {
@@ -1311,21 +1313,21 @@ bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar, double power, OCStringR
     theScalar->unit = unit;
     switch (theScalar->type) {
         case kSINumberFloat32Type:
-            theScalar->value.floatValue = pow(theScalar->value.floatValue, power) * unit_multiplier;
+            theScalar->value.floatValue = pow(theScalar->value.floatValue, power_double) * unit_multiplier;
             return true;
         case kSINumberFloat64Type:
-            theScalar->value.doubleValue = pow(theScalar->value.doubleValue, power) * unit_multiplier;
+            theScalar->value.doubleValue = pow(theScalar->value.doubleValue, power_double) * unit_multiplier;
             return true;
         case kSINumberComplex64Type:
-            theScalar->value.floatComplexValue = cpow(theScalar->value.floatComplexValue, power) * unit_multiplier;
+            theScalar->value.floatComplexValue = cpow(theScalar->value.floatComplexValue, power_double) * unit_multiplier;
             return true;
         case kSINumberComplex128Type:
-            theScalar->value.doubleComplexValue = cpow(theScalar->value.doubleComplexValue, power) * unit_multiplier;
+            theScalar->value.doubleComplexValue = cpow(theScalar->value.doubleComplexValue, power_double) * unit_multiplier;
             return true;
     }
     return false;
 }
-SIScalarRef SIScalarCreateByRaisingToPower(SIScalarRef theScalar, double power, OCStringRef *error) {
+SIScalarRef SIScalarCreateByRaisingToPower(SIScalarRef theScalar, int power, OCStringRef *error) {
     if (error)
         if (*error) return NULL;
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, NULL);

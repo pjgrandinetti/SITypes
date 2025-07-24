@@ -252,16 +252,16 @@ SIScalarRef SIScalarCreateByDividing(SIScalarRef input1, SIScalarRef input2, OCS
 bool SIScalarDivide(SIMutableScalarRef target, SIScalarRef input2, OCStringRef *error);
 
 /** @brief Create a new SIScalar by raising a scalar to a power without simplifying the unit. */
-SIScalarRef SIScalarCreateByRaisingToPowerWithoutReducingUnit(SIScalarRef theScalar, double power, OCStringRef *error);
+SIScalarRef SIScalarCreateByRaisingToPowerWithoutReducingUnit(SIScalarRef theScalar, int power, OCStringRef *error);
 
 /** @brief Raises a mutable scalar to a power without simplifying the unit in place. */
-bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar, double power, OCStringRef *error);
+bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar, int power, OCStringRef *error);
 
 /** @brief Create a new SIScalar by raising a scalar to a power. */
-SIScalarRef SIScalarCreateByRaisingToPower(SIScalarRef theScalar, double power, OCStringRef *error);
+SIScalarRef SIScalarCreateByRaisingToPower(SIScalarRef theScalar, int power, OCStringRef *error);
 
 /** @brief Raises a mutable scalar to a power in place. */
-bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar, double power, OCStringRef *error);
+bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar, int power, OCStringRef *error);
 
 /** @brief Create a new SIScalar by taking the absolute value. */
 SIScalarRef SIScalarCreateByTakingAbsoluteValue(SIScalarRef theScalar, OCStringRef *error);

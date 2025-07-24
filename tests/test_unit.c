@@ -807,18 +807,23 @@ bool test_unit_14(void) {
     SIUnitRef unit_simple_frac = SIUnitFromExpression(STR("m^0.5"), &multiplier1, &err);
     if (!unit_simple_frac) {
         if (err) {
-            printf("  Note: 'm^0.5' not supported: %s\n", OCStringGetCString(err));
+            printf("  ✓ Correctly rejected 'm^0.5': %s\n", OCStringGetCString(err));
             OCRelease(err);
             err = NULL;
         } else {
-            printf("  Note: 'm^0.5' not supported (no error message)\n");
+            printf("  ✓ Correctly rejected 'm^0.5' (no error message)\n");
         }
     } else {
-        printf("  ✓ 'm^0.5' parsed successfully\n");
+        printf("  ⚠️  'm^0.5' was parsed as valid (parser limitation)\n");
         OCStringRef symbol = SIUnitCopySymbol(unit_simple_frac);
         if (symbol) {
-            printf("    Symbol: %s\n", OCStringGetCString(symbol));
+            printf("    Symbol: '%s'\n", OCStringGetCString(symbol));
             OCRelease(symbol);
+        }
+        // Check if this returned dimensionless unit (m^0)
+        SIUnitRef dimensionless = SIUnitDimensionlessAndUnderived();
+        if (unit_simple_frac == dimensionless) {
+            printf("    Note: Parser treated this as m^0 (dimensionless)\n");
         }
         OCRelease(unit_simple_frac);
     }
@@ -828,20 +833,20 @@ bool test_unit_14(void) {
     SIUnitRef unit_paren_frac = SIUnitFromExpression(STR("(m^2)^0.5"), &multiplier2, &err);
     if (!unit_paren_frac) {
         if (err) {
-            printf("  Note: '(m^2)^0.5' not supported: %s\n", OCStringGetCString(err));
+            printf("  ✓ Correctly rejected '(m^2)^0.5': %s\n", OCStringGetCString(err));
             OCRelease(err);
             err = NULL;
         } else {
-            printf("  Note: '(m^2)^0.5' not supported (no error message)\n");
+            printf("  ✓ Correctly rejected '(m^2)^0.5' (no error message)\n");
         }
     } else {
-        printf("  ✓ '(m^2)^0.5' parsed successfully\n");
+        printf("  ✗ '(m^2)^0.5' was unexpectedly parsed as valid\n");
         OCStringRef symbol = SIUnitCopySymbol(unit_paren_frac);
         if (symbol) {
-            printf("    Symbol: %s\n", OCStringGetCString(symbol));
+            printf("    Symbol: '%s'\n", OCStringGetCString(symbol));
+            OCRelease(symbol);
         }
         OCRelease(unit_paren_frac);
-        if (symbol) OCRelease(symbol);
     }
 
     printf("  Testing fractional power with fraction: m^(1/2)\n");
@@ -849,17 +854,17 @@ bool test_unit_14(void) {
     SIUnitRef unit_frac_notation = SIUnitFromExpression(STR("m^(1/2)"), &multiplier3, &err);
     if (!unit_frac_notation) {
         if (err) {
-            printf("  Note: 'm^(1/2)' not supported: %s\n", OCStringGetCString(err));
+            printf("  ✓ Correctly rejected 'm^(1/2)': %s\n", OCStringGetCString(err));
             OCRelease(err);
             err = NULL;
         } else {
-            printf("  Note: 'm^(1/2)' not supported (no error message)\n");
+            printf("  ✓ Correctly rejected 'm^(1/2)' (no error message)\n");
         }
     } else {
-        printf("  ✓ 'm^(1/2)' parsed successfully\n");
+        printf("  ✗ 'm^(1/2)' was unexpectedly parsed as valid\n");
         OCStringRef symbol = SIUnitCopySymbol(unit_frac_notation);
         if (symbol) {
-            printf("    Symbol: %s\n", OCStringGetCString(symbol));
+            printf("    Symbol: '%s'\n", OCStringGetCString(symbol));
             OCRelease(symbol);
         }
         OCRelease(unit_frac_notation);
@@ -871,17 +876,17 @@ bool test_unit_14(void) {
     SIUnitRef unit_neg_frac = SIUnitFromExpression(STR("m^-0.5"), &multiplier4, &err);
     if (!unit_neg_frac) {
         if (err) {
-            printf("  Note: 'm^-0.5' not supported: %s\n", OCStringGetCString(err));
+            printf("  ✓ Correctly rejected 'm^-0.5': %s\n", OCStringGetCString(err));
             OCRelease(err);
             err = NULL;
         } else {
-            printf("  Note: 'm^-0.5' not supported (no error message)\n");
+            printf("  ✓ Correctly rejected 'm^-0.5' (no error message)\n");
         }
     } else {
-        printf("  ✓ 'm^-0.5' parsed successfully\n");
+        printf("  ⚠️  'm^-0.5' was parsed as valid (parser limitation)\n");
         OCStringRef symbol = SIUnitCopySymbol(unit_neg_frac);
         if (symbol) {
-            printf("    Symbol: %s\n", OCStringGetCString(symbol));
+            printf("    Symbol: '%s'\n", OCStringGetCString(symbol));
             OCRelease(symbol);
         }
         OCRelease(unit_neg_frac);
@@ -1344,7 +1349,7 @@ bool test_unit_by_raising_to_power_without_reducing(void) {
         success = false;
         goto cleanup;
     }
-    SIUnitRef m2 = SIUnitByRaisingToPowerWithoutReducing(m, 2.0, &multiplier, &err);
+    SIUnitRef m2 = SIUnitByRaisingToPowerWithoutReducing(m, 2, &multiplier, &err);
     if (!m2) {
         fprintf(stderr, "  ✗ Failed to compute m^2: %s\n",
             err ? OCStringGetCString(err) : "no error");
@@ -1371,7 +1376,7 @@ bool test_unit_by_raising_to_power_without_reducing(void) {
 
     // 2. Test negative power: m^-1
     multiplier = 0.0;
-    SIUnitRef m_inv = SIUnitByRaisingToPowerWithoutReducing(m, -1.0, &multiplier, &err);
+    SIUnitRef m_inv = SIUnitByRaisingToPowerWithoutReducing(m, -1, &multiplier, &err);
     if (!m_inv) {
         fprintf(stderr, "  ✗ Failed to compute m^-1: %s\n",
             err ? OCStringGetCString(err) : "no error");
@@ -1398,7 +1403,7 @@ bool test_unit_by_raising_to_power_without_reducing(void) {
 
     // 3. Test raising to the 1st power: should return original pointer
     multiplier = 0.0;
-    SIUnitRef m_pow1 = SIUnitByRaisingToPowerWithoutReducing(m, 1.0, &multiplier, &err);
+    SIUnitRef m_pow1 = SIUnitByRaisingToPowerWithoutReducing(m, 1, &multiplier, &err);
     if (m_pow1 != m) {
         fprintf(stderr, "  ✗ m^1 did not return original instance\n");
         success = false;

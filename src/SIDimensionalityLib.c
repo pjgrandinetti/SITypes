@@ -176,35 +176,22 @@ SIDimensionalityRef SIDimensionalityByDividing(SIDimensionalityRef theDim1, SIDi
     return SIDimensionalityByReducing(SIDimensionalityByDividingWithoutReducing(theDim1, theDim2));
 }
 SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensionalityRef theDim,
-                                                                    double power,
+                                                                    int power,
                                                                     OCStringRef *error) {
     // 1) Propagate any preexisting error
     if (error && *error) return NULL;
     // 2) Validate input
     IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
-    // 3) Separate integer and fractional parts
-    int32_t powInt = (int32_t)floor(power);
-    double fraction = power - (double)powInt;
-    // 4) If there’s a fractional component, try to invert via nth-root
-    if (OCCompareDoubleValues(fraction, 0.0) != kOCCompareEqualTo) {
-        int32_t root = (int32_t)floor(1.0 / power);
-        double invFrac = 1.0 / power - (double)root;
-        if (OCCompareDoubleValues(invFrac, 0.0) == kOCCompareEqualTo) {
-            return SIDimensionalityByTakingNthRoot(theDim, (uint8_t)root, error);
-        }
-        if (error) *error = STR("Can't raise physical dimensionality to a non-integer power.");
-        return NULL;
-    }
-    // 5) Compute new exponents in two small arrays
+    // 3) Compute new exponents in two small arrays
     uint8_t num_exp[BASE_DIMENSION_COUNT];
     uint8_t den_exp[BASE_DIMENSION_COUNT];
     for (size_t i = 0; i < BASE_DIMENSION_COUNT; ++i) {
-        if (powInt > 0) {
-            num_exp[i] = theDim->num_exp[i] * (uint8_t)powInt;
-            den_exp[i] = theDim->den_exp[i] * (uint8_t)powInt;
+        if (power > 0) {
+            num_exp[i] = theDim->num_exp[i] * (uint8_t)power;
+            den_exp[i] = theDim->den_exp[i] * (uint8_t)power;
         } else {
             // negative power → swap roles
-            uint8_t magnitude = (uint8_t)(-powInt);
+            uint8_t magnitude = (uint8_t)(-power);
             num_exp[i] = theDim->den_exp[i] * magnitude;
             den_exp[i] = theDim->num_exp[i] * magnitude;
         }
@@ -212,7 +199,7 @@ SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensiona
     // 6) Delegate to the array-based constructor + intern
     return SIDimensionalityWithExponentArrays(num_exp, den_exp);
 }
-SIDimensionalityRef SIDimensionalityByRaisingToPower(SIDimensionalityRef theDim, double power, OCStringRef *error) {
+SIDimensionalityRef SIDimensionalityByRaisingToPower(SIDimensionalityRef theDim, int power, OCStringRef *error) {
     if (error)
         if (*error) return NULL;
     return SIDimensionalityByReducing(SIDimensionalityByRaisingToPowerWithoutReducing(theDim, power, error));
