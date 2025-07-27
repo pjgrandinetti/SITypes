@@ -1571,17 +1571,13 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     }
     SIUnitRef unit = OCDictionaryGetValue(unitsLibrary, key);
     if (unit) {
-        fprintf(stderr, "DEBUG: Found in library - key='%s'\n", OCStringGetCString(key));
         if (unit_multiplier) *unit_multiplier = 1.0;
         OCRelease(key);
         return unit;
     }
-    fprintf(stderr, "DEBUG: Not found in library, parsing expression: '%s'\n", OCStringGetCString(expression));
-    fprintf(stderr, "DEBUG: Point A\n");
 
     // Parse the expression if not found in library
     double multiplier = 1.0;  // Default multiplier
-    fprintf(stderr, "DEBUG: Point B\n");
     OCStringRef canonical_expr = SIUnitCreateLibraryKey(expression);
     if (!canonical_expr) {
         // NULL canonical_expr indicates fractional power error
@@ -1591,10 +1587,7 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
         OCRelease(key);
         return NULL;
     }
-    fprintf(stderr, "DEBUG: Point C - canonical_expr='%s'\n", OCStringGetCString(canonical_expr));
-    fprintf(stderr, "DEBUG: Point D - About to call SIUnitFromExpressionInternal...\n");
     unit = SIUnitFromExpressionInternal(canonical_expr, &multiplier, error);
-    fprintf(stderr, "DEBUG: Point E - After SIUnitFromExpressionInternal - unit=%p\n", (void*)unit);
     if(unit && multiplier != 1.0) {
         SIDimensionalityRef dimensionality = SIUnitGetDimensionality(unit);
         OCStringRef dimensionalitySymbol = SIDimensionalityGetSymbol(dimensionality);
