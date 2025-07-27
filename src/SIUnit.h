@@ -260,6 +260,9 @@ SIUnitRef SIUnitByTakingNthRoot(SIUnitRef input, uint8_t root, double *unit_mult
 /** @brief Returns the reduced (lowest integer exponents) form of a unit. */
 SIUnitRef SIUnitByReducing(SIUnitRef theUnit, double *unit_multiplier);
 
+/** @brief Returns the reduced form of a unit by parsing and simplifying its symbol string. */
+SIUnitRef SIUnitByReducingSymbol(SIUnitRef theUnit, OCStringRef *error);
+
 /** @brief Multiplies two units, reduces result, updates multiplier, with error. */
 SIUnitRef SIUnitByMultiplying(SIUnitRef theUnit1, SIUnitRef theUnit2, double *unit_multiplier, OCStringRef *error);
 

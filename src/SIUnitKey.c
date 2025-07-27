@@ -498,6 +498,188 @@ OCStringRef SIUnitCreateLibraryKey(OCStringRef expression) {
     return library_key;
 }
 
+// Function to reduce a unit expression by combining like terms
+OCStringRef SIUnitReduceExpression(OCStringRef expression) {
+    if (!expression) return NULL;
+    
+    // First normalize the expression to handle Unicode variants (μ → µ, etc.)
+    OCStringRef normalized_expression = SIUnitCreateNormalizedExpression(expression, true);
+    if (!normalized_expression) return NULL;
+    
+    // Initialize component lists
+    init_component_lists();
+    
+    // Convert normalized OCString to C string for parsing
+    const char *expr_cstr = OCStringGetCString(normalized_expression);
+    
+    // Parse the expression
+    parse_expression_manually(expr_cstr);
+    
+    // Check for fractional power error
+    if (fractional_power_error) {
+        // Clean up component lists
+        free_component_lists();
+        // Release the normalized expression
+        OCRelease(normalized_expression);
+        return NULL; // Return NULL to indicate error
+    }
+    
+    // Now reduce by combining like terms across numerator and denominator
+    // Create a combined map of all symbols and their net powers
+    typedef struct {
+        char *symbol;
+        int net_power;
+    } NetComponent;
+    
+    // Count unique symbols
+    int unique_count = 0;
+    NetComponent temp_components[100]; // Temporary array for collecting unique symbols
+    
+    // Process positive components
+    for (int i = 0; i < positive_components->count; i++) {
+        UnitComponent *comp = &positive_components->components[i];
+        if (comp->power == 0) continue;
+        
+        // Find if this symbol already exists
+        int found_idx = -1;
+        for (int j = 0; j < unique_count; j++) {
+            if (strcmp(temp_components[j].symbol, comp->symbol) == 0) {
+                found_idx = j;
+                break;
+            }
+        }
+        
+        if (found_idx >= 0) {
+            temp_components[found_idx].net_power += comp->power;
+        } else {
+            temp_components[unique_count].symbol = strdup(comp->symbol);
+            temp_components[unique_count].net_power = comp->power;
+            unique_count++;
+        }
+    }
+    
+    // Process negative components
+    for (int i = 0; i < negative_components->count; i++) {
+        UnitComponent *comp = &negative_components->components[i];
+        if (comp->power == 0) continue;
+        
+        // Find if this symbol already exists
+        int found_idx = -1;
+        for (int j = 0; j < unique_count; j++) {
+            if (strcmp(temp_components[j].symbol, comp->symbol) == 0) {
+                found_idx = j;
+                break;
+            }
+        }
+        
+        if (found_idx >= 0) {
+            temp_components[found_idx].net_power -= comp->power;
+        } else {
+            temp_components[unique_count].symbol = strdup(comp->symbol);
+            temp_components[unique_count].net_power = -comp->power;
+            unique_count++;
+        }
+    }
+    
+    // Build the reduced expression
+    OCMutableStringRef result = OCStringCreateMutable(0);
+    bool has_numerator = false;
+    bool has_denominator = false;
+    
+    // First pass: build numerator (positive net powers)
+    bool first_positive = true;
+    for (int i = 0; i < unique_count; i++) {
+        if (temp_components[i].net_power > 0) {
+            if (!first_positive) {
+                OCStringAppend(result, STR("•"));
+            }
+            
+            OCStringRef compString = OCStringCreateWithCString(temp_components[i].symbol);
+            OCStringAppend(result, compString);
+            OCRelease(compString);
+            
+            if (temp_components[i].net_power != 1) {
+                OCStringAppendFormat(result, STR("^%d"), temp_components[i].net_power);
+            }
+            
+            first_positive = false;
+            has_numerator = true;
+        }
+    }
+    
+    // Second pass: check if we have denominator terms
+    for (int i = 0; i < unique_count; i++) {
+        if (temp_components[i].net_power < 0) {
+            has_denominator = true;
+            break;
+        }
+    }
+    
+    // Third pass: build denominator (negative net powers)
+    if (has_denominator) {
+        if (!has_numerator) {
+            OCStringAppend(result, STR("1"));
+        }
+        
+        OCStringAppend(result, STR("/"));
+        
+        // Count denominator terms to determine if we need parentheses
+        int denom_count = 0;
+        for (int i = 0; i < unique_count; i++) {
+            if (temp_components[i].net_power < 0) {
+                denom_count++;
+            }
+        }
+        
+        bool needs_parens = (denom_count > 1);
+        if (needs_parens) {
+            OCStringAppend(result, STR("("));
+        }
+        
+        bool first_negative = true;
+        for (int i = 0; i < unique_count; i++) {
+            if (temp_components[i].net_power < 0) {
+                if (!first_negative) {
+                    OCStringAppend(result, STR("•"));
+                }
+                
+                OCStringRef compString = OCStringCreateWithCString(temp_components[i].symbol);
+                OCStringAppend(result, compString);
+                OCRelease(compString);
+                
+                int abs_power = -temp_components[i].net_power;
+                if (abs_power != 1) {
+                    OCStringAppendFormat(result, STR("^%d"), abs_power);
+                }
+                
+                first_negative = false;
+            }
+        }
+        
+        if (needs_parens) {
+            OCStringAppend(result, STR(")"));
+        }
+    }
+    
+    // Handle the case where everything cancels out
+    if (OCStringGetLength(result) == 0) {
+        OCStringAppend(result, STR("1"));  // Return "1" for dimensionless
+    }
+    
+    // Clean up temporary components
+    for (int i = 0; i < unique_count; i++) {
+        free(temp_components[i].symbol);
+    }
+    
+    // Clean up component lists
+    free_component_lists();
+    
+    // Release the normalized expression
+    OCRelease(normalized_expression);
+    
+    return result;
+}
+
 // Function to check if two expressions are equivalent using canonicalization
 bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2) {
     if (!expr1 || !expr2) return false;

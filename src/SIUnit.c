@@ -11,6 +11,7 @@
 #include <string.h>
 #include "SIDimensionalityPrivate.h"
 #include "SILibrary.h"
+#include "SIUnitKey.h"
 
 #define UNIT_NOT_FOUND -1
 // SIUnit Opaque Type
@@ -1740,6 +1741,76 @@ SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit) {
     OCRelease(candidates);
     return best;
 }
+SIUnitRef SIUnitByReducingSymbol(SIUnitRef theUnit, OCStringRef *error) {
+    // Propagate any pending error
+    if (error && *error) return NULL;
+    
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    
+    // Get the current symbol
+    OCStringRef originalSymbol = SIUnitCopySymbol(theUnit);
+    // Reduce the expression algebraically
+    OCStringRef reducedSymbol = SIUnitReduceExpression(originalSymbol);
+    if (!reducedSymbol) {
+        if (error) {
+            *error = STR("Failed to reduce unit expression");
+        }
+        OCRelease(originalSymbol);
+        return NULL;
+    }
+    
+    // Check if the symbol was actually reduced
+    bool wasReduced = (OCStringCompare(reducedSymbol, originalSymbol, 0) != kOCCompareEqualTo);
+    OCRelease(originalSymbol);
+    
+    if (!wasReduced) {
+        OCRelease(reducedSymbol);
+        // No reduction needed, return equivalent unit with shortest symbol
+        return SIUnitFindEquivalentUnitWithShortestSymbol(theUnit);
+    }
+    
+    // Parse the reduced symbol to get the new unit
+    OCStringRef parsing_error = NULL;
+    double parsing_multiplier = 1.0;
+    SIUnitRef reducedUnit = SIUnitFromExpression(reducedSymbol, &parsing_multiplier, &parsing_error);
+    
+    if (parsing_error) {
+        if (error) {
+            *error = parsing_error;
+        } else {
+            OCRelease(parsing_error);
+        }
+        OCRelease(reducedSymbol);
+        return NULL;
+    }
+    
+    if (!reducedUnit) {
+        if (error) {
+            *error = STR("Failed to parse reduced unit expression");
+        }
+        OCRelease(reducedSymbol);
+        return NULL;
+    }
+    
+    // Calculate the scale factor between original and reduced units
+    double originalScale = SIUnitScaleToCoherentSIUnit(theUnit);
+    double reducedScale = SIUnitScaleToCoherentSIUnit(reducedUnit);
+    double totalMultiplier = (originalScale / reducedScale) * parsing_multiplier;
+    
+    // For algebraic reduction, the multiplier should always be 1.0
+    // If it's not, this indicates an unexpected issue in the reduction process
+    if (fabs(totalMultiplier - 1.0) > 1e-12) {
+        if (error) {
+            *error = STR("Unit reduction resulted in scaling factor - algebraic reduction should preserve unit equivalence");
+        }
+        OCRelease(reducedSymbol);
+        return NULL;
+    }
+    
+    OCRelease(reducedSymbol);
+    return reducedUnit;
+}
+
 SIUnitRef SIUnitByReducing(SIUnitRef theUnit, double *unit_multiplier) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
     SIDimensionalityRef dimensionality = SIDimensionalityByReducing(theUnit->dimensionality);

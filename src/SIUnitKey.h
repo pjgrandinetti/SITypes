@@ -56,6 +56,29 @@ typedef const struct impl_OCString * OCStringRef;
 OCStringRef SIUnitCreateLibraryKey(OCStringRef expression);
 
 /**
+ * @brief Reduces a unit expression by combining like terms algebraically.
+ *
+ * This function takes a unit expression and reduces it by combining powers of
+ * the same unit symbols. Unlike SIUnitCreateLibraryKey, which creates a canonical
+ * form for library lookups, this function performs actual algebraic reduction.
+ *
+ * Examples:
+ * - "in^4/in^2" → "in^2"
+ * - "ft^3/ft" → "ft^2" 
+ * - "m^6/m^2" → "m^4"
+ * - "kg•m^2/m" → "kg•m"
+ * - "s^4/(s^2•s)" → "s"
+ *
+ * @param expression The unit expression to reduce
+ * @return A new reduced expression, or NULL if the input is invalid
+ *
+ * @note The caller is responsible for releasing the returned OCStringRef.
+ * @see SIUnitByReducingSymbol
+ * @ingroup SIUnit
+ */
+OCStringRef SIUnitReduceExpression(OCStringRef expression);
+
+/**
  * @brief Checks if two unit expressions are equivalent.
  *
  * This function determines if two unit expressions represent the same physical
