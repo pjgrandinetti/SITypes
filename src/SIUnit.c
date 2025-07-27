@@ -2083,7 +2083,10 @@ SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input,
     if (error && *error)  // if an earlier error is pending, bail out
         return NULL;
     IF_NO_OBJECT_EXISTS_RETURN(input, NULL);
-    
+    if(power == 0) {
+        return SIUnitDimensionlessAndUnderived();
+    }
+
     // Convert int power to double for internal calculations
     double power_double = (double)power;
     
