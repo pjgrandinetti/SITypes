@@ -15,6 +15,7 @@
 #include "test_unit_from_expression_robust.h"
 #include "test_duplicate_units.h"
 #include "test_library_key.h"
+#include "test_unit_power_operations.h"
 #ifdef LEAK_SANITIZER
 extern void __lsan_do_leak_check() __attribute__((weak));
 #endif
@@ -189,6 +190,11 @@ int main(int argc, const char* argv[]) {
     printf("\n=== Duplicate Units Tests ===\n");
     TRACK(test_create_potential_duplicates);
     TRACK(test_check_for_duplicate_units);
+
+    printf("\n=== Unit Power Operations Tests ===\n");
+    TRACK(test_unit_negative_power_operations);
+    TRACK(test_unit_inverse_expression_parsing);
+    TRACK(test_unit_negative_exponent_parsing);
 
     if (failures) {
         fprintf(stderr, "\n%d test(s) failed.\n", failures);
