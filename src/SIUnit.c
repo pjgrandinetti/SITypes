@@ -200,25 +200,25 @@ baseUnitRootSymbol(uint8_t idx) {
             return NULL;
     }
 }
-// Special-case kilogram (“gram” → “kilogram” / “kilograms” / “kg”)
-static OCStringRef
-baseUnitName(uint8_t idx) {
-    return (idx == kSIMassIndex
-                ? STR("kilogram")
-                : baseUnitRootName(idx));
-}
-static OCStringRef
-baseUnitPluralName(uint8_t idx) {
-    return (idx == kSIMassIndex
-                ? STR("kilograms")
-                : baseUnitPluralRootName(idx));
-}
-static OCStringRef
-baseUnitSymbol(uint8_t idx) {
-    return (idx == kSIMassIndex
-                ? STR("kg")
-                : baseUnitRootSymbol(idx));
-}
+// // Special-case kilogram (“gram” → “kilogram” / “kilograms” / “kg”)
+// static OCStringRef
+// baseUnitName(uint8_t idx) {
+//     return (idx == kSIMassIndex
+//                 ? STR("kilogram")
+//                 : baseUnitRootName(idx));
+// }
+// static OCStringRef
+// baseUnitPluralName(uint8_t idx) {
+//     return (idx == kSIMassIndex
+//                 ? STR("kilograms")
+//                 : baseUnitPluralRootName(idx));
+// }
+// static OCStringRef
+// baseUnitSymbol(uint8_t idx) {
+//     return (idx == kSIMassIndex
+//                 ? STR("kg")
+//                 : baseUnitRootSymbol(idx));
+// }
 bool impl_SIUnitEqual(const void *theType1, const void *theType2) {
     // 1) Null‐object guard
     if (!theType1 || !theType2)
@@ -834,46 +834,24 @@ SIDimensionalityRef SIUnitGetDimensionality(SIUnitRef theUnit) {
 }
 OCStringRef SIUnitCopyRootName(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
-    OCStringRef result = NULL;
-    if (SIUnitIsSIBaseUnit(theUnit)) {
-        for (uint8_t i = 0; i <= 6; i++) {
-            if (SIDimensionalityGetNumExpAtIndex(theUnit->dimensionality, i)) {
-                result = OCStringCreateCopy(baseUnitRootName(i));
-                break;
-            }
-        }
-    } else {
-        if (theUnit->root_name) {
-            result = OCStringCreateCopy(theUnit->root_name);
-        }
+
+    if (theUnit->root_name) {
+        return OCStringCreateCopy(theUnit->root_name);
     }
-    if (!result) {
-        result = STR("");
-    }
-    return result;
+    
+    return OCStringCreateCopy(STR(""));
 }
 OCStringRef SIUnitCopyRootPluralName(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
-    if (SIUnitIsSIBaseUnit(theUnit)) {
-        for (uint8_t i = 0; i < BASE_DIMENSION_COUNT; i++)
-            if (SIDimensionalityGetNumExpAtIndex(theUnit->dimensionality, i))
-                return OCStringCreateCopy(baseUnitPluralRootName(i));
-    } else {
-        if (theUnit->root_plural_name)
-            return OCStringCreateCopy(theUnit->root_plural_name);
-    }
-    return STR("");
+    if (theUnit->root_plural_name)
+        return OCStringCreateCopy(theUnit->root_plural_name);
+
+    return OCStringCreateCopy(STR(""));
 }
 OCStringRef SIUnitCopyRootSymbol(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
-    if (SIUnitIsSIBaseUnit(theUnit)) {
-        for (uint8_t i = 0; i < BASE_DIMENSION_COUNT; i++)
-            if (SIDimensionalityGetNumExpAtIndex(theUnit->dimensionality, i))
-                return OCStringCreateCopy(baseUnitRootSymbol(i));
-    } else {
-        if (theUnit->root_symbol)
-            return OCStringCreateCopy(theUnit->root_symbol);
-    }
+    if (theUnit->root_symbol)
+        return OCStringCreateCopy(theUnit->root_symbol);
     return NULL;
 }
 bool SIUnitAllowsSIPrefix(SIUnitRef theUnit) {
@@ -903,25 +881,19 @@ SIPrefix SIUnitGetDenominatorPrefixAtIndex(SIUnitRef theUnit, const uint8_t inde
 bool SIUnitIsDimensionlessAndUnderived(SIUnitRef theUnit) {
     if (!SIDimensionalityIsDimensionlessAndNotDerived(theUnit->dimensionality))
         return false;
-    if (theUnit->root_name != NULL)
-        return false;
+    if (theUnit->root_name != NULL) return false;
     return true;
 }
 OCStringRef SIUnitCopySymbol(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
-    // Construct the symbol of the unit from root_symbol and prefix.
     if (SIUnitIsDimensionlessAndUnderived(theUnit)) {
         return OCStringCreateCopy(STR(" "));
     }
-    // Symbol should be generated and saved when unit is created.
     return OCStringCreateCopy(theUnit->symbol);
 }
 OCStringRef SIUnitCreateSymbol(SIUnitRef unit) {
-    // 1) Sanity check
     IF_NO_OBJECT_EXISTS_RETURN(unit, NULL);
     if (!unit->dimensionality) return NULL;
-    // 2) If there's a special root_symbol at all (Ω, lb, Å, etc), just
-    //    return prefix + that symbol.
     if (unit->root_symbol) {
         OCMutableStringRef s = OCStringCreateMutable(0);
         OCStringAppend(s, prefixSymbolForSIPrefix(unit->root_symbol_prefix));
@@ -1509,20 +1481,19 @@ AddAllSIPrefixedUnitsToLibrary(SIUnitRef rootUnit, OCStringRef quantity) {
 __attribute__((no_sanitize("address")))
 static void AddSIBaseUnitToLibrary(OCStringRef quantity) {
     // all seven dims get no per-dim prefix
-    SIPrefix none = kSIPrefixNone;
     AddUnitForQuantityToLibrary(
         quantity,
-        none, none,  // length
-        none, none,  // mass
-        none, none,  // time
-        none, none,  // current
-        none, none,  // temperature
-        none, none,  // amount
-        none, none,  // luminous intensity
+        kSIPrefixNone, kSIPrefixNone,  // length
+        kSIPrefixNone, kSIPrefixNone,  // mass
+        kSIPrefixNone, kSIPrefixNone,  // time
+        kSIPrefixNone, kSIPrefixNone,  // current
+        kSIPrefixNone, kSIPrefixNone,  // temperature
+        kSIPrefixNone, kSIPrefixNone,  // amount
+        kSIPrefixNone, kSIPrefixNone,  // luminous intensity
         /* root_name */ NULL,
         /* root_plural_name */ NULL,
         /* root_symbol */ NULL,
-        /* root_symbol_prefix */ none,
+        /* root_symbol_prefix */ kSIPrefixNone,
         /* is_special_si_symbol */ false,
         /* allows_si_prefix */ true,
         /* scale_to_coherent_si */ 1.0);
@@ -1536,7 +1507,7 @@ __attribute__((no_sanitize("address")))
 static void AddSIUnitWithPrefixesToLibrary(OCStringRef quantity,
                                            OCStringRef name,
                                            OCStringRef plural,
-                                           OCStringRef symbol) {
+                                           OCStringRef root_symbol) {
     // no per‐dimension SIPrefix at all:
     SIPrefix none[BASE_DIMENSION_COUNT] = {
         kSIPrefixNone, kSIPrefixNone, kSIPrefixNone, kSIPrefixNone,
@@ -1554,7 +1525,7 @@ static void AddSIUnitWithPrefixesToLibrary(OCStringRef quantity,
         none[kSILuminousIntensityIndex], none[kSILuminousIntensityIndex],
         /* root_name */ name,
         /* root_plural_name */ plural,
-        /* root_symbol */ symbol,
+        /* root_symbol */ root_symbol,
         /* root_symbol_prefix */ kSIPrefixNone,
         /* is_special_si_symbol */ false,
         /* scale_to_coherent_si */ 1.0,
@@ -2674,6 +2645,23 @@ bool SIUnitsCreateLibraries(void) {
     double planckMass = sqrt(hbar * kSISpeedOfLight / kSIGravitationalConstant);
     double planckTemperature = planckMass * kSISpeedOfLight * kSISpeedOfLight / kSIBoltmannConstant;
 //
+
+AddSpecialSIUnit(kSIQuantityLength, STR("meter"), STR("meters"), STR("m"));
+AddSpecialSIUnit(kSIQuantityMass, STR("gram"), STR("grams"), STR("g"));
+AddSpecialSIUnit(kSIQuantityTime, STR("second"), STR("seconds"), STR("s"));
+AddSpecialSIUnit(kSIQuantityCurrent, STR("ampere"), STR("amperes"), STR("A"));
+AddSpecialSIUnit(kSIQuantityTemperature, STR("kelvin"), STR("kelvin"), STR("K"));
+AddSpecialSIUnit(kSIQuantityAmount, STR("mole"), STR("moles"), STR("mol"));
+AddSpecialSIUnit(kSIQuantityLuminousIntensity, STR("candela"), STR("candelas"), STR("cd"));
+    // AddSIBaseUnitToLibrary(kSIQuantityLength);
+    // AddSIBaseUnitToLibrary(kSIQuantityTime);
+    // AddSIBaseUnitToLibrary(kSIQuantityMass);
+    // AddSIBaseUnitToLibrary(kSIQuantityCurrent);
+    // AddSIBaseUnitToLibrary(kSIQuantityTemperature);
+    // AddSIBaseUnitToLibrary(kSIQuantityAmount);
+    // AddSIBaseUnitToLibrary(kSIQuantityLuminousIntensity);
+
+
 #pragma mark kSIQuantityDimensionless
     AddNonSIUnitToLibrary(kSIQuantityDimensionless, STR("dimensionless"), STR("dimensionless"), STR(" "), 1);
     AddNonSIUnitToLibrary(kSIQuantityDimensionless, STR("percent"), STR("percent"), STR("%"), 0.01);
@@ -2690,7 +2678,6 @@ bool SIUnitsCreateLibraries(void) {
     AddNonSIUnitToLibrary(kSIQuantityFineStructureConstant, STR("inverse fine structure constant"), STR("inverse fine structure constant"), STR("(1/α)"), 1 / alpha);
 //
 #pragma mark kSIQuantityLength
-    AddSIBaseUnitToLibrary(kSIQuantityLength);
     AddNonSIUnitToLibrary(kSIQuantityLength, STR("astronomical unit"), STR("astronomical units"), STR("ua"), 1.49597870691e11);
     AddNonSIUnitToLibrary(kSIQuantityLength, STR("light year"), STR("light years"), STR("ly"), lightYear);
     AddNonSIUnitToLibrary(kSIQuantityLength, STR("ångström"), STR("ångströms"), STR("Å"), 1.e-10);
@@ -2732,7 +2719,6 @@ bool SIUnitsCreateLibraries(void) {
     OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityPlaneAngle, units);
 //
 #pragma mark kSIQuantityMass
-    AddSIBaseUnitToLibrary(kSIQuantityMass);
     AddNonSIUnitToLibrary(kSIQuantityMass, STR("microgram"), STR("micrograms"), STR("mcg"), 1e-9);
     AddNonSIUnitToLibrary(kSIQuantityMass, STR("tonne"), STR("tonnes"), STR("t"), 1e3);
     AddNonSIUnitWithPrefixesToLibrary(kSIQuantityMass, STR("dalton"), STR("daltons"), STR("Da"), kSIAtomicMassConstant);
@@ -2766,7 +2752,6 @@ bool SIUnitsCreateLibraries(void) {
     AddNonSIUnitWithPrefixesToLibrary(kSIQuantityMassRatio, STR("gram per kilogram"), STR("grams per kilogram"), STR("g/kg"), 0.001);
 //
 #pragma mark kSIQuantityTime
-    AddSIBaseUnitToLibrary(kSIQuantityTime);
     AddNonSIUnitToLibrary(kSIQuantityTime, STR("minute"), STR("minutes"), STR("min"), kSIMinute);
     AddNonSIUnitToLibrary(kSIQuantityTime, STR("hour"), STR("hours"), STR("h"), kSIHour);
     AddNonSIUnitToLibrary(kSIQuantityTime, STR("day"), STR("days"), STR("d"), kSIDay);
@@ -2829,13 +2814,11 @@ bool SIUnitsCreateLibraries(void) {
 //
 #pragma mark kSIQuantityTemperature
     AddNonSIUnitToLibrary(kSIQuantityTemperature, STR("planck temperature"), STR("planck temperature"), STR("T_P"), planckTemperature);
-    AddSIBaseUnitToLibrary(kSIQuantityTemperature);
     AddNonSIUnitToLibrary(kSIQuantityTemperature, STR("rankine"), STR("rankines"), STR("°R"), 0.555555555555556);
     AddNonSIUnitToLibrary(kSIQuantityTemperature, STR("fahrenheit"), STR("fahrenheit"), STR("°F"), 0.555555555555556);
     AddNonSIUnitToLibrary(kSIQuantityTemperature, STR("celsius"), STR("celsius"), STR("°C"), 1);
 //
 #pragma mark kSIQuantityCurrent
-    AddSIBaseUnitToLibrary(kSIQuantityCurrent);
     AddNonSIUnitToLibrary(kSIQuantityCurrent, STR("atomic unit of current"), STR("atomic unit of current"), STR("q_e•E_h/ℏ"), kSIElementaryCharge * E_h / hbar);
 //
 #pragma mark kSIQuantityInverseCurrent
@@ -2856,18 +2839,12 @@ bool SIUnitsCreateLibraries(void) {
     AddNonSIUnitToLibrary(kSIQuantityTemperatureGradient, STR("fahrenheit per foot"), STR("fahrenheit per foot"), STR("°F/ft"), 0.555555555555556 / (1609.344 / 5280));
     AddNonSIUnitToLibrary(kSIQuantityTemperatureGradient, STR("rankine per foot"), STR("rankines per foot"), STR("°R/ft"), 0.555555555555556 / (1609.344 / 5280));
 //
-#pragma mark kSIQuantityAmount
-    AddSIBaseUnitToLibrary(kSIQuantityAmount);
-//
 #pragma mark kSIQuantityInverseAmount
     AddNonSIUnitToLibrary(kSIQuantityInverseAmount, STR("inverse mole"), STR("inverse moles"), STR("(1/mol)"), 1.);
     AddNonSIUnitToLibrary(kSIQuantityInverseAmount, STR("avogadro constant"), STR("avogadro constant"), STR("N_A"), kSIAvogadroConstant);
 //
 #pragma mark kSIQuantityAmountRatio
     AddSpecialSIUnit(kSIQuantityAmountRatio, STR("mole per mole"), STR("moles per mole"), STR("mol/mol"));
-//
-#pragma mark kSIQuantityLuminousIntensity
-    AddSIBaseUnitToLibrary(kSIQuantityLuminousIntensity);
 //
 #pragma mark kSIQuantityInverseLuminousIntensity
     AddNonSIUnitToLibrary(kSIQuantityInverseLuminousIntensity, STR("inverse candela"), STR("inverse candelas"), STR("(1/cd)"), 1.);
