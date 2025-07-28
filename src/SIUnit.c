@@ -13,6 +13,91 @@
 #include "SILibrary.h"
 #include "SIUnitKey.h"
 
+
+/**
+ * @file SIUnit.c
+ * @brief Implementation of the SIUnit type and related functionality.
+ * 
+ * This file contains the definition of the SIUnit type, along with functions for creating, manipulating, and destroying SIUnit instances.
+ * 
+ * @section SI Unit Prefixes
+ *
+ * The SIUnit system uses a set of prefixes in front of the root unit symbol to indicate a power of ten multiplier, e.g., k (kilo) for 10^3, m (milli) for 10^-3, etc.  Only SI Units, the SI Special Units, and a few Non-SI units are allowed to have SI prefixes.
+ *
+ * @section unit_types Unit Classification System
+ * 
+ * The SIUnit system recognizes several categories of units:
+ * 
+ * @subsection coherent_base Coherent SI Base Units
+ * A set of seven base units, given by the symbols: m, kg, s, A, K, mol, cd
+ * 
+ * @subsection coherent_derived Coherent Derived SI Units  
+ * Units derived from the Coherent SI Base Units, such as m/s, kg·m/s², etc. These units are coherent 
+ * because they can be expressed in terms of the Coherent SI Base Units without any additional scaling
+ * factors. For each dimensionality, there is only one coherent derived unit, formed from the Coherent
+ * SI Base Units, such as kg•m/s, etc.  Every SIUnit has a scale_to_coherent_si value, which is the 
+ * scaling factor needed to convert from the unit back to this coherent SI unit.
+ *
+ * @subsection base_root SI Base Root Units
+ * A set of seven root units, given by the symbols: m, g, s, A, K, mol, cd. This set is defined because 
+ * of the minor complication that the coherent base unit for mass is the kilogram (kg), while the root 
+ * unit is the gram (g).
+ * 
+ * @subsection si_base SI Base Units
+ * Include the seven Coherent SI Base Units and all decimal multiples of the root units, created using 
+ * the 20 SI prefix symbols indicating the different powers of ten multipliers, e.g., pm, nm, µm, mm, 
+ * cm, m, km, Mg, Gg, Tg, Pg, Eg, Zg, Yg, etc.
+ * 
+ * @subsection derived_si Derived SI Units
+ * Units formed from the SI Base Root Units, such as µm/s, g•km/s², etc. Among the Derived SI Units, 
+ * we have the derived dimensionless units, which are formed by taking the ratio of two quantities with 
+ * the same dimensionality, such as the radian (rad = m/m) and the steradian (sr = m^2/m^2). These units 
+ * are distinct from the dimensionless and underived dimensionless unit.
+ * 
+ * @subsection special_si Special SI Units
+ * Units that are not part of the coherent SI system but are still recognized by the SI, such as the 
+ * liter (L) for volume, the electronvolt (eV) for energy, and the astronomical unit (AU) for distance. 
+ * There are 22 Special SI Units, which are equivalent to their corresponding coherent derived SI Units, 
+ * e.g., V = m²•kg/s³, W = m²•kg/s³, J = m²•kg/s², etc. They are allowed to have SI prefixes.
+ * 
+ * @subsection non_si_prefixed Non-SI Units with SI prefixes
+ * A few units that are not part of the SI system but are still allowed by the SI, these are the liter (L), 
+ * electron volt (eV), tonne (t), and the bar.
+ * 
+ * @subsection non_si_no_prefix Non-SI Units without SI prefixes
+ * Units that are not part of the SI system and do not have an official SI prefix. These include the 
+ * foot (ft), pound (lb), gallon (gal), the inch (in), etc.
+ */
+
+/**
+ * @section SIUnit Implementation Approach
+ * 
+ * In defining the SIUnit type, we use the following approach:
+ * 
+ * Each SIUnit has a dimensionality, which is described by a SIDimensionalityRef.
+ * 
+ * @subsection root_symbol with allows_si_prefix = true
+ * If the SIUnit is assigned a root_symbol during creation and is allowed to have a prefix,
+ * then the root_symbol is used to generate the full set of SIUnits, and their corresponding
+ * symbols and names.
+ * 
+ * @subsection root_symbol without allows_si_prefix = false  
+ * If the SIUnit is assigned a root_symbol during creation and is not allowed to have a prefix,
+ * then only an SIUnit with the root_symbol is created, no prefixes are allowed, 
+ * and the symbol is identical to the root_symbol.
+ * 
+ * @subsection derived_units Derived Units
+ * Derived units, i.e., units that are formed from the multiplication, division, or exponentiation of 
+ * units with root_symbols, will not have a root_symbol, i.e., root_symbol will be NULL and 
+ * allows_si_prefix = false.  In this case, the symbol will be formed from the symbols of the 
+ * constituent units, e.g., µm/ps^2, lbf^3•floz/min^2. This symbol will be generated at creation.
+ * The creation of these units occurs mainly through the unit expression parser, which, in turn, calls 
+ * functions, to multiply, divide, raise to a power, or take the nth root of the constituent units.
+ * In this case, the expression will be normalized to form the derived unit symbol, and the scale_to_coherent_si
+ * value will be calculated based on the constituent units.
+ */
+
+ 
 #define UNIT_NOT_FOUND -1
 // SIUnit Opaque Type
 struct impl_SIUnit {
