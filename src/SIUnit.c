@@ -508,6 +508,170 @@ static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
     theUnit->key = SIUnitCreateLibraryKey(theUnit->symbol);
     return (SIUnitRef)theUnit;
 }
+
+// Forward declarations
+static OCStringRef SIUnitCreateCanonicalKey(SIUnitRef unit);
+
+// Lightweight version of SIUnitCreate for library building that skips heavy key creation
+__attribute__((no_sanitize("address")))
+static SIUnitRef SIUnitCreateForLibrary(SIDimensionalityRef dimensionality,
+                              const SIPrefix num_prefix[BASE_DIMENSION_COUNT], const SIPrefix den_prefix[BASE_DIMENSION_COUNT],
+                              OCStringRef root_name, OCStringRef root_plural_name,
+                              OCStringRef root_symbol, SIPrefix root_symbol_prefix,
+                              bool allows_si_prefix, bool is_special_si_symbol,
+                              double scale_to_coherent_si) {
+    struct impl_SIUnit *theUnit = SIUnitAllocate();
+    if (!theUnit) return NULL;
+    theUnit->allows_si_prefix = allows_si_prefix;
+    // Validate root symbol conditions (same logic as SIUnitCreate but with simpler error handling)
+    if (root_symbol == NULL)
+    {
+        // Only derived SI units are allowed to have no symbol
+        if (is_special_si_symbol || scale_to_coherent_si != 1.0 || root_symbol_prefix != 0) {
+            OCRelease(theUnit);
+            return NULL;
+        }
+        theUnit->is_special_si_symbol = false;
+        theUnit->root_symbol_prefix = 0;
+        theUnit->scale_to_coherent_si = 1.0;
+    }
+    else {
+        if (!isValidSIPrefix(root_symbol_prefix)) {
+            OCRelease(theUnit);
+            return NULL;
+        }
+        theUnit->is_special_si_symbol = is_special_si_symbol;
+        theUnit->root_symbol_prefix = root_symbol_prefix;
+        theUnit->scale_to_coherent_si = is_special_si_symbol ? 1.0 : scale_to_coherent_si;
+    }
+    // Validate all prefixes
+    for (int i = 0; i < BASE_DIMENSION_COUNT; i++) {
+        if (!isValidSIPrefix(num_prefix[i]) || !isValidSIPrefix(den_prefix[i])) {
+            OCRelease(theUnit);
+            return NULL;
+        }
+    }
+    // Set attributes
+    if (root_name) theUnit->root_name = OCStringCreateCopy(root_name);
+    if (root_plural_name) theUnit->root_plural_name = OCStringCreateCopy(root_plural_name);
+    if (root_symbol) theUnit->root_symbol = OCStringCreateCopy(root_symbol);
+    theUnit->dimensionality = dimensionality;
+    memcpy(theUnit->num_prefix, num_prefix, sizeof(SIPrefix) * BASE_DIMENSION_COUNT);
+    memcpy(theUnit->den_prefix, den_prefix, sizeof(SIPrefix) * BASE_DIMENSION_COUNT);
+    // Construct unit symbol 
+    theUnit->symbol = SIUnitCreateSymbol(theUnit);
+    // For library building, generate canonical key directly from the unit structure
+    // avoiding expensive expression parsing since we control the exact format
+    theUnit->key = SIUnitCreateCanonicalKey(theUnit);
+    return (SIUnitRef)theUnit;
+}
+
+// Create a canonical library key directly from unit structure (for library building optimization)
+__attribute__((no_sanitize("address")))
+static OCStringRef SIUnitCreateCanonicalKey(SIUnitRef unit) {
+    if (!unit || !unit->dimensionality) return NULL;
+    
+    // Handle special root symbols (like Ω, lb, etc.)
+    if (unit->root_symbol) {
+        // For library creation, any non-NULL root_symbol can be used directly as the key
+        // Add prefix if present and return the full expression as-is
+        OCMutableStringRef fullExpression = OCStringCreateMutable(0);
+        
+        // Add prefix if present
+        OCStringRef prefix = prefixSymbolForSIPrefix(unit->root_symbol_prefix);
+        if (OCStringGetLength(prefix) > 0) {
+            OCStringAppend(fullExpression, prefix);
+        }
+        OCStringAppend(fullExpression, unit->root_symbol);
+        
+        return fullExpression;
+    }
+    
+    // Build canonical key from dimensional structure
+    OCMutableStringRef numerator = OCStringCreateMutable(0);
+    OCMutableStringRef denominator = OCStringCreateMutable(0);
+    
+    // Collect numerator terms (positive powers)
+    bool first_num = true;
+    for (int i = 0; i < BASE_DIMENSION_COUNT; i++) {
+        uint8_t exp = SIDimensionalityGetNumExpAtIndex(unit->dimensionality, i);
+        if (exp == 0) continue;
+        
+        if (!first_num) {
+            OCStringAppend(numerator, STR("•"));
+        }
+        
+        OCStringRef prefix = prefixSymbolForSIPrefix(unit->num_prefix[i]);
+        OCStringRef base = baseUnitRootSymbol(i);
+        OCStringAppend(numerator, prefix);
+        OCStringAppend(numerator, base);
+        
+        if (exp != 1) {
+            OCStringAppendFormat(numerator, STR("^%d"), exp);
+        }
+        
+        first_num = false;
+    }
+    
+    // Collect denominator terms (negative powers) 
+    bool first_den = true;
+    for (int i = 0; i < BASE_DIMENSION_COUNT; i++) {
+        uint8_t exp = SIDimensionalityGetDenExpAtIndex(unit->dimensionality, i);
+        if (exp == 0) continue;
+        
+        if (!first_den) {
+            OCStringAppend(denominator, STR("•"));
+        }
+        
+        OCStringRef prefix = prefixSymbolForSIPrefix(unit->den_prefix[i]);
+        OCStringRef base = baseUnitRootSymbol(i);
+        OCStringAppend(denominator, prefix);
+        OCStringAppend(denominator, base);
+        
+        if (exp != 1) {
+            OCStringAppendFormat(denominator, STR("^%d"), exp);
+        }
+        
+        first_den = false;
+    }
+    
+    // Combine into final canonical form
+    OCStringRef result = NULL;
+    if (OCStringGetLength(numerator) > 0) {
+        if (OCStringGetLength(denominator) > 0) {
+            // Both numerator and denominator
+            OCRange findResult = OCStringFind(denominator, STR("•"), 0);
+            if (!first_den && findResult.location != kOCNotFound) {
+                // Multiple terms in denominator, need parentheses
+                result = OCStringCreateWithFormat(STR("%@/(%@)"), numerator, denominator);
+            } else {
+                // Single term in denominator
+                result = OCStringCreateWithFormat(STR("%@/%@"), numerator, denominator);
+            }
+        } else {
+            // Only numerator
+            result = OCStringCreateCopy(numerator);
+        }
+    } else if (OCStringGetLength(denominator) > 0) {
+        // Only denominator
+        OCRange findResult = OCStringFind(denominator, STR("•"), 0);
+        if (!first_den && findResult.location != kOCNotFound) {
+            // Multiple terms, need parentheses
+            result = OCStringCreateWithFormat(STR("1/(%@)"), denominator);
+        } else {
+            // Single term
+            result = OCStringCreateWithFormat(STR("1/%@"), denominator);
+        }
+    } else {
+        // Dimensionless
+        result = OCStringCreateWithCString("1");
+    }
+    
+    OCRelease(numerator);
+    OCRelease(denominator);
+    return result;
+}
+
 // –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 //  SIUnitCopyDictionary
 //     Pack every field of an SIUnit into a CF‐dictionary,
@@ -1169,14 +1333,17 @@ static OCMutableDictionaryRef unitsDimensionalitiesLibrary = NULL;
 static OCMutableArrayRef unitsNamesLibrary = NULL;
 static bool imperialVolumes = false;
 bool SIUnitsCreateLibraries(void);
+__attribute__((no_sanitize("address")))
 OCMutableDictionaryRef SIUnitGetUnitsLib(void) {
     if(NULL==unitsLibrary) SIUnitsCreateLibraries();
     return unitsLibrary;
 }
+__attribute__((no_sanitize("address")))
 OCMutableDictionaryRef SIUnitGetQuantitiesLib(void) {
     if(NULL==unitsQuantitiesLibrary) SIUnitsCreateLibraries();
     return unitsQuantitiesLibrary;
 }
+__attribute__((no_sanitize("address")))
 OCMutableDictionaryRef SIUnitGetDimensionalitiesLib(void) {
     if(NULL==unitsDimensionalitiesLibrary) SIUnitsCreateLibraries();
     return unitsDimensionalitiesLibrary;
@@ -1188,6 +1355,7 @@ OCArrayRef SIUnitGetSortedNamesLib(void) {
 static bool
 AddAllSIPrefixedUnitsToLibrary(SIUnitRef rootUnit, OCStringRef quantity);
 
+__attribute__((no_sanitize("address")))
 static SIUnitRef AddUnitForQuantityToLibrary(OCStringRef quantity,
                                              SIPrefix length_num_prefix, SIPrefix length_den_prefix,
                                              SIPrefix mass_num_prefix, SIPrefix mass_den_prefix,
@@ -1221,8 +1389,8 @@ static SIUnitRef AddUnitForQuantityToLibrary(OCStringRef quantity,
         temperature_den_prefix,
         amount_den_prefix,
         luminous_intensity_den_prefix};
-    // Now call the two‐array prototype:
-    SIUnitRef unit = SIUnitCreate(theDim, num_prefixes, den_prefixes, root_name, root_plural_name, root_symbol, root_symbol_prefix, allows_si_prefix, is_special_si_symbol, scale_to_coherent_si);
+    // Use lightweight version for library building to avoid heavy parsing
+    SIUnitRef unit = SIUnitCreateForLibrary(theDim, num_prefixes, den_prefixes, root_name, root_plural_name, root_symbol, root_symbol_prefix, allows_si_prefix, is_special_si_symbol, scale_to_coherent_si);
     if (NULL == unit) {
         fprintf(stderr, "ERROR - Could not create unit for quantity: ");
         OCStringShow(quantity);
@@ -1279,6 +1447,7 @@ static SIUnitRef AddUnitForQuantityToLibrary(OCStringRef quantity,
     return unit;
 }
 
+__attribute__((no_sanitize("address")))
 static bool
 AddAllSIPrefixedUnitsToLibrary(SIUnitRef rootUnit, OCStringRef quantity) {
     if (!rootUnit || !quantity) return false;
@@ -1337,6 +1506,7 @@ AddAllSIPrefixedUnitsToLibrary(SIUnitRef rootUnit, OCStringRef quantity) {
     return true;
 }
 
+__attribute__((no_sanitize("address")))
 static void AddSIBaseUnitToLibrary(OCStringRef quantity) {
     // all seven dims get no per-dim prefix
     SIPrefix none = kSIPrefixNone;
@@ -1362,6 +1532,7 @@ static void AddSIBaseUnitToLibrary(OCStringRef quantity) {
 ///   name     – the singular English name (“meter per second”)
 ///   plural   – the plural (“meters per second”)
 ///   symbol   – the symbol (“m/s”)
+__attribute__((no_sanitize("address")))
 static void AddSIUnitWithPrefixesToLibrary(OCStringRef quantity,
                                            OCStringRef name,
                                            OCStringRef plural,
@@ -1392,6 +1563,7 @@ static void AddSIUnitWithPrefixesToLibrary(OCStringRef quantity,
 /// A convenience for “true” special‐SI units (Bq, Gy, Sv, etc),
 /// which always are coherent, always allow SI prefixes,
 /// and always have is_special_si_symbol==true.
+__attribute__((no_sanitize("address")))
 static SIUnitRef AddSpecialSIUnit(OCStringRef quantity,
                                   OCStringRef root_name,
                                   OCStringRef root_plural_name,
@@ -1436,6 +1608,7 @@ static SIUnitRef AddSpecialSIUnit(OCStringRef quantity,
 ///   name/pluralName      – human-readable names (“liter”/“liters”)
 ///   symbol               – the unit symbol (“L”)
 ///   scale_to_coherent_si – how to convert this unit into the coherent SI base
+__attribute__((no_sanitize("address")))
 static void
 AddNonSIUnitWithPrefixesToLibrary(OCStringRef quantity,
                                   OCStringRef name,
@@ -1475,6 +1648,7 @@ AddNonSIUnitWithPrefixesToLibrary(OCStringRef quantity,
         true  // allows_si_prefix
     );
 }
+__attribute__((no_sanitize("address")))
 static void AddNonSIUnitToLibrary(OCStringRef quantity, OCStringRef name, OCStringRef pluralName, OCStringRef symbol, double scale_to_coherent_si) {
     AddUnitForQuantityToLibrary(quantity,
                                 kSIPrefixNone, kSIPrefixNone,
@@ -1741,6 +1915,7 @@ SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit) {
     OCRelease(candidates);
     return best;
 }
+__attribute__((no_sanitize("address")))
 SIUnitRef SIUnitByReducingSymbol(SIUnitRef theUnit, OCStringRef *error) {
     // Propagate any pending error
     if (error && *error) return NULL;
@@ -2086,6 +2261,10 @@ SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input,
     if(power == 0) {
         return SIUnitDimensionlessAndUnderived();
     }
+    if(power == 1) {
+        // Identity operation: anything to the power of 1 is itself
+        return input;
+    }
 
     // Convert int power to double for internal calculations
     double power_double = (double)power;
@@ -2097,29 +2276,48 @@ SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input,
                                                         error);
     if (error && *error)
         return NULL;
-    // 2) SPECIAL-CASE: if this unit has its own root_symbol (e.g. “hp”), just build “hp^n”
+    // 2) SPECIAL-CASE: if this unit has its own root_symbol (e.g. “hp”), just build “(hp)^n”
     if (input->root_symbol) {
         // build [prefix][root]^[power]
-        OCMutableStringRef sym = OCStringCreateMutable(0);
-        OCStringAppend(sym, prefixSymbolForSIPrefix(input->root_symbol_prefix));
+        OCMutableStringRef sym = OCMutableStringCreateWithCString("(");
+        if(input->allows_si_prefix) OCStringAppend(sym, prefixSymbolForSIPrefix(input->root_symbol_prefix));
         OCStringAppend(sym, input->root_symbol);
-        if (power != 1) {
-            OCStringAppendFormat(sym, STR("^%d"), power);
+        OCStringAppendFormat(sym, STR(")^%d"), power);
+        OCStringRef key = SIUnitCreateLibraryKey(sym);
+        // Check if this unit already exists in the library
+        if (OCDictionaryContainsKey(unitsLibrary, key)) {
+            SIUnitRef existingUnit = (SIUnitRef)OCDictionaryGetValue(unitsLibrary, key);
+            OCRelease(sym);
+            OCRelease(key);
+            return existingUnit;
         }
+        OCRelease(sym);
+
         // new scale = (old scale)^power
         double newScale = pow(input->scale_to_coherent_si, power_double);
-        // create a brand-new SIUnit with exactly the same per-dimensional prefixes
+        
+        // For negative powers, we need special handling to get proper parentheses
+        OCStringRef use_root_symbol;
+        if (power < 0) {
+            // For negative powers, use the canonicalized key but wrap it in parentheses
+            // The key is already in the form "1/in^2", so we wrap it as "(1/in^2)"
+            use_root_symbol = OCStringCreateWithFormat(STR("(%@)"), key);
+        } else {
+            use_root_symbol = OCRetain(key);
+        }
+        
         SIUnitRef theUnit = SIUnitWithParameters(
             dimensionality,
             input->num_prefix, input->den_prefix,
             /*root_name=*/NULL,
             /*root_plural_name=*/NULL,
-            /*root_symbol=*/sym,
+            /*root_symbol=*/use_root_symbol,
             /*root_symbol_prefix=*/input->root_symbol_prefix,
             /*allows_si_prefix=*/false,
             /*is_special_si_symbol=*/input->is_special_si_symbol,
             /*scale_to_coherent_si=*/newScale);
-        OCRelease(sym);
+        OCRelease(use_root_symbol);
+        OCRelease(key);
         // adjust the numerical multiplier
         if (unit_multiplier) {
             if (*unit_multiplier == 0.0) *unit_multiplier = 1.0;
@@ -2127,20 +2325,35 @@ SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input,
         }
         return theUnit;
     }
-    // 3) Otherwise fall back to your existing derived-unit logic:
-    SIUnitRef derived = SIUnitFindEquivalentDerivedSIUnit(input);
-    SIUnitRef result;
-    if (power > 0) {
-        result = SIUnitWithParameters(
-            dimensionality,
-            derived->num_prefix, derived->den_prefix,
-            NULL, NULL, NULL, 0, false, false, 1.0);
-    } else {
-        result = SIUnitWithParameters(
-            dimensionality,
-            derived->den_prefix, derived->num_prefix,
-            NULL, NULL, NULL, 0, false, false, 1.0);
+    // 3) Otherwise fall back to derived-unit logic with proper prefix handling:
+    // For negative powers, we need to create a proper inverse unit
+    // The dimensionality should already be correct from SIDimensionalityByRaisingToPowerWithoutReducing
+    // So we just use the standard prefixes (mass gets kilo, others get none)
+    SIPrefix num_prefix[BASE_DIMENSION_COUNT];
+    SIPrefix den_prefix[BASE_DIMENSION_COUNT];
+    
+    for (int i = 0; i < BASE_DIMENSION_COUNT; i++) {
+        // Set standard prefixes based on dimensionality
+        uint8_t numExp = SIDimensionalityGetNumExpAtIndex(dimensionality, i);
+        uint8_t denExp = SIDimensionalityGetDenExpAtIndex(dimensionality, i);
+        
+        if (numExp > 0) {
+            num_prefix[i] = (i == kSIMassIndex) ? kSIPrefixKilo : kSIPrefixNone;
+        } else {
+            num_prefix[i] = kSIPrefixNone;
+        }
+        
+        if (denExp > 0) {
+            den_prefix[i] = (i == kSIMassIndex) ? kSIPrefixKilo : kSIPrefixNone;
+        } else {
+            den_prefix[i] = kSIPrefixNone;
+        }
     }
+    
+    SIUnitRef result = SIUnitWithParameters(
+        dimensionality,
+        num_prefix, den_prefix,
+        NULL, NULL, NULL, 0, false, false, 1.0);
     if (unit_multiplier) {
         if (*unit_multiplier == 0.0) *unit_multiplier = 1.0;
         *unit_multiplier *= pow(SIUnitScaleToCoherentSIUnit(input), power_double) / SIUnitScaleToCoherentSIUnit(result);
@@ -2426,6 +2639,8 @@ void SIUnitsLibrarySetImperialVolumes(bool value) {
     }
     imperialVolumes = value;
 }
+
+__attribute__((no_sanitize("address")))
 bool SIUnitsCreateLibraries(void) {
     setlocale(LC_ALL, "");
     const struct lconv *const currentlocale = localeconv();

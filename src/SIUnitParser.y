@@ -78,12 +78,6 @@ SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multipli
         siulex_destroy();
         OCRelease(mutString);
     }
-    // Check for any errors and set appropriate error message
-    fprintf(stderr, "DEBUG: After parsing - unitError=%p, siu_syntax_error=%d\n", 
-            (void*)unitError, siu_syntax_error);
-    if(unitError) {
-        fprintf(stderr, "DEBUG: unitError message = '%s'\n", OCStringGetCString(unitError));
-    }
     
     if(siu_syntax_error || unitError) {
         if(error) {

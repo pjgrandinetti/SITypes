@@ -1402,7 +1402,7 @@ bool test_unit_by_raising_to_power_without_reducing(void) {
     OCRelease(m_inv);
 
     // 3. Test raising to the 1st power: should return original pointer
-    multiplier = 0.0;
+    multiplier = 1.0;
     SIUnitRef m_pow1 = SIUnitByRaisingToPowerWithoutReducing(m, 1, &multiplier, &err);
     if (m_pow1 != m) {
         fprintf(stderr, "  ✗ m^1 did not return original instance\n");

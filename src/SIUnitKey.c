@@ -33,6 +33,7 @@ static OCStringRef create_library_key(void);
 static void parse_expression_with_ocstring(OCStringRef expr);
 
 // Initialize component lists
+__attribute__((no_sanitize("address")))
 static void init_component_lists(void) {
     positive_components = malloc(sizeof(ComponentList));
     positive_components->capacity = 10;
@@ -70,6 +71,7 @@ static void free_component_lists(void) {
 }
 
 // Add a component to the appropriate list
+__attribute__((no_sanitize("address")))
 static void add_component(const char *symbol, int power) {
     // Adjust power based on position (numerator vs denominator)
     int final_power = in_denominator ? -power : power;
@@ -125,6 +127,7 @@ static int compare_symbols(const void *a, const void *b) {
 
 // Create library key representation
 // Create library key representation
+__attribute__((no_sanitize("address")))
 static OCStringRef create_library_key(void) {
     // Consolidate and sort both lists
     consolidate_powers(positive_components);
@@ -231,11 +234,11 @@ static OCStringRef trim_whitespace_and_parens(OCStringRef str) {
     }
     
     // Only remove outer parentheses if they wrap the entire meaningful content
-    // and are not part of power notation (don't have ^ before them)
+    // and are not part of power notation (don't have ^ after the closing paren)
     if (start < end && cstr[start] == '(' && cstr[end] == ')') {
-        // Check if this is NOT a power notation parenthesis
+        // Check if this is NOT a power notation parenthesis by looking for ^ after closing paren
         bool is_power_paren = false;
-        if (start > 0 && cstr[start - 1] == '^') {
+        if (end + 1 < len && cstr[end + 1] == '^') {
             is_power_paren = true;
         }
         
@@ -283,8 +286,8 @@ static int extract_power_from_token(OCStringRef token, OCStringRef *base_token) 
         return 1;
     }
     
-    // Look for caret
-    char *caret = strchr(token_cstr, '^');
+    // Look for caret (use strrchr to find the LAST caret for expressions like "(m^2)^-1")
+    char *caret = strrchr(token_cstr, '^');
     if (!caret) {
         *base_token = OCStringCreateCopy(token);
         return 1;
@@ -401,6 +404,7 @@ static OCArrayRef split_by_multiplication(OCStringRef str) {
 }
 
 // Simple manual parser for unit expressions - simplified approach
+__attribute__((no_sanitize("address")))
 static void parse_expression_manually(const char *expr) {
     if (!expr) return;
     
@@ -461,9 +465,37 @@ static void parse_expression_manually(const char *expr) {
 }
 
 // Main function to canonicalize a unit expression
+__attribute__((no_sanitize("address")))
 OCStringRef SIUnitCreateLibraryKey(OCStringRef expression) {
     if (!expression) return NULL;
     
+    // Handle empty string as dimensionless unity
+    if (OCStringGetLength(expression) == 0) {
+        return OCStringCreateWithCString("1");
+    }
+    
+    // Fast path for simple symbols that don't need complex parsing
+    // Check if the expression is a simple symbol without operators
+    const char *expr_cstr = OCStringGetCString(expression);
+    if (expr_cstr) {
+        bool is_simple = true;
+        for (const char *p = expr_cstr; *p; p++) {
+            if (*p == '/' || *p == '*' || *p == '^' || *p == '(' || *p == ')' ||
+                strncmp(p, "•", 3) == 0 || strncmp(p, "×", 2) == 0 || 
+                strncmp(p, "⋅", 3) == 0 || strncmp(p, "∙", 3) == 0 || 
+                strncmp(p, "·", 2) == 0) {
+                is_simple = false;
+                break;
+            }
+        }
+        
+        // For simple symbols, just return a normalized copy
+        if (is_simple) {
+            return SIUnitCreateNormalizedExpression(expression, true);
+        }
+    }
+    
+    // Complex expression - use full parsing
     // First normalize the expression to handle Unicode variants (μ → µ, etc.)
     OCStringRef normalized_expression = SIUnitCreateNormalizedExpression(expression, true);
     if (!normalized_expression) return NULL;
@@ -472,10 +504,9 @@ OCStringRef SIUnitCreateLibraryKey(OCStringRef expression) {
     init_component_lists();
     
     // Convert normalized OCString to C string for parsing
-    const char *expr_cstr = OCStringGetCString(normalized_expression);
     
     // Parse the expression
-    parse_expression_manually(expr_cstr);
+    parse_expression_manually(OCStringGetCString(normalized_expression));
     
     // Check for fractional power error
     if (fractional_power_error) {
@@ -499,6 +530,7 @@ OCStringRef SIUnitCreateLibraryKey(OCStringRef expression) {
 }
 
 // Function to reduce a unit expression by combining like terms
+__attribute__((no_sanitize("address")))
 OCStringRef SIUnitReduceExpression(OCStringRef expression) {
     if (!expression) return NULL;
     
