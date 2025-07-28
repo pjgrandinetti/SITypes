@@ -25,6 +25,7 @@
 // Centralized Ref typedefs
 typedef const struct impl_SIDimensionality * SIDimensionalityRef;
 typedef const struct impl_SIUnit * SIUnitRef;
+typedef const struct impl_SIUnit2 * SIUnit2Ref;
 typedef const struct impl_SIQuantity * SIQuantityRef;
 typedef const struct impl_SIScalar *SIScalarRef;
 typedef struct impl_SIScalar *SIMutableScalarRef;

@@ -109,15 +109,13 @@ struct impl_SIUnit {
     SIPrefix num_prefix[BASE_DIMENSION_COUNT];
     SIPrefix den_prefix[BASE_DIMENSION_COUNT];
     // Attributes needed to describe Special SI Units and Non-SI units
-    OCStringRef root_name;
-    OCStringRef root_plural_name;
-    OCStringRef root_symbol;
-    SIPrefix root_symbol_prefix;
-    bool is_special_si_symbol;
-    bool allows_si_prefix;
-    // Attributes needed to describe Non-SI units
-    // unit must have a symbol for this value to have meaning.
-    double scale_to_coherent_si;
+    OCStringRef root_name; // Root name of the unit, e.g., "meter", "gram", "second", etc.
+    OCStringRef root_plural_name; // Plural name of the unit, e.g., "meters", "grams", "seconds", etc.
+    OCStringRef root_symbol; // Root Symbol of the unit, e.g., "m", "g", "s", "N", "J", etc.
+    SIPrefix root_symbol_prefix; // SI prefix for the root symbol
+    bool is_special_si_symbol; // Flag indicating if the unit is a special SI unit - maybe remove
+    bool allows_si_prefix; // Flag indicating if the unit allows SI prefixes
+    double scale_to_coherent_si; // Scale factor to convert from this unit to its coherent SI unit
 
     OCStringRef symbol; // Symbol of unit is generated.
     OCStringRef key; // Key for unit in library
@@ -1145,29 +1143,21 @@ bool SIUnitAreEquivalentUnits(SIUnitRef theUnit1, SIUnitRef theUnit2) {
     return true;
 }
 bool SIUnitIsCoherentDerivedUnit(SIUnitRef u) {
-    // 1) Sanity
     if (!u) return false;
-    // 2) must be exactly coherent (no scale factor)
-    if (fabs(u->scale_to_coherent_si - 1.0) > 1e-12)
-        return false;
-    // 3) must *not* be any kind of “special” or prefixed base unit
-    if (u->is_special_si_symbol || u->root_symbol_prefix != kSIPrefixNone)
-        return false;
-    // 4) must *not* be one of the pure base units (m, kg, ...)
+    if (fabs(u->scale_to_coherent_si - 1.0) > 1e-12) return false;
+    // must *not* be any kind of “special” or prefixed base unit
+    if (u->is_special_si_symbol || u->root_symbol_prefix != kSIPrefixNone) return false;
+    // must *not* be one of the pure base units (m, kg, ...)
     //    (so that “derived” really means “combination of bases”)
-    if (SIUnitIsSIBaseUnit(u))
-        return false;
+    if (SIUnitIsSIBaseUnit(u)) return false;
     // 5) check all the dimension‐prefix arrays in one loop:
     for (int i = 0; i < BASE_DIMENSION_COUNT; i++) {
         // numerator prefix: only mass gets kilo, all others none
         SIPrefix wantNum = (i == kSIMassIndex) ? kSIPrefixKilo : kSIPrefixNone;
-        if (u->num_prefix[i] != wantNum)
-            return false;
+        if (u->num_prefix[i] != wantNum) return false;
         // denominator prefix: always none
-        if (u->den_prefix[i] != kSIPrefixNone)
-            return false;
+        if (u->den_prefix[i] != kSIPrefixNone) return false;
     }
-    // passed every test
     return true;
 }
 OCArrayRef SIUnitCreateArrayOfEquivalentUnits(SIUnitRef theUnit) {
@@ -1278,10 +1268,22 @@ OCArrayRef SIUnitCreateArrayOfConversionUnits(SIUnitRef theUnit) {
     OCRelease(result);
     return sorted;
 }
+/**
+ * Finds the best equivalent derived SI unit for a given input unit.
+* 
+ * The function searches through all units with the same dimensionality and finds the
+ * coherent derived SI unit that has the closest scaling factor to the input unit.
+ * "Closest" is determined by the smallest logarithmic difference in scaling factors.
+ * 
+ * @param input The unit to find an equivalent for
+ * @return The best matching coherent derived SI unit, or the original unit if:
+ *         - Input is NULL
+ *         - Input already has no root_symbol (already a derived unit)
+ *         - No suitable coherent derived unit candidates are found
+ */
 static SIUnitRef SIUnitFindEquivalentDerivedSIUnit(SIUnitRef input) {
     IF_NO_OBJECT_EXISTS_RETURN(input, NULL);
-    if (input->root_symbol == NULL)
-        return input;
+    if (input->root_symbol == NULL) return input;
     SIDimensionalityRef theDim = SIUnitGetDimensionality(input);
     OCArrayRef candidates = SIUnitCreateArrayOfUnitsForDimensionality(theDim);
     if (candidates) {
@@ -2067,17 +2069,11 @@ SIUnitRef SIUnitByMultiplyingWithoutReducing(SIUnitRef theUnit1,
                                              SIUnitRef theUnit2,
                                              double *unit_multiplier,
                                              OCStringRef *error) {
-    // 1) Propagate any pending error
     if (error && *error) return NULL;
-    // 2) Null checks
     IF_NO_OBJECT_EXISTS_RETURN(theUnit1, NULL);
     IF_NO_OBJECT_EXISTS_RETURN(theUnit2, NULL);
-    // 3) Shortcut: squaring the same unit
     if (theUnit1 == theUnit2) {
-        return SIUnitByRaisingToPowerWithoutReducing(theUnit1,
-                                                     2,
-                                                     unit_multiplier,
-                                                     error);
+        return SIUnitByRaisingToPowerWithoutReducing(theUnit1,2,unit_multiplier,error);
     }
     // 4) Identity: multiplying by dimensionless does nothing
     SIUnitRef dimless = SIUnitDimensionlessAndUnderived();
