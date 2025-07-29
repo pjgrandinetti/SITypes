@@ -26,7 +26,7 @@ bool test_scalar_parser_1(void) {
         err = NULL;
     }
 
-    SIUnitRef evUnit = SIUnitFindWithUnderivedSymbol(STR("eV"));
+    SIUnitRef evUnit = SIUnitWithSymbol(STR("eV"));
     SIScalarRef expected1 = SIScalarCreateWithFloatComplex(4.3, evUnit);
     if (!expected1) {
         printf("%s failed: Failed to create expected scalar\n", __func__);
@@ -544,7 +544,7 @@ bool test_scalar_parser_7(void) {
     }
 
     // Expected scalar
-    SIUnitRef micron = SIUnitFindWithUnderivedSymbol(STR("µm"));
+    SIUnitRef micron = SIUnitWithSymbol(STR("µm"));
     SIScalarRef m2 = SIScalarCreateWithFloatComplex(5.0, micron);
     if (!m2) {
         OCRelease(m1);
@@ -587,7 +587,7 @@ bool test_scalar_parser_8(void) {
     }
 
     // Create expected scalar
-    SIUnitRef qUnit = SIUnitFindWithUnderivedSymbol(STR("quartertsp"));
+    SIUnitRef qUnit = SIUnitWithSymbol(STR("quartertsp"));
     SIScalarRef qExp = SIScalarCreateWithFloatComplex(1.0, qUnit);
     if (!qExp) {
         OCRelease(q);
@@ -814,7 +814,7 @@ bool test_scalar_parser_11(void) {
     }
 
     // Verify the value is correct
-    SIUnitRef hzUnit = SIUnitFindWithUnderivedSymbol(STR("Hz"));
+    SIUnitRef hzUnit = SIUnitWithSymbol(STR("Hz"));
     SIScalarRef expected = SIScalarCreateWithFloatComplex(100.0, hzUnit);
     if (!expected) {
         printf("%s failed: Failed to create expected scalar\n", __func__);

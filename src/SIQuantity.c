@@ -20,8 +20,7 @@ struct impl_SIQuantity {
 
 SIUnitRef SIQuantityGetUnit(SIQuantityRef quantity)
 {
-    SIQuantityRef theQuantity = (SIQuantityRef) quantity;
-    return theQuantity->unit;
+    return quantity->unit;
 }
 
 bool SIQuantitySetUnit(SIMutableQuantityRef quantity, SIUnitRef unit)
@@ -33,6 +32,10 @@ bool SIQuantitySetUnit(SIMutableQuantityRef quantity, SIUnitRef unit)
     return true;
 }
 
+OCStringRef SIQuantityCopyUnitSymbol(SIQuantityRef quantity)
+{
+    return SIUnitCopySymbol(quantity->unit);
+}
 SIDimensionalityRef SIQuantityGetUnitDimensionality(SIQuantityRef quantity)
 {
     IF_NO_OBJECT_EXISTS_RETURN(quantity,NULL);

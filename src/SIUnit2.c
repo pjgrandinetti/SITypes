@@ -251,27 +251,74 @@ OCStringRef SIUnit2GetSymbol(SIUnit2Ref theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
     return theUnit->symbol;
 }
+OCStringRef SIUnit2CopySymbol(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    return OCStringCreateCopy(theUnit->symbol);
+}
 OCStringRef SIUnit2GetName(SIUnit2Ref theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
     return theUnit->name;
+}
+OCStringRef SIUnit2CopyName(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    return OCStringCreateCopy(theUnit->name);
 }
 OCStringRef SIUnit2GetPluralName(SIUnit2Ref theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
     return theUnit->plural_name;
 }
+OCStringRef SIUnit2CopyPluralName(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    return OCStringCreateCopy(theUnit->plural_name);
+}
+double SIUnit2GetScaleToCoherentSI(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, 0);
+    return theUnit->scale_to_coherent_si;
+}
+// Elimate this function after SIUnit refactor
 double SIUnit2ScaleToCoherentSIUnit(SIUnit2Ref theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, 0);
     return theUnit->scale_to_coherent_si;
 }
+bool SIUnit2Equal(SIUnit2Ref theUnit1, SIUnit2Ref theUnit2)
+{
+    return impl_SIUnit2Equal(theUnit1,theUnit2);
+}
+double SIUnit2Conversion(SIUnit2Ref initialUnit, SIUnit2Ref finalUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(initialUnit, 0);
+    IF_NO_OBJECT_EXISTS_RETURN(finalUnit, 0);
+    if (SIDimensionalityHasSameReducedDimensionality(initialUnit->dimensionality, finalUnit->dimensionality))
+        return initialUnit->scale_to_coherent_si / finalUnit->scale_to_coherent_si;
+    return 0;
+}
+
 bool SIUnit2AreEquivalentUnits(SIUnit2Ref theUnit1, SIUnit2Ref theUnit2) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit1, false);
     IF_NO_OBJECT_EXISTS_RETURN(theUnit2, false);
     if (theUnit1 == theUnit2) return true;
     if (!SIDimensionalityEqual(theUnit1->dimensionality, theUnit2->dimensionality)) return false;
-    if (OCCompareDoubleValues(SIUnit2ScaleToCoherentSIUnit(theUnit1), SIUnit2ScaleToCoherentSIUnit(theUnit2)) != kOCCompareEqualTo)
+    if (OCCompareDoubleValues(SIUnit2GetScaleToCoherentSI(theUnit1), SIUnit2GetScaleToCoherentSI(theUnit2)) != kOCCompareEqualTo)
         return false;
     return true;
 }
+
+// Common helper function for creating and simplifying symbols
+static OCStringRef SIUnit2CreateSimplifiedSymbol(OCStringRef raw_symbol, bool reduce, OCStringRef *error) {
+    OCStringRef simplified_symbol;
+    if (reduce) {
+        simplified_symbol = SIUnitReduceExpression(raw_symbol);
+    } else {
+        simplified_symbol = SIUnitCreateLibraryKey(raw_symbol);
+    }
+    
+    if (!simplified_symbol) {
+        simplified_symbol = raw_symbol;  // Fallback to raw symbol
+        OCRetain(simplified_symbol);     // Balance the retain for cleanup
+    }
+    return simplified_symbol;
+}
+
+
 //
 static OCMutableDictionaryRef units2Library = NULL;
 static OCMutableDictionaryRef units2QuantitiesLibrary = NULL;
@@ -567,7 +614,7 @@ void SIUnit2LibrariesRelease(void) {
     if (keys) {
         for (uint64_t i = 0; i < OCArrayGetCount(keys); i++) {
             OCStringRef key = (OCStringRef)OCArrayGetValueAtIndex(keys, i);
-            SIUnitRef unit = (SIUnitRef)OCDictionaryGetValue(units2Library, key);
+            SIUnit2Ref unit = (SIUnit2Ref)OCDictionaryGetValue(units2Library, key);
             OCDictionaryRemoveValue(units2Library, key);
             OCTypeSetStaticInstance(unit, false);
             OCRelease(unit);
@@ -707,8 +754,12 @@ static bool SIUnit2LibraryAddUSLabeledVolumeUnits(OCStringRef *error) {
     AddToLib(kSIQuantityVolumetricFlowRate, STR("US gallon per hour"), STR("US gallons per hour"), STR("galUS/h"), 0.003785411784 / 3600., error);
     AddToLib(kSIQuantityVolumetricFlowRate, STR("US gallon per minute"), STR("US gallons per minute"), STR("galUS/min"), 0.003785411784 / 60., error);
     AddToLib(kSIQuantityVolumetricFlowRate, STR("US gallon per second"), STR("US gallons per second"), STR("galUS/s"), 0.003785411784, error);
+    
+    // Check if any error occurred
+    if (error && *error) return false;
+    return true;
 }
-static bool SIUnitsSetUSPlainVolumeUnits(OCStringRef *error) {
+static bool SIUnit2SetUSPlainVolumeUnits(OCStringRef *error) {
     AddToLib(kSIQuantityVolume, STR("gallon"), STR("gallons"), STR("gal"), 0.003785411784, error);
     AddToLib(kSIQuantityVolume, STR("quart"), STR("quarts"), STR("qt"), 0.003785411784 / 4, error);
     AddToLib(kSIQuantityVolume, STR("pint"), STR("pints"), STR("pt"), 0.003785411784 / 8, error);
@@ -733,8 +784,12 @@ static bool SIUnitsSetUSPlainVolumeUnits(OCStringRef *error) {
     AddToLib(kSIQuantityVolumetricFlowRate, STR("gallon per hour"), STR("gallons per hour"), STR("gal/h"), 0.003785411784 / 3600., error);
     AddToLib(kSIQuantityVolumetricFlowRate, STR("gallon per minute"), STR("gallons per minute"), STR("gal/min"), 0.003785411784 / 60., error);
     AddToLib(kSIQuantityVolumetricFlowRate, STR("gallon per second"), STR("gallons per second"), STR("gal/s"), 0.003785411784, error);
+    
+    // Check if any error occurred
+    if (error && *error) return false;
+    return true;
 }
-static bool SIUnitSetUKPlainVolumeUnits(OCStringRef *error) {
+static bool SIUnit2SetUKPlainVolumeUnits(OCStringRef *error) {
     // Volume
     AddToLib(kSIQuantityVolume, STR("gallon"), STR("gallons"), STR("gal"), 0.00454609, error);
     AddToLib(kSIQuantityVolume, STR("quart"), STR("quarts"), STR("qt"), 0.00454609 / 4, error);
@@ -760,8 +815,12 @@ static bool SIUnitSetUKPlainVolumeUnits(OCStringRef *error) {
     AddToLib(kSIQuantityVolumetricFlowRate, STR("gallon per hour"), STR("gallons per hour"), STR("gal/h"), 0.00454609 / 3600., error);
     AddToLib(kSIQuantityVolumetricFlowRate, STR("gallon per minute"), STR("gallons per minute"), STR("gal/min"), 0.00454609 / 60., error);
     AddToLib(kSIQuantityVolumetricFlowRate, STR("gallon per second"), STR("gallons per second"), STR("gal/s"), 0.00454609, error);
+    
+    // Check if any error occurred
+    if (error && *error) return false;
+    return true;
 }
-static bool SIUnitAddUKLabeledVolumeUnits(OCStringRef *error) {
+static bool SIUnit2AddUKLabeledVolumeUnits(OCStringRef *error) {
     AddToLib(kSIQuantityVolume, STR("imperial gallon"), STR("imperial gallons"), STR("galUK"), 0.00454609, error);
     AddToLib(kSIQuantityVolume, STR("imperial quart"), STR("imperial quarts"), STR("qtUK"), 0.00454609 / 4, error);
     AddToLib(kSIQuantityVolume, STR("imperial pint"), STR("imperial pints"), STR("ptUK"), 0.00454609 / 8, error);
@@ -786,6 +845,10 @@ static bool SIUnitAddUKLabeledVolumeUnits(OCStringRef *error) {
     AddToLib(kSIQuantityVolumetricFlowRate, STR("imperial gallon per hour"), STR("imperial gallons per hour"), STR("galUK/h"), 0.00454609 / 3600., error);
     AddToLib(kSIQuantityVolumetricFlowRate, STR("imperial gallon per minute"), STR("imperial gallons per minute"), STR("galUK/min"), 0.00454609 / 60., error);
     AddToLib(kSIQuantityVolumetricFlowRate, STR("imperial gallon per second"), STR("imperial gallons per second"), STR("galUK/s"), 0.00454609, error);
+    
+    // Check if any error occurred
+    if (error && *error) return false;
+    return true;
 }
 void SIUnit2LibrarySetImperialVolumes(bool value) {
     if (imperialVolumes == value) return;
@@ -794,13 +857,40 @@ void SIUnit2LibrarySetImperialVolumes(bool value) {
     if (value) {
         SIUnit2LibraryRemoveUKLabeledVolumeUnits();  // Remove Imperial Volumes
         SIUnit2LibraryAddUSLabeledVolumeUnits(&error);     // Define US Volume units
-        SIUnitSetUKPlainVolumeUnits(&error);       // Define UK Volume units
+        SIUnit2SetUKPlainVolumeUnits(&error);       // Define UK Volume units
     } else {
         SIUnit2LibraryRemoveUSLabeledVolumeUnits();  // Remove US Volumes
-        SIUnitsSetUSPlainVolumeUnits(&error);      // Define US Volume units
-        SIUnitAddUKLabeledVolumeUnits(&error);     // Define UK Volume units
+        SIUnit2SetUSPlainVolumeUnits(&error);      // Define US Volume units
+        SIUnit2AddUKLabeledVolumeUnits(&error);     // Define UK Volume units
     }
     imperialVolumes = value;
+}
+bool SIUnit2LibraryGetImperialVolumes(void)
+{
+    return imperialVolumes;
+}
+SIUnit2Ref SIUnit2FindWithName(OCStringRef input) {
+    if (NULL == units2Library) SIUnit2CreateLibraries();
+    IF_NO_OBJECT_EXISTS_RETURN(units2Library, NULL);
+    int64_t count = OCDictionaryGetCount(units2Library);
+    OCStringRef keys[count];
+    SIUnit2Ref units[count];
+    OCDictionaryGetKeysAndValues(units2Library, (const void **)keys, (const void **)units);
+    for (int64_t index = 0; index < count; index++) {
+        OCStringRef name = units[index]->name;
+        if (name)
+            if (OCStringCompare(name, input, 0) == kOCCompareEqualTo) {
+                SIUnit2Ref theUnit = units[index];
+                return theUnit;
+            }
+        OCStringRef plural_name = units[index]->plural_name;
+        if (plural_name)
+            if (OCStringCompare(plural_name, input, 0) == kOCCompareEqualTo) {
+                SIUnit2Ref theUnit = units[index];
+                return theUnit;
+            }
+    }
+    return NULL;
 }
 
 
@@ -826,7 +916,7 @@ static SIUnit2Ref SIUnit2WithParameters(SIDimensionalityRef dimensionality,
     OCRelease(tempUnit);
     return tempUnit;
 }
-SIUnit2Ref SIUnit2WithCoherentUnit(SIDimensionalityRef dimensionality) {
+SIUnit2Ref SIUnit2CoherentUnitFromDimensionality(SIDimensionalityRef dimensionality) {
     OCMutableStringRef symbol = OCStringCreateMutableCopy(SIDimensionalityGetSymbol(dimensionality));
     // Create Coherent Unit symbol by simply replacing base dimensionality symbols with base SI symbols
     OCStringFindAndReplace2(symbol, STR("L"), STR("m"));
@@ -836,6 +926,15 @@ SIUnit2Ref SIUnit2WithCoherentUnit(SIDimensionalityRef dimensionality) {
     OCStringFindAndReplace2(symbol, STR("N"), STR("mol"));
     OCStringFindAndReplace2(symbol, STR("J"), STR("cd"));
     return SIUnit2WithParameters(dimensionality, NULL, NULL, symbol, 1);
+}
+bool SIUnit2IsCoherentUnit(SIUnit2Ref theUnit) {
+    if(SIUnit2CoherentUnitFromDimensionality(theUnit->dimensionality) == theUnit) return true;
+    return false;
+}
+bool SIUnit2IsDimensionless(SIUnit2Ref theUnit) {
+    if (!SIDimensionalityIsDimensionless(theUnit->dimensionality))
+        return false;
+    return true;
 }
 OCArrayRef SIUnit2CreateArrayOfUnitsForQuantity(OCStringRef quantity) {
     IF_NO_OBJECT_EXISTS_RETURN(quantity, NULL);
@@ -875,8 +974,80 @@ OCArrayRef SIUnit2CreateArrayOfUnitsForSameReducedDimensionality(SIDimensionalit
 SIUnit2Ref SIUnit2DimensionlessAndUnderived(void) {
     return SIUnit2WithParameters(SIDimensionalityDimensionless(), NULL, NULL, STR(" "), 1);
 }
+// Equivalent units can be substituted for each other without changing the associated numerical value
+OCArrayRef SIUnit2CreateArrayOfEquivalentUnits(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    OCArrayRef candidates = SIUnit2CreateArrayOfUnitsForDimensionality(SIUnit2GetDimensionality(theUnit));
+    if (candidates) {
+        OCMutableArrayRef result = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
+        for (uint64_t index = 0; index < OCArrayGetCount(candidates); index++) {
+            SIUnit2Ref unit = OCArrayGetValueAtIndex(candidates, index);
+            if (SIUnit2AreEquivalentUnits(unit, theUnit))
+                OCArrayAppendValue(result, unit);
+        }
+        OCRelease(candidates);
+        return result;
+    }
+    return NULL;
+}
+static OCComparisonResult unit2Sort(const void *val1, const void *val2, void *context) {
+    SIUnit2Ref unit1 = (SIUnit2Ref)val1;
+    SIUnit2Ref unit2 = (SIUnit2Ref)val2;
+    double scale1 = SIUnit2ScaleToCoherentSIUnit(unit1);
+    double scale2 = SIUnit2ScaleToCoherentSIUnit(unit2);
+    if (scale1 < scale2)
+        return kOCCompareLessThan;
+    else if (scale1 > scale2)
+        return kOCCompareGreaterThan;
+    else {
+        OCStringRef symbol1 = SIUnit2CopySymbol((SIUnit2Ref)val1);
+        OCStringRef symbol2 = SIUnit2CopySymbol((SIUnit2Ref)val2);
+        OCComparisonResult result = OCStringCompare(symbol1, symbol2, kOCCompareCaseInsensitive);
+        OCRelease(symbol1);
+        OCRelease(symbol2);
+        return result;
+    }
+}
+
+OCArrayRef SIUnit2CreateArrayOfConversionUnits(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    OCArrayRef result = SIUnit2CreateArrayOfUnitsForSameReducedDimensionality(theUnit->dimensionality);
+    OCMutableArrayRef sorted = OCArrayCreateMutableCopy(result);
+    OCArraySortValues(sorted, OCRangeMake(0, OCArrayGetCount(result)), unit2Sort, NULL);
+    OCRelease(result);
+    return sorted;
+}
+
+SIUnit2Ref SIUnit2FindEquivalentUnitWithShortestSymbol(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    if (theUnit== SIUnit2DimensionlessAndUnderived())
+        return theUnit;
+    OCArrayRef candidates = SIUnit2CreateArrayOfEquivalentUnits(theUnit);
+    if (!candidates)
+        return theUnit;
+    if (OCArrayGetCount(candidates) == 0) {
+        OCRelease(candidates);
+        return theUnit;
+    }
+    SIUnit2Ref best = theUnit;
+    OCStringRef symbol = SIUnit2CopySymbol(theUnit);
+    int64_t length = OCStringGetLength(symbol);
+    OCRelease(symbol);
+    for (uint64_t i = 0, cnt = OCArrayGetCount(candidates); i < cnt; i++) {
+        SIUnit2Ref candidate = OCArrayGetValueAtIndex(candidates, i);
+        OCStringRef candidateSymbol = SIUnit2CopySymbol(candidate);
+        if (OCStringGetLength(candidateSymbol) < length) {
+            best = candidate;
+            length = OCStringGetLength(candidateSymbol);
+        }
+        OCRelease(candidateSymbol);
+    }
+    OCRelease(candidates);
+    return best;
+}
+
 //
-// Common helper function for finding best matching unit
+// Common helper function for finding best matching unit, i.e., one that best matches the target_scale
 static SIUnit2Ref SIUnit2FindBestMatchingUnit(SIDimensionalityRef dimensionality, double target_scale) {
     OCArrayRef candidates = SIUnit2CreateArrayOfUnitsForDimensionality(dimensionality);
     if (!candidates || OCArrayGetCount(candidates) == 0) {
@@ -904,23 +1075,28 @@ static SIUnit2Ref SIUnit2FindBestMatchingUnit(SIDimensionalityRef dimensionality
     OCRelease(candidates);
     return best_match;
 }
+SIUnit2Ref SIUnit2ByReducing(SIUnit2Ref theUnit, double *unit_multiplier) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    SIDimensionalityRef dimensionality = SIDimensionalityByReducing(theUnit->dimensionality);
+    if (SIDimensionalityEqual(dimensionality, theUnit->dimensionality))
+        return SIUnit2FindEquivalentUnitWithShortestSymbol(theUnit);
 
-// Common helper function for creating and simplifying symbols
-static OCStringRef SIUnit2CreateSimplifiedSymbol(OCStringRef raw_symbol, bool reduce, OCStringRef *error) {
-    OCStringRef simplified_symbol;
-    if (reduce) {
-        simplified_symbol = SIUnitReduceExpression(raw_symbol);
-    } else {
-        simplified_symbol = SIUnitCreateLibraryKey(raw_symbol);
+    SIUnit2Ref best_match = SIUnit2FindBestMatchingUnit(dimensionality, theUnit->scale_to_coherent_si);
+    if (best_match) {
+        if(unit_multiplier) {
+            *unit_multiplier *= theUnit->scale_to_coherent_si/best_match->scale_to_coherent_si;
+        }
+        return best_match;
     }
-    
-    if (!simplified_symbol) {
-        simplified_symbol = raw_symbol;  // Fallback to raw symbol
-        OCRetain(simplified_symbol);     // Balance the retain for cleanup
-    }
-    
-    return simplified_symbol;
+    // Reduce the symbol
+    OCStringRef error = NULL;
+    OCStringRef simplified_symbol = SIUnit2CreateSimplifiedSymbol(theUnit->symbol, true, &error);
+    // Create new unit with the reduced symbol and scale_to_coherent_si
+    SIUnit2Ref result = SIUnit2WithParameters(dimensionality,NULL,NULL,simplified_symbol,theUnit->scale_to_coherent_si);
+    OCRelease(simplified_symbol);
+    return result;
 }
+
 
 // Power operation
 static SIUnit2Ref SIUnit2ByRaisingToPowerInternal(SIUnit2Ref input,
@@ -949,6 +1125,9 @@ static SIUnit2Ref SIUnit2ByRaisingToPowerInternal(SIUnit2Ref input,
     // First approach: Look for existing units with matching dimensionality
     SIUnit2Ref best_match = SIUnit2FindBestMatchingUnit(dimensionality, scale);
     if (best_match) {
+        if(unit_multiplier) {
+            *unit_multiplier *= scale/best_match->scale_to_coherent_si;
+        }
         return best_match;
     }
     
@@ -1015,6 +1194,9 @@ static SIUnit2Ref SIUnit2ByMultiplyingInternal(SIUnit2Ref theUnit1,
     // First approach: Look for existing units with matching dimensionality
     SIUnit2Ref best_match = SIUnit2FindBestMatchingUnit(dimensionality, scale);
     if (best_match) {
+        if(unit_multiplier) {
+            *unit_multiplier *= scale/best_match->scale_to_coherent_si;
+        }
         return best_match;
     }
     
@@ -1104,6 +1286,9 @@ static SIUnit2Ref SIUnit2ByDividingInternal(SIUnit2Ref theUnit1,
     // First approach: Look for existing units with matching dimensionality
     SIUnit2Ref best_match = SIUnit2FindBestMatchingUnit(dimensionality, scale);
     if (best_match) {
+        if(unit_multiplier) {
+            *unit_multiplier *= scale/best_match->scale_to_coherent_si;
+        }
         return best_match;
     }
     
@@ -1171,6 +1356,9 @@ SIUnit2Ref SIUnit2ByTakingNthRoot(SIUnit2Ref theUnit,
     // First approach: Look for existing units with matching dimensionality
     SIUnit2Ref best_match = SIUnit2FindBestMatchingUnit(dimensionality, scale);
     if (best_match) {
+        if(unit_multiplier) {
+            *unit_multiplier *= scale/best_match->scale_to_coherent_si;
+        }
         return best_match;
     }
     
@@ -1209,3 +1397,22 @@ SIUnit2Ref SIUnit2ByTakingNthRoot(SIUnit2Ref theUnit,
     return result;
 }
 
+OCStringRef SIUnit2GuessQuantityName(SIUnit2Ref theUnit) {
+    OCStringRef quantityName = NULL;
+    OCArrayRef quantityNames = SIDimensionalityCreateArrayOfQuantityNames(theUnit->dimensionality);
+    if (quantityNames) {
+        if (OCArrayGetCount(quantityNames) > 0) {
+            quantityName = OCArrayGetValueAtIndex(quantityNames, 0);  // Borrowed
+        }
+        OCRelease(quantityNames);
+        return quantityName;
+    } else {
+        // Fall back to dimensionality symbol
+        return SIDimensionalityGetSymbol(theUnit->dimensionality);
+        // Optional logic (disabled below)
+        // double multiplier = 1;
+        // SIUnitRef reduced = SIUnitByReducing(theUnit, &multiplier);
+        // if (reduced != theUnit) return SIUnitGuessQuantityName(reduced);
+        // else return SIDimensionalityGetSymbol(dimensionality);
+    }
+}

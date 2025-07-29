@@ -77,7 +77,7 @@ bool test_SIScalarShow(void);
 bool test_SIScalarCreateStringValue(void);
 bool test_SIScalarCreateNumericStringValue(void);
 bool test_SIScalarCreateStringValueForPart(void);
-bool test_SIScalarCreateUnitString(void);
+bool test_SIScalarCopyUnitSymbol(void);
 bool test_SIScalarCreateStringValueWithFormat(void);
 bool test_SIScalarCreateNumericStringValueWithFormat(void);
 bool test_SIScalarAddToArrayAsStringValue(void);

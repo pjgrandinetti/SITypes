@@ -33,7 +33,7 @@ bool test_unit_negative_power_operations(void) {
         return false;
     }
     
-    OCStringRef symbol = SIUnitCreateSymbol(result);
+    OCStringRef symbol = SIUnitCopySymbol(result);
     if (!symbol) {
         printf("  ✗ Failed to create symbol for (m^2)^-1\n");
         OCRelease(result);
@@ -76,7 +76,7 @@ bool test_unit_inverse_expression_parsing(void) {
         return false;
     }
     
-    OCStringRef symbol = SIUnitCreateSymbol(parsed_inverse);
+    OCStringRef symbol = SIUnitCopySymbol(parsed_inverse);
     if (!symbol) {
         printf("  ✗ Failed to create symbol for parsed 1/m^2\n");
         OCRelease(parsed_inverse);
@@ -116,7 +116,7 @@ bool test_unit_negative_exponent_parsing(void) {
         return false;
     }
     
-    OCStringRef symbol = SIUnitCreateSymbol(parsed_negative);
+    OCStringRef symbol = SIUnitCopySymbol(parsed_negative);
     if (!symbol) {
         printf("  ✗ Failed to create symbol for parsed m^-2\n");
         OCRelease(parsed_negative);

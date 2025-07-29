@@ -103,4 +103,7 @@ OCStringRef SIUnitReduceExpression(OCStringRef expression);
  */
 bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2);
 
+
+OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool forLibraryLookup);
+
 #endif /* SIUnitKey_h */

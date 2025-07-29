@@ -186,14 +186,11 @@ bool SIUnitGetIsSpecialSISymbol(SIUnitRef theUnit);
 /** @brief Returns true if unit is a coherent SI base unit. */
 bool SIUnitIsCoherentSIBaseUnit(SIUnitRef theUnit);
 
-/** @brief Returns true if unit is a base root unit (no prefix). */
-bool SIUnitIsSIBaseRootUnit(SIUnitRef theUnit);
-
 /** @brief Returns true if unit is a base unit or prefix variant. */
 bool SIUnitIsSIBaseUnit(SIUnitRef theUnit);
 
 /** @brief Returns true if unit is a coherent SI derived unit. */
-bool SIUnitIsCoherentDerivedUnit(SIUnitRef theUnit);
+bool SIUnitIsCoherentUnit(SIUnitRef theUnit);
 
 /** @brief Returns true if unit is the dimensionless underived unit. */
 bool SIUnitIsDimensionlessAndUnderived(SIUnitRef theUnit);
@@ -231,13 +228,13 @@ OCArrayRef SIUnitCreateArrayOfUnitsForSameReducedDimensionality(SIDimensionality
 OCArrayRef SIUnitCreateArrayOfConversionUnits(SIUnitRef theUnit);
 
 /** @brief Gets the scale factor to convert a non-SI root unit to coherent SI. */
-double SIUnitGetScaleNonSIToCoherentSI(SIUnitRef theUnit);
+double SIUnitGetScaleToCoherentSI(SIUnitRef theUnit);
 
 /** @brief Creates the full human-readable name for a unit. */
-OCStringRef SIUnitCreateName(SIUnitRef theUnit);
+OCStringRef SIUnitCopyName(SIUnitRef theUnit);
 
 /** @brief Creates the plural name for a unit. */
-OCStringRef SIUnitCreatePluralName(SIUnitRef theUnit);
+OCStringRef SIUnitCopyPluralName(SIUnitRef theUnit);
 
 /** @brief Copies the symbol for a unit, including any prefix. */
 OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
@@ -246,13 +243,10 @@ OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
 double SIUnitScaleToCoherentSIUnit(SIUnitRef theUnit);
 
 /** @brief Creates the symbol for a unit. */
-OCStringRef SIUnitCreateSymbol(SIUnitRef theUnit);
+OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
 
 /** @brief Finds a coherent SI unit for a given dimensionality. */
-SIUnitRef SIUnitFindCoherentSIUnitWithDimensionality(SIDimensionalityRef theDimensionality);
-
-/** @brief Finds coherent SI unit for an arbitrary unit, updating multiplier. */
-SIUnitRef SIUnitFindCoherentSIUnit(SIUnitRef input, double *unit_multiplier);
+SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef theDimensionality);
 
 /** @brief Returns the Nth root of a unit, updating multiplier, with error. */
 SIUnitRef SIUnitByTakingNthRoot(SIUnitRef input, uint8_t root, double *unit_multiplier, OCStringRef *error);
@@ -282,38 +276,21 @@ SIUnitRef SIUnitByRaisingToPower(SIUnitRef input, int power, double *unit_multip
 SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input, int power, double *unit_multiplier, OCStringRef *error);
 
 /** @brief Finds a unit by canonical name. */
-SIUnitRef SIUnitFindWithName(OCStringRef input);
+SIUnitRef SIUnitWithName(OCStringRef input);
 
 /** @brief Finds a unit by underived (base) symbol. */
-SIUnitRef SIUnitFindWithUnderivedSymbol(OCStringRef symbol);
+SIUnitRef SIUnitWithSymbol(OCStringRef symbol);
 
 /** @brief Parses a symbol and returns the corresponding unit, updating multiplier. */
 SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, OCStringRef *error);
 
-/** @brief Creates array of all units defined for a given quantity. */
-OCArrayRef SIUnitCreateArrayForQuantity(OCStringRef quantity);
-
-/** @brief Creates dictionary of units for a given dimensionality. */
-OCDictionaryRef SIUnitCreateDictionaryOfUnitsWithDimensionality(SIDimensionalityRef theDimensionality);
-
-/** @brief Creates dictionary of units with the same reduced dimensionality. */
-OCDictionaryRef SIUnitCreateDictionaryOfUnitsWithSameReducedDimensionality(SIDimensionalityRef theDimensionality);
-
 /** @brief Computes the conversion factor between two compatible units. */
 double SIUnitConversion(SIUnitRef initialUnit, SIUnitRef finalUnit);
-
-#pragma mark Strings and Archiving
-
-/** @brief Prints a one-line summary of the unit. */
-void SIUnitShow(SIUnitRef theUnit);
-
-/** @brief Prints a multi-line, detailed report of the unit. */
-void SIUnitShowFull(SIUnitRef theUnit);
 
 #pragma mark Library
 
 /** @brief Returns true if library uses US volume units, false for UK/Imperial. */
-bool SIUnitsLibraryImperialVolumes(void);
+bool SIUnitsLibraryGetImperialVolumes(void);
 
 /** @brief Sets library to use US or UK/Imperial volume symbols. */
 void SIUnitsLibrarySetImperialVolumes(bool value);
@@ -321,23 +298,8 @@ void SIUnitsLibrarySetImperialVolumes(bool value);
 /** @brief Returns a mutable copy of the current units library. */
 OCMutableDictionaryRef SIUnitGetUnitsLib(void);
 
-/** @brief Replaces the global units library. */
-void SIUnitSetLibrary(OCMutableDictionaryRef newUnitsLibrary);
 
-/** @brief Prints a one-line summary of each unit in the library. */
-void SIUnitLibraryShow(void);
 
-/** @brief Prints a multi-line description of each unit in the library. */
-void SIUnitLibraryShowFull(void);
-
-/** @brief Returns all units sorted by printed name length. */
-OCArrayRef SIUnitGetUnitsSortedByNameLength(void);
-
-/** @brief Returns all root units, ordered alphabetically by name. */
-OCArrayRef SIUnitCreateArrayOfRootUnits(void);
-
-/** @brief Returns root units for a quantity; sets error on failure. */
-OCArrayRef SIUnitCreateArrayOfRootUnitsForQuantity(OCStringRef quantity, OCStringRef *error);
 
 
 /**
@@ -359,7 +321,6 @@ OCArrayRef SIUnitCreateArrayOfRootUnitsForQuantity(OCStringRef quantity, OCStrin
 OCStringRef SIUnitGuessQuantityName(SIUnitRef theUnit);
 
 
-OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool forLibraryLookup);
 /** @cond INTERNAL */
 /** @brief Cleans up all static and global unit dictionaries. */
 void cleanupUnitsLibraries(void);

@@ -16,7 +16,7 @@
 #include "test_duplicate_units.h"
 #include "test_library_key.h"
 #include "test_unit_power_operations.h"
-#include "test_siunit2_power.h"
+#include "test_siunit2.h"
 #ifdef LEAK_SANITIZER
 extern void __lsan_do_leak_check() __attribute__((weak));
 #endif
@@ -161,7 +161,7 @@ int main(int argc, const char* argv[]) {
     TRACK(test_SIScalarCreateStringValue);
     TRACK(test_SIScalarCreateNumericStringValue);
     TRACK(test_SIScalarCreateStringValueForPart);
-    TRACK(test_SIScalarCreateUnitString);
+    TRACK(test_SIScalarCopyUnitSymbol);
     TRACK(test_SIScalarCreateStringValueWithFormat);
     TRACK(test_SIScalarCreateNumericStringValueWithFormat);
     TRACK(test_SIScalarAddToArrayAsStringValue);

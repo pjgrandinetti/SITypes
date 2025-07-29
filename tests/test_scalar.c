@@ -90,9 +90,9 @@ bool test_SIScalarGetTypeID(void) {
 
 
 bool test_SIScalarCreateCopy(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateCopy failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateCopy failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -124,8 +124,8 @@ bool test_SIScalarCreateCopy(void) {
         return false;
     }
 
-    OCStringRef us = SIScalarCreateUnitString(s);
-    OCStringRef uc = SIScalarCreateUnitString(c);
+    OCStringRef us = SIScalarCopyUnitSymbol(s);
+    OCStringRef uc = SIScalarCopyUnitSymbol(c);
     if (!OCStringEqual(us, uc)) {
         printf("test_SIScalarCreateCopy failed: Unit strings differ between original and copy\n");
         OCRelease(us);
@@ -145,9 +145,9 @@ bool test_SIScalarCreateCopy(void) {
 }
 
 bool test_SIScalarCreateMutableCopy(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateMutableCopy failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateMutableCopy failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -178,8 +178,8 @@ bool test_SIScalarCreateMutableCopy(void) {
         return false;
     }
 
-    OCStringRef unit_orig = SIScalarCreateUnitString(orig);
-    OCStringRef unit_copy = SIScalarCreateUnitString(copy);
+    OCStringRef unit_orig = SIScalarCopyUnitSymbol(orig);
+    OCStringRef unit_copy = SIScalarCopyUnitSymbol(copy);
     if (!OCStringEqual(unit_orig, unit_copy)) {
         printf("test_SIScalarCreateMutableCopy failed: Unit strings do not match\n");
         OCRelease(unit_orig);
@@ -216,9 +216,9 @@ bool test_SIScalarCreateMutableCopy(void) {
 }
 
 bool test_SIScalarCreateWithFloat(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateWithFloat failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateWithFloat failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -235,7 +235,7 @@ bool test_SIScalarCreateWithFloat(void) {
         return false;
     }
 
-    OCStringRef unitStr = SIScalarCreateUnitString(s);
+    OCStringRef unitStr = SIScalarCopyUnitSymbol(s);
     if (!OCStringEqual(unitStr, STR("m"))) {
         printf("test_SIScalarCreateWithFloat failed: Unit string mismatch (expected 'm')\n");
         OCRelease(unitStr);
@@ -250,9 +250,9 @@ bool test_SIScalarCreateWithFloat(void) {
 }
 
 bool test_SIScalarCreateMutableWithFloat(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateMutableWithFloat failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateMutableWithFloat failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -269,7 +269,7 @@ bool test_SIScalarCreateMutableWithFloat(void) {
         return false;
     }
 
-    OCStringRef unitStr = SIScalarCreateUnitString(m);
+    OCStringRef unitStr = SIScalarCopyUnitSymbol(m);
     if (!OCStringEqual(unitStr, STR("m"))) {
         printf("test_SIScalarCreateMutableWithFloat failed: Unit string mismatch (expected 'm')\n");
         OCRelease(unitStr);
@@ -293,9 +293,9 @@ bool test_SIScalarCreateMutableWithFloat(void) {
 
 bool test_SIScalarCreateWithDouble(void) {
     // Create a unit for testing
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateWithDouble failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateWithDouble failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -317,7 +317,7 @@ bool test_SIScalarCreateWithDouble(void) {
     }
 
     // Verify the unit was correctly assigned
-    OCStringRef unitStr = SIScalarCreateUnitString(s);
+    OCStringRef unitStr = SIScalarCopyUnitSymbol(s);
     if (!OCStringEqual(unitStr, STR("m"))) {
         printf("test_SIScalarCreateWithDouble failed: Unit string mismatch (expected 'm')\n");
         OCRelease(unitStr);
@@ -340,9 +340,9 @@ bool test_SIScalarCreateWithDouble(void) {
 
 bool test_SIScalarCreateMutableWithDouble(void) {
     // Create a unit for testing
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateMutableWithDouble failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateMutableWithDouble failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -364,7 +364,7 @@ bool test_SIScalarCreateMutableWithDouble(void) {
     }
 
     // Verify the unit was correctly assigned
-    OCStringRef unitStr = SIScalarCreateUnitString(m);
+    OCStringRef unitStr = SIScalarCopyUnitSymbol(m);
     if (!OCStringEqual(unitStr, STR("m"))) {
         printf("test_SIScalarCreateMutableWithDouble failed: Unit string mismatch (expected 'm')\n");
         OCRelease(unitStr);
@@ -396,9 +396,9 @@ bool test_SIScalarCreateMutableWithDouble(void) {
 
 
 bool test_SIScalarCreateWithFloatComplex(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateWithFloatComplex failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateWithFloatComplex failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -428,9 +428,9 @@ bool test_SIScalarCreateWithFloatComplex(void) {
 }
 
 bool test_SIScalarCreateMutableWithFloatComplex(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateMutableWithFloatComplex failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateMutableWithFloatComplex failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -461,9 +461,9 @@ bool test_SIScalarCreateMutableWithFloatComplex(void) {
 
 
 bool test_SIScalarCreateWithDoubleComplex(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateWithDoubleComplex failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateWithDoubleComplex failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -493,9 +493,9 @@ bool test_SIScalarCreateWithDoubleComplex(void) {
 }
 
 bool test_SIScalarCreateMutableWithDoubleComplex(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateMutableWithDoubleComplex failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateMutableWithDoubleComplex failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -526,9 +526,9 @@ bool test_SIScalarCreateMutableWithDoubleComplex(void) {
 
 
 bool test_SIScalarGetValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarGetValue failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarGetValue failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -552,9 +552,9 @@ bool test_SIScalarGetValue(void) {
 
 
 bool test_SIScalarSetFloatValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarSetFloatValue failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarSetFloatValue failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -578,9 +578,9 @@ bool test_SIScalarSetFloatValue(void) {
 }
 
 bool test_SIScalarSetDoubleValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarSetDoubleValue failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarSetDoubleValue failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -604,9 +604,9 @@ bool test_SIScalarSetDoubleValue(void) {
 }
 
 bool test_SIScalarSetFloatComplexValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarSetFloatComplexValue failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarSetFloatComplexValue failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -638,9 +638,9 @@ bool test_SIScalarSetFloatComplexValue(void) {
 }
 
 bool test_SIScalarSetDoubleComplexValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarSetDoubleComplexValue failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarSetDoubleComplexValue failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -672,9 +672,9 @@ bool test_SIScalarSetDoubleComplexValue(void) {
 }
 
 bool test_SIScalarSetNumericType(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarSetNumericType failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarSetNumericType failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -700,9 +700,9 @@ bool test_SIScalarSetNumericType(void) {
 }
 
 bool test_SIScalarFloatValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarFloatValue failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarFloatValue failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -726,9 +726,9 @@ bool test_SIScalarFloatValue(void) {
 
 
 bool test_SIScalarDoubleValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarDoubleValue failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarDoubleValue failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -751,9 +751,9 @@ bool test_SIScalarDoubleValue(void) {
 }
 
 bool test_SIScalarFloatComplexValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarFloatComplexValue failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarFloatComplexValue failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -782,9 +782,9 @@ bool test_SIScalarFloatComplexValue(void) {
 }
 
 bool test_SIScalarDoubleComplexValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarDoubleComplexValue failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarDoubleComplexValue failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -814,9 +814,9 @@ bool test_SIScalarDoubleComplexValue(void) {
 
 
 bool test_SIScalarCreateByConvertingToNumberType(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateByConvertingToNumberType failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateByConvertingToNumberType failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -848,9 +848,9 @@ bool test_SIScalarCreateByConvertingToNumberType(void) {
 }
 
 bool test_SIScalarTakeComplexPart(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarTakeComplexPart failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarTakeComplexPart failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -887,9 +887,9 @@ bool test_SIScalarTakeComplexPart(void) {
 
 
 bool test_SIScalarCreateByTakingComplexPart(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateByTakingComplexPart failed: SIUnitFindWithUnderivedSymbol returned NULL\n");
+        printf("test_SIScalarCreateByTakingComplexPart failed: SIUnitWithSymbol returned NULL\n");
         return false;
     }
 
@@ -929,8 +929,8 @@ bool test_SIScalarCreateByTakingComplexPart(void) {
 
 
 bool test_SIScalarCreateByReducingUnit(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef s_unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef s_unit = SIUnitWithSymbol(STR("s"));
     if (!m || !s_unit) {
         printf("test_SIScalarCreateByReducingUnit failed: Failed to retrieve base units\n");
         return false;
@@ -963,7 +963,7 @@ bool test_SIScalarCreateByReducingUnit(void) {
         return false;
     }
 
-    OCStringRef unit_str = SIScalarCreateUnitString(scalar_reduced);
+    OCStringRef unit_str = SIScalarCopyUnitSymbol(scalar_reduced);
     if (!OCStringEqual(unit_str, STR("m"))) {
         printf("test_SIScalarCreateByReducingUnit failed: Reduced unit is not 'm' (got: %s)\n",
                OCStringGetCString(unit_str));
@@ -983,8 +983,8 @@ bool test_SIScalarCreateByReducingUnit(void) {
 
 
 bool test_SIScalarReduceUnit(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef s_unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef s_unit = SIUnitWithSymbol(STR("s"));
     if (!m || !s_unit) {
         printf("test_SIScalarReduceUnit failed: Failed to retrieve base units\n");
         return false;
@@ -1017,7 +1017,7 @@ bool test_SIScalarReduceUnit(void) {
         return false;
     }
 
-    OCStringRef unit_str = SIScalarCreateUnitString(scalar);
+    OCStringRef unit_str = SIScalarCopyUnitSymbol(scalar);
     if (!OCStringEqual(unit_str, STR("m"))) {
         printf("test_SIScalarReduceUnit failed: Reduced unit is not 'm' (got: %s)\n",
                OCStringGetCString(unit_str));
@@ -1034,8 +1034,8 @@ bool test_SIScalarReduceUnit(void) {
 
 
 bool test_SIScalarConvertToUnit(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef cm = SIUnitFindWithUnderivedSymbol(STR("cm"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef cm = SIUnitWithSymbol(STR("cm"));
     if (!m || !cm) {
         printf("test_SIScalarConvertToUnit failed: Failed to retrieve 'm' or 'cm' units\n");
         return false;
@@ -1079,8 +1079,8 @@ bool test_SIScalarConvertToUnit(void) {
 }
 
 bool test_SIScalarCreateByConvertingToUnit(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef cm = SIUnitFindWithUnderivedSymbol(STR("cm"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef cm = SIUnitWithSymbol(STR("cm"));
     if (!m || !cm) {
         printf("test_SIScalarCreateByConvertingToUnit failed: Failed to retrieve 'm' or 'cm' units\n");
         return false;
@@ -1127,7 +1127,7 @@ bool test_SIScalarCreateByConvertingToUnit(void) {
 }
 
 bool test_SIScalarConvertToCoherentUnit(void) {
-    SIUnitRef cm = SIUnitFindWithUnderivedSymbol(STR("cm"));
+    SIUnitRef cm = SIUnitWithSymbol(STR("cm"));
     if (!cm) {
         printf("test_SIScalarConvertToCoherentUnit failed: Failed to retrieve 'cm' unit\n");
         return false;
@@ -1172,7 +1172,7 @@ bool test_SIScalarConvertToCoherentUnit(void) {
 }
 
 bool test_SIScalarCreateByConvertingToCoherentUnit(void) {
-    SIUnitRef cm = SIUnitFindWithUnderivedSymbol(STR("cm"));
+    SIUnitRef cm = SIUnitWithSymbol(STR("cm"));
     if (!cm) {
         printf("test_SIScalarCreateByConvertingToCoherentUnit failed: Failed to retrieve 'cm' unit\n");
         return false;
@@ -1220,7 +1220,7 @@ bool test_SIScalarCreateByConvertingToCoherentUnit(void) {
 
 
 bool test_SIScalarCreateByAdding(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarCreateByAdding failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -1275,7 +1275,7 @@ bool test_SIScalarCreateByAdding(void) {
 }
 
 bool test_SIScalarAdd(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarAdd failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -1327,7 +1327,7 @@ bool test_SIScalarAdd(void) {
 }
 
 bool test_SIScalarCreateBySubtracting(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarCreateBySubtracting failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -1382,7 +1382,7 @@ bool test_SIScalarCreateBySubtracting(void) {
 }
 
 bool test_SIScalarSubtract(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarSubtract failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -1435,8 +1435,8 @@ bool test_SIScalarSubtract(void) {
 
 
 bool test_SIScalarCreateByMultiplyingWithoutReducingUnit(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef s_unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef s_unit = SIUnitWithSymbol(STR("s"));
     if (!m || !s_unit) {
         printf("test_SIScalarCreateByMultiplyingWithoutReducingUnit failed: Failed to retrieve base units\n");
         return false;
@@ -1494,8 +1494,8 @@ bool test_SIScalarCreateByMultiplyingWithoutReducingUnit(void) {
 
 
 bool test_SIScalarMultiplyWithoutReducingUnit(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef s_unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef s_unit = SIUnitWithSymbol(STR("s"));
     if (!m || !s_unit) {
         printf("test_SIScalarMultiplyWithoutReducingUnit failed: Failed to retrieve base units\n");
         return false;
@@ -1547,8 +1547,8 @@ bool test_SIScalarMultiplyWithoutReducingUnit(void) {
 }
 
 bool test_SIScalarCreateByMultiplying(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef s_unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef s_unit = SIUnitWithSymbol(STR("s"));
     if (!m || !s_unit) {
         printf("test_SIScalarCreateByMultiplying failed: Failed to retrieve base units\n");
         return false;
@@ -1603,8 +1603,8 @@ bool test_SIScalarCreateByMultiplying(void) {
 }
 
 bool test_SIScalarMultiply(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef s_unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef s_unit = SIUnitWithSymbol(STR("s"));
     if (!m || !s_unit) {
         printf("test_SIScalarMultiply failed: Failed to retrieve base units\n");
         return false;
@@ -1657,8 +1657,8 @@ bool test_SIScalarMultiply(void) {
 
 
 bool test_SIScalarCreateByDividingWithoutReducingUnit(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef s_unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef s_unit = SIUnitWithSymbol(STR("s"));
     if (!m || !s_unit) {
         printf("test_SIScalarCreateByDividingWithoutReducingUnit failed: Failed to retrieve base units\n");
         return false;
@@ -1716,8 +1716,8 @@ bool test_SIScalarCreateByDividingWithoutReducingUnit(void) {
 
 
 bool test_SIScalarDivideWithoutReducingUnit(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef s_unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef s_unit = SIUnitWithSymbol(STR("s"));
     if (!m || !s_unit) {
         printf("test_SIScalarDivideWithoutReducingUnit failed: Failed to retrieve base units\n");
         return false;
@@ -1771,8 +1771,8 @@ bool test_SIScalarDivideWithoutReducingUnit(void) {
 }
 
 bool test_SIScalarCreateByDividing(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef s_unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef s_unit = SIUnitWithSymbol(STR("s"));
     if (!m || !s_unit) {
         printf("test_SIScalarCreateByDividing failed: Failed to retrieve base units\n");
         return false;
@@ -1829,8 +1829,8 @@ bool test_SIScalarCreateByDividing(void) {
 }
 
 bool test_SIScalarDivide(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef s_unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef s_unit = SIUnitWithSymbol(STR("s"));
     if (!m || !s_unit) {
         printf("test_SIScalarDivide failed: Failed to retrieve base units\n");
         return false;
@@ -1884,7 +1884,7 @@ bool test_SIScalarDivide(void) {
 }
 
 bool test_SIScalarCreateByRaisingToPowerWithoutReducingUnit(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarCreateByRaisingToPowerWithoutReducingUnit failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -1937,7 +1937,7 @@ bool test_SIScalarCreateByRaisingToPowerWithoutReducingUnit(void) {
 }
 
 bool test_SIScalarRaiseToAPowerWithoutReducingUnit(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarRaiseToAPowerWithoutReducingUnit failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -1988,7 +1988,7 @@ bool test_SIScalarRaiseToAPowerWithoutReducingUnit(void) {
 
 
 bool test_SIScalarCreateByRaisingToPower(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarCreateByRaisingToPower failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2041,7 +2041,7 @@ bool test_SIScalarCreateByRaisingToPower(void) {
 }
 
 bool test_SIScalarRaiseToAPower(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarRaiseToAPower failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2092,7 +2092,7 @@ bool test_SIScalarRaiseToAPower(void) {
 
 
 bool test_SIScalarCreateByTakingAbsoluteValue(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarCreateByTakingAbsoluteValue failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2146,7 +2146,7 @@ bool test_SIScalarCreateByTakingAbsoluteValue(void) {
 
 
 bool test_SIScalarTakeAbsoluteValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarTakeAbsoluteValue failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2283,7 +2283,7 @@ bool test_SIScalarCreateByGammaFunctionWithoutReducingUnit(void) {
 }
 
 bool test_SIScalarCreateByTakingNthRoot(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarCreateByTakingNthRoot failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2340,7 +2340,7 @@ bool test_SIScalarCreateByTakingNthRoot(void) {
         return false;
     }
 
-    OCStringRef unit_str = SIScalarCreateUnitString(root_s);
+    OCStringRef unit_str = SIScalarCopyUnitSymbol(root_s);
     if (!OCStringEqual(unit_str, STR("m"))) {
         printf("test_SIScalarCreateByTakingNthRoot failed: Expected unit 'm', got '%s'\n", OCStringGetCString(unit_str));
         OCRelease(unit_str);
@@ -2361,7 +2361,7 @@ bool test_SIScalarCreateByTakingNthRoot(void) {
 }
 
 bool test_SIScalarTakeNthRoot(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarTakeNthRoot failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2416,7 +2416,7 @@ bool test_SIScalarTakeNthRoot(void) {
         return false;
     }
 
-    OCStringRef unit_str = SIScalarCreateUnitString(target);
+    OCStringRef unit_str = SIScalarCopyUnitSymbol(target);
     if (!OCStringEqual(unit_str, STR("m"))) {
         printf("test_SIScalarTakeNthRoot failed: Expected unit 'm', got '%s'\n", OCStringGetCString(unit_str));
         OCRelease(unit_str);
@@ -2495,7 +2495,7 @@ bool test_SIScalarTakeLog10(void) {
 }
 
 bool test_SIScalarCreateByZeroingPart(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarCreateByZeroingPart failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2536,7 +2536,7 @@ bool test_SIScalarCreateByZeroingPart(void) {
 }
 
 bool test_SIScalarZeroPart(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarZeroPart failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2574,7 +2574,7 @@ bool test_SIScalarZeroPart(void) {
 }
 
 bool test_SIScalarMultiplyByDimensionlessRealConstant(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarMultiplyByDimensionlessRealConstant failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2606,7 +2606,7 @@ bool test_SIScalarMultiplyByDimensionlessRealConstant(void) {
 }
 
 bool test_SIScalarCreateByMultiplyingByDimensionlessRealConstant(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarCreateByMultiplyingByDimensionlessRealConstant failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2640,7 +2640,7 @@ bool test_SIScalarCreateByMultiplyingByDimensionlessRealConstant(void) {
 }
 
 bool test_SIScalarMultiplyByDimensionlessComplexConstant(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarMultiplyByDimensionlessComplexConstant failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2680,7 +2680,7 @@ bool test_SIScalarMultiplyByDimensionlessComplexConstant(void) {
 
 
 bool test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2749,7 +2749,7 @@ bool test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant(void) {
 
 
 bool test_SIScalarCreateByConjugation(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarCreateByConjugation failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2790,7 +2790,7 @@ bool test_SIScalarCreateByConjugation(void) {
 }
 
 bool test_SIScalarConjugate(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarConjugate failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2828,7 +2828,7 @@ bool test_SIScalarConjugate(void) {
 }
 
 bool test_SIScalarShow(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarShow failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2850,7 +2850,7 @@ bool test_SIScalarShow(void) {
 }
 
 bool test_SIScalarCreateStringValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarCreateStringValue failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2879,7 +2879,7 @@ bool test_SIScalarCreateStringValue(void) {
 }
 
 bool test_SIScalarCreateNumericStringValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarCreateNumericStringValue failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2909,7 +2909,7 @@ bool test_SIScalarCreateNumericStringValue(void) {
 
 
 bool test_SIScalarCreateStringValueForPart(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarCreateStringValueForPart failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -2937,28 +2937,28 @@ bool test_SIScalarCreateStringValueForPart(void) {
     return true;
 }
 
-bool test_SIScalarCreateUnitString(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+bool test_SIScalarCopyUnitSymbol(void) {
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
-        printf("test_SIScalarCreateUnitString failed: Failed to retrieve unit 'm'\n");
+        printf("test_SIScalarCopyUnitSymbol failed: Failed to retrieve unit 'm'\n");
         return false;
     }
 
     SIScalarRef s = SIScalarCreateWithFloat(1.0f, u);
     if (!s) {
-        printf("test_SIScalarCreateUnitString failed: Failed to create scalar\n");
+        printf("test_SIScalarCopyUnitSymbol failed: Failed to create scalar\n");
         return false;
     }
 
-    OCStringRef unit_str = SIScalarCreateUnitString(s);
+    OCStringRef unit_str = SIScalarCopyUnitSymbol(s);
     if (!unit_str) {
-        printf("test_SIScalarCreateUnitString failed: Failed to create unit string\n");
+        printf("test_SIScalarCopyUnitSymbol failed: Failed to create unit string\n");
         OCRelease(s);
         return false;
     }
 
     if (!OCStringEqual(unit_str, STR("m"))) {
-        printf("test_SIScalarCreateUnitString failed: Unit string mismatch (expected 'm')\n");
+        printf("test_SIScalarCopyUnitSymbol failed: Unit string mismatch (expected 'm')\n");
         OCRelease(unit_str);
         OCRelease(s);
         return false;
@@ -2966,13 +2966,13 @@ bool test_SIScalarCreateUnitString(void) {
 
     OCRelease(unit_str);
     OCRelease(s);
-    printf("test_SIScalarCreateUnitString passed\n");
+    printf("test_SIScalarCopyUnitSymbol passed\n");
     return true;
 }
 
 
 bool test_SIScalarCreateStringValueWithFormat(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarCreateStringValueWithFormat failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -3004,7 +3004,7 @@ bool test_SIScalarCreateStringValueWithFormat(void) {
 }
 
 bool test_SIScalarCreateNumericStringValueWithFormat(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarCreateNumericStringValueWithFormat failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -3036,7 +3036,7 @@ bool test_SIScalarCreateNumericStringValueWithFormat(void) {
 }
 
 bool test_SIScalarAddToArrayAsStringValue(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarAddToArrayAsStringValue failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -3080,7 +3080,7 @@ bool test_SIScalarAddToArrayAsStringValue(void) {
 #include <complex.h>
 
 bool test_SIScalarIsReal(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarIsReal failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -3130,7 +3130,7 @@ bool test_SIScalarIsReal(void) {
 }
 
 bool test_SIScalarIsImaginary(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarIsImaginary failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -3186,7 +3186,7 @@ fail:
 }
 
 bool test_SIScalarIsComplex(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarIsComplex failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -3234,7 +3234,7 @@ fail:
 
 
 bool test_SIScalarIsZero(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarIsZero failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -3293,7 +3293,7 @@ fail:
 }
 
 bool test_SIScalarIsInfinite(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef u = SIUnitWithSymbol(STR("m"));
     if (!u) {
         printf("test_SIScalarIsInfinite failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -3352,7 +3352,7 @@ fail:
 }
 
 bool test_SIScalarIsRealNonNegativeInteger(void) {
-    SIUnitRef u = SIUnitFindWithUnderivedSymbol(STR("m")); // Unit doesn't affect value check
+    SIUnitRef u = SIUnitWithSymbol(STR("m")); // Unit doesn't affect value check
     if (!u) {
         printf("test_SIScalarIsRealNonNegativeInteger failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -3413,7 +3413,7 @@ bool test_SIScalarValidateProposedStringValue(void) {
     OCStringRef invalid_dim_str = STR("10 kg");   // Different dimensionality
     OCStringRef invalid_fmt_str = STR("ten meters"); // Malformed input
 
-    SIScalarRef s_meter = SIScalarCreateWithFloat(1.0f, SIUnitFindWithUnderivedSymbol(STR("m")));
+    SIScalarRef s_meter = SIScalarCreateWithFloat(1.0f, SIUnitWithSymbol(STR("m")));
     if (!s_meter) {
         printf("test_SIScalarValidateProposedStringValue failed: Failed to create reference scalar\n");
         return false;
@@ -3474,8 +3474,8 @@ bool test_SIScalarValidateProposedStringValue(void) {
 }
 
 bool test_SIScalarEqual(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef cm = SIUnitFindWithUnderivedSymbol(STR("cm"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef cm = SIUnitWithSymbol(STR("cm"));
     if (!m || !cm) {
         printf("test_SIScalarEqual failed: Failed to retrieve unit(s)\n");
         return false;
@@ -3518,9 +3518,9 @@ fail:
 
 
 bool test_SIScalarCompare(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef cm = SIUnitFindWithUnderivedSymbol(STR("cm"));
-    SIUnitRef kg = SIUnitFindWithUnderivedSymbol(STR("kg"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef cm = SIUnitWithSymbol(STR("cm"));
+    SIUnitRef kg = SIUnitWithSymbol(STR("kg"));
 
     if (!m || !cm || !kg) {
         printf("test_SIScalarCompare failed: Failed to retrieve one or more base units\n");
@@ -3570,7 +3570,7 @@ fail:
 
 bool test_SIScalarCompareReduced(void) {
     // Similar to Compare, but ensures units are reduced first.
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     double mult = 1.0;
     SIUnitRef mm_unit = SIUnitFromExpression(STR("mm"), &mult, NULL); // millimeter
 
@@ -3604,7 +3604,7 @@ bool test_SIScalarCompareReduced(void) {
 
 
 bool test_SIScalarCompareLoose(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     if (!m) {
         printf("test_SIScalarCompareLoose failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -3649,7 +3649,7 @@ fail:
 // -----------------------------------------------------------------------------
 // Test SIScalarBestConversionForQuantity: 0.005 s → 5 ms
 bool test_SIScalarBestConversionForQuantity(void) {
-    SIScalarRef s = SIScalarCreateWithDouble(0.005, SIUnitFindWithUnderivedSymbol(STR("s")));
+    SIScalarRef s = SIScalarCreateWithDouble(0.005, SIUnitWithSymbol(STR("s")));
     OCStringRef err = NULL;
 
     bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
@@ -3688,7 +3688,7 @@ bool test_SIScalarBestConversionForQuantity(void) {
 // Test SIScalarBestConversionForQuantity: large value → hours
 bool test_SIScalarBestConversionForQuantity_large(void) {
     // 36 000 s → 10 h
-    SIScalarRef s = SIScalarCreateWithDouble(36000.0, SIUnitFindWithUnderivedSymbol(STR("s")));
+    SIScalarRef s = SIScalarCreateWithDouble(36000.0, SIUnitWithSymbol(STR("s")));
     OCStringRef err = NULL;
 
     bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
@@ -3727,7 +3727,7 @@ bool test_SIScalarBestConversionForQuantity_large(void) {
 // Test SIScalarBestConversionForQuantity: very small value → microseconds
 bool test_SIScalarBestConversionForQuantity_tiny(void) {
     // 1e-6 s → 1 µs
-    SIScalarRef s = SIScalarCreateWithDouble(0.000001, SIUnitFindWithUnderivedSymbol(STR("s")));
+    SIScalarRef s = SIScalarCreateWithDouble(0.000001, SIUnitWithSymbol(STR("s")));
     OCStringRef err = NULL;
 
     bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
@@ -3767,7 +3767,7 @@ bool test_SIScalarBestConversionForQuantity_tiny(void) {
 // Test SIScalarBestConversionForQuantity: no change when in “good” range
 bool test_SIScalarBestConversionForQuantity_noop(void) {
     // 2 s stays as seconds
-    SIScalarRef s = SIScalarCreateWithDouble(2.0, SIUnitFindWithUnderivedSymbol(STR("s")));
+    SIScalarRef s = SIScalarCreateWithDouble(2.0, SIUnitWithSymbol(STR("s")));
     OCStringRef err = NULL;
 
     bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
@@ -3805,7 +3805,7 @@ bool test_SIScalarBestConversionForQuantity_noop(void) {
 // -----------------------------------------------------------------------------
 // Test SIScalarBestConversionForQuantity: zero → no error, no change
 bool test_SIScalarBestConversionForQuantity_zero(void) {
-    SIScalarRef s = SIScalarCreateWithDouble(0.0, SIUnitFindWithUnderivedSymbol(STR("s")));
+    SIScalarRef s = SIScalarCreateWithDouble(0.0, SIUnitWithSymbol(STR("s")));
     OCStringRef err = STR("pre-existing");
     bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
                                                 STR("time"),
@@ -3838,7 +3838,7 @@ bool test_SIScalarBestConversionForQuantity_zero(void) {
 // Test SIScalarBestConversionForQuantity: negative duration → preserves sign
 bool test_SIScalarBestConversionForQuantity_negative(void) {
     // –0.002 s → –2 ms
-    SIScalarRef s = SIScalarCreateWithDouble(-0.002, SIUnitFindWithUnderivedSymbol(STR("s")));
+    SIScalarRef s = SIScalarCreateWithDouble(-0.002, SIUnitWithSymbol(STR("s")));
     OCStringRef err = NULL;
     bool ok = SIScalarBestConversionForQuantity((SIMutableScalarRef)s,
                                                 STR("time"),
@@ -3876,7 +3876,7 @@ bool test_SIScalarBestConversionForQuantity_negative(void) {
  * Write a SIScalar to JSON file, read it back, check for exact value and unit string.
  */
 bool test_SIScalarWriteReadJSON_simple(void) {
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
     SIScalarRef scalar = SIScalarCreateWithFloat(42.5f, m);
 
     char tmpl[PATH_MAX];
@@ -3929,7 +3929,7 @@ bool test_SIScalarWriteReadJSON_simple(void) {
 }
 
 bool test_SIScalarWriteReadJSON_negative(void) {
-    SIUnitRef kg = SIUnitFindWithUnderivedSymbol(STR("kg"));
+    SIUnitRef kg = SIUnitWithSymbol(STR("kg"));
     SIScalarRef scalar = SIScalarCreateWithFloat(-17.25f, kg);
 
     char tmpl[PATH_MAX];
@@ -4046,9 +4046,9 @@ bool test_SIScalarWriteReadJSON_array_and_dictionary(void) {
     bool success = true;
 
     // Create some SIScalars
-    SIUnitRef m = SIUnitFindWithUnderivedSymbol(STR("m"));
-    SIUnitRef kg = SIUnitFindWithUnderivedSymbol(STR("kg"));
-    SIUnitRef s = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef m = SIUnitWithSymbol(STR("m"));
+    SIUnitRef kg = SIUnitWithSymbol(STR("kg"));
+    SIUnitRef s = SIUnitWithSymbol(STR("s"));
 
     SIScalarRef s1 = SIScalarCreateWithFloat(42.0f, m);
     SIScalarRef s2 = SIScalarCreateWithFloat(-7.0f, kg);

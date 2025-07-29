@@ -73,6 +73,8 @@ SIUnitRef SIQuantityGetUnit(SIQuantityRef quantity);
  */
 bool SIQuantitySetUnit(SIMutableQuantityRef quantity, SIUnitRef unit);
 
+OCStringRef SIQuantityCopyUnitSymbol(SIQuantityRef quantity);
+
 /**
  * @brief Returns the quantity's dimensionality.
  * @param quantity The quantity.

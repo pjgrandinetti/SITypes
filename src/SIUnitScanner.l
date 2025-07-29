@@ -17,7 +17,7 @@ UNIT {SYMBOL1}|{SYMBOL2}|{SYMBOL3}
 %%
 {UNIT} {
     OCStringRef string = OCStringCreateWithCString(yytext);
-    siulval.unit = SIUnitFindWithUnderivedSymbol(string);
+    siulval.unit = SIUnitWithSymbol(string);
     OCRelease(string);
     return UNIT;
 }

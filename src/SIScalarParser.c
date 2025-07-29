@@ -163,7 +163,7 @@ SIScalarRef ScalarNodeEvaluate(ScalarNodeRef node, OCStringRef *errorString)
             SIScalarReduceUnit((SIMutableScalarRef)right);
             double complex power = SIScalarDoubleComplexValue(right);
             SIUnitRef argumentUnit = SIQuantityGetUnit((SIQuantityRef)left);
-            if (SIUnitIsDimensionless(argumentUnit) && SIUnitGetScaleNonSIToCoherentSI(argumentUnit) == 1.0)
+            if (SIUnitIsDimensionless(argumentUnit) && SIUnitGetScaleToCoherentSI(argumentUnit) == 1.0)
             {
                 SIScalarReduceUnit((SIMutableScalarRef)left);
                 double complex x = SIScalarDoubleComplexValue(left);
@@ -613,7 +613,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = cacos(SIScalarDoubleComplexValue(scalar));
-            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
             return result;
@@ -630,7 +630,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = cacosh(SIScalarDoubleComplexValue(scalar));
-            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
             return result;
@@ -648,7 +648,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
             double complex value = casin(SIScalarDoubleComplexValue(scalar));
-            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
             return result;
@@ -665,7 +665,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar)))
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
             double complex value = casinh(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
@@ -683,7 +683,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar)))
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
             double complex value = catan(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);
@@ -701,7 +701,7 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
         if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar)))
         {
             SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-            SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("rad"));
+            SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
             double complex value = catanh(SIScalarDoubleComplexValue(scalar));
             SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
             if(result) OCAutorelease(result);

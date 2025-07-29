@@ -476,48 +476,6 @@ static struct impl_SIUnit *SIUnitAllocate() {
  */
 
 
-OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool forLibraryLookup) {
-    if (!expression) return NULL;
-    
-    OCMutableStringRef normalized = OCStringCreateMutableCopy(expression);
-    if (!normalized) return NULL;
-    
-    // Replace Unicode multiplication and division symbols with ASCII equivalents
-    OCStringFindAndReplace2(normalized, STR("×"), STR("*"));
-    OCStringFindAndReplace2(normalized, STR("·"), STR("*"));
-    OCStringFindAndReplace2(normalized, STR("⋅"), STR("*"));  // Dot operator
-    OCStringFindAndReplace2(normalized, STR("∙"), STR("*"));  // Bullet operator
-    OCStringFindAndReplace2(normalized, STR("÷"), STR("/"));
-    OCStringFindAndReplace2(normalized, STR("∕"), STR("/"));  // Division slash
-    OCStringFindAndReplace2(normalized, STR("⁄"), STR("/"));  // Fraction slash
-    
-    // Normalize Unicode mu characters to standard micro sign (µ = U+00B5)
-    OCStringFindAndReplace2(normalized, STR("μ"), STR("µ"));  // Greek Small Letter Mu (U+03BC)
-    OCStringFindAndReplace2(normalized, STR("Μ"), STR("µ"));  // Greek Capital Letter Mu (U+039C) 
-    OCStringFindAndReplace2(normalized, STR("ɥ"), STR("µ"));  // Latin Small Letter Turned H (U+0265) - sometimes confused
-    OCStringFindAndReplace2(normalized, STR("𝜇"), STR("µ"));  // Mathematical Italic Small Mu (U+1D707)
-    OCStringFindAndReplace2(normalized, STR("𝝁"), STR("µ"));  // Mathematical Bold Small Mu (U+1D741)
-    OCStringFindAndReplace2(normalized, STR("𝝻"), STR("µ"));  // Mathematical Bold Italic Small Mu (U+1D77B)
-
-    // Remove spaces around operators for consistent formatting
-    OCStringFindAndReplace2(normalized, STR(" * "), STR("*"));
-    OCStringFindAndReplace2(normalized, STR(" / "), STR("/"));
-    OCStringFindAndReplace2(normalized, STR(" ^ "), STR("^"));
-    
-    // Trim leading/trailing whitespace
-    OCStringTrimWhitespace(normalized);
-    
-    if (forLibraryLookup) {
-        // For library lookup, replace * with • for consistent symbol representation
-        OCStringFindAndReplace2(normalized, STR("*"), STR("•"));
-    }
-    else {
-        // For display, replace • with * for multiplication
-        OCStringFindAndReplace2(normalized, STR("•"), STR("*"));
-    }
-    
-    return normalized;
-}
 
 static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
                               const SIPrefix num_prefix[BASE_DIMENSION_COUNT], const SIPrefix den_prefix[BASE_DIMENSION_COUNT],
@@ -587,7 +545,7 @@ static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
     memcpy(theUnit->num_prefix, num_prefix, sizeof(SIPrefix) * BASE_DIMENSION_COUNT);
     memcpy(theUnit->den_prefix, den_prefix, sizeof(SIPrefix) * BASE_DIMENSION_COUNT);
     // Construct unit symbol and key
-    theUnit->symbol = SIUnitCreateSymbol(theUnit);
+    theUnit->symbol = SIUnitCopySymbol(theUnit);
     theUnit->key = SIUnitCreateLibraryKey(theUnit->symbol);
     return (SIUnitRef)theUnit;
 }
@@ -642,7 +600,7 @@ static SIUnitRef SIUnitCreateForLibrary(SIDimensionalityRef dimensionality,
     memcpy(theUnit->num_prefix, num_prefix, sizeof(SIPrefix) * BASE_DIMENSION_COUNT);
     memcpy(theUnit->den_prefix, den_prefix, sizeof(SIPrefix) * BASE_DIMENSION_COUNT);
     // Construct unit symbol 
-    theUnit->symbol = SIUnitCreateSymbol(theUnit);
+    theUnit->symbol = SIUnitCopySymbol(theUnit);
     // For library building, generate canonical key directly from the unit structure
     // avoiding expensive expression parsing since we control the exact format
     theUnit->key = SIUnitCreateCanonicalKey(theUnit);
@@ -945,7 +903,7 @@ SIPrefix SIUnitGetRootSymbolPrefix(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, 0);
     return theUnit->root_symbol_prefix;
 }
-double SIUnitGetScaleNonSIToCoherentSI(SIUnitRef theUnit) {
+double SIUnitGetScaleToCoherentSI(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, 0);
     return theUnit->scale_to_coherent_si;
 }
@@ -969,18 +927,11 @@ bool SIUnitIsDimensionlessAndUnderived(SIUnitRef theUnit) {
 }
 OCStringRef SIUnitCopySymbol(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
-    if (SIUnitIsDimensionlessAndUnderived(theUnit)) {
-        return OCStringCreateCopy(STR(" "));
-    }
-    return OCStringCreateCopy(theUnit->symbol);
-}
-OCStringRef SIUnitCreateSymbol(SIUnitRef unit) {
-    IF_NO_OBJECT_EXISTS_RETURN(unit, NULL);
-    if (!unit->dimensionality) return NULL;
-    if (unit->root_symbol) {
+    if (!theUnit->dimensionality) return NULL;
+    if (theUnit->root_symbol) {
         OCMutableStringRef s = OCStringCreateMutable(0);
-        OCStringAppend(s, prefixSymbolForSIPrefix(unit->root_symbol_prefix));
-        OCStringAppend(s, unit->root_symbol);
+        OCStringAppend(s, prefixSymbolForSIPrefix(theUnit->root_symbol_prefix));
+        OCStringAppend(s, theUnit->root_symbol);
         return s;
     }
 
@@ -994,11 +945,11 @@ OCStringRef SIUnitCreateSymbol(SIUnitRef unit) {
         int numOnes = 0;
         int whichIdx = -1;
         for (int i = 0; i < BASE_DIMENSION_COUNT; i++) {
-            if (SIDimensionalityGetDenExpAtIndex(unit->dimensionality, i) != 0) {
+            if (SIDimensionalityGetDenExpAtIndex(theUnit->dimensionality, i) != 0) {
                 allDenZero = false;
                 break;
             }
-            uint8_t n = SIDimensionalityGetNumExpAtIndex(unit->dimensionality, i);
+            uint8_t n = SIDimensionalityGetNumExpAtIndex(theUnit->dimensionality, i);
             if (n > 1) {
                 allDenZero = false;
                 break;
@@ -1013,7 +964,7 @@ OCStringRef SIUnitCreateSymbol(SIUnitRef unit) {
             // or something like cm, mm, etc (scale_to_coherent_si!=1).
             OCMutableStringRef s = OCStringCreateMutable(0);
             // numerator prefix (for cm, mm, etc) comes from num_prefix[whichIdx]
-            OCStringAppend(s, prefixSymbolForSIPrefix(unit->num_prefix[whichIdx]));
+            OCStringAppend(s, prefixSymbolForSIPrefix(theUnit->num_prefix[whichIdx]));
             // then the one base‐unit letter
             OCStringAppend(s, baseUnitRootSymbol(whichIdx));
             return s;
@@ -1034,10 +985,10 @@ OCStringRef SIUnitCreateSymbol(SIUnitRef unit) {
     } while (0)
     // a) Numerator
     for (int i = 0; i < BASE_DIMENSION_COUNT; i++) {
-        uint8_t e = SIDimensionalityGetNumExpAtIndex(unit->dimensionality, i);
+        uint8_t e = SIDimensionalityGetNumExpAtIndex(theUnit->dimensionality, i);
         if (e == 0) continue;
         OCStringRef prefix = prefixSymbolForSIPrefix(
-            SIUnitGetNumeratorPrefixAtIndex(unit, i));
+            SIUnitGetNumeratorPrefixAtIndex(theUnit, i));
         OCStringRef root = baseUnitRootSymbol(i);
         if (OCStringGetLength(num) == 0) {
             APPEND_PART(num, root, e, "");
@@ -1048,10 +999,10 @@ OCStringRef SIUnitCreateSymbol(SIUnitRef unit) {
     }
     // b) Denominator
     for (int i = 0; i < BASE_DIMENSION_COUNT; i++) {
-        uint8_t e = SIDimensionalityGetDenExpAtIndex(unit->dimensionality, i);
+        uint8_t e = SIDimensionalityGetDenExpAtIndex(theUnit->dimensionality, i);
         if (e == 0) continue;
         OCStringRef prefix = prefixSymbolForSIPrefix(
-            SIUnitGetDenominatorPrefixAtIndex(unit, i));
+            SIUnitGetDenominatorPrefixAtIndex(theUnit, i));
         OCStringRef root = baseUnitRootSymbol(i);
         if (OCStringGetLength(den) == 0) {
             APPEND_PART(den, root, e, "");
@@ -1142,7 +1093,7 @@ bool SIUnitAreEquivalentUnits(SIUnitRef theUnit1, SIUnitRef theUnit2) {
         return false;
     return true;
 }
-bool SIUnitIsCoherentDerivedUnit(SIUnitRef u) {
+bool SIUnitIsCoherentUnit(SIUnitRef u) {
     if (!u) return false;
     if (fabs(u->scale_to_coherent_si - 1.0) > 1e-12) return false;
     // must *not* be any kind of “special” or prefixed base unit
@@ -1182,7 +1133,7 @@ double SIUnitConversion(SIUnitRef initialUnit, SIUnitRef finalUnit) {
         return SIUnitScaleToCoherentSIUnit(initialUnit) / SIUnitScaleToCoherentSIUnit(finalUnit);
     return 0;
 }
-OCStringRef SIUnitCreateName(SIUnitRef theUnit) {
+OCStringRef SIUnitCopyName(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
     // Construct the name of the unit from root_name and prefix.
     if (SIUnitIsDimensionlessAndUnderived(theUnit))
@@ -1206,7 +1157,7 @@ OCStringRef SIUnitCreateName(SIUnitRef theUnit) {
     }
     return NULL;
 }
-OCStringRef SIUnitCreatePluralName(SIUnitRef theUnit) {
+OCStringRef SIUnitCopyPluralName(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
     // Construct the plural name of the unit from root_plural_name and prefix.
     if (SIUnitIsSIBaseUnit(theUnit)) {
@@ -1291,7 +1242,7 @@ static SIUnitRef SIUnitFindEquivalentDerivedSIUnit(SIUnitRef input) {
         double bestScaling = 100;
         for (int64_t index = 0; index < OCArrayGetCount(candidates); index++) {
             SIUnitRef unit = OCArrayGetValueAtIndex(candidates, index);
-            if (SIUnitIsCoherentDerivedUnit(unit)) {  // was unit->root_symbol==NULL
+            if (SIUnitIsCoherentUnit(unit)) {  // was unit->root_symbol==NULL
                 double scaling = fabs(log10(SIUnitScaleToCoherentSIUnit(unit) / SIUnitScaleToCoherentSIUnit(input)));
                 if (fabs(log(SIUnitScaleToCoherentSIUnit(unit) / SIUnitScaleToCoherentSIUnit(input))) < bestScaling) {
                     bestScaling = scaling;
@@ -1353,8 +1304,8 @@ bool SIUnitEqual(SIUnitRef theUnit1, SIUnitRef theUnit2) {
         return false;
     if (theUnit1->scale_to_coherent_si != theUnit2->scale_to_coherent_si)
         return false;
-    OCStringRef symbol1 = SIUnitCreateSymbol(theUnit1);
-    OCStringRef symbol2 = SIUnitCreateSymbol(theUnit2);
+    OCStringRef symbol1 = SIUnitCopySymbol(theUnit1);
+    OCStringRef symbol2 = SIUnitCopySymbol(theUnit2);
     if (OCStringCompare(symbol1, symbol2, 0) != kOCCompareEqualTo) {
         OCRelease(symbol1);
         OCRelease(symbol2);
@@ -1718,7 +1669,7 @@ static void AddNonSIUnitToLibrary(OCStringRef quantity, OCStringRef name, OCStri
                                 kSIPrefixNone, kSIPrefixNone,
                                 name, pluralName, symbol, kSIPrefixNone, false, scale_to_coherent_si, false);
 }
-SIUnitRef SIUnitFindWithName(OCStringRef input) {
+SIUnitRef SIUnitWithName(OCStringRef input) {
     if (NULL == unitsLibrary)
         SIUnitsCreateLibraries();
     IF_NO_OBJECT_EXISTS_RETURN(unitsLibrary, NULL);
@@ -1727,7 +1678,7 @@ SIUnitRef SIUnitFindWithName(OCStringRef input) {
     SIUnitRef units[count];
     OCDictionaryGetKeysAndValues(unitsLibrary, (const void **)keys, (const void **)units);
     for (int64_t index = 0; index < count; index++) {
-        OCStringRef name = SIUnitCreateName(units[index]);
+        OCStringRef name = SIUnitCopyName(units[index]);
         if (name)
             if (OCStringCompare(name, input, 0) == kOCCompareEqualTo) {
                 OCRelease(name);
@@ -1736,7 +1687,7 @@ SIUnitRef SIUnitFindWithName(OCStringRef input) {
             }
         if (name)
             OCRelease(name);
-        name = SIUnitCreatePluralName(units[index]);
+        name = SIUnitCopyPluralName(units[index]);
         if (name)
             if (OCStringCompare(name, input, 0) == kOCCompareEqualTo) {
                 OCRelease(name);
@@ -1749,8 +1700,8 @@ SIUnitRef SIUnitFindWithName(OCStringRef input) {
     return NULL;
 }
 static OCComparisonResult unitNameLengthSort(const void *val1, const void *val2, void *context) {
-    OCStringRef name1 = SIUnitCreateName((SIUnitRef)val1);
-    OCStringRef name2 = SIUnitCreateName((SIUnitRef)val2);
+    OCStringRef name1 = SIUnitCopyName((SIUnitRef)val1);
+    OCStringRef name2 = SIUnitCopyName((SIUnitRef)val2);
     if (name1 == NULL && name2 == NULL)
         return kOCCompareEqualTo;
     if (name1 == NULL) {
@@ -1874,7 +1825,7 @@ void cleanupUnitsLibraries(void) {
     OCRelease(unitsLibrary);
     unitsLibrary = NULL;
 }
-SIUnitRef SIUnitFindWithUnderivedSymbol(OCStringRef symbol) {
+SIUnitRef SIUnitWithSymbol(OCStringRef symbol) {
     if (NULL == symbol) {
         return NULL;
     }
@@ -2282,7 +2233,7 @@ SIUnitRef SIUnitByTakingNthRoot(SIUnitRef input,
     if (error && *error) return NULL;
 
     // Step 2: Try to find a standard SI unit with this dimensionality
-    SIUnitRef result_unit = SIUnitFindCoherentSIUnitWithDimensionality(dimensionality);
+    SIUnitRef result_unit = SIUnitCoherentUnitFromDimensionality(dimensionality);
     if (result_unit) {
         // adjust multiplier for the change in unit scale
         if (unit_multiplier) {
@@ -2419,13 +2370,7 @@ SIUnitRef SIUnitByRaisingToPower(SIUnitRef input, int power, double *unit_multip
     SIUnitRef unit = SIUnitByRaisingToPowerWithoutReducing(input, power, unit_multiplier, error);
     return SIUnitByReducing(unit, unit_multiplier);
 }
-void SIUnitShow(SIUnitRef theUnit) {
-    IF_NO_OBJECT_EXISTS_RETURN(theUnit, );
-    OCStringShow(theUnit->symbol);
-    fprintf(stdout, "\n");
-    return;
-}
-SIUnitRef SIUnitFindCoherentSIUnitWithDimensionality(SIDimensionalityRef theDim) {
+SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef theDim) {
     IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
     SIPrefix num[BASE_DIMENSION_COUNT] = {kSIPrefixNone,kSIPrefixKilo,kSIPrefixNone,kSIPrefixNone,kSIPrefixNone,kSIPrefixNone,kSIPrefixNone};
     SIPrefix den[BASE_DIMENSION_COUNT] = {kSIPrefixNone,kSIPrefixKilo,kSIPrefixNone,kSIPrefixNone,kSIPrefixNone,kSIPrefixNone,kSIPrefixNone};
@@ -2690,6 +2635,10 @@ void SIUnitsLibrarySetImperialVolumes(bool value) {
         SIUnitAddUKLabeledVolumeUnits();     // Define UK Volume units
     }
     imperialVolumes = value;
+}
+bool SIUnitsLibraryGetImperialVolumes(void)
+{
+    return imperialVolumes;
 }
 
 __attribute__((no_sanitize("address")))

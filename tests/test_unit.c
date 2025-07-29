@@ -76,7 +76,7 @@ bool test_unit_1(void) {
         return false;
     }
 
-    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("bar"));
+    SIUnitRef unit = SIUnitWithSymbol(STR("bar"));
     if (!unit) {
         printf("test_unit_1 failed: Failed to retrieve unit 'bar'\n");
         OCRelease(dimensionality);
@@ -94,13 +94,13 @@ bool test_unit_1(void) {
 bool test_unit_3(void) {
     printf("Running %s...\n", __func__);
 
-    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("N"));
+    SIUnitRef unit = SIUnitWithSymbol(STR("N"));
     if (!unit) {
         printf("test_unit_3 failed: Failed to retrieve unit 'N'\n");
         return false;
     }
 
-    unit = SIUnitFindWithUnderivedSymbol(STR("m"));
+    unit = SIUnitWithSymbol(STR("m"));
     if (!unit) {
         printf("test_unit_3 failed: Failed to retrieve unit 'm'\n");
         return false;
@@ -145,33 +145,21 @@ bool test_unit_4(void) {
         return false;
     }
 
-    if (SIUnitGetNumeratorPrefixAtIndex(unit, kSILengthIndex) != kSIPrefixKilo) {
-        printf("test_unit_4 failed: Expected numerator prefix at index %d to be kilo\n", kSILengthIndex);
+    OCStringRef name = SIUnitCopyName(unit);
+    if (!name) {
+        printf("test_unit_4 failed: Failed to retrieve name\n");
         OCRelease(unit);
         return false;
     }
 
-    if (SIUnitGetDenominatorPrefixAtIndex(unit, kSILengthIndex) != kSIPrefixNone) {
-        printf("test_unit_4 failed: Expected denominator prefix at index %d to be none\n", kSILengthIndex);
+    if (OCStringCompare(name, STR("meter"), 0) != kOCCompareEqualTo) {
+        printf("test_unit_4 failed: Expected name 'meter', got '%s'\n", OCStringGetCString(name));
+        OCRelease(name);
         OCRelease(unit);
         return false;
     }
 
-    OCStringRef rootName = SIUnitCopyRootName(unit);
-    if (!rootName) {
-        printf("test_unit_4 failed: Failed to retrieve root name\n");
-        OCRelease(unit);
-        return false;
-    }
-
-    if (OCStringCompare(rootName, STR("meter"), 0) != kOCCompareEqualTo) {
-        printf("test_unit_4 failed: Expected root name 'meter', got '%s'\n", OCStringGetCString(rootName));
-        OCRelease(rootName);
-        OCRelease(unit);
-        return false;
-    }
-
-    OCRelease(rootName);
+    OCRelease(name);
     OCRelease(unit);
     if (errorString) OCRelease(errorString);
 
@@ -183,31 +171,25 @@ bool test_unit_4(void) {
 bool test_unit_5(void) {
     printf("Running %s...\n", __func__);
 
-    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("g"));
+    SIUnitRef unit = SIUnitWithSymbol(STR("g"));
     if (!unit) {
         printf("test_unit_5 failed: Failed to retrieve unit 'g'\n");
         return false;
     }
 
-    OCStringRef rootPlural = SIUnitCopyRootPluralName(unit);
-    if (!rootPlural) {
-        printf("test_unit_5 failed: Failed to retrieve root plural name\n");
+    OCStringRef plural = SIUnitCopyPluralName(unit);
+    if (!rootPlpluralural) {
+        printf("test_unit_5 failed: Failed to retrieve plural name\n");
         return false;
     }
 
-    if (OCStringCompare(rootPlural, STR("grams"), 0) != kOCCompareEqualTo) {
-        printf("test_unit_5 failed: Expected plural root name 'grams', got '%s'\n", OCStringGetCString(rootPlural));
-        OCRelease(rootPlural);
+    if (OCStringCompare(plural, STR("grams"), 0) != kOCCompareEqualTo) {
+        printf("test_unit_5 failed: Expected plural name 'grams', got '%s'\n", OCStringGetCString(plural));
+        OCRelease(plural);
         return false;
     }
 
-    if (!SIUnitAllowsSIPrefix(unit)) {
-        printf("test_unit_5 failed: Unit 'g' should allow SI prefixes\n");
-        OCRelease(rootPlural);
-        return false;
-    }
-
-    OCRelease(rootPlural);
+    OCRelease(plural);
     printf("%s passed\n", __func__);
     return true;
 }
@@ -218,7 +200,7 @@ bool test_unit_6(void) {
     OCStringRef errorString = NULL;
     double multiplier = 1.0;
 
-    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("N"));
+    SIUnitRef unit = SIUnitWithSymbol(STR("N"));
     if (!unit) {
         printf("test_unit_6 failed: Failed to retrieve unit 'N'\n");
         return false;
@@ -314,7 +296,7 @@ bool test_unit_8(void) {
         return false;
     }
 
-    SIUnitRef N = SIUnitFindWithUnderivedSymbol(STR("N"));
+    SIUnitRef N = SIUnitWithSymbol(STR("N"));
     if (!N) {
         printf("test_unit_8 failed: Failed to retrieve unit 'N'\n");
         OCRelease(unit);
@@ -377,7 +359,7 @@ bool test_unit_9(void) {
         return false;
     }
 
-    SIUnitRef baseN = SIUnitFindWithUnderivedSymbol(STR("N"));
+    SIUnitRef baseN = SIUnitWithSymbol(STR("N"));
     if (!baseN) {
         printf("test_unit_9 failed: Failed to retrieve base unit 'N'\n");
         OCRelease(unit);
@@ -537,7 +519,7 @@ bool test_unit_12(void) {
     }
 
     // Get reference unit "Pa"
-    SIUnitRef pa = SIUnitFindWithUnderivedSymbol(STR("Pa"));
+    SIUnitRef pa = SIUnitWithSymbol(STR("Pa"));
     if (!pa) {
         printf("test_unit_12 failed: Failed to retrieve reference unit 'Pa'\n");
         OCRelease(unit);
@@ -591,7 +573,7 @@ bool test_unit_13(void) {
         return false;
     }
 
-    SIUnitRef kg = SIUnitFindWithUnderivedSymbol(STR("kg"));
+    SIUnitRef kg = SIUnitWithSymbol(STR("kg"));
     if (!kg) {
         printf("test_unit_13 failed: Failed to retrieve 'kg' unit\n");
         OCRelease(unit_lb);
@@ -651,7 +633,7 @@ bool test_unit_13(void) {
         return false;
     }
 
-    SIUnitRef N = SIUnitFindWithUnderivedSymbol(STR("N"));
+    SIUnitRef N = SIUnitWithSymbol(STR("N"));
     if (!N) {
         printf("test_unit_13 failed: Failed to retrieve unit 'N'\n");
         OCRelease(unit_lb);
@@ -930,7 +912,7 @@ bool test_unit_14(void) {
     }
 
     // Get reference meter unit
-    SIUnitRef meter = SIUnitFindWithUnderivedSymbol(STR("m"));
+    SIUnitRef meter = SIUnitWithSymbol(STR("m"));
     if (!meter) {
         printf("test_unit_14 failed: Failed to retrieve 'm' unit\n");
         OCRelease(area_unit);

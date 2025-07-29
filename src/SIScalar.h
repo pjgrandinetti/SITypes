@@ -322,7 +322,7 @@ OCStringRef SIScalarCreateNumericStringValue(SIScalarRef theScalar);
 OCStringRef SIScalarCreateStringValueForPart(SIScalarRef theScalar, complexPart thePart);
 
 /** @brief Creates a string representation of only the unit of a scalar. */
-OCStringRef SIScalarCreateUnitString(SIScalarRef theScalar);
+OCStringRef SIScalarCopyUnitSymbol(SIScalarRef theScalar);
 
 /** @brief Creates a formatted string representation of a scalar using a custom format. */
 OCStringRef SIScalarCreateStringValueWithFormat(SIScalarRef theScalar, OCStringRef format);

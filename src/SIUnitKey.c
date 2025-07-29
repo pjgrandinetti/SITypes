@@ -883,3 +883,46 @@ bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2) {
     
     return equivalent;
 }
+
+OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool forLibraryLookup) {
+    if (!expression) return NULL;
+    
+    OCMutableStringRef normalized = OCStringCreateMutableCopy(expression);
+    if (!normalized) return NULL;
+    
+    // Replace Unicode multiplication and division symbols with ASCII equivalents
+    OCStringFindAndReplace2(normalized, STR("×"), STR("*"));
+    OCStringFindAndReplace2(normalized, STR("·"), STR("*"));
+    OCStringFindAndReplace2(normalized, STR("⋅"), STR("*"));  // Dot operator
+    OCStringFindAndReplace2(normalized, STR("∙"), STR("*"));  // Bullet operator
+    OCStringFindAndReplace2(normalized, STR("÷"), STR("/"));
+    OCStringFindAndReplace2(normalized, STR("∕"), STR("/"));  // Division slash
+    OCStringFindAndReplace2(normalized, STR("⁄"), STR("/"));  // Fraction slash
+    
+    // Normalize Unicode mu characters to standard micro sign (µ = U+00B5)
+    OCStringFindAndReplace2(normalized, STR("μ"), STR("µ"));  // Greek Small Letter Mu (U+03BC)
+    OCStringFindAndReplace2(normalized, STR("Μ"), STR("µ"));  // Greek Capital Letter Mu (U+039C) 
+    OCStringFindAndReplace2(normalized, STR("ɥ"), STR("µ"));  // Latin Small Letter Turned H (U+0265) - sometimes confused
+    OCStringFindAndReplace2(normalized, STR("𝜇"), STR("µ"));  // Mathematical Italic Small Mu (U+1D707)
+    OCStringFindAndReplace2(normalized, STR("𝝁"), STR("µ"));  // Mathematical Bold Small Mu (U+1D741)
+    OCStringFindAndReplace2(normalized, STR("𝝻"), STR("µ"));  // Mathematical Bold Italic Small Mu (U+1D77B)
+
+    // Remove spaces around operators for consistent formatting
+    OCStringFindAndReplace2(normalized, STR(" * "), STR("*"));
+    OCStringFindAndReplace2(normalized, STR(" / "), STR("/"));
+    OCStringFindAndReplace2(normalized, STR(" ^ "), STR("^"));
+    
+    // Trim leading/trailing whitespace
+    OCStringTrimWhitespace(normalized);
+    
+    if (forLibraryLookup) {
+        // For library lookup, replace * with • for consistent symbol representation
+        OCStringFindAndReplace2(normalized, STR("*"), STR("•"));
+    }
+    else {
+        // For display, replace • with * for multiplication
+        OCStringFindAndReplace2(normalized, STR("•"), STR("*"));
+    }
+    
+    return normalized;
+}

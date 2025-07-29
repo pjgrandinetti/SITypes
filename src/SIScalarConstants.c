@@ -235,7 +235,7 @@ static void SIPeriodicTableIsotopeHalfLifeLibrary(void)
 {
     isotopeHalfLifeLibrary  = OCDictionaryCreateMutable(0);
     
-    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef unit = SIUnitWithSymbol(STR("s"));
     
     for(int64_t index=0;index<3181;index++) {
         SIScalarRef value = SIScalarCreateWithDouble(isotopeHalfLife[index],unit);
@@ -270,7 +270,7 @@ static void SIPeriodicTableIsotopeLifetimeLibrary(void)
 {
     isotopeLifetimeLibrary  = OCDictionaryCreateMutable(0);
     
-    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("s"));
+    SIUnitRef unit = SIUnitWithSymbol(STR("s"));
     
     for(int64_t index=0;index<3181;index++) {
         SIScalarRef value = SIScalarCreateWithDouble(isotopeLifeTime[index],unit);
@@ -339,7 +339,7 @@ static bool SIPeriodicTableNuclearElectricQuadrupoleMomentLibrary(OCStringRef *e
     if(errorString) if(*errorString) return false;
     nuclearElectricQuadrupoleMomentLibrary = OCDictionaryCreateMutable(0);
     
-    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("b"));
+    SIUnitRef unit = SIUnitWithSymbol(STR("b"));
     
     for(int64_t index=0;index<3181;index++) {
         if(quadMoment[index] != -99) {
@@ -378,7 +378,7 @@ static bool SIPeriodicTableNuclearMagneticDipoleMomentLibrary(OCStringRef *error
     if(errorString) if(*errorString) return false;
     nuclearMagneticMomentLibrary  = OCDictionaryCreateMutable(0);
     
-    SIUnitRef unit = SIUnitFindWithUnderivedSymbol(STR("µ_N"));
+    SIUnitRef unit = SIUnitWithSymbol(STR("µ_N"));
     
     for(int64_t index=0;index<3181;index++) {
         if(isotopeSpin[index] != -99) {
@@ -484,7 +484,7 @@ SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSym
     SIScalarRef magneticMoment = (SIScalarRef) OCDictionaryGetValue(nuclearMagneticMomentLibrary, lowerCaseKey);
     SIScalarRef spin = (SIScalarRef) OCDictionaryGetValue(isotopeSpinLibrary, lowerCaseKey);
 
-    SIScalarRef hbar = SIScalarCreateWithDouble(1,SIUnitFindWithUnderivedSymbol(STR("ℏ")));
+    SIScalarRef hbar = SIScalarCreateWithDouble(1,SIUnitWithSymbol(STR("ℏ")));
     OCRelease(lowerCaseKey);
     if(NULL == magneticMoment || NULL == spin || NULL == hbar ) {
         if(hbar) OCRelease(hbar);
