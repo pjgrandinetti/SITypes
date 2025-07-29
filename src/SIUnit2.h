@@ -20,6 +20,10 @@ OCStringRef SIUnit2GetName(SIUnit2Ref theUnit);
 OCStringRef SIUnit2GetPluralName(SIUnit2Ref theUnit);
 double SIUnit2ScaleToCoherentSIUnit(SIUnit2Ref theUnit);
 
+// Unit library management
+void SIUnit2LibrarySetImperialVolumes(bool value);
+void SIUnit2LibrariesRelease(void);  // do not call, called by SITypesShutdown()
+
 // Array creation functions
 OCArrayRef SIUnit2CreateArrayOfUnitsForQuantity(OCStringRef quantity);
 OCArrayRef SIUnit2CreateArrayOfUnitsForDimensionality(SIDimensionalityRef theDim);
