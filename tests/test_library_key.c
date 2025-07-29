@@ -525,6 +525,47 @@ bool test_library_key_consistency(void) {
     return success;
 }
 
+bool test_library_key_parenthetical_powers(void) {
+    printf("Running %s...\n", __func__);
+    bool success = true;
+    
+    // Test parenthetical power expansion
+    struct {
+        const char* input;
+        const char* expected;
+        const char* description;
+    } tests[] = {
+        {"(m•kg)^2", "kg^2•m^2", "simple parenthetical power"},
+        {"(m^2•kg/s)^4", "kg^4•m^8/s^4", "complex parenthetical power"},
+        {"(kg/m)^3", "kg^3/m^3", "parenthetical power with division"},
+        {"(m*s^2)^2", "m^2•s^4", "parenthetical power with existing powers"},
+        {"(N•m)^2", "N^2•m^2", "parenthetical power with derived units"},
+        {"(m/s)^(-2)", "s^2/m^2", "negative parenthetical power"}
+    };
+    
+    int num_tests = sizeof(tests) / sizeof(tests[0]);
+    for (int i = 0; i < num_tests; i++) {
+        OCStringRef input = OCStringCreateWithCString(tests[i].input);
+        OCStringRef expected = OCStringCreateWithCString(tests[i].expected);
+        OCStringRef result = SIUnitCreateLibraryKey(input);
+        
+        if (!result || OCStringCompare(result, expected, 0) != kOCCompareEqualTo) {
+            printf("FAILED: %s\n", tests[i].description);
+            printf("  Input: '%s'\n", tests[i].input);
+            printf("  Expected: '%s'\n", tests[i].expected);
+            printf("  Got: '%s'\n", result ? OCStringGetCString(result) : "NULL");
+            success = false;
+        }
+        
+        OCRelease(input);
+        OCRelease(expected);
+        if (result) OCRelease(result);
+    }
+    
+    printf("%s %s\n", __func__, success ? "passed" : "failed");
+    return success;
+}
+
 bool test_library_key_comprehensive(void) {
     printf("Running comprehensive SIUnitCreateLibraryKey test suite...\n\n");
     
@@ -540,6 +581,7 @@ bool test_library_key_comprehensive(void) {
     overall_success &= test_library_key_unicode_normalization();
     overall_success &= test_library_key_expression_equivalence();
     overall_success &= test_library_key_edge_cases();
+    overall_success &= test_library_key_parenthetical_powers();
     overall_success &= test_library_key_consistency();
     
     printf("\n=== SIUnitCreateLibraryKey Comprehensive Test Results ===\n");

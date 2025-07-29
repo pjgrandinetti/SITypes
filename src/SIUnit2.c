@@ -226,7 +226,7 @@ static SIUnit2Ref SIUnit2Create(SIDimensionalityRef dimensionality,
                                 double scale_to_coherent_si) {
     struct impl_SIUnit2 *theUnit = SIUnit2Allocate();
     if (!theUnit) return NULL;
-    theUnit->dimensionality = dimensionality;
+    theUnit->dimensionality = OCRetain(dimensionality);
     theUnit->scale_to_coherent_si = scale_to_coherent_si;
     if (name)
         theUnit->name = OCStringCreateCopy(name);
@@ -242,24 +242,60 @@ static SIUnit2Ref SIUnit2Create(SIDimensionalityRef dimensionality,
         theUnit->symbol = NULL;
     return (SIUnit2Ref)theUnit;
 }
+// Accessor functions for SIUnit2
+SIDimensionalityRef SIUnit2GetDimensionality(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    return theUnit->dimensionality;
+}
+OCStringRef SIUnit2GetSymbol(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    return theUnit->symbol;
+}
+OCStringRef SIUnit2GetName(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    return theUnit->name;
+}
+OCStringRef SIUnit2GetPluralName(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    return theUnit->plural_name;
+}
+double SIUnit2ScaleToCoherentSIUnit(SIUnit2Ref theUnit) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, 0);
+    return theUnit->scale_to_coherent_si;
+}
+bool SIUnit2AreEquivalentUnits(SIUnit2Ref theUnit1, SIUnit2Ref theUnit2) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit1, false);
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit2, false);
+    if (theUnit1 == theUnit2) return true;
+    if (!SIDimensionalityEqual(theUnit1->dimensionality, theUnit2->dimensionality)) return false;
+    if (OCCompareDoubleValues(SIUnit2ScaleToCoherentSIUnit(theUnit1), SIUnit2ScaleToCoherentSIUnit(theUnit2)) != kOCCompareEqualTo)
+        return false;
+    return true;
+}
 //
-static OCMutableDictionaryRef unitsLibrary = NULL;
-static OCMutableDictionaryRef unitsQuantitiesLibrary = NULL;
-static OCMutableDictionaryRef unitsDimensionalitiesLibrary = NULL;
-static OCMutableArrayRef unitsNamesLibrary = NULL;
+static OCMutableDictionaryRef units2Library = NULL;
+static OCMutableDictionaryRef units2QuantitiesLibrary = NULL;
+static OCMutableDictionaryRef units2DimensionalitiesLibrary = NULL;
+static OCMutableArrayRef units2NamesLibrary = NULL;
 static bool imperialVolumes = false;
-bool SIUnitsCreateLibraries(void);
-OCMutableDictionaryRef SIUnitGetUnitsLib(void) {
-    if (NULL == unitsLibrary) SIUnitsCreateLibraries();
-    return unitsLibrary;
+// Function prototypes
+static bool SIUnit2CreateLibraries(void);
+// Library accessor functions
+static OCMutableDictionaryRef SIUnit2GetUnitsLib(void) {
+    if (NULL == units2Library) SIUnit2CreateLibraries();
+    return units2Library;
 }
-OCMutableDictionaryRef SIUnitGetQuantitiesLib(void) {
-    if (NULL == unitsQuantitiesLibrary) SIUnitsCreateLibraries();
-    return unitsQuantitiesLibrary;
+static OCMutableDictionaryRef SIUnit2GetQuantitiesLib(void) {
+    if (NULL == units2QuantitiesLibrary) SIUnit2CreateLibraries();
+    return units2QuantitiesLibrary;
 }
-OCMutableDictionaryRef SIUnitGetDimensionalitiesLib(void) {
-    if (NULL == unitsDimensionalitiesLibrary) SIUnitsCreateLibraries();
-    return unitsDimensionalitiesLibrary;
+static OCMutableDictionaryRef SIUnit2GetDimensionalitiesLib(void) {
+    if (NULL == units2DimensionalitiesLibrary) SIUnit2CreateLibraries();
+    return units2DimensionalitiesLibrary;
+}
+static OCMutableArrayRef SIUnit2GetNamesLib(void) {
+    if (NULL == units2NamesLibrary) SIUnit2CreateLibraries();
+    return units2NamesLibrary;
 }
 static SIUnit2Ref AddToLib(
     OCStringRef quantity,
@@ -283,7 +319,7 @@ static SIUnit2Ref AddToLib(
         }
         return NULL;
     }
-    OCMutableDictionaryRef unitsLib = SIUnitGetUnitsLib();
+    OCMutableDictionaryRef unitsLib = SIUnit2GetUnitsLib();
     // Add unit to units library dictionary
     if (OCDictionaryContainsKey(unitsLib, theUnit->symbol)) {
         OCRelease(theUnit);
@@ -294,7 +330,7 @@ static SIUnit2Ref AddToLib(
     OCRelease(theUnit);  // This is a no-op for static instance, but helps AI not get confused
     // Append unit to mutable array value associated with quantity key inside quanity library dictionary
     {
-        OCMutableDictionaryRef unitsQuantitiesLib = SIUnitGetQuantitiesLib();
+        OCMutableDictionaryRef unitsQuantitiesLib = SIUnit2GetQuantitiesLib();
         OCMutableArrayRef units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLib, quantity);
         if (units)
             OCArrayAppendValue(units, theUnit);
@@ -308,7 +344,7 @@ static SIUnit2Ref AddToLib(
     // Append unit to mutable array value associated with dimensionality key inside dimensionality library dictionary
     {
         OCStringRef dimensionalitySymbol = SIDimensionalityGetSymbol(dimensionality);
-        OCMutableDictionaryRef unitsDimensionalitiesLib = SIUnitGetDimensionalitiesLib();
+        OCMutableDictionaryRef unitsDimensionalitiesLib = SIUnit2GetDimensionalitiesLib();
         OCMutableArrayRef units = (OCMutableArrayRef)OCDictionaryGetValue(unitsDimensionalitiesLib, dimensionalitySymbol);
         if (units)
             OCArrayAppendValue(units, theUnit);
@@ -437,6 +473,13 @@ static bool AddToLibPrefixed(
             OCRelease(prefixedSymbol);
             return false;
         }
+        // Reset the mutable strings to original values for each iteration
+        OCStringDelete(prefixedName, OCRangeMake(0, OCStringGetLength(prefixedName)));
+        OCStringDelete(prefixedPluralName, OCRangeMake(0, OCStringGetLength(prefixedPluralName)));
+        OCStringDelete(prefixedSymbol, OCRangeMake(0, OCStringGetLength(prefixedSymbol)));
+        OCStringAppend(prefixedName, name);
+        OCStringAppend(prefixedPluralName, plural_name);
+        OCStringAppend(prefixedSymbol, symbol);
         // Prefix the names and symbol
         OCStringInsert(prefixedName, 0, prefixName);
         OCStringInsert(prefixedPluralName, 0, prefixName);
@@ -472,15 +515,15 @@ static OCComparisonResult unitNameLengthSort(const void *val1, const void *val2,
         result = kOCCompareGreaterThan;
     return result;
 }
-bool SIUnitsCreateLibraries(void) {
+static bool SIUnit2CreateLibraries(void) {
     setlocale(LC_ALL, "");
     const struct lconv *const currentlocale = localeconv();
-    unitsLibrary = OCDictionaryCreateMutable(0);
-    unitsQuantitiesLibrary = OCDictionaryCreateMutable(0);
-    unitsDimensionalitiesLibrary = OCDictionaryCreateMutable(0);
-    IF_NO_OBJECT_EXISTS_RETURN(unitsLibrary, false);
-    IF_NO_OBJECT_EXISTS_RETURN(unitsQuantitiesLibrary, false);
-    IF_NO_OBJECT_EXISTS_RETURN(unitsDimensionalitiesLibrary, false);
+    units2Library = OCDictionaryCreateMutable(0);
+    units2QuantitiesLibrary = OCDictionaryCreateMutable(0);
+    units2DimensionalitiesLibrary = OCDictionaryCreateMutable(0);
+    IF_NO_OBJECT_EXISTS_RETURN(units2Library, false);
+    IF_NO_OBJECT_EXISTS_RETURN(units2QuantitiesLibrary, false);
+    IF_NO_OBJECT_EXISTS_RETURN(units2DimensionalitiesLibrary, false);
     // Derived Constants
 //
 #pragma mark Derived Constants
@@ -564,16 +607,16 @@ bool SIUnitsCreateLibraries(void) {
     AddToLib(kSIQuantityWavenumber, STR("inverse inch"), STR("inverse inches"), STR("(1/in)"), 1. / (1609.344 / 63360), &error);
     AddToLib(kSIQuantityWavenumber, STR("rydberg constant"), STR("rydberg constant"), STR("R_∞"), R_H, &error);
     AddToLib(kSIQuantityWavenumber, STR("inverse atomic unit of length"), STR("inverse atomic unit of length"), STR("(1/a_0)"), 1 / a_0, &error);
-    OCMutableArrayRef units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityWavenumber);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityInverseLength, units);
+    OCMutableArrayRef units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityWavenumber);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityInverseLength, units);
 //
 #pragma mark kSIQuantityLengthRatio, kSIQuantityPlaneAngle
     AddToLibPrefixed(kSIQuantityLengthRatio, STR("meter per meter"), STR("meters per meter"), STR("m/m"), 1.0, &error);
     AddToLibPrefixed(kSIQuantityLengthRatio, STR("radian"), STR("radians"), STR("rad"), 1.0, &error);
     AddToLibPrefixed(kSIQuantityLengthRatio, STR("degree"), STR("degrees"), STR("°"), kSIPi / 180., &error);
     AddToLib(kSIQuantityLengthRatio, STR("pi"), STR("pi"), STR("π"), kSIPi, &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityLengthRatio);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityPlaneAngle, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityLengthRatio);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityPlaneAngle, units);
 //
 #pragma mark kSIQuantityMass
     AddToLib(kSIQuantityMass, STR("microgram"), STR("micrograms"), STR("mcg"), 1e-9, &error);
@@ -787,8 +830,8 @@ bool SIUnitsCreateLibraries(void) {
     AddToLib(kSIQuantitySpeed, STR("mile per minute"), STR("miles per minute"), STR("mi/min"), 1609.344 / 60., &error);
     AddToLib(kSIQuantitySpeed, STR("mile per hour"), STR("miles per hour"), STR("mi/h"), 1609.344 / 3600., &error);
     AddToLib(kSIQuantitySpeed, STR("atomic unit of velocity"), STR("atomic units of velocity"), STR("a_0•E_h/ℏ"), a_0 * E_h / hbar, &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantitySpeed);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityVelocity, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantitySpeed);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityVelocity, units);
 //
 #pragma mark kSIQuantityAngularMomentum
     AddToLibPrefixed(kSIQuantityAngularMomentum, STR("joule second"), STR("joules second"), STR("J•s"), 1, &error);
@@ -886,9 +929,9 @@ bool SIUnitsCreateLibraries(void) {
     AddToLib(kSIQuantityPressure, STR("millimeter of Hg"), STR("millimeters of Hg"), STR("mmHg"), 133.322, &error);
     AddToLib(kSIQuantityPressure, STR("atmosphere"), STR("atmospheres"), STR("atm"), 1.01325e5, &error);
     AddToLibPrefixed(kSIQuantityPressure, STR("newton per square meter"), STR("newtons per square meter"), STR("N/m^2"), 1, &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityPressure);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityStress, units);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityElasticModulus, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityPressure);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityStress, units);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityElasticModulus, units);
 //
 #pragma mark kSIQuantityCompressibility
     AddToLib(kSIQuantityCompressibility, STR("inverse pascal"), STR("inverse pascals"), STR("1/Pa"), 1, &error);
@@ -920,8 +963,8 @@ bool SIUnitsCreateLibraries(void) {
     AddToLib(kSIQuantityPower, STR("inch pound force per hour"), STR("inches pound force per hour"), STR("in•lbf/h"), 1.3558179483314 / 12. / 3600., &error);
     AddToLib(kSIQuantityPower, STR("inch pound force per minute"), STR("inches pound force per minute"), STR("in•lbf/min"), 1.3558179483314 / 12. / 60., &error);
     AddToLib(kSIQuantityPower, STR("inch pound force per second"), STR("inches pound force per second"), STR("in•lbf/s"), 1.3558179483314 / 12., &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityPower);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityRadiantFlux, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityPower);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityRadiantFlux, units);
 //
 #pragma mark kSIQuantitySpectralPower
     AddToLibPrefixed(kSIQuantitySpectralPower, STR("watt per nanometer"), STR("watts per nanometer"), STR("W/nm"), 1.e9, &error);
@@ -938,15 +981,15 @@ bool SIUnitsCreateLibraries(void) {
 #pragma mark kSIQuantityElectricCharge, kSIQuantityAmountOfElectricity
     AddToLibPrefixed(kSIQuantityElectricCharge, STR("coulomb"), STR("coulombs"), STR("C"), 1, &error);
     AddToLib(kSIQuantityElectricCharge, STR("elementary charge"), STR("elementary charge"), STR("q_e"), kSIElementaryCharge, &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityElectricCharge);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityAmountOfElectricity, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityElectricCharge);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityAmountOfElectricity, units);
 //
 #pragma mark kSIQuantityElectricPotentialDifference, kSIQuantityElectromotiveForce, kSIQuantityVoltage
     AddToLibPrefixed(kSIQuantityElectricPotentialDifference, STR("volt"), STR("volts"), STR("V"), 1, &error);
     AddToLib(kSIQuantityElectricPotentialDifference, STR("atomic unit of electric potential"), STR("atomic units of electric potential"), STR("E_h/q_e"), E_h / kSIElementaryCharge, &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityElectricPotentialDifference);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityElectromotiveForce, units);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityVoltage, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityElectricPotentialDifference);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityElectromotiveForce, units);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityVoltage, units);
 //
 #pragma mark kSIQuantityElectricFieldGradient
     AddToLibPrefixed(kSIQuantityElectricFieldGradient, STR("volt per square meter"), STR("volts per square meter"), STR("V/m^2"), 1, &error);
@@ -1130,8 +1173,8 @@ bool SIUnitsCreateLibraries(void) {
 //
 #pragma mark kSIQuantityAngularSpeed, kSIQuantityAngularVelocity
     AddToLib(kSIQuantityAngularSpeed, STR("radian per second"), STR("radians per second"), STR("rad/s"), 1, &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityAngularSpeed);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityAngularVelocity, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityAngularSpeed);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityAngularVelocity, units);
 //
 #pragma mark kSIQuantityAngularAcceleration
     AddToLib(kSIQuantityAngularAcceleration, STR("radian per square second"), STR("radians per square second"), STR("rad/s^2"), 1, &error);
@@ -1141,8 +1184,8 @@ bool SIUnitsCreateLibraries(void) {
     AddToLibPrefixed(kSIQuantityHeatFluxDensity, STR("watt per square centimeter"), STR("watts per square centimeter"), STR("W/cm^2"), 10000., &error);
     AddToLibPrefixed(kSIQuantityHeatFluxDensity, STR("watt per square foot"), STR("watts per square foot"), STR("W/ft^2"), 10.76391041670972, &error);
     AddToLibPrefixed(kSIQuantityHeatFluxDensity, STR("watt per square inch"), STR("watts per square inch"), STR("W/in^2"), 10.76391041670972 / 12., &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityHeatFluxDensity);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityIrradiance, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityHeatFluxDensity);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityIrradiance, units);
 //
 #pragma mark kSIQuantitySpectralRadiantFluxDensity
     AddToLibPrefixed(kSIQuantitySpectralRadiantFluxDensity, STR("watt per square meter per nanometer"), STR("watts per square meter per nanometer"), STR("W/(m^2•nm)"), 1.e9, &error);
@@ -1150,15 +1193,15 @@ bool SIUnitsCreateLibraries(void) {
 #pragma mark kSIQuantityEntropy, kSIQuantityHeatCapacity
     AddToLibPrefixed(kSIQuantityEntropy, STR("joule per kelvin"), STR("joules per kelvin"), STR("J/K"), 1, &error);
     AddToLib(kSIQuantityEntropy, STR("boltzmann constant"), STR("boltzmann constant"), STR("k_B"), kSIBoltmannConstant, &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityEntropy);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityHeatCapacity, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityEntropy);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityHeatCapacity, units);
 //
 #pragma mark kSIQuantitySpecificHeatCapacity, kSIQuantitySpecificEntropy
     AddToLibPrefixed(kSIQuantitySpecificHeatCapacity, STR("joule per kilogram kelvin"), STR("joules per kilogram kelvin"), STR("J/(kg•K)"), 1, &error);
     AddToLibPrefixed(kSIQuantitySpecificHeatCapacity, STR("joule per gram kelvin"), STR("joules per gram kelvin"), STR("J/(g•K)"), 1000., &error);
     AddToLibPrefixed(kSIQuantitySpecificHeatCapacity, STR("calorie per gram per kelvin"), STR("calories per gram per kelvin"), STR("cal/(g•K)"), 4186.8, &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantitySpecificHeatCapacity);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantitySpecificEntropy, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantitySpecificHeatCapacity);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantitySpecificEntropy, units);
 //
 #pragma mark kSIQuantityMolarMass
     AddToLibPrefixed(kSIQuantityMolarMass, STR("gram per mole"), STR("grams per mole"), STR("g/mol"), 1e-3, &error);
@@ -1205,9 +1248,9 @@ bool SIUnitsCreateLibraries(void) {
 //
 #pragma mark kSIQuantitySurfaceChargeDensity, kSIQuantityElectricFluxDensity, kSIQuantityElectricDisplacement
     AddToLibPrefixed(kSIQuantitySurfaceChargeDensity, STR("coulomb per square meter"), STR("coulombs per square meter"), STR("C/m^2"), 1, &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantitySurfaceChargeDensity);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityElectricFluxDensity, units);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityElectricDisplacement, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantitySurfaceChargeDensity);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityElectricFluxDensity, units);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityElectricDisplacement, units);
 //
 #pragma mark kSIQuantityPermeability
     AddToLibPrefixed(kSIQuantityPermeability, STR("henry per meter"), STR("henries per meter"), STR("H/m"), 1., &error);
@@ -1219,8 +1262,8 @@ bool SIUnitsCreateLibraries(void) {
 #pragma mark kSIQuantityMolarEntropy, kSIQuantityMolarHeatCapacity
     AddToLibPrefixed(kSIQuantityMolarEntropy, STR("joule per mole kelvin"), STR("joules per mole kelvin"), STR("J/(mol•K)"), 1, &error);
     AddToLib(kSIQuantityMolarEntropy, STR("gas constant"), STR("gas constant"), STR("R"), kSIBoltmannConstant * kSIAvogadroConstant, &error);
-    units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityMolarEntropy);
-    OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityMolarHeatCapacity, units);
+    units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityMolarEntropy);
+    OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityMolarHeatCapacity, units);
 //
 #pragma mark kSIQuantityMolarEnergy
     AddToLibPrefixed(kSIQuantityMolarEnergy, STR("joule per mole"), STR("joules per mole"), STR("J/mol"), 1, &error);
@@ -1290,7 +1333,7 @@ bool SIUnitsCreateLibraries(void) {
 //
 #pragma mark kSIQuantityGasPermeance
     AddToLib(kSIQuantityGasPermeance, STR("gas permeance unit"), STR("gas permeance unit"), STR("GPU"), 3.35e-10, &error);
-    // fprintf(stderr,"\nSIUnitLibrary: %d units loaded.\n", (int)OCDictionaryGetCount(unitsLibrary));
+    // fprintf(stderr,"\nSIUnitLibrary: %d units loaded.\n", (int)OCDictionaryGetCount(units2Library));
     // Set to UK or US units.
     imperialVolumes = true;
     SIUnitsLibrarySetImperialVolumes(false);
@@ -1300,9 +1343,483 @@ bool SIUnitsCreateLibraries(void) {
             SIUnitsLibrarySetImperialVolumes(true);
         }
     }
-    OCArrayRef allUnits = OCDictionaryCreateArrayWithAllValues(unitsLibrary);
-    unitsNamesLibrary = OCArrayCreateMutableCopy(allUnits);
+    OCArrayRef allUnits = OCDictionaryCreateArrayWithAllValues(units2Library);
+    units2NamesLibrary = OCArrayCreateMutableCopy(allUnits);
     OCRelease(allUnits);
-    OCArraySortValues(unitsNamesLibrary, OCRangeMake(0, OCArrayGetCount(unitsNamesLibrary)), unitNameLengthSort, NULL);
+    OCArraySortValues(units2NamesLibrary, OCRangeMake(0, OCArrayGetCount(units2NamesLibrary)), unitNameLengthSort, NULL);
     return true;
+}
+SIUnit2Ref SIUnit2WithSymbol(OCStringRef symbol) {
+    if (NULL == symbol) {
+        return NULL;
+    }
+    if (NULL == units2Library) SIUnit2CreateLibraries();
+    IF_NO_OBJECT_EXISTS_RETURN(units2Library, NULL);
+    SIUnit2Ref unit = OCDictionaryGetValue(units2Library, symbol);
+    return unit;
+}
+static SIUnit2Ref SIUnit2WithParameters(SIDimensionalityRef dimensionality,
+                                        OCStringRef name,
+                                        OCStringRef plural_name,
+                                        OCStringRef symbol,
+                                        double scale_to_coherent_si) {
+    if (NULL == units2Library) SIUnit2CreateLibraries();
+    // Create a temporary unit to get its symbol, then check if equivalent exists
+    SIUnit2Ref tempUnit = SIUnit2Create(dimensionality, name, plural_name, symbol, scale_to_coherent_si);
+    if (NULL == tempUnit)
+        return NULL;
+    // Check if unit with this symbol already exists
+    if (OCDictionaryContainsKey(units2Library, tempUnit->symbol)) {
+        SIUnit2Ref existingUnit = OCDictionaryGetValue(units2Library, tempUnit->symbol);
+        OCRelease(tempUnit);  // Discard the temporary unit
+        return existingUnit;
+    }
+    // No existing unit found, so add this fresh unit to library
+    OCTypeSetStaticInstance(tempUnit, true);
+    OCDictionaryAddValue(units2Library, tempUnit->symbol, tempUnit);
+    OCRelease(tempUnit);
+    return tempUnit;
+}
+SIUnit2Ref SIUnit2WithCoherentUnit(SIDimensionalityRef dimensionality) {
+    OCMutableStringRef symbol = OCStringCreateMutableCopy(SIDimensionalityGetSymbol(dimensionality));
+    // Create Coherent Unit symbol by simply replacing base dimensionality symbols with base SI symbols
+    OCStringFindAndReplace2(symbol, STR("L"), STR("m"));
+    OCStringFindAndReplace2(symbol, STR("M"), STR("kg"));
+    OCStringFindAndReplace2(symbol, STR("T"), STR("s"));
+    OCStringFindAndReplace2(symbol, STR("I"), STR("A"));
+    OCStringFindAndReplace2(symbol, STR("N"), STR("mol"));
+    OCStringFindAndReplace2(symbol, STR("J"), STR("cd"));
+    return SIUnit2WithParameters(dimensionality, NULL, NULL, symbol, 1);
+}
+OCArrayRef SIUnit2CreateArrayOfUnitsForQuantity(OCStringRef quantity) {
+    IF_NO_OBJECT_EXISTS_RETURN(quantity, NULL);
+    if (NULL == units2Library) SIUnit2CreateLibraries();
+    if (OCDictionaryContainsKey(units2QuantitiesLibrary, quantity)) {
+        OCMutableArrayRef array = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, quantity);
+        return OCArrayCreateCopy(array);
+    }
+    return NULL;
+}
+OCArrayRef SIUnit2CreateArrayOfUnitsForDimensionality(SIDimensionalityRef theDim) {
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
+    if (NULL == units2Library) SIUnit2CreateLibraries();
+    OCStringRef symbol = SIDimensionalityGetSymbol(theDim);
+    if (OCDictionaryContainsKey(units2DimensionalitiesLibrary, symbol)) {
+        OCMutableArrayRef array = (OCMutableArrayRef)OCDictionaryGetValue(units2DimensionalitiesLibrary, symbol);
+        return OCArrayCreateCopy(array);
+    }
+    return NULL;
+}
+OCArrayRef SIUnit2CreateArrayOfUnitsForSameReducedDimensionality(SIDimensionalityRef theDim) {
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
+    if (NULL == units2Library) SIUnit2CreateLibraries();
+    OCArrayRef dimensionalities = SIDimensionalityCreateArrayWithSameReducedDimensionality(theDim);
+    OCMutableArrayRef result = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
+    for (uint64_t index = 0; index < OCArrayGetCount(dimensionalities); index++) {
+        SIDimensionalityRef dimensionality = OCArrayGetValueAtIndex(dimensionalities, index);
+        OCStringRef symbol = SIDimensionalityGetSymbol(dimensionality);
+        if (OCDictionaryContainsKey(units2DimensionalitiesLibrary, symbol)) {
+            OCMutableArrayRef array = (OCMutableArrayRef)OCDictionaryGetValue(units2DimensionalitiesLibrary, symbol);
+            OCArrayAppendArray(result, array, OCRangeMake(0, OCArrayGetCount(array)));
+        }
+    }
+    OCRelease(dimensionalities);
+    return result;
+}
+SIUnit2Ref SIUnit2DimensionlessAndUnderived(void) {
+    return SIUnit2WithParameters(SIDimensionalityDimensionless(), NULL, NULL, STR(" "), 1);
+}
+//
+// Common helper function for finding best matching unit
+static SIUnit2Ref SIUnit2FindBestMatchingUnit(SIDimensionalityRef dimensionality, double target_scale) {
+    OCArrayRef candidates = SIUnit2CreateArrayOfUnitsForDimensionality(dimensionality);
+    if (!candidates || OCArrayGetCount(candidates) == 0) {
+        if (candidates) OCRelease(candidates);
+        return NULL;
+    }
+    
+    SIUnit2Ref best_match = NULL;
+    OCStringRef shortest_symbol = NULL;
+    
+    for (OCIndex i = 0; i < OCArrayGetCount(candidates); i++) {
+        SIUnit2Ref candidate = (SIUnit2Ref)OCArrayGetValueAtIndex(candidates, i);
+        double scale_diff = fabs(candidate->scale_to_coherent_si - target_scale);
+        
+        // Consider it a close match if within 1% relative error
+        if (scale_diff < 0.01 * target_scale) {
+            if (!best_match ||
+                OCStringGetLength(candidate->symbol) < OCStringGetLength(shortest_symbol)) {
+                best_match = candidate;
+                shortest_symbol = candidate->symbol;
+            }
+        }
+    }
+    
+    OCRelease(candidates);
+    return best_match;
+}
+
+// Common helper function for finding best matching unit
+static SIUnit2Ref SIUnit2FindBestMatchingUnit(SIDimensionalityRef dimensionality, double target_scale) {
+    OCArrayRef candidates = SIUnit2CreateArrayOfUnitsForDimensionality(dimensionality);
+    if (!candidates || OCArrayGetCount(candidates) == 0) {
+        if (candidates) OCRelease(candidates);
+        return NULL;
+    }
+    
+    SIUnit2Ref best_match = NULL;
+    OCStringRef shortest_symbol = NULL;
+    
+    for (OCIndex i = 0; i < OCArrayGetCount(candidates); i++) {
+        SIUnit2Ref candidate = (SIUnit2Ref)OCArrayGetValueAtIndex(candidates, i);
+        double scale_diff = fabs(candidate->scale_to_coherent_si - target_scale);
+        
+        // Consider it a close match if within 1% relative error
+        if (scale_diff < 0.01 * target_scale) {
+            if (!best_match ||
+                OCStringGetLength(candidate->symbol) < OCStringGetLength(shortest_symbol)) {
+                best_match = candidate;
+                shortest_symbol = candidate->symbol;
+            }
+        }
+    }
+    
+    OCRelease(candidates);
+    return best_match;
+}
+
+// Common helper function for creating and simplifying symbols
+static OCStringRef SIUnit2CreateSimplifiedSymbol(OCStringRef raw_symbol, bool reduce, OCStringRef *error) {
+    OCStringRef simplified_symbol;
+    if (reduce) {
+        simplified_symbol = SIUnitReduceExpression(raw_symbol);
+    } else {
+        simplified_symbol = SIUnitCreateLibraryKey(raw_symbol);
+    }
+    
+    if (!simplified_symbol) {
+        simplified_symbol = raw_symbol;  // Fallback to raw symbol
+        OCRetain(simplified_symbol);     // Balance the retain for cleanup
+    }
+    
+    return simplified_symbol;
+}
+
+// Power operation
+static SIUnit2Ref SIUnit2ByRaisingToPowerInternal(SIUnit2Ref input,
+                                                  int power,
+                                                  double *unit_multiplier,
+                                                  bool reduce,
+                                                  OCStringRef *error) {
+    if (error && *error) return NULL;
+    IF_NO_OBJECT_EXISTS_RETURN(input, NULL);
+    if (power == 0) return SIUnit2DimensionlessAndUnderived();
+    if (power == 1) return input;
+    
+    // Choose the appropriate dimensionality function based on parameter
+    SIDimensionalityRef dimensionality;
+    if (reduce) {
+        dimensionality = SIDimensionalityByRaisingToPower(input->dimensionality, power, error);
+    } else {
+        dimensionality = SIDimensionalityByRaisingToPowerWithoutReducing(input->dimensionality, power, error);
+    }
+    if (!dimensionality) return NULL;
+    
+    // Calculate the new scale factor
+    double scale = pow(*unit_multiplier, power);
+    *unit_multiplier = scale;
+    
+    // First approach: Look for existing units with matching dimensionality
+    SIUnit2Ref best_match = SIUnit2FindBestMatchingUnit(dimensionality, scale);
+    if (best_match) {
+        return best_match;
+    }
+    
+    // Second approach: Create new symbol by wrapping input symbol with "( )^power"
+    OCMutableStringRef new_symbol = OCStringCreateMutable(0);
+    if (!new_symbol) {
+        if (error && !*error) *error = STR("ERROR: Could not create mutable string for new symbol");
+        return NULL;
+    }
+    
+    OCStringAppend(new_symbol, STR("("));
+    OCStringAppend(new_symbol, input->symbol);
+    OCStringAppend(new_symbol, STR(")^"));
+    
+    // Add the power
+    char power_str[32];
+    snprintf(power_str, sizeof(power_str), "%d", power);
+    OCStringRef power_string = OCStringCreateWithCString(power_str);
+    OCStringAppend(new_symbol, power_string);
+    OCRelease(power_string);
+    
+    // Simplify the symbol
+    OCStringRef simplified_symbol = SIUnit2CreateSimplifiedSymbol(new_symbol, reduce, error);
+    
+    // Create new unit with the simplified symbol and calculated scale
+    SIUnit2Ref result = SIUnit2WithParameters(dimensionality,
+                                              input->name,         // Keep original name for now
+                                              input->plural_name,  // Keep original plural name
+                                              simplified_symbol,
+                                              scale);
+    
+    OCRelease(new_symbol);
+    OCRelease(simplified_symbol);
+    return result;
+}
+
+// Multiplication operation
+static SIUnit2Ref SIUnit2ByMultiplyingInternal(SIUnit2Ref theUnit1,
+                                               SIUnit2Ref theUnit2,
+                                               double *unit_multiplier,
+                                               bool reduce,
+                                               OCStringRef *error) {
+    if (error && *error) return NULL;
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit1, NULL);
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit2, NULL);
+    
+    // multiplying by dimensionless does nothing
+    SIUnit2Ref dimless = SIUnit2DimensionlessAndUnderived();
+    if (theUnit1 == dimless) return theUnit2;
+    if (theUnit2 == dimless) return theUnit1;
+    if (SIUnit2AreEquivalentUnits(theUnit1, theUnit2)) {
+        return SIUnit2ByRaisingToPowerInternal(theUnit1, 2, unit_multiplier, reduce, error);
+    }
+    
+    // Compute new dimensionality
+    SIDimensionalityRef dimensionality;
+    if (reduce) {
+        dimensionality = SIDimensionalityByMultiplying(theUnit1->dimensionality, theUnit2->dimensionality, error);
+    } else {
+        dimensionality = SIDimensionalityByMultiplyingWithoutReducing(theUnit1->dimensionality, theUnit2->dimensionality, error);
+    }
+    if (error && *error) return NULL;
+    
+    // Calculate the new scale factor
+    double scale = theUnit1->scale_to_coherent_si * theUnit2->scale_to_coherent_si;
+    *unit_multiplier = scale;
+    
+    // First approach: Look for existing units with matching dimensionality
+    SIUnit2Ref best_match = SIUnit2FindBestMatchingUnit(dimensionality, scale);
+    if (best_match) {
+        return best_match;
+    }
+    
+    // Second approach: Create new symbol by wrapping input symbols with "(unit1)*(unit2)"
+    OCMutableStringRef new_symbol = OCStringCreateMutable(0);
+    if (!new_symbol) {
+        if (error && !*error) *error = STR("ERROR: Could not create mutable string for new symbol");
+        return NULL;
+    }
+    
+    OCStringAppend(new_symbol, STR("("));
+    OCStringAppend(new_symbol, theUnit1->symbol);
+    OCStringAppend(new_symbol, STR(")*("));
+    OCStringAppend(new_symbol, theUnit2->symbol);
+    OCStringAppend(new_symbol, STR(")"));
+    
+    // Simplify the symbol
+    OCStringRef simplified_symbol = SIUnit2CreateSimplifiedSymbol(new_symbol, reduce, error);
+    
+    // Create new unit with the simplified symbol and calculated scale
+    SIUnit2Ref result = SIUnit2WithParameters(dimensionality,
+                                              theUnit1->name,         // Use first unit's name
+                                              theUnit1->plural_name,  // Use first unit's plural name
+                                              simplified_symbol,
+                                              scale);
+    
+    OCRelease(new_symbol);
+    OCRelease(simplified_symbol);
+    return result;
+}
+
+// Public API functions - now more intuitive with 'reduce' parameter
+SIUnit2Ref SIUnit2ByRaisingToPowerWithoutReducing(SIUnit2Ref input,
+                                                  int power,
+                                                  double *unit_multiplier,
+                                                  OCStringRef *error) {
+    return SIUnit2ByRaisingToPowerInternal(input, power, unit_multiplier, false, error);  // reduce = false
+}
+
+SIUnit2Ref SIUnit2ByRaisingToPower(SIUnit2Ref input,
+                                   int power,
+                                   double *unit_multiplier,
+                                   OCStringRef *error) {
+    return SIUnit2ByRaisingToPowerInternal(input, power, unit_multiplier, true, error);   // reduce = true
+}
+
+SIUnit2Ref SIUnit2ByMultiplyingWithoutReducing(SIUnit2Ref theUnit1,
+                                               SIUnit2Ref theUnit2,
+                                               double *unit_multiplier,
+                                               OCStringRef *error) {
+    return SIUnit2ByMultiplyingInternal(theUnit1, theUnit2, unit_multiplier, false, error);  // reduce = false
+}
+
+SIUnit2Ref SIUnit2ByMultiplying(SIUnit2Ref theUnit1,
+                                SIUnit2Ref theUnit2,
+                                double *unit_multiplier,
+                                OCStringRef *error) {
+    return SIUnit2ByMultiplyingInternal(theUnit1, theUnit2, unit_multiplier, true, error);   // reduce = true
+}
+
+// Division operation
+static SIUnit2Ref SIUnit2ByDividingInternal(SIUnit2Ref theUnit1,
+                                            SIUnit2Ref theUnit2,
+                                            double *unit_multiplier,
+                                            bool reduce,
+                                            OCStringRef *error) {
+    if (error && *error) return NULL;
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit1, NULL);
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit2, NULL);
+    
+    // dividing by dimensionless does nothing
+    SIUnit2Ref dimless = SIUnit2DimensionlessAndUnderived();
+    if (theUnit2 == dimless) return theUnit1;
+    if (SIUnit2AreEquivalentUnits(theUnit1, theUnit2)) {
+        return SIUnit2DimensionlessAndUnderived();
+    }
+    
+    // Compute new dimensionality
+    SIDimensionalityRef dimensionality;
+    if (reduce) {
+        dimensionality = SIDimensionalityByDividing(theUnit1->dimensionality, theUnit2->dimensionality, error);
+    } else {
+        dimensionality = SIDimensionalityByDividingWithoutReducing(theUnit1->dimensionality, theUnit2->dimensionality, error);
+    }
+    if (error && *error) return NULL;
+    
+    // Calculate the new scale factor
+    double scale = theUnit1->scale_to_coherent_si / theUnit2->scale_to_coherent_si;
+    *unit_multiplier = scale;
+    
+    // First approach: Look for existing units with matching dimensionality
+    SIUnit2Ref best_match = SIUnit2FindBestMatchingUnit(dimensionality, scale);
+    if (best_match) {
+        return best_match;
+    }
+    
+    // Second approach: Create new symbol by wrapping input symbols with "(unit1)/(unit2)"
+    OCMutableStringRef new_symbol = OCStringCreateMutable(0);
+    if (!new_symbol) {
+        if (error && !*error) *error = STR("ERROR: Could not create mutable string for new symbol");
+        return NULL;
+    }
+    
+    OCStringAppend(new_symbol, STR("("));
+    OCStringAppend(new_symbol, theUnit1->symbol);
+    OCStringAppend(new_symbol, STR(")/("));
+    OCStringAppend(new_symbol, theUnit2->symbol);
+    OCStringAppend(new_symbol, STR(")"));
+    
+    // Simplify the symbol
+    OCStringRef simplified_symbol = SIUnit2CreateSimplifiedSymbol(new_symbol, reduce, error);
+    
+    // Create new unit with the simplified symbol and calculated scale
+    SIUnit2Ref result = SIUnit2WithParameters(dimensionality,
+                                              theUnit1->name,         // Use first unit's name
+                                              theUnit1->plural_name,  // Use first unit's plural name
+                                              simplified_symbol,
+                                              scale);
+    
+    OCRelease(new_symbol);
+    OCRelease(simplified_symbol);
+    return result;
+}
+
+// Public API functions
+SIUnit2Ref SIUnit2ByDividingWithoutReducing(SIUnit2Ref theUnit1,
+                                            SIUnit2Ref theUnit2,
+                                            double *unit_multiplier,
+                                            OCStringRef *error) {
+    return SIUnit2ByDividingInternal(theUnit1, theUnit2, unit_multiplier, false, error);  // reduce = false
+}
+
+SIUnit2Ref SIUnit2ByDividing(SIUnit2Ref theUnit1,
+                             SIUnit2Ref theUnit2,
+                             double *unit_multiplier,
+                             OCStringRef *error) {
+    return SIUnit2ByDividingInternal(theUnit1, theUnit2, unit_multiplier, true, error);   // reduce = true
+}
+
+// Nth root operation
+static SIUnit2Ref SIUnit2ByTakingNthRootInternal(SIUnit2Ref theUnit,
+                                                 int root,
+                                                 double *unit_multiplier,
+                                                 bool reduce,
+                                                 OCStringRef *error) {
+    if (error && *error) return NULL;
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
+    if (root == 0) {
+        if (error && !*error) *error = STR("ERROR: Cannot take 0th root of a unit");
+        return NULL;
+    }
+    if (root == 1) return theUnit;
+    
+    // Compute new dimensionality
+    SIDimensionalityRef dimensionality;
+    if (reduce) {
+        dimensionality = SIDimensionalityByTakingNthRoot(theUnit->dimensionality, root, error);
+    } else {
+        dimensionality = SIDimensionalityByTakingNthRootWithoutReducing(theUnit->dimensionality, root, error);
+    }
+    if (!dimensionality) return NULL;
+    
+    // Calculate the new scale factor
+    double scale = pow(*unit_multiplier, 1.0 / root);
+    *unit_multiplier = scale;
+    
+    // First approach: Look for existing units with matching dimensionality
+    SIUnit2Ref best_match = SIUnit2FindBestMatchingUnit(dimensionality, scale);
+    if (best_match) {
+        return best_match;
+    }
+    
+    // Second approach: Create new symbol by wrapping input symbol with "( )^(1/root)"
+    OCMutableStringRef new_symbol = OCStringCreateMutable(0);
+    if (!new_symbol) {
+        if (error && !*error) *error = STR("ERROR: Could not create mutable string for new symbol");
+        return NULL;
+    }
+    
+    OCStringAppend(new_symbol, STR("("));
+    OCStringAppend(new_symbol, theUnit->symbol);
+    OCStringAppend(new_symbol, STR(")^(1/"));
+    
+    // Add the root
+    char root_str[32];
+    snprintf(root_str, sizeof(root_str), "%d", root);
+    OCStringRef root_string = OCStringCreateWithCString(root_str);
+    OCStringAppend(new_symbol, root_string);
+    OCRelease(root_string);
+    
+    OCStringAppend(new_symbol, STR(")"));
+    
+    // Simplify the symbol
+    OCStringRef simplified_symbol = SIUnit2CreateSimplifiedSymbol(new_symbol, reduce, error);
+    
+    // Create new unit with the simplified symbol and calculated scale
+    SIUnit2Ref result = SIUnit2WithParameters(dimensionality,
+                                              theUnit->name,         // Keep original name
+                                              theUnit->plural_name,  // Keep original plural name
+                                              simplified_symbol,
+                                              scale);
+    
+    OCRelease(new_symbol);
+    OCRelease(simplified_symbol);
+    return result;
+}
+
+// Public API functions
+SIUnit2Ref SIUnit2ByTakingNthRootWithoutReducing(SIUnit2Ref theUnit,
+                                                 int root,
+                                                 double *unit_multiplier,
+                                                 OCStringRef *error) {
+    return SIUnit2ByTakingNthRootInternal(theUnit, root, unit_multiplier, false, error);  // reduce = false
+}
+
+SIUnit2Ref SIUnit2ByTakingNthRoot(SIUnit2Ref theUnit,
+                                  int root,
+                                  double *unit_multiplier,
+                                  OCStringRef *error) {
+    return SIUnit2ByTakingNthRootInternal(theUnit, root, unit_multiplier, true, error);   // reduce = true
 }

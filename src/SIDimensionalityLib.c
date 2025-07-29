@@ -97,7 +97,7 @@ SIDimensionalityRef SIDimensionalityForSymbol(OCStringRef symbol, OCStringRef *e
     if (OCDictionaryContainsKey(dimLibrary, symbol)) {
         return (SIDimensionalityRef)OCDictionaryGetValue(dimLibrary, symbol);
     }
-    return SIDimensionalityParseExpression(symbol, error);
+    return SIDimensionalityFromExpression(symbol, error);
 }
 SIDimensionalityRef SIDimensionalityForQuantity(OCStringRef quantity, OCStringRef *error) {
     if (quantity == NULL)
@@ -116,7 +116,7 @@ SIDimensionalityRef SIDimensionalityForQuantity(OCStringRef quantity, OCStringRe
     }
     OCRelease(lowerCaseQuantity);
     if (dimensionality == NULL) {
-        dimensionality = SIDimensionalityParseExpression(quantity, error);
+        dimensionality = SIDimensionalityFromExpression(quantity, error);
     }
     return dimensionality;
 }

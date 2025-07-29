@@ -47,7 +47,7 @@ extern int sid_scan_string(const char *);
 extern void sidlex_destroy(void);
 
 bool sid_syntax_error;
-SIDimensionalityRef SIDimensionalityParseExpression(OCStringRef expression, OCStringRef *error)
+SIDimensionalityRef SIDimensionalityFromExpression(OCStringRef expression, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
 

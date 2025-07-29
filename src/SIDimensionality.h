@@ -63,7 +63,7 @@ typedef enum {
 /** @endcond */
 
 /** @brief Parse an SI dimensionality expression into a cached, immutable object. */
-SIDimensionalityRef SIDimensionalityParseExpression(OCStringRef expression, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityFromExpression(OCStringRef expression, OCStringRef *error);
 
 #pragma mark Accessors
 

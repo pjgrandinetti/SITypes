@@ -153,7 +153,7 @@ SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json) {
     OCStringRef str = OCStringCreateWithCString(symbol);
     if (!str) return NULL;
     OCStringRef err = NULL;
-    SIDimensionalityRef dim = SIDimensionalityParseExpression(str, &err);
+    SIDimensionalityRef dim = SIDimensionalityFromExpression(str, &err);
     OCRelease(str);
     OCRelease(err);
     return dim;

@@ -9,7 +9,7 @@
 bool test_dimensionality_0(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
-    SIDimensionalityRef dimensionality1 = SIDimensionalityParseExpression(STR("L"), &err);
+    SIDimensionalityRef dimensionality1 = SIDimensionalityFromExpression(STR("L"), &err);
     if (!dimensionality1) {
         if (err) {
             printf("Error parsing dimensionality 'L': %s\n", OCStringGetCString(err));
@@ -52,7 +52,7 @@ bool test_dimensionality_1(void) {
     OCStringRef err = NULL;
 
     OCStringRef symbol = STR("L•M^2•T^3•I^4•ϴ^5•N^6•J^7/(L^2•M^3•T^4•I^5•ϴ^6•N^7•J^8)");
-    SIDimensionalityRef dimensionality = SIDimensionalityParseExpression(symbol, &err);
+    SIDimensionalityRef dimensionality = SIDimensionalityFromExpression(symbol, &err);
     if (!dimensionality) {
         if (err) {
             printf("Error parsing complex dimensionality: %s\n", OCStringGetCString(err));
@@ -134,14 +134,14 @@ bool test_dimensionality_3(void) {
     SIDimensionalityRef dim1 = NULL, dim2 = NULL, dim3 = NULL, dless = NULL;
     SIDimensionalityRef bySym = NULL, byIdx = NULL;
 
-    dim1 = SIDimensionalityParseExpression(STR("L*M"), &err);
-    dim2 = SIDimensionalityParseExpression(STR("M*L"), &err);
+    dim1 = SIDimensionalityFromExpression(STR("L*M"), &err);
+    dim2 = SIDimensionalityFromExpression(STR("M*L"), &err);
     if (!dim1 || !dim2 || !SIDimensionalityEqual(dim1, dim2)) {
         success = false;
         goto cleanup;
     }
 
-    dim3 = SIDimensionalityParseExpression(STR("L^3*M^-2*T"), &err);
+    dim3 = SIDimensionalityFromExpression(STR("L^3*M^-2*T"), &err);
     if (!dim3 || !SIDimensionalityHasReducedExponents(dim3, 3, -2, 1, 0, 0, 0, 0)) {
         success = false;
         goto cleanup;
@@ -223,7 +223,7 @@ bool test_dimensionality_symbol_acceleration(void) {
     OCStringRef err = NULL;
     bool success = true;
 
-    SIDimensionalityRef accel = SIDimensionalityParseExpression(STR("L/T^2"), &err);
+    SIDimensionalityRef accel = SIDimensionalityFromExpression(STR("L/T^2"), &err);
     if (!accel) {
         if (err) {
             printf("Error parsing acceleration symbol: %s\n", OCStringGetCString(err));
@@ -257,7 +257,7 @@ bool test_dimensionality_divide_mass(void) {
         return false;
     }
 
-    SIDimensionalityRef accel = SIDimensionalityParseExpression(STR("L/T^2"), &err);
+    SIDimensionalityRef accel = SIDimensionalityFromExpression(STR("L/T^2"), &err);
     if (!accel || err) {
         if (err) {
             printf("Error getting acceleration dimensionality: %s\n", OCStringGetCString(err));
@@ -439,7 +439,7 @@ bool test_dimensionality_deep_copy(void) {
     SIDimensionalityRef mcopy    = NULL;
 
     /* parse */
-    original = SIDimensionalityParseExpression(STR("L•M^2/T"), &err);
+    original = SIDimensionalityFromExpression(STR("L•M^2/T"), &err);
     if (!original || err) {
         fprintf(stderr,
                 "  ✗ PARSE failed: %s\n",
@@ -518,7 +518,7 @@ bool test_dimensionality_parser_strictness(void) {
         
         printf("  Testing rejection of: '%s'\n", expr);
         OCStringRef expr_str = OCStringCreateWithCString(expr);
-        SIDimensionalityRef result = SIDimensionalityParseExpression(expr_str, &err);
+        SIDimensionalityRef result = SIDimensionalityFromExpression(expr_str, &err);
         
         if (result != NULL) {
             // Parser incorrectly accepted the expression

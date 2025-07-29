@@ -14,6 +14,7 @@ bool test_library_key_unicode_operators(void);
 bool test_library_key_unicode_normalization(void);
 bool test_library_key_expression_equivalence(void);
 bool test_library_key_edge_cases(void);
+bool test_library_key_parenthetical_powers(void);
 bool test_library_key_consistency(void);
 bool test_library_key_comprehensive(void);
 

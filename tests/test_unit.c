@@ -65,7 +65,7 @@ bool test_unit_1(void) {
     printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
 
-    SIDimensionalityRef dimensionality = SIDimensionalityParseExpression(STR("M/(L*T^2)"), &errorString);
+    SIDimensionalityRef dimensionality = SIDimensionalityFromExpression(STR("M/(L*T^2)"), &errorString);
     if (!dimensionality) {
         if (errorString) {
             printf("test_unit_1 failed: Failed to parse dimensionality: %s\n", OCStringGetCString(errorString));
