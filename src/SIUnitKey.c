@@ -1,29 +1,31 @@
+#include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include <math.h>
 #include "SILibrary.h"
-
 // Structure to hold parsed unit components with their powers
 typedef struct {
     char *symbol;
     int power;
 } UnitComponent;
-
 // Dynamic array to store components
 typedef struct {
     UnitComponent *components;
     int count;
     int capacity;
 } ComponentList;
-
 // Static variables for parsing state
 static ComponentList *positive_components = NULL;
 static ComponentList *negative_components = NULL;
 static bool in_denominator = false;
 static bool fractional_power_error = false;
-
+// Structure to hold the result of power extraction
+typedef struct {
+    OCStringRef base_token;  // The base part (e.g., "m" from "m^2")
+    int power;               // The power value (e.g., 2 from "m^2")
+    bool error;              // True if there was an error (e.g., fractional power)
+} PowerExtractionResult;
 // Function prototypes
 static void init_component_lists(void);
 static void free_component_lists(void);
@@ -34,23 +36,20 @@ static OCStringRef create_library_key(void);
 static void parse_expression_with_ocstring(OCStringRef expr);
 static void parse_expression_manually(const char *expr);
 static OCStringRef expand_parenthetical_power(OCStringRef expression, int power);
-
+static PowerExtractionResult extract_power_from_token(OCStringRef token);
 // Initialize component lists
 static void init_component_lists(void) {
     positive_components = malloc(sizeof(ComponentList));
     positive_components->capacity = 10;
     positive_components->count = 0;
     positive_components->components = malloc(positive_components->capacity * sizeof(UnitComponent));
-    
     negative_components = malloc(sizeof(ComponentList));
     negative_components->capacity = 10;
     negative_components->count = 0;
     negative_components->components = malloc(negative_components->capacity * sizeof(UnitComponent));
-    
     in_denominator = false;
     fractional_power_error = false;
 }
-
 // Free component lists
 static void free_component_lists(void) {
     if (positive_components) {
@@ -61,7 +60,6 @@ static void free_component_lists(void) {
         free(positive_components);
         positive_components = NULL;
     }
-    
     if (negative_components) {
         for (int i = 0; i < negative_components->count; i++) {
             free(negative_components->components[i].symbol);
@@ -71,16 +69,13 @@ static void free_component_lists(void) {
         negative_components = NULL;
     }
 }
-
 // Add a component to the appropriate list
 static void add_component(const char *symbol, int power) {
     // Adjust power based on position (numerator vs denominator)
     int final_power = in_denominator ? -power : power;
-    
     // Choose the appropriate list
     ComponentList *target_list = (final_power > 0) ? positive_components : negative_components;
     final_power = abs(final_power);  // Store absolute values in lists
-    
     // Check if this symbol already exists in the target list
     for (int i = 0; i < target_list->count; i++) {
         if (strcmp(target_list->components[i].symbol, symbol) == 0) {
@@ -89,19 +84,16 @@ static void add_component(const char *symbol, int power) {
             return;
         }
     }
-    
     // Add new component - expand array if needed
     if (target_list->count >= target_list->capacity) {
         target_list->capacity *= 2;
-        target_list->components = realloc(target_list->components, 
-                                        target_list->capacity * sizeof(UnitComponent));
+        target_list->components = realloc(target_list->components,
+                                          target_list->capacity * sizeof(UnitComponent));
     }
-    
     UnitComponent *comp = &target_list->components[target_list->count++];
     comp->symbol = strdup(symbol);
     comp->power = final_power;
 }
-
 // Remove components with zero power
 static void consolidate_powers(ComponentList *list) {
     int write_idx = 0;
@@ -118,212 +110,176 @@ static void consolidate_powers(ComponentList *list) {
     }
     list->count = write_idx;
 }
-
 // Comparison function for sorting components alphabetically
 static int compare_symbols(const void *a, const void *b) {
     const UnitComponent *comp_a = (const UnitComponent *)a;
     const UnitComponent *comp_b = (const UnitComponent *)b;
     return strcmp(comp_a->symbol, comp_b->symbol);
 }
-
 // Create library key representation
 // Create library key representation
 static OCStringRef create_library_key(void) {
     // Consolidate and sort both lists
     consolidate_powers(positive_components);
     consolidate_powers(negative_components);
-    
     // Sort both lists alphabetically by symbol
-    qsort(positive_components->components, positive_components->count, 
+    qsort(positive_components->components, positive_components->count,
           sizeof(UnitComponent), compare_symbols);
-    qsort(negative_components->components, negative_components->count, 
+    qsort(negative_components->components, negative_components->count,
           sizeof(UnitComponent), compare_symbols);
-    
     OCMutableStringRef result = OCStringCreateMutable(0);
-    
     // Build numerator (positive powers)
     bool first_positive = true;
     for (int i = 0; i < positive_components->count; i++) {
         UnitComponent *comp = &positive_components->components[i];
         if (comp->power == 0) continue;  // Skip zero powers
-        
         if (!first_positive) {
             OCStringAppend(result, STR("•"));
         }
-        
         OCStringRef compString = OCStringCreateWithCString(comp->symbol);
         OCStringAppend(result, compString);
         OCRelease(compString);
-        
         if (comp->power != 1) {
             OCStringAppendFormat(result, STR("^%d"), comp->power);
         }
-        
         first_positive = false;
     }
-    
     // Build denominator (negative powers) if any exist
     if (negative_components->count > 0) {
         // If we have no numerator terms, add "1" as numerator
         if (first_positive) {
             OCStringAppend(result, STR("1"));
         }
-        
         OCStringAppend(result, STR("/"));
-        
         // Use parentheses only if multiple terms in denominator
         bool needs_parens = negative_components->count > 1;
         if (needs_parens) {
             OCStringAppend(result, STR("("));
         }
-        
         bool first_negative = true;
         for (int i = 0; i < negative_components->count; i++) {
             UnitComponent *comp = &negative_components->components[i];
             if (comp->power == 0) continue;  // Skip zero powers
-            
             if (!first_negative) {
                 OCStringAppend(result, STR("•"));
             }
-            
             OCStringRef compString = OCStringCreateWithCString(comp->symbol);
             OCStringAppend(result, compString);
             OCRelease(compString);
-            
             if (comp->power != 1) {
                 OCStringAppendFormat(result, STR("^%d"), comp->power);
             }
-            
             first_negative = false;
         }
-        
         if (needs_parens) {
             OCStringAppend(result, STR(")"));
         }
     }
-    
     // Handle the case where everything cancels out or empty input
     if (OCStringGetLength(result) == 0) {
         OCStringAppend(result, STR("1"));  // Return "1" for dimensionless/empty
     }
-    
     return result;
 }
-
-// Simple string trimming using C string conversion (temporary approach)
+// Trim whitespace and conditionally remove parentheses using OCTypes APIs
 static OCStringRef trim_whitespace_and_parens(OCStringRef str) {
     if (!str || OCStringGetLength(str) == 0) return OCStringCreateCopy(str);
-    
-    // Convert to C string for simpler processing
-    const char *cstr = OCStringGetCString(str);
-    if (!cstr) return OCStringCreateCopy(str);
-    
-    size_t len = strlen(cstr);
-    if (len == 0) return OCStringCreateWithCString("");
-    
-    // Find start position (skip whitespace only, be careful with parens)
-    size_t start = 0;
-    while (start < len && (cstr[start] == ' ' || cstr[start] == '\t')) {
-        start++;
-    }
-    
-    // Find end position (skip whitespace only, be careful with parens)
-    size_t end = len - 1;
-    while (end > start && (cstr[end] == ' ' || cstr[end] == '\t')) {
-        end--;
-    }
-    
-    // Only remove outer parentheses if they wrap the entire meaningful content
-    // and are not part of power notation (don't have ^ after the closing paren)
-    if (start < end && cstr[start] == '(' && cstr[end] == ')') {
+    // Step 1: Create mutable copy and trim whitespace using OCTypes API
+    OCMutableStringRef mutable_str = OCStringCreateMutableCopy(str);
+    if (!mutable_str) return OCStringCreateCopy(str);
+    OCStringTrimWhitespace(mutable_str);
+    // Step 2: Check if we should remove outer parentheses
+    // Only remove if they wrap the entire content and are not part of power notation
+    uint64_t len = OCStringGetLength(mutable_str);
+    if (len >= 2 &&
+        OCStringGetCharacterAtIndex(mutable_str, 0) == '(' &&
+        OCStringGetCharacterAtIndex(mutable_str, len - 1) == ')') {
         // Check if this is NOT a power notation parenthesis by looking for ^ after closing paren
-        bool is_power_paren = false;
-        if (end + 1 < len && cstr[end + 1] == '^') {
-            is_power_paren = true;
-        }
-        
-        if (!is_power_paren) {
-            // Check for balanced parentheses to ensure we're removing outer ones
-            int paren_count = 0;
-            bool balanced = true;
-            for (size_t i = start; i <= end; i++) {
-                if (cstr[i] == '(') paren_count++;
-                else if (cstr[i] == ')') paren_count--;
-                
-                if (paren_count < 0 || (paren_count == 0 && i < end)) {
-                    balanced = false;
-                    break;
+        const char *cstr = OCStringGetCString(mutable_str);
+        if (cstr) {
+            size_t cstr_len = strlen(cstr);
+            bool is_power_paren = false;
+            // Look for ^ after the closing parenthesis in the original string
+            // We need to check beyond the trimmed length since trimming might have removed trailing spaces
+            const char *orig_cstr = OCStringGetCString(str);
+            if (orig_cstr) {
+                size_t orig_len = strlen(orig_cstr);
+                // Find the position of the closing paren in the original string
+                for (size_t i = 0; i < orig_len; i++) {
+                    if (orig_cstr[i] == ')') {
+                        // Check if there's a ^ immediately following this )
+                        if (i + 1 < orig_len && orig_cstr[i + 1] == '^') {
+                            is_power_paren = true;
+                            break;
+                        }
+                    }
                 }
             }
-            
-            if (balanced && paren_count == 0) {
-                start++; // Skip opening paren
-                end--;   // Skip closing paren
+            if (!is_power_paren) {
+                // Check for balanced parentheses to ensure we're removing outer ones
+                int paren_count = 0;
+                bool balanced = true;
+                for (size_t i = 0; i < cstr_len; i++) {
+                    if (cstr[i] == '(')
+                        paren_count++;
+                    else if (cstr[i] == ')')
+                        paren_count--;
+                    if (paren_count < 0 || (paren_count == 0 && i < cstr_len - 1)) {
+                        balanced = false;
+                        break;
+                    }
+                }
+                if (balanced && paren_count == 0) {
+                    // Remove outer parentheses using OCTypes API
+                    OCStringDelete(mutable_str, OCRangeMake(len - 1, 1));  // Remove closing paren
+                    OCStringDelete(mutable_str, OCRangeMake(0, 1));        // Remove opening paren
+                    OCStringTrimWhitespace(mutable_str);                   // Trim any inner whitespace
+                }
             }
         }
     }
-    
-    if (start > end) {
-        return OCStringCreateWithCString("");
-    }
-    
-    // Create substring
-    size_t result_len = end - start + 1;
-    char *result = malloc(result_len + 1);
-    strncpy(result, cstr + start, result_len);
-    result[result_len] = '\0';
-    
-    OCStringRef trimmed = OCStringCreateWithCString(result);
-    free(result);
-    return trimmed;
+    // Convert back to immutable string
+    OCStringRef result = OCStringCreateCopy(mutable_str);
+    OCRelease(mutable_str);
+    return result ? result : OCStringCreateWithCString("");
 }
-
 // Helper function to expand parenthetical power expressions
 // e.g., expand_parenthetical_power("m^2•kg/s", 4) -> "m^8•kg^4/s^4"
 static OCStringRef expand_parenthetical_power(OCStringRef expression, int power) {
     if (!expression || power == 1) {
         return OCStringCreateCopy(expression);
     }
-    
     if (power == 0) {
         return OCStringCreateWithCString("1");
     }
-    
     // Parse the expression to extract components and their powers
     // Initialize temporary component storage
     ComponentList temp_positive = {0};
     ComponentList temp_negative = {0};
-    
     // Initialize the temporary component lists properly
     temp_positive.capacity = 10;
     temp_positive.count = 0;
     temp_positive.components = malloc(temp_positive.capacity * sizeof(UnitComponent));
-    
     temp_negative.capacity = 10;
     temp_negative.count = 0;
     temp_negative.components = malloc(temp_negative.capacity * sizeof(UnitComponent));
-    
     // Save current state
     ComponentList *saved_positive = positive_components;
     ComponentList *saved_negative = negative_components;
     bool saved_in_denominator = in_denominator;
     bool saved_fractional_power_error = fractional_power_error;
-    
     // Use temporary storage
     positive_components = &temp_positive;
     negative_components = &temp_negative;
     in_denominator = false;
     fractional_power_error = false;
-    
     // Parse the inner expression
     parse_expression_manually(OCStringGetCString(expression));
-    
     // Apply the power to each component
     if (power < 0) {
         // For negative powers, we need to swap positive and negative components
         // and make the power positive
         int abs_power = -power;
-        
         // Apply power and swap lists
         for (int i = 0; i < temp_positive.count; i++) {
             temp_positive.components[i].power *= abs_power;
@@ -331,7 +287,6 @@ static OCStringRef expand_parenthetical_power(OCStringRef expression, int power)
         for (int i = 0; i < temp_negative.count; i++) {
             temp_negative.components[i].power *= abs_power;
         }
-        
         // Swap the lists (positive becomes negative and vice versa)
         ComponentList temp_swap = temp_positive;
         temp_positive = temp_negative;
@@ -345,16 +300,13 @@ static OCStringRef expand_parenthetical_power(OCStringRef expression, int power)
             temp_negative.components[i].power *= power;
         }
     }
-    
     // Create the expanded expression from components
     OCStringRef result = create_library_key();
-    
     // Restore original component storage
     positive_components = saved_positive;
     negative_components = saved_negative;
     in_denominator = saved_in_denominator;
     fractional_power_error = saved_fractional_power_error;
-    
     // Clean up temporary storage
     for (int i = 0; i < temp_positive.count; i++) {
         free(temp_positive.components[i].symbol);
@@ -364,49 +316,45 @@ static OCStringRef expand_parenthetical_power(OCStringRef expression, int power)
         free(temp_negative.components[i].symbol);
     }
     free(temp_negative.components);
-    
     return result;
 }
-
 // Power extraction using C string approach
-static int extract_power_from_token(OCStringRef token, OCStringRef *base_token) {
+static PowerExtractionResult extract_power_from_token(OCStringRef token) {
+    PowerExtractionResult result;
+    result.base_token = NULL;
+    result.power = 1;
+    result.error = false;
     const char *token_cstr = OCStringGetCString(token);
     if (!token_cstr) {
-        *base_token = OCStringCreateCopy(token);
-        return 1;
+        result.base_token = OCStringCreateCopy(token);
+        return result;
     }
-    
     // Look for caret (use strrchr to find the LAST caret for expressions like "(m^2)^-1")
     char *caret = strrchr(token_cstr, '^');
     if (!caret) {
-        *base_token = OCStringCreateCopy(token);
-        return 1;
+        result.base_token = OCStringCreateCopy(token);
+        return result;
     }
-    
     // Extract base token (before caret)
     size_t base_len = caret - token_cstr;
     if (base_len == 0) {
         // Empty base - invalid
-        *base_token = OCStringCreateCopy(token);
-        return 1;
+        result.base_token = OCStringCreateCopy(token);
+        return result;
     }
-    
     char *base = malloc(base_len + 1);
     if (!base) {
         // Allocation failed
-        *base_token = OCStringCreateCopy(token);
-        return 1;
+        result.base_token = OCStringCreateCopy(token);
+        return result;
     }
     strncpy(base, token_cstr, base_len);
     base[base_len] = '\0';
-    
     // Extract power (after caret)
     char *power_str = caret + 1;
-    
     // Parse the power value (could be integer or fractional)
     double power_double;
     bool is_fractional = false;
-    
     // Handle parentheses around power: m^(-1) or m^(2) or m^(0.5)
     if (*power_str == '(') {
         char *close_paren = strchr(power_str, ')');
@@ -416,11 +364,10 @@ static int extract_power_from_token(OCStringRef token, OCStringRef *base_token) 
             char *paren_content = malloc(paren_len + 1);
             strncpy(paren_content, power_str + 1, paren_len);
             paren_content[paren_len] = '\0';
-            
             power_double = atof(paren_content);
             // Check for fractional powers: decimal points or division (fractions)
-            is_fractional = (strchr(paren_content, '.') != NULL) || 
-                           (strchr(paren_content, '/') != NULL);
+            is_fractional = (strchr(paren_content, '.') != NULL) ||
+                            (strchr(paren_content, '/') != NULL);
             free(paren_content);
         } else {
             power_double = atof(power_str);
@@ -430,11 +377,10 @@ static int extract_power_from_token(OCStringRef token, OCStringRef *base_token) 
         power_double = atof(power_str);
         is_fractional = (strchr(power_str, '.') != NULL);
     }
-    
     // Check if base token is a parenthetical expression that needs expansion
     // This handles cases like (m^2•kg/s)^4 -> m^8•kg^4/s^4
     // For fractional powers, we need to check if the mathematical result would be integer
-    if (base[0] == '(' && base[base_len-1] == ')') {
+    if (base[0] == '(' && base[base_len - 1] == ')') {
         // For parenthetical expressions with fractional powers, we need special handling
         if (is_fractional) {
             // Extract content inside parentheses
@@ -442,119 +388,100 @@ static int extract_power_from_token(OCStringRef token, OCStringRef *base_token) 
             char *inner_expr = malloc(inner_len + 1);
             strncpy(inner_expr, base + 1, inner_len);
             inner_expr[inner_len] = '\0';
-            
             // Check if this is a simple case like (m^2)^0.5 that can be mathematically simplified
             if (strncmp(inner_expr, "m^", 2) == 0) {
                 // Extract inner power
                 double inner_power = atof(inner_expr + 2);
                 double result_power = inner_power * power_double;
-                
                 // Check if result is effectively an integer
                 double fractional_part = result_power - floor(result_power);
                 if (fabs(fractional_part) < 1e-10) {
                     // Result is an integer - create simplified expression
                     int int_result = (int)round(result_power);
                     if (int_result == 1) {
-                        *base_token = OCStringCreateWithCString("m");
+                        result.base_token = OCStringCreateWithCString("m");
                     } else if (int_result == 0) {
-                        *base_token = OCStringCreateWithCString("1");
+                        result.base_token = OCStringCreateWithCString("1");
                     } else {
                         char result_str[64];
                         snprintf(result_str, sizeof(result_str), "m^%d", int_result);
-                        *base_token = OCStringCreateWithCString(result_str);
+                        result.base_token = OCStringCreateWithCString(result_str);
                     }
-                    
-                    // Safely free allocated memory
-                    if (inner_expr) {
-                        free(inner_expr);
-                        inner_expr = NULL;
-                    }
-                    if (base) {
-                        free(base);
-                        base = NULL;
-                    }
-                    return 1; // Return 1 because we've already applied the power
+                    result.power = 1;  // Power already applied in the expansion
+                    result.error = false;
+                    // Clean up
+                    free(inner_expr);
+                    free(base);
+                    return result;
                 } else {
                     // Result is fractional - reject
-                    if (inner_expr) {
-                        free(inner_expr);
-                        inner_expr = NULL;
-                    }
-                    if (base) {
-                        free(base);
-                        base = NULL;
-                    }
+                    result.base_token = OCStringCreateCopy(token);
+                    result.power = -9999;
+                    result.error = true;
+                    free(inner_expr);
+                    free(base);
                     fractional_power_error = true;
-                    return -9999;
+                    return result;
                 }
             }
-            
+            // Set base_token before returning error for complex fractional expressions
+            result.base_token = OCStringCreateCopy(token);
+            result.power = -9999;
+            result.error = true;
             free(inner_expr);
             free(base);
             fractional_power_error = true;
-            return -9999; // Reject complex fractional expressions for now
+            return result;
         }
-        
         // Integer power case - use existing logic
         // Extract content inside parentheses
         size_t inner_len = base_len - 2;
         char *inner_expr = malloc(inner_len + 1);
         strncpy(inner_expr, base + 1, inner_len);
         inner_expr[inner_len] = '\0';
-        
         // Recursively process the inner expression and apply the power to each component
         OCStringRef inner_str = OCStringCreateWithCString(inner_expr);
         int int_power = (int)round(power_double);
         OCStringRef expanded = expand_parenthetical_power(inner_str, int_power);
-        
-        *base_token = expanded; // expanded already has proper reference count
-        
+        result.base_token = expanded;  // expanded already has proper reference count
+        result.power = 1;              // Power already applied in the expansion
+        result.error = false;
         OCRelease(inner_str);
         free(inner_expr);
-        if (base) {
-            free(base);
-            base = NULL;
-        }
-        return 1; // Return 1 because we've already applied the power in the expansion
+        free(base);
+        return result;
     }
-    
     // Non-parenthetical case - reject fractional powers
     if (is_fractional) {
-        if (base) {
-            free(base);
-            base = NULL;
-        }
-        fractional_power_error = true;
-        return -9999; // Special error code for fractional powers
-    }
-    
-    // Normal case - return base token and power separately
-    *base_token = OCStringCreateWithCString(base);
-    if (base) {
+        // Set base_token before returning error
+        result.base_token = OCStringCreateCopy(token);
+        result.power = -9999;
+        result.error = true;
         free(base);
-        base = NULL;
+        fractional_power_error = true;
+        return result;
     }
-    return (int)round(power_double);
+    // Normal case - return base token and power separately
+    result.base_token = OCStringCreateWithCString(base);
+    result.power = (int)round(power_double);
+    result.error = false;
+    free(base);
+    return result;
 }
-
-// Tokenization by splitting on multiplication operators - simpler approach
+// Tokenization by splitting on multiplication operators using OCTypes APIs
 static OCArrayRef split_by_multiplication(OCStringRef str) {
     OCMutableArrayRef tokens = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
-    
     if (!str || OCStringGetLength(str) == 0) {
         return tokens;
     }
-    
+    // Create a working copy for parentheses-aware processing
     const char *cstr = OCStringGetCString(str);
     if (!cstr) return tokens;
-    
     char *str_copy = strdup(cstr);
-    
-    // Smart splitting that respects parentheses
-    // Don't split on multiplication operators that are inside parentheses
+    if (!str_copy) return tokens;
     char *pos = str_copy;
     int paren_depth = 0;
-    
+    // Replace multiplication operators with delimiter, respecting parentheses
     while (*pos) {
         if (*pos == '(') {
             paren_depth++;
@@ -595,41 +522,43 @@ static OCArrayRef split_by_multiplication(OCStringRef str) {
             pos++;
         }
     }
-    
-    // Now split by single ASCII delimiter
-    char *token;
-    char *save_ptr;
-    token = strtok_r(str_copy, "|", &save_ptr);
-    while (token) {
-        OCStringRef token_str = OCStringCreateWithCString(token);
-        OCStringRef trimmed = trim_whitespace_and_parens(token_str);
-        if (OCStringGetLength(trimmed) > 0) {
-            OCArrayInsertValueAtIndex(tokens, OCArrayGetCount(tokens), trimmed);
-        }
-        OCRelease(trimmed);
-        OCRelease(token_str);
-        
-        token = strtok_r(NULL, "|", &save_ptr);
-    }
-    
+    // Now use OCTypes string splitting safely
+    OCStringRef processed_str = OCStringCreateWithCString(str_copy);
     free(str_copy);
+    if (processed_str) {
+        // Use OCTypes string splitting function with proper memory management
+        OCArrayRef split_result = OCStringCreateArrayBySeparatingStrings(processed_str, STR("|"));
+        if (split_result) {
+            OCIndex count = OCArrayGetCount(split_result);
+            for (OCIndex i = 0; i < count; i++) {
+                OCStringRef token = (OCStringRef)OCArrayGetValueAtIndex(split_result, i);
+                if (token) {
+                    OCStringRef trimmed = trim_whitespace_and_parens(token);
+                    if (trimmed && OCStringGetLength(trimmed) > 0) {
+                        OCArrayInsertValueAtIndex(tokens, OCArrayGetCount(tokens), trimmed);
+                    }
+                    if (trimmed) {
+                        OCRelease(trimmed);
+                    }
+                }
+            }
+            OCRelease(split_result);
+        }
+        OCRelease(processed_str);
+    }
     return tokens;
 }
-
 // Simple manual parser for unit expressions - simplified approach
 static void parse_expression_manually(const char *expr) {
     if (!expr) return;
-    
     char *expr_copy = strdup(expr);
-    
     // Smart splitting that respects parentheses for division too
     // Find division points that are not inside parentheses
-    char *parts[10]; // Support up to 10 parts separated by division
+    char *parts[10];  // Support up to 10 parts separated by division
     int part_count = 0;
     char *current_part_start = expr_copy;
     char *pos = expr_copy;
     int paren_depth = 0;
-    
     while (*pos && part_count < 9) {
         if (*pos == '(') {
             paren_depth++;
@@ -637,73 +566,57 @@ static void parse_expression_manually(const char *expr) {
             paren_depth--;
         } else if (*pos == '/' && paren_depth == 0) {
             // Found a division point outside parentheses
-            *pos = '\0'; // Terminate current part
+            *pos = '\0';  // Terminate current part
             parts[part_count++] = current_part_start;
             current_part_start = pos + 1;
         }
         pos++;
     }
-    
     // Add the last part
     parts[part_count++] = current_part_start;
-    
     // Process each part
     for (int part_index = 0; part_index < part_count; part_index++) {
-        in_denominator = (part_index > 0); // First part is numerator, rest are denominators
+        in_denominator = (part_index > 0);  // First part is numerator, rest are denominators
         char *part = parts[part_index];
-        
         // Convert part to OCString for trimming
         OCStringRef part_str = OCStringCreateWithCString(part);
         OCStringRef trimmed = trim_whitespace_and_parens(part_str);
-        
         // Split by multiplication operators
         OCArrayRef tokens = split_by_multiplication(trimmed);
-        
         for (OCIndex j = 0; j < OCArrayGetCount(tokens); j++) {
             OCStringRef token = (OCStringRef)OCArrayGetValueAtIndex(tokens, j);
-            
-            // Extract power and base token
-            OCStringRef base_token;
-            int power = extract_power_from_token(token, &base_token);
-            
+            // Extract power and base token using struct return
+            PowerExtractionResult extraction = extract_power_from_token(token);
             // Check for fractional power error
-            if (power == -9999) {
+            if (extraction.error || extraction.power == -9999) {
                 // Fractional power detected - clean up and return without adding component
-                OCRelease(base_token);
+                OCRelease(extraction.base_token);
                 // Set a global error flag or handle the error appropriately
                 // For now, we'll skip this component which will result in an incomplete key
                 continue;
             }
-            
             // Trim the base token
-            OCStringRef final_token = trim_whitespace_and_parens(base_token);
-            
+            OCStringRef final_token = trim_whitespace_and_parens(extraction.base_token);
             if (OCStringGetLength(final_token) > 0) {
                 const char *symbol = OCStringGetCString(final_token);
-                add_component(symbol, power);
+                add_component(symbol, extraction.power);
             }
-            
             OCRelease(final_token);
-            OCRelease(base_token);
+            OCRelease(extraction.base_token);
         }
-        
         OCRelease(tokens);
         OCRelease(trimmed);
         OCRelease(part_str);
     }
-    
     free(expr_copy);
 }
-
 // Main function to canonicalize a unit expression
 OCStringRef SIUnitCreateLibraryKey(OCStringRef expression) {
     if (!expression) return NULL;
-    
     // Handle empty string as dimensionless unity
     if (OCStringGetLength(expression) == 0) {
         return OCStringCreateWithCString("1");
     }
-    
     // Fast path for simple symbols that don't need complex parsing
     // Check if the expression is a simple symbol without operators
     const char *expr_cstr = OCStringGetCString(expression);
@@ -711,96 +624,76 @@ OCStringRef SIUnitCreateLibraryKey(OCStringRef expression) {
         bool is_simple = true;
         for (const char *p = expr_cstr; *p; p++) {
             if (*p == '/' || *p == '*' || *p == '^' || *p == '(' || *p == ')' ||
-                strncmp(p, "•", 3) == 0 || strncmp(p, "×", 2) == 0 || 
-                strncmp(p, "⋅", 3) == 0 || strncmp(p, "∙", 3) == 0 || 
+                strncmp(p, "•", 3) == 0 || strncmp(p, "×", 2) == 0 ||
+                strncmp(p, "⋅", 3) == 0 || strncmp(p, "∙", 3) == 0 ||
                 strncmp(p, "·", 2) == 0) {
                 is_simple = false;
                 break;
             }
         }
-        
         // For simple symbols, just return a normalized copy
         if (is_simple) {
             return SIUnitCreateNormalizedExpression(expression, true);
         }
     }
-    
     // Complex expression - use full parsing
     // First normalize the expression to handle Unicode variants (μ → µ, etc.)
     OCStringRef normalized_expression = SIUnitCreateNormalizedExpression(expression, true);
     if (!normalized_expression) return NULL;
-    
     // Initialize component lists
     init_component_lists();
-    
     // Convert normalized OCString to C string for parsing
-    
     // Parse the expression
     parse_expression_manually(OCStringGetCString(normalized_expression));
-    
     // Check for fractional power error
     if (fractional_power_error) {
         // Clean up component lists
         free_component_lists();
         // Release the normalized expression
         OCRelease(normalized_expression);
-        return NULL; // Return NULL to indicate error
+        return NULL;  // Return NULL to indicate error
     }
-    
     // Create library key from components
     OCStringRef library_key = create_library_key();
-    
     // Clean up component lists
     free_component_lists();
-    
     // Release the normalized expression
     OCRelease(normalized_expression);
-    
     return library_key;
 }
-
 // Function to reduce a unit expression by combining like terms
 OCStringRef SIUnitReduceExpression(OCStringRef expression) {
     if (!expression) return NULL;
-    
     // First normalize the expression to handle Unicode variants (μ → µ, etc.)
     OCStringRef normalized_expression = SIUnitCreateNormalizedExpression(expression, true);
     if (!normalized_expression) return NULL;
-    
     // Initialize component lists
     init_component_lists();
-    
     // Convert normalized OCString to C string for parsing
     const char *expr_cstr = OCStringGetCString(normalized_expression);
-    
     // Parse the expression
     parse_expression_manually(expr_cstr);
-    
     // Check for fractional power error
     if (fractional_power_error) {
         // Clean up component lists
         free_component_lists();
         // Release the normalized expression
         OCRelease(normalized_expression);
-        return NULL; // Return NULL to indicate error
+        return NULL;  // Return NULL to indicate error
     }
-    
     // Now reduce by combining like terms across numerator and denominator
     // Create a combined map of all symbols and their net powers
     typedef struct {
         char *symbol;
         int net_power;
     } NetComponent;
-    
     // Count unique symbols
     int unique_count = 0;
-    NetComponent temp_components[100]; // Temporary array for collecting unique symbols
-    
+    NetComponent temp_components[100];  // Temporary array for collecting unique symbols
     // Process positive components
     for (int i = 0; i < positive_components->count; i++) {
         UnitComponent *comp = &positive_components->components[i];
         if (comp->power == 0) continue;
-        
         // Find if this symbol already exists
         int found_idx = -1;
         for (int j = 0; j < unique_count; j++) {
@@ -809,7 +702,6 @@ OCStringRef SIUnitReduceExpression(OCStringRef expression) {
                 break;
             }
         }
-        
         if (found_idx >= 0) {
             temp_components[found_idx].net_power += comp->power;
         } else {
@@ -818,12 +710,10 @@ OCStringRef SIUnitReduceExpression(OCStringRef expression) {
             unique_count++;
         }
     }
-    
     // Process negative components
     for (int i = 0; i < negative_components->count; i++) {
         UnitComponent *comp = &negative_components->components[i];
         if (comp->power == 0) continue;
-        
         // Find if this symbol already exists
         int found_idx = -1;
         for (int j = 0; j < unique_count; j++) {
@@ -832,7 +722,6 @@ OCStringRef SIUnitReduceExpression(OCStringRef expression) {
                 break;
             }
         }
-        
         if (found_idx >= 0) {
             temp_components[found_idx].net_power -= comp->power;
         } else {
@@ -841,12 +730,10 @@ OCStringRef SIUnitReduceExpression(OCStringRef expression) {
             unique_count++;
         }
     }
-    
     // Build the reduced expression
     OCMutableStringRef result = OCStringCreateMutable(0);
     bool has_numerator = false;
     bool has_denominator = false;
-    
     // First pass: build numerator (positive net powers)
     bool first_positive = true;
     for (int i = 0; i < unique_count; i++) {
@@ -854,20 +741,16 @@ OCStringRef SIUnitReduceExpression(OCStringRef expression) {
             if (!first_positive) {
                 OCStringAppend(result, STR("•"));
             }
-            
             OCStringRef compString = OCStringCreateWithCString(temp_components[i].symbol);
             OCStringAppend(result, compString);
             OCRelease(compString);
-            
             if (temp_components[i].net_power != 1) {
                 OCStringAppendFormat(result, STR("^%d"), temp_components[i].net_power);
             }
-            
             first_positive = false;
             has_numerator = true;
         }
     }
-    
     // Second pass: check if we have denominator terms
     for (int i = 0; i < unique_count; i++) {
         if (temp_components[i].net_power < 0) {
@@ -875,15 +758,12 @@ OCStringRef SIUnitReduceExpression(OCStringRef expression) {
             break;
         }
     }
-    
     // Third pass: build denominator (negative net powers)
     if (has_denominator) {
         if (!has_numerator) {
             OCStringAppend(result, STR("1"));
         }
-        
         OCStringAppend(result, STR("/"));
-        
         // Count denominator terms to determine if we need parentheses
         int denom_count = 0;
         for (int i = 0; i < unique_count; i++) {
@@ -891,81 +771,61 @@ OCStringRef SIUnitReduceExpression(OCStringRef expression) {
                 denom_count++;
             }
         }
-        
         bool needs_parens = (denom_count > 1);
         if (needs_parens) {
             OCStringAppend(result, STR("("));
         }
-        
         bool first_negative = true;
         for (int i = 0; i < unique_count; i++) {
             if (temp_components[i].net_power < 0) {
                 if (!first_negative) {
                     OCStringAppend(result, STR("•"));
                 }
-                
                 OCStringRef compString = OCStringCreateWithCString(temp_components[i].symbol);
                 OCStringAppend(result, compString);
                 OCRelease(compString);
-                
                 int abs_power = -temp_components[i].net_power;
                 if (abs_power != 1) {
                     OCStringAppendFormat(result, STR("^%d"), abs_power);
                 }
-                
                 first_negative = false;
             }
         }
-        
         if (needs_parens) {
             OCStringAppend(result, STR(")"));
         }
     }
-    
     // Handle the case where everything cancels out
     if (OCStringGetLength(result) == 0) {
         OCStringAppend(result, STR("1"));  // Return "1" for dimensionless
     }
-    
     // Clean up temporary components
     for (int i = 0; i < unique_count; i++) {
         free(temp_components[i].symbol);
     }
-    
     // Clean up component lists
     free_component_lists();
-    
     // Release the normalized expression
     OCRelease(normalized_expression);
-    
     return result;
 }
-
 // Function to check if two expressions are equivalent using canonicalization
 bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2) {
     if (!expr1 || !expr2) return false;
-    
     if (OCStringCompare(expr1, expr2, 0) == kOCCompareEqualTo) {
         return true;  // Exact match
     }
-    
     OCStringRef canonical1 = SIUnitCreateLibraryKey(expr1);
     OCStringRef canonical2 = SIUnitCreateLibraryKey(expr2);
-    
     bool equivalent = (OCStringCompare(canonical1, canonical2, 0) == kOCCompareEqualTo);
-    
     OCRelease(canonical1);
     OCRelease(canonical2);
-    
     return equivalent;
 }
-
 OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool forLibraryLookup) {
     if (!expression) return NULL;
-    
     OCMutableStringRef normalized = OCStringCreateMutableCopy(expression);
     if (!normalized) return NULL;
-    
     // Replace Unicode multiplication and division symbols with ASCII equivalents
     OCStringFindAndReplace2(normalized, STR("×"), STR("*"));
     OCStringFindAndReplace2(normalized, STR("·"), STR("*"));
@@ -974,31 +834,25 @@ OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool
     OCStringFindAndReplace2(normalized, STR("÷"), STR("/"));
     OCStringFindAndReplace2(normalized, STR("∕"), STR("/"));  // Division slash
     OCStringFindAndReplace2(normalized, STR("⁄"), STR("/"));  // Fraction slash
-    
     // Normalize Unicode mu characters to standard micro sign (µ = U+00B5)
     OCStringFindAndReplace2(normalized, STR("μ"), STR("µ"));  // Greek Small Letter Mu (U+03BC)
-    OCStringFindAndReplace2(normalized, STR("Μ"), STR("µ"));  // Greek Capital Letter Mu (U+039C) 
+    OCStringFindAndReplace2(normalized, STR("Μ"), STR("µ"));  // Greek Capital Letter Mu (U+039C)
     OCStringFindAndReplace2(normalized, STR("ɥ"), STR("µ"));  // Latin Small Letter Turned H (U+0265) - sometimes confused
     OCStringFindAndReplace2(normalized, STR("𝜇"), STR("µ"));  // Mathematical Italic Small Mu (U+1D707)
     OCStringFindAndReplace2(normalized, STR("𝝁"), STR("µ"));  // Mathematical Bold Small Mu (U+1D741)
     OCStringFindAndReplace2(normalized, STR("𝝻"), STR("µ"));  // Mathematical Bold Italic Small Mu (U+1D77B)
-
     // Remove spaces around operators for consistent formatting
     OCStringFindAndReplace2(normalized, STR(" * "), STR("*"));
     OCStringFindAndReplace2(normalized, STR(" / "), STR("/"));
     OCStringFindAndReplace2(normalized, STR(" ^ "), STR("^"));
-    
     // Trim leading/trailing whitespace
     OCStringTrimWhitespace(normalized);
-    
     if (forLibraryLookup) {
         // For library lookup, replace * with • for consistent symbol representation
         OCStringFindAndReplace2(normalized, STR("*"), STR("•"));
-    }
-    else {
+    } else {
         // For display, replace • with * for multiplication
         OCStringFindAndReplace2(normalized, STR("•"), STR("*"));
     }
-    
     return normalized;
 }
