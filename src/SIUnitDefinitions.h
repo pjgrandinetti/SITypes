@@ -29,7 +29,7 @@
     double vonKlitzingConstant = kSIPlanckConstant / (kSIElementaryCharge * kSIElementaryCharge);
     OCStringRef error = NULL;
     AddToLibPrefixed(kSIQuantityLength, STR("meter"), STR("meters"), STR("m"), 1, &error);
-    AddToLibPrefixed(kSIQuantityMass, STR("gram"), STR("grams"), STR("g"), 1, &error);
+    AddToLibPrefixed(kSIQuantityMass, STR("gram"), STR("grams"), STR("g"), 0.001, &error);
     AddToLibPrefixed(kSIQuantityTime, STR("second"), STR("seconds"), STR("s"), 1, &error);
     AddToLibPrefixed(kSIQuantityCurrent, STR("ampere"), STR("amperes"), STR("A"), 1, &error);
     AddToLibPrefixed(kSIQuantityTemperature, STR("kelvin"), STR("kelvin"), STR("K"), 1, &error);

@@ -3982,7 +3982,7 @@ bool test_SIScalarWriteReadJSON_negative(void) {
 }
 
 bool test_SIScalarWriteReadJSON_complex_unit(void) {
-    double multiplier = 0.0;
+    double multiplier = 1.0;
     OCStringRef err = NULL;
     SIUnitRef ms2 = SIUnitFromExpression(STR("m/s^2"), &multiplier, &err);
     SIScalarRef scalar = SIScalarCreateWithFloat(9.81f, ms2);

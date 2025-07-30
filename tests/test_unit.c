@@ -108,14 +108,12 @@ bool test_unit_3(void) {
         return false;
     }
 
-    OCStringRef name = SIUnitCopyName(unit);
-    if (OCStringCompare(name, STR("m"), 0) != kOCCompareEqualTo) {
-        printf("test_unit_3 failed: Root symbol mismatch (expected 'm')\n");
-        OCRelease(name);
+    OCStringRef symbol = SIUnitGetSymbol(unit);
+    if (OCStringCompare(symbol, STR("m"), 0) != kOCCompareEqualTo) {
+        printf("test_unit_3 failed: Symbol mismatch (expected 'm')\n");
         return false;
     }
 
-    OCRelease(name);
     printf("%s passed\n", __func__);
     return true;
 }
@@ -142,21 +140,19 @@ bool test_unit_4(void) {
         return false;
     }
 
-    OCStringRef name = SIUnitCopyName(unit);
+    OCStringRef name = SIUnitGetName(unit);
     if (!name) {
         printf("test_unit_4 failed: Failed to retrieve name\n");
         OCRelease(unit);
         return false;
     }
 
-    if (OCStringCompare(name, STR("meter"), 0) != kOCCompareEqualTo) {
-        printf("test_unit_4 failed: Expected name 'meter', got '%s'\n", OCStringGetCString(name));
-        OCRelease(name);
+    if (OCStringCompare(name, STR("kilometer"), 0) != kOCCompareEqualTo) {
+        printf("test_unit_4 failed: Expected name 'kilometer', got '%s'\n", OCStringGetCString(name));
         OCRelease(unit);
         return false;
     }
 
-    OCRelease(name);
     OCRelease(unit);
     if (errorString) OCRelease(errorString);
 
@@ -739,22 +735,23 @@ bool test_unit_14(void) {
     OCStringRef err = NULL;
 
     // Test parsing fractional power expressions
-    // Note: The SITypes parser may not support complex fractional syntax like (m^2)^0.5
-    // Let's test what is actually supported
+    // Expressions with fractional powers that result in integer powers are allowed
+    // Example: (m^2)^0.5 = m^(2*0.5) = m^1 = m (allowed)
+    // Example: m^0.5 (rejected)
+    // Example: m^(1/2) (rejected)
+    // Example: m^-0.5 (rejected)
     
-    printf("  Testing simple fractional power: m^0.5\n");
+    // Test simple fractional power: m^0.5 (should be rejected)
     double multiplier1 = 1.0;
     SIUnitRef unit_simple_frac = SIUnitFromExpression(STR("m^0.5"), &multiplier1, &err);
     if (!unit_simple_frac) {
+        // Expected behavior - no verbose output needed
         if (err) {
-            printf("  ✓ Correctly rejected 'm^0.5': %s\n", OCStringGetCString(err));
             OCRelease(err);
             err = NULL;
-        } else {
-            printf("  ✓ Correctly rejected 'm^0.5' (no error message)\n");
         }
     } else {
-        printf("  ⚠️  'm^0.5' was parsed as valid (parser limitation)\n");
+        printf("  ✗ 'm^0.5' was unexpectedly parsed as valid\n");
         OCStringRef symbol = SIUnitCopySymbol(unit_simple_frac);
         if (symbol) {
             printf("    Symbol: '%s'\n", OCStringGetCString(symbol));
@@ -766,39 +763,45 @@ bool test_unit_14(void) {
             printf("    Note: Parser treated this as m^0 (dimensionless)\n");
         }
         OCRelease(unit_simple_frac);
+        return false;
     }
 
-    printf("  Testing parenthesized fractional power: (m^2)^0.5\n");
+    // Test parenthesized fractional power: (m^2)^0.5 (should be accepted and simplified to m)
     double multiplier2 = 1.0;
     SIUnitRef unit_paren_frac = SIUnitFromExpression(STR("(m^2)^0.5"), &multiplier2, &err);
     if (!unit_paren_frac) {
         if (err) {
-            printf("  ✓ Correctly rejected '(m^2)^0.5': %s\n", OCStringGetCString(err));
+            printf("  ✗ Unexpectedly rejected '(m^2)^0.5': %s\n", OCStringGetCString(err));
             OCRelease(err);
             err = NULL;
         } else {
-            printf("  ✓ Correctly rejected '(m^2)^0.5' (no error message)\n");
+            printf("  ✗ Unexpectedly rejected '(m^2)^0.5' (no error message)\n");
         }
+        return false;
     } else {
-        printf("  ✗ '(m^2)^0.5' was unexpectedly parsed as valid\n");
+        // Expected behavior - check if symbol is correctly simplified
         OCStringRef symbol = SIUnitCopySymbol(unit_paren_frac);
         if (symbol) {
-            printf("    Symbol: '%s'\n", OCStringGetCString(symbol));
+            const char* symbolStr = OCStringGetCString(symbol);
+            if (strcmp(symbolStr, "m") != 0) {
+                printf("  ✗ '(m^2)^0.5' symbol: '%s' (expected 'm')\n", symbolStr);
+                OCRelease(symbol);
+                OCRelease(unit_paren_frac);
+                return false;
+            }
             OCRelease(symbol);
         }
         OCRelease(unit_paren_frac);
     }
 
-    printf("  Testing fractional power with fraction: m^(1/2)\n");
+    // Test fractional power with fraction: m^(1/2) (should be rejected)
     double multiplier3 = 1.0;
     SIUnitRef unit_frac_notation = SIUnitFromExpression(STR("m^(1/2)"), &multiplier3, &err);
     if (!unit_frac_notation) {
+        // Expected behavior - no verbose output needed
         if (err) {
-            printf("  ✓ Correctly rejected 'm^(1/2)': %s\n", OCStringGetCString(err));
             OCRelease(err);
             err = NULL;
-        } else {
-            printf("  ✓ Correctly rejected 'm^(1/2)' (no error message)\n");
         }
     } else {
         printf("  ✗ 'm^(1/2)' was unexpectedly parsed as valid\n");
@@ -808,33 +811,30 @@ bool test_unit_14(void) {
             OCRelease(symbol);
         }
         OCRelease(unit_frac_notation);
+        return false;
     }
 
-    // Test what fractional syntax IS supported by trying different approaches
-    printf("  Testing if negative fractional powers work: m^-0.5\n");
+    // Test negative fractional powers: m^-0.5 (should be rejected)
     double multiplier4 = 1.0;
     SIUnitRef unit_neg_frac = SIUnitFromExpression(STR("m^-0.5"), &multiplier4, &err);
     if (!unit_neg_frac) {
+        // Expected behavior - no verbose output needed
         if (err) {
-            printf("  ✓ Correctly rejected 'm^-0.5': %s\n", OCStringGetCString(err));
             OCRelease(err);
             err = NULL;
-        } else {
-            printf("  ✓ Correctly rejected 'm^-0.5' (no error message)\n");
         }
     } else {
-        printf("  ⚠️  'm^-0.5' was parsed as valid (parser limitation)\n");
+        printf("  ✗ 'm^-0.5' was unexpectedly parsed as valid\n");
         OCStringRef symbol = SIUnitCopySymbol(unit_neg_frac);
         if (symbol) {
             printf("    Symbol: '%s'\n", OCStringGetCString(symbol));
             OCRelease(symbol);
         }
         OCRelease(unit_neg_frac);
+        return false;
     }
 
-    // Since the parser doesn't support the syntax we want to test,
-    // let's test the functionality using the SIUnitCreateByTakingNthRoot function directly
-    printf("  Testing nth root functionality directly using SIUnitCreateByTakingNthRoot\n");
+    // Test nth root functionality directly using SIUnitCreateByTakingNthRoot
     
     // Get m^2 unit
     SIUnitRef area_unit = SIUnitFromExpression(STR("m^2"), &multiplier1, &err);
@@ -880,16 +880,12 @@ bool test_unit_14(void) {
 
     // Check if sqrt(m^2) equals m
     if (!SIUnitAreEquivalentUnits(sqrt_area, meter)) {
-        printf("test_unit_14 failed: sqrt(m^2) should be equivalent to m\n");
+        printf("  ✗ sqrt(m^2) should be equivalent to m\n");
         
         OCStringRef sqrt_symbol = SIUnitCopySymbol(sqrt_area);
         OCStringRef meter_symbol = SIUnitCopySymbol(meter);
-        printf("  sqrt(m^2) symbol: %s\n", sqrt_symbol ? OCStringGetCString(sqrt_symbol) : "NULL");
-        printf("  meter symbol: %s\n", meter_symbol ? OCStringGetCString(meter_symbol) : "NULL");
-        
-        SIDimensionalityRef dim_sqrt = SIUnitGetDimensionality(sqrt_area);
-        SIDimensionalityRef dim_meter = SIUnitGetDimensionality(meter);
-        printf("  Are dimensionally equal: %s\n", SIDimensionalityEqual(dim_sqrt, dim_meter) ? "YES" : "NO");
+        printf("    sqrt(m^2) symbol: %s\n", sqrt_symbol ? OCStringGetCString(sqrt_symbol) : "NULL");
+        printf("    meter symbol: %s\n", meter_symbol ? OCStringGetCString(meter_symbol) : "NULL");
         
         if (sqrt_symbol) OCRelease(sqrt_symbol);
         if (meter_symbol) OCRelease(meter_symbol);
@@ -899,8 +895,6 @@ bool test_unit_14(void) {
         OCRelease(meter);
         return false;
     }
-
-    printf("  ✓ SIUnitByTakingNthRoot works correctly: sqrt(m^2) = m\n");
 
     // Test cube root as well
     SIUnitRef volume_unit = SIUnitFromExpression(STR("m^3"), &multiplier1, &err);
@@ -939,7 +933,7 @@ bool test_unit_14(void) {
     }
     
     if (!SIUnitAreEquivalentUnits(cbrt_volume, meter)) {
-        printf("test_unit_14 failed: cbrt(m^3) should be equivalent to m\n");
+        printf("  ✗ cbrt(m^3) should be equivalent to m\n");
         OCRelease(area_unit);
         OCRelease(sqrt_area);
         OCRelease(meter);
@@ -948,15 +942,12 @@ bool test_unit_14(void) {
         return false;
     }
 
-    printf("  ✓ SIUnitByTakingNthRoot works correctly: cbrt(m^3) = m\n");
-
     // Test invalid operation: sqrt(m) should fail  
-    printf("  Testing invalid operation: sqrt(m) (should fail)\n");
     double invalid_multiplier = 1.0;
     OCStringRef invalid_error = NULL;
     SIUnitRef invalid_sqrt = SIUnitByTakingNthRoot(meter, 2, &invalid_multiplier, &invalid_error);
     if (invalid_sqrt) {
-        printf("test_unit_14 failed: sqrt(m) should have failed (m^0.5 is not valid)\n");
+        printf("  ✗ sqrt(m) should have failed (m^0.5 is not valid)\n");
         OCRelease(invalid_sqrt);
         OCRelease(area_unit);
         OCRelease(sqrt_area);
@@ -967,10 +958,7 @@ bool test_unit_14(void) {
     }
     
     if (invalid_error) {
-        printf("  ✓ Correctly rejected sqrt(m): %s\n", OCStringGetCString(invalid_error));
         OCRelease(invalid_error);
-    } else {
-        printf("  ✓ Correctly rejected sqrt(m) (no error message)\n");
     }
 
     // Clean up
@@ -988,7 +976,7 @@ bool test_unit_by_multiplying_without_reducing(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef err = NULL;
-    double multiplier = 0.0;
+    double multiplier = 1.0;
 
     // 1) Prepare base units: m and s
     SIUnitRef m = SIUnitFromExpression(STR("m"), NULL, &err);
@@ -1008,7 +996,7 @@ bool test_unit_by_multiplying_without_reducing(void) {
     }
 
     // 2) Multiply two distinct units: m * s
-    multiplier = 0.0;
+    multiplier = 1.0;
     SIUnitRef ms = SIUnitByMultiplyingWithoutReducing(m, s, &multiplier, &err);
     if (!ms) {
         fprintf(stderr, "  ✗ m*s returned NULL: %s\n",
@@ -1054,7 +1042,7 @@ bool test_unit_by_multiplying_without_reducing(void) {
     }
 
     // 4) Squaring shortcut: m * m => m^2
-    multiplier = 0.0;
+    multiplier = 1.0;
     SIUnitRef m2 = SIUnitByMultiplyingWithoutReducing(m, m, &multiplier, &err);
     if (!m2) {
         fprintf(stderr, "  ✗ Squaring m returned NULL: %s\n",
@@ -1063,7 +1051,7 @@ bool test_unit_by_multiplying_without_reducing(void) {
         goto cleanup;
     }
     {
-        double exprMul2 = 0.0;
+        double exprMul2 = 1.0;
         SIUnitRef m2_expr = SIUnitFromExpression(STR("m^2"), &exprMul2, &err);
         if (!m2_expr) {
             fprintf(stderr, "  ✗ Failed to parse 'm^2': %s\n",
@@ -1177,7 +1165,7 @@ bool test_unit_by_taking_nth_root(void) {
     OCStringRef err = NULL;
 
     // Test 1: Take square root of "m^2" -> should yield "m"
-    double multiplier = 0.0;
+    double multiplier = 1.0;
     SIUnitRef m2 = SIUnitFromExpression(STR("m^2"), NULL, &err);
     if (!m2) {
         fprintf(stderr, "  ✗ Failed to parse 'm^2': %s\n",
@@ -1281,7 +1269,7 @@ bool test_unit_by_raising_to_power_without_reducing(void) {
     OCStringRef err = NULL;
 
     // 1. Test squaring a unit: m^2
-    double multiplier = 0.0;
+    double multiplier = 1.0;
     SIUnitRef m = SIUnitFromExpression(STR("m"), NULL, &err);
     if (!m) {
         fprintf(stderr, "  ✗ Failed to parse 'm': %s\n",
@@ -1315,7 +1303,7 @@ bool test_unit_by_raising_to_power_without_reducing(void) {
     OCRelease(m2);
 
     // 2. Test negative power: m^-1
-    multiplier = 0.0;
+    multiplier = 1.0;
     SIUnitRef m_inv = SIUnitByRaisingToPowerWithoutReducing(m, -1, &multiplier, &err);
     if (!m_inv) {
         fprintf(stderr, "  ✗ Failed to compute m^-1: %s\n",
@@ -1356,7 +1344,7 @@ bool test_unit_by_raising_to_power_without_reducing(void) {
     // 4. (Optional) Test with a "special symbol" unit if you have one (e.g., "hp")
     // SIUnitRef hp = SIUnitFromExpression(STR("hp"), NULL, &err);
     // if (hp) {
-    //     multiplier = 0.0;
+    //     multiplier = 1.0;
     //     SIUnitRef hp2 = SIUnitByRaisingToPowerWithoutReducing(hp, 2.0, &multiplier, &err);
     //     // Symbol should be "hp^2" etc. (You may want to check the symbol string here.)
     //     OCRelease(hp2);
@@ -1383,93 +1371,77 @@ bool test_unit_unicode_normalization(void) {
     OCStringRef errorString = NULL;
 
     // Test Unicode normalization: Greek letter mu (μ, U+03BC) should be normalized to micro sign (µ, U+00B5)
-    printf("Testing Unicode normalization: Greek mu (μ) → micro sign (µ)\n");
     
     // Test 1: Create unit with Greek letter mu (μm)
     SIUnitRef unit_greek_mu = SIUnitFromExpression(STR("μm"), NULL, &errorString);
     if (!unit_greek_mu) {
-        printf("test_unit_unicode_normalization failed: Failed to parse unit with Greek mu 'μm'\n");
+        printf("  ✗ Failed to parse unit with Greek mu 'μm'\n");
         if (errorString) {
-            printf("Error: %s\n", OCStringGetCString(errorString));
+            printf("    Error: %s\n", OCStringGetCString(errorString));
             OCRelease(errorString);
             errorString = NULL;
         }
         success = false;
     } else {
-        printf("✓ Successfully parsed unit with Greek mu 'μm'\n");
-        
         // Get the symbol and verify it's normalized to micro sign
         OCStringRef symbol_greek = SIUnitCopySymbol(unit_greek_mu);
         if (symbol_greek) {
-            printf("  Symbol from Greek mu: '%s'\n", OCStringGetCString(symbol_greek));
-            
             // Test 2: Create unit with micro sign (µm) for comparison
             SIUnitRef unit_micro_sign = SIUnitFromExpression(STR("µm"), NULL, &errorString);
             if (!unit_micro_sign) {
-                printf("test_unit_unicode_normalization failed: Failed to parse unit with micro sign 'µm'\n");
+                printf("  ✗ Failed to parse unit with micro sign 'µm'\n");
                 if (errorString) {
-                    printf("Error: %s\n", OCStringGetCString(errorString));
+                    printf("    Error: %s\n", OCStringGetCString(errorString));
                     OCRelease(errorString);
                     errorString = NULL;
                 }
                 success = false;
             } else {
-                printf("✓ Successfully parsed unit with micro sign 'µm'\n");
-                
                 OCStringRef symbol_micro = SIUnitCopySymbol(unit_micro_sign);
                 if (symbol_micro) {
-                    printf("  Symbol from micro sign: '%s'\n", OCStringGetCString(symbol_micro));
-                    
                     // Test 3: Both symbols should be identical after normalization
-                    if (OCStringCompare(symbol_greek, symbol_micro, 0) == kOCCompareEqualTo) {
-                        printf("✓ Unicode normalization working: both symbols are identical\n");
-                    } else {
-                        printf("✗ Unicode normalization failed: symbols differ\n");
-                        printf("  Greek mu symbol:  '%s'\n", OCStringGetCString(symbol_greek));
-                        printf("  Micro sign symbol: '%s'\n", OCStringGetCString(symbol_micro));
+                    if (OCStringCompare(symbol_greek, symbol_micro, 0) != kOCCompareEqualTo) {
+                        printf("  ✗ Unicode normalization failed: symbols differ\n");
+                        printf("    Greek mu symbol:  '%s'\n", OCStringGetCString(symbol_greek));
+                        printf("    Micro sign symbol: '%s'\n", OCStringGetCString(symbol_micro));
                         success = false;
                     }
                     
                     // Test 4: Units should be equal
-                    if (SIUnitEqual(unit_greek_mu, unit_micro_sign)) {
-                        printf("✓ Units are equal after normalization\n");
-                    } else {
-                        printf("✗ Units are not equal after normalization\n");
+                    if (!SIUnitEqual(unit_greek_mu, unit_micro_sign)) {
+                        printf("  ✗ Units are not equal after normalization\n");
                         success = false;
                     }
                     
                     OCRelease(symbol_micro);
                 } else {
-                    printf("test_unit_unicode_normalization failed: Failed to get symbol from micro sign unit\n");
+                    printf("  ✗ Failed to get symbol from micro sign unit\n");
                     success = false;
                 }
                 OCRelease(unit_micro_sign);
             }
             OCRelease(symbol_greek);
         } else {
-            printf("test_unit_unicode_normalization failed: Failed to get symbol from Greek mu unit\n");
+            printf("  ✗ Failed to get symbol from Greek mu unit\n");
             success = false;
         }
         OCRelease(unit_greek_mu);
     }
     
-    // Test 5: Test other Unicode normalizations
-    printf("\nTesting other Unicode normalizations:\n");
+    // Test other Unicode normalizations
     
     // Test multiplication sign (×) normalization
     SIUnitRef unit_mult = SIUnitFromExpression(STR("m×s"), NULL, &errorString);
     if (unit_mult) {
-        printf("✓ Successfully parsed 'm×s' (multiplication sign)\n");
         OCStringRef mult_symbol = SIUnitCopySymbol(unit_mult);
         if (mult_symbol) {
-            printf("  Symbol: '%s'\n", OCStringGetCString(mult_symbol));
             OCRelease(mult_symbol);
         }
         OCRelease(unit_mult);
     } else {
-        printf("✗ Failed to parse 'm×s' (multiplication sign)\n");
+        printf("  ✗ Failed to parse 'm×s' (multiplication sign)\n");
         if (errorString) {
-            printf("Error: %s\n", OCStringGetCString(errorString));
+            printf("    Error: %s\n", OCStringGetCString(errorString));
             OCRelease(errorString);
             errorString = NULL;
         }
@@ -1479,17 +1451,15 @@ bool test_unit_unicode_normalization(void) {
     // Test division sign (÷) normalization  
     SIUnitRef unit_div = SIUnitFromExpression(STR("m÷s"), NULL, &errorString);
     if (unit_div) {
-        printf("✓ Successfully parsed 'm÷s' (division sign)\n");
         OCStringRef div_symbol = SIUnitCopySymbol(unit_div);
         if (div_symbol) {
-            printf("  Symbol: '%s'\n", OCStringGetCString(div_symbol));
             OCRelease(div_symbol);
         }
         OCRelease(unit_div);
     } else {
-        printf("✗ Failed to parse 'm÷s' (division sign)\n");
+        printf("  ✗ Failed to parse 'm÷s' (division sign)\n");
         if (errorString) {
-            printf("Error: %s\n", OCStringGetCString(errorString));
+            printf("    Error: %s\n", OCStringGetCString(errorString));
             OCRelease(errorString);
             errorString = NULL;
         }
@@ -1521,96 +1491,68 @@ bool isUnitInLibrary(const char* expression) {
 // Test unit registration behavior in SITypes library
 bool test_unit_registration(void) {
     printf("Running %s...\n", __func__);
-    printf("Testing unit registration behavior in SITypes library\n");
+    printf("Testing unit registration behavior\n");
     
     bool success = true;
     OCStringRef error = NULL;
     
-    // Test 1: Check if ft^2*kg/s is initially in library  
+    // Test unit registration behavior - should only show output if something fails
     const char* testExpr = "ft^2*kg/s";
-    printf("1. Checking if '%s' is initially in library: %s\n", 
-           testExpr, isUnitInLibrary(testExpr) ? "YES" : "NO");
     
-    // Test 2: Try to parse it with SIUnitFromExpression
-    printf("2. Attempting to parse '%s'...\n", testExpr);
+    // Test 1: Try to parse it with SIUnitFromExpression
     double multiplier = 1.0;
     
     OCStringRef exprStr = OCStringCreateWithCString(testExpr);
     SIUnitRef unit = SIUnitFromExpression(exprStr, &multiplier, &error);
     
     if (unit) {
-        printf("   SUCCESS: Parsed unit\n");
-        printf("   Multiplier: %.12f\n", multiplier);
-        
-        OCStringRef symbol = SIUnitCopySymbol(unit);
-        if (symbol) {
-            printf("   Symbol: %s\n", OCStringGetCString(symbol));
-            OCRelease(symbol);
-        }
-        
-        // Test 3: Check if it's now in the library
-        printf("3. Checking if '%s' is now in library: %s\n", 
-               testExpr, isUnitInLibrary(testExpr) ? "YES" : "NO");
-        
-        // Test 4: Try parsing again to see if behavior changes
-        printf("4. Parsing '%s' again...\n", testExpr);
+        // Test 2: Try parsing again to see if behavior changes
         double multiplier2 = 1.0;
         SIUnitRef unit2 = SIUnitFromExpression(exprStr, &multiplier2, &error);
         
-        if (unit2) {
-            printf("   SUCCESS: Parsed unit again\n");
-            printf("   Multiplier: %.12f\n", multiplier2);
-            printf("   Same unit object? %s\n", (unit == unit2) ? "YES" : "NO");
-            printf("   Units equal? %s\n", SIUnitEqual(unit, unit2) ? "YES" : "NO");
-        } else {
-            printf("   FAILED to parse unit again\n");
+        if (!unit2) {
+            printf("  ✗ Failed to parse unit again\n");
             if (error) {
-                printf("   Error: %s\n", OCStringGetCString(error));
+                printf("    Error: %s\n", OCStringGetCString(error));
                 OCRelease(error);
                 error = NULL;
             }
             success = false;
+        } else {
+            // Verify consistency
+            if (!SIUnitEqual(unit, unit2)) {
+                printf("  ✗ Units not equal on second parse\n");
+                success = false;
+            }
+            OCRelease(unit2);
         }
         
-        // Test 5: Try a completely new Imperial combination
-        printf("5. Testing new Imperial combination 'in*lb'...\n");
+        // Test 3: Try a completely new Imperial combination
         const char* newExpr = "in*lb";
-        printf("   Initially in library: %s\n", isUnitInLibrary(newExpr) ? "YES" : "NO");
         
         double multiplier3 = 1.0;
         OCStringRef newExprStr = OCStringCreateWithCString(newExpr);
         SIUnitRef unit3 = SIUnitFromExpression(newExprStr, &multiplier3, &error);
         
-        if (unit3) {
-            printf("   SUCCESS: Parsed new combination\n");
-            printf("   Multiplier: %.12f\n", multiplier3);
-            
-            OCStringRef symbol3 = SIUnitCopySymbol(unit3);
-            if (symbol3) {
-                printf("   Symbol: %s\n", OCStringGetCString(symbol3));
-                OCRelease(symbol3);
-            }
-            
-            printf("   Now in library: %s\n", isUnitInLibrary(newExpr) ? "YES" : "NO");
-            
-            OCRelease(unit3);
-        } else {
-            printf("   FAILED to parse new combination\n");
+        if (!unit3) {
+            printf("  ✗ Failed to parse new combination '%s'\n", newExpr);
             if (error) {
-                printf("   Error: %s\n", OCStringGetCString(error));
+                printf("    Error: %s\n", OCStringGetCString(error));
                 OCRelease(error);
                 error = NULL;
             }
+            success = false;
+        } else {
+            OCRelease(unit3);
         }
         
         OCRelease(newExprStr);
         OCRelease(unit);
-        if (unit2) OCRelease(unit2);
         
     } else {
-        printf("   FAILED to parse unit\n");
+        printf("  ✗ Failed to parse unit\n");
         if (error) {
-            printf("   Error: %s\n", OCStringGetCString(error));
+            printf("    Error: %s\n", OCStringGetCString(error));
             OCRelease(error);
         }
         success = false;
@@ -1618,7 +1560,7 @@ bool test_unit_registration(void) {
     
     OCRelease(exprStr);
     
-    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
+    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 
@@ -1627,39 +1569,36 @@ bool test_unit_canonical_expressions(void) {
     bool success = true;
     
     // Test basic canonicalization
-    printf("Testing basic canonicalization...\n");
     
     OCStringRef result1 = SIUnitCreateLibraryKey(STR("m"));
     if (OCStringCompare(result1, STR("m"), 0) != kOCCompareEqualTo) {
-        printf("FAILED: 'm' should canonicalize to 'm', got '%s'\n", OCStringGetCString(result1));
+        printf("  ✗ 'm' should canonicalize to 'm', got '%s'\n", OCStringGetCString(result1));
         success = false;
     }
     OCRelease(result1);
     
     OCStringRef result2 = SIUnitCreateLibraryKey(STR("m^2"));
     if (OCStringCompare(result2, STR("m^2"), 0) != kOCCompareEqualTo) {
-        printf("FAILED: 'm^2' should canonicalize to 'm^2', got '%s'\n", OCStringGetCString(result2));
+        printf("  ✗ 'm^2' should canonicalize to 'm^2', got '%s'\n", OCStringGetCString(result2));
         success = false;
     }
     OCRelease(result2);
     
     // Test multiplication ordering
-    printf("Testing multiplication ordering...\n");
     
     OCStringRef result3 = SIUnitCreateLibraryKey(STR("m*kg"));
     OCStringRef result4 = SIUnitCreateLibraryKey(STR("kg*m"));
     
     if (OCStringCompare(result3, result4, 0) != kOCCompareEqualTo) {
-        printf("FAILED: 'm*kg' and 'kg*m' should have same canonical form\n");
-        printf("  'm*kg' -> '%s'\n", OCStringGetCString(result3));
-        printf("  'kg*m' -> '%s'\n", OCStringGetCString(result4));
+        printf("  ✗ 'm*kg' and 'kg*m' should have same canonical form\n");
+        printf("    'm*kg' -> '%s'\n", OCStringGetCString(result3));
+        printf("    'kg*m' -> '%s'\n", OCStringGetCString(result4));
         success = false;
     }
     OCRelease(result3);
     OCRelease(result4);
     
     // Test Imperial/SI combinations that caused the original problem
-    printf("Testing problematic Imperial/SI combinations...\n");
     
     const char* test_expressions[] = {
         "lb*ft^2/s^2",
@@ -1675,7 +1614,6 @@ bool test_unit_canonical_expressions(void) {
     for (int i = 0; i < num_tests; i++) {
         OCStringRef expr = OCStringCreateWithCString(test_expressions[i]);
         canonical_forms[i] = SIUnitCreateLibraryKey(expr);
-        printf("  '%s' -> '%s'\n", test_expressions[i], OCStringGetCString(canonical_forms[i]));
         OCRelease(expr);
     }
     
@@ -1689,7 +1627,10 @@ bool test_unit_canonical_expressions(void) {
     }
     
     if (!all_equivalent) {
-        printf("FAILED: All Imperial/SI expressions should be equivalent\n");
+        printf("  ✗ All Imperial/SI expressions should be equivalent\n");
+        for (int i = 0; i < num_tests; i++) {
+            printf("    '%s' -> '%s'\n", test_expressions[i], OCStringGetCString(canonical_forms[i]));
+        }
         success = false;
     }
     
@@ -1699,30 +1640,28 @@ bool test_unit_canonical_expressions(void) {
     }
     
     // Test power consolidation
-    printf("Testing power consolidation...\n");
     
     OCStringRef result5 = SIUnitCreateLibraryKey(STR("m*m"));
     if (OCStringCompare(result5, STR("m^2"), 0) != kOCCompareEqualTo) {
-        printf("FAILED: 'm*m' should canonicalize to 'm^2', got '%s'\n", OCStringGetCString(result5));
+        printf("  ✗ 'm*m' should canonicalize to 'm^2', got '%s'\n", OCStringGetCString(result5));
         success = false;
     }
     OCRelease(result5);
     
     OCStringRef result6 = SIUnitCreateLibraryKey(STR("m^2*m"));
     if (OCStringCompare(result6, STR("m^3"), 0) != kOCCompareEqualTo) {
-        printf("FAILED: 'm^2*m' should canonicalize to 'm^3', got '%s'\n", OCStringGetCString(result6));
+        printf("  ✗ 'm^2*m' should canonicalize to 'm^3', got '%s'\n", OCStringGetCString(result6));
         success = false;
     }
     OCRelease(result6);
     
     // Test equivalence function
-    printf("Testing equivalence function...\n");
     
     OCStringRef expr1a = OCStringCreateWithCString("lb*ft^2/s^2");
     OCStringRef expr1b = OCStringCreateWithCString("ft^2*lb/s^2");
     bool eq1 = SIUnitAreExpressionsEquivalent(expr1a, expr1b);
     if (!eq1) {
-        printf("FAILED: 'lb*ft^2/s^2' and 'ft^2*lb/s^2' should be equivalent\n");
+        printf("  ✗ 'lb*ft^2/s^2' and 'ft^2*lb/s^2' should be equivalent\n");
         success = false;
     }
     OCRelease(expr1a);
@@ -1732,7 +1671,7 @@ bool test_unit_canonical_expressions(void) {
     OCStringRef expr2b = OCStringCreateWithCString("s/m");
     bool eq2 = SIUnitAreExpressionsEquivalent(expr2a, expr2b);
     if (eq2) {
-        printf("FAILED: 'm/s' and 's/m' should NOT be equivalent\n");
+        printf("  ✗ 'm/s' and 's/m' should NOT be equivalent\n");
         success = false;
     }
     OCRelease(expr2a);
@@ -1745,8 +1684,6 @@ bool test_unit_canonical_expressions(void) {
 bool test_unit_from_expression_equivalence(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
-    
-    printf("Testing SIUnitFromExpression with equivalent expressions...\n");
     
     // Test equivalent expressions that should return the same SIUnitRef
     const char* equivalent_sets[][5] = {
@@ -1763,8 +1700,6 @@ bool test_unit_from_expression_equivalence(void) {
     int num_sets = sizeof(equivalent_sets) / sizeof(equivalent_sets[0]);
     
     for (int set = 0; set < num_sets; set++) {
-        printf("  Testing equivalent set %d:\n", set + 1);
-        
         SIUnitRef first_unit = NULL;
         double first_multiplier = 1.0;
         OCStringRef error = NULL;
@@ -1777,7 +1712,7 @@ bool test_unit_from_expression_equivalence(void) {
             SIUnitRef unit = SIUnitFromExpression(expression, &multiplier, &error);
             
             if (!unit) {
-                printf("    FAILED: Could not parse '%s'\n", equivalent_sets[set][expr]);
+                printf("  ✗ Could not parse '%s'\n", equivalent_sets[set][expr]);
                 if (error) {
                     printf("    Error: %s\n", OCStringGetCString(error));
                     OCRelease(error);
@@ -1787,8 +1722,7 @@ bool test_unit_from_expression_equivalence(void) {
                 continue;
             }
             
-            printf("    '%s' -> unit: %p, multiplier: %f\n", 
-                   equivalent_sets[set][expr], (void*)unit, multiplier);
+            // Only print detailed output on failure
             
             if (expr == 0) {
                 // First expression in the set - save as reference
@@ -1797,7 +1731,7 @@ bool test_unit_from_expression_equivalence(void) {
             } else {
                 // Compare with first expression
                 if (unit!=first_unit) {
-                    printf("    FAILED: '%s' does not produce same unit as '%s'\n",
+                    printf("  ✗ '%s' does not produce same unit as '%s'\n",
                            equivalent_sets[set][expr], equivalent_sets[set][0]);
                     
                     // Show unit symbols for debugging
@@ -1813,7 +1747,7 @@ bool test_unit_from_expression_equivalence(void) {
                 
                 // Check that multipliers are the same (within tolerance)
                 if (fabs(multiplier - first_multiplier) > 1e-12) {
-                    printf("    FAILED: '%s' multiplier (%f) differs from '%s' multiplier (%f)\n",
+                    printf("  ✗ '%s' multiplier (%f) differs from '%s' multiplier (%f)\n",
                            equivalent_sets[set][expr], multiplier, 
                            equivalent_sets[set][0], first_multiplier);
                     success = false;
@@ -1825,7 +1759,6 @@ bool test_unit_from_expression_equivalence(void) {
     }
     
     // Test that different units return different SIUnitRef objects
-    printf("  Testing that different units return different objects:\n");
     
     OCStringRef error = NULL;
     double mult1 = 1.0, mult2 = 1.0;
@@ -1835,13 +1768,11 @@ bool test_unit_from_expression_equivalence(void) {
     
     if (unit_length && unit_time) {
         if (SIUnitEqual(unit_length, unit_time)) {
-            printf("    FAILED: Different units 'm' and 's' should not be equal\n");
+            printf("  ✗ Different units 'm' and 's' should not be equal\n");
             success = false;
-        } else {
-            printf("    PASSED: Different units 'm' and 's' are correctly different\n");
         }
     } else {
-        printf("    FAILED: Could not parse basic units 'm' or 's'\n");
+        printf("  ✗ Could not parse basic units 'm' or 's'\n");
         success = false;
     }
     

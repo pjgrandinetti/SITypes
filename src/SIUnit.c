@@ -295,7 +295,7 @@ bool SIUnitAreEquivalentUnits(SIUnitRef theUnit1, SIUnitRef theUnit2) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit2, false);
     if (theUnit1 == theUnit2) return true;
     if (!SIDimensionalityEqual(theUnit1->dimensionality, theUnit2->dimensionality)) return false;
-    if (OCCompareDoubleValues(SIUnitGetScaleToCoherentSI(theUnit1), SIUnitGetScaleToCoherentSI(theUnit2)) != kOCCompareEqualTo)
+    if (OCCompareDoubleValues(theUnit1->scale_to_coherent_si, theUnit2->scale_to_coherent_si) != kOCCompareEqualTo)
         return false;
     return true;
 }
@@ -395,8 +395,10 @@ static SIUnitRef AddToLib(
     OCMutableDictionaryRef unitsLib = SIUnitGetUnitsLib();
     // Add unit to units library dictionary
     if (OCDictionaryContainsKey(unitsLib, theUnit->symbol)) {
+        // Get the existing unit before releasing the newly created one
+        SIUnitRef existingUnit = OCDictionaryGetValue(unitsLib, theUnit->symbol);
         OCRelease(theUnit);
-        return OCDictionaryGetValue(unitsLib, theUnit->symbol);
+        return existingUnit;
     }
     OCTypeSetStaticInstance(theUnit, true);
     OCDictionaryAddValue(unitsLib, theUnit->symbol, theUnit);

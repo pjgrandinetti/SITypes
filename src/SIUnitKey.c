@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 #include "SILibrary.h"
 
 // Structure to hold parsed unit components with their powers
@@ -35,7 +36,6 @@ static void parse_expression_manually(const char *expr);
 static OCStringRef expand_parenthetical_power(OCStringRef expression, int power);
 
 // Initialize component lists
-__attribute__((no_sanitize("address")))
 static void init_component_lists(void) {
     positive_components = malloc(sizeof(ComponentList));
     positive_components->capacity = 10;
@@ -73,7 +73,6 @@ static void free_component_lists(void) {
 }
 
 // Add a component to the appropriate list
-__attribute__((no_sanitize("address")))
 static void add_component(const char *symbol, int power) {
     // Adjust power based on position (numerator vs denominator)
     int final_power = in_denominator ? -power : power;
@@ -129,7 +128,6 @@ static int compare_symbols(const void *a, const void *b) {
 
 // Create library key representation
 // Create library key representation
-__attribute__((no_sanitize("address")))
 static OCStringRef create_library_key(void) {
     // Consolidate and sort both lists
     consolidate_powers(positive_components);
@@ -387,24 +385,29 @@ static int extract_power_from_token(OCStringRef token, OCStringRef *base_token) 
     
     // Extract base token (before caret)
     size_t base_len = caret - token_cstr;
+    if (base_len == 0) {
+        // Empty base - invalid
+        *base_token = OCStringCreateCopy(token);
+        return 1;
+    }
+    
     char *base = malloc(base_len + 1);
+    if (!base) {
+        // Allocation failed
+        *base_token = OCStringCreateCopy(token);
+        return 1;
+    }
     strncpy(base, token_cstr, base_len);
     base[base_len] = '\0';
     
     // Extract power (after caret)
     char *power_str = caret + 1;
     
-    // Check for fractional powers - reject them
-    if (strchr(power_str, '.')) {
-        // Found a decimal point in the power - this is not allowed
-        fractional_power_error = true;
-        free(base);
-        return -9999; // Special error code for fractional powers
-    }
+    // Parse the power value (could be integer or fractional)
+    double power_double;
+    bool is_fractional = false;
     
-    // Parse the power value
-    int power;
-    // Handle parentheses around power: m^(-1) or m^(2)
+    // Handle parentheses around power: m^(-1) or m^(2) or m^(0.5)
     if (*power_str == '(') {
         char *close_paren = strchr(power_str, ')');
         if (close_paren) {
@@ -414,26 +417,85 @@ static int extract_power_from_token(OCStringRef token, OCStringRef *base_token) 
             strncpy(paren_content, power_str + 1, paren_len);
             paren_content[paren_len] = '\0';
             
-            // Check for fractional powers in parentheses
-            if (strchr(paren_content, '.')) {
-                free(paren_content);
-                free(base);
-                fractional_power_error = true;
-                return -9999; // Special error code for fractional powers
-            }
-            
-            power = atoi(paren_content);
+            power_double = atof(paren_content);
+            // Check for fractional powers: decimal points or division (fractions)
+            is_fractional = (strchr(paren_content, '.') != NULL) || 
+                           (strchr(paren_content, '/') != NULL);
             free(paren_content);
         } else {
-            power = atoi(power_str);
+            power_double = atof(power_str);
+            is_fractional = (strchr(power_str, '.') != NULL);
         }
     } else {
-        power = atoi(power_str);
+        power_double = atof(power_str);
+        is_fractional = (strchr(power_str, '.') != NULL);
     }
     
     // Check if base token is a parenthetical expression that needs expansion
     // This handles cases like (m^2•kg/s)^4 -> m^8•kg^4/s^4
+    // For fractional powers, we need to check if the mathematical result would be integer
     if (base[0] == '(' && base[base_len-1] == ')') {
+        // For parenthetical expressions with fractional powers, we need special handling
+        if (is_fractional) {
+            // Extract content inside parentheses
+            size_t inner_len = base_len - 2;
+            char *inner_expr = malloc(inner_len + 1);
+            strncpy(inner_expr, base + 1, inner_len);
+            inner_expr[inner_len] = '\0';
+            
+            // Check if this is a simple case like (m^2)^0.5 that can be mathematically simplified
+            if (strncmp(inner_expr, "m^", 2) == 0) {
+                // Extract inner power
+                double inner_power = atof(inner_expr + 2);
+                double result_power = inner_power * power_double;
+                
+                // Check if result is effectively an integer
+                double fractional_part = result_power - floor(result_power);
+                if (fabs(fractional_part) < 1e-10) {
+                    // Result is an integer - create simplified expression
+                    int int_result = (int)round(result_power);
+                    if (int_result == 1) {
+                        *base_token = OCStringCreateWithCString("m");
+                    } else if (int_result == 0) {
+                        *base_token = OCStringCreateWithCString("1");
+                    } else {
+                        char result_str[64];
+                        snprintf(result_str, sizeof(result_str), "m^%d", int_result);
+                        *base_token = OCStringCreateWithCString(result_str);
+                    }
+                    
+                    // Safely free allocated memory
+                    if (inner_expr) {
+                        free(inner_expr);
+                        inner_expr = NULL;
+                    }
+                    if (base) {
+                        free(base);
+                        base = NULL;
+                    }
+                    return 1; // Return 1 because we've already applied the power
+                } else {
+                    // Result is fractional - reject
+                    if (inner_expr) {
+                        free(inner_expr);
+                        inner_expr = NULL;
+                    }
+                    if (base) {
+                        free(base);
+                        base = NULL;
+                    }
+                    fractional_power_error = true;
+                    return -9999;
+                }
+            }
+            
+            free(inner_expr);
+            free(base);
+            fractional_power_error = true;
+            return -9999; // Reject complex fractional expressions for now
+        }
+        
+        // Integer power case - use existing logic
         // Extract content inside parentheses
         size_t inner_len = base_len - 2;
         char *inner_expr = malloc(inner_len + 1);
@@ -442,20 +504,37 @@ static int extract_power_from_token(OCStringRef token, OCStringRef *base_token) 
         
         // Recursively process the inner expression and apply the power to each component
         OCStringRef inner_str = OCStringCreateWithCString(inner_expr);
-        OCStringRef expanded = expand_parenthetical_power(inner_str, power);
+        int int_power = (int)round(power_double);
+        OCStringRef expanded = expand_parenthetical_power(inner_str, int_power);
         
         *base_token = expanded; // expanded already has proper reference count
         
         OCRelease(inner_str);
         free(inner_expr);
-        free(base);
+        if (base) {
+            free(base);
+            base = NULL;
+        }
         return 1; // Return 1 because we've already applied the power in the expansion
+    }
+    
+    // Non-parenthetical case - reject fractional powers
+    if (is_fractional) {
+        if (base) {
+            free(base);
+            base = NULL;
+        }
+        fractional_power_error = true;
+        return -9999; // Special error code for fractional powers
     }
     
     // Normal case - return base token and power separately
     *base_token = OCStringCreateWithCString(base);
-    free(base);
-    return power;
+    if (base) {
+        free(base);
+        base = NULL;
+    }
+    return (int)round(power_double);
 }
 
 // Tokenization by splitting on multiplication operators - simpler approach
@@ -538,7 +617,6 @@ static OCArrayRef split_by_multiplication(OCStringRef str) {
 }
 
 // Simple manual parser for unit expressions - simplified approach
-__attribute__((no_sanitize("address")))
 static void parse_expression_manually(const char *expr) {
     if (!expr) return;
     
@@ -618,7 +696,6 @@ static void parse_expression_manually(const char *expr) {
 }
 
 // Main function to canonicalize a unit expression
-__attribute__((no_sanitize("address")))
 OCStringRef SIUnitCreateLibraryKey(OCStringRef expression) {
     if (!expression) return NULL;
     
@@ -683,7 +760,6 @@ OCStringRef SIUnitCreateLibraryKey(OCStringRef expression) {
 }
 
 // Function to reduce a unit expression by combining like terms
-__attribute__((no_sanitize("address")))
 OCStringRef SIUnitReduceExpression(OCStringRef expression) {
     if (!expression) return NULL;
     

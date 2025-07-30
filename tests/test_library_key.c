@@ -6,24 +6,22 @@
 
 // Helper function to test library key creation
 static bool test_library_key_creation(const char *input, const char *expected, const char *test_name) {
-    printf("  Testing %s: '%s'\n", test_name, input);
-    
     OCStringRef input_str = OCStringCreateWithCString(input);
     OCStringRef result = SIUnitCreateLibraryKey(input_str);
     
     if (!result) {
-        printf("    ERROR: SIUnitCreateLibraryKey returned NULL\n");
+        printf("  ✗ %s: '%s' - SIUnitCreateLibraryKey returned NULL\n", test_name, input);
         OCRelease(input_str);
         return false;
     }
     
     const char *result_cstr = OCStringGetCString(result);
-    printf("    -> '%s'\n", result_cstr);
     
     bool passed = (strcmp(result_cstr, expected) == 0);
     if (!passed) {
-        printf("    EXPECTED: '%s'\n", expected);
-        printf("    ACTUAL:   '%s'\n", result_cstr);
+        printf("  ✗ %s: '%s'\n", test_name, input);
+        printf("    Expected: '%s'\n", expected);
+        printf("    Actual:   '%s'\n", result_cstr);
     }
     
     OCRelease(result);
@@ -33,19 +31,19 @@ static bool test_library_key_creation(const char *input, const char *expected, c
 
 // Helper function to test equivalence
 static bool test_equivalence(const char *expr1, const char *expr2, bool should_be_equal, const char *test_name) {
-    printf("  Testing %s:\n", test_name);
-    printf("    '%s' vs '%s'\n", expr1, expr2);
-    
     OCStringRef str1 = OCStringCreateWithCString(expr1);
     OCStringRef str2 = OCStringCreateWithCString(expr2);
     
     bool are_equivalent = SIUnitAreExpressionsEquivalent(str1, str2);
     
-    printf("    Equivalent: %s (expected: %s)\n", 
-           are_equivalent ? "YES" : "NO", 
-           should_be_equal ? "YES" : "NO");
-    
     bool passed = (are_equivalent == should_be_equal);
+    if (!passed) {
+        printf("  ✗ %s:\n", test_name);
+        printf("    '%s' vs '%s'\n", expr1, expr2);
+        printf("    Equivalent: %s (expected: %s)\n", 
+               are_equivalent ? "YES" : "NO", 
+               should_be_equal ? "YES" : "NO");
+    }
     
     OCRelease(str1);
     OCRelease(str2);
@@ -393,25 +391,21 @@ bool test_library_key_expression_equivalence(void) {
     int num_groups = sizeof(equivalent_groups) / sizeof(equivalent_groups[0]);
     
     for (int group = 0; group < num_groups; group++) {
-        printf("  Testing equivalence group %d:\n", group + 1);
-        
         // Get canonical form of first expression
         OCStringRef first_expr = OCStringCreateWithCString(equivalent_groups[group][0]);
         OCStringRef first_canonical = SIUnitCreateLibraryKey(first_expr);
-        printf("    '%s' -> '%s'\n", equivalent_groups[group][0], OCStringGetCString(first_canonical));
         
         // Test all other expressions in the group
         for (int i = 1; i < 6 && equivalent_groups[group][i] != NULL; i++) {
             OCStringRef expr = OCStringCreateWithCString(equivalent_groups[group][i]);
             OCStringRef canonical = SIUnitCreateLibraryKey(expr);
             
-            printf("    '%s' -> '%s'\n", equivalent_groups[group][i], OCStringGetCString(canonical));
-            
             if (OCStringCompare(first_canonical, canonical, 0) != kOCCompareEqualTo) {
-                printf("    FAILED: Should be equivalent to first expression\n");
+                printf("  ✗ Equivalence group %d failure:\n", group + 1);
+                printf("    '%s' -> '%s'\n", equivalent_groups[group][0], OCStringGetCString(first_canonical));
+                printf("    '%s' -> '%s'\n", equivalent_groups[group][i], OCStringGetCString(canonical));
+                printf("    Should be equivalent but are different\n");
                 success = false;
-            } else {
-                printf("      Equivalent to first: YES\n");
             }
             
             OCRelease(expr);
@@ -420,7 +414,6 @@ bool test_library_key_expression_equivalence(void) {
         
         OCRelease(first_expr);
         OCRelease(first_canonical);
-        printf("\n");
     }
     
     printf("%s %s\n", __func__, success ? "passed" : "failed");

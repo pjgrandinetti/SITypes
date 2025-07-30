@@ -95,8 +95,6 @@ bool test_check_for_duplicate_units(void) {
 
 // Test function to create some expressions that might cause duplicates
 bool test_create_potential_duplicates(void) {
-    printf("\n=== Testing expressions that might create duplicates ===\n");
-    
     // Test equivalent expressions
     const char* expressions[] = {
         "ft*ft*lb/s/s",
@@ -113,28 +111,20 @@ bool test_create_potential_duplicates(void) {
         NULL
     };
     
-    printf("Creating units from equivalent expressions...\n");
-    
     for (int i = 0; expressions[i] != NULL; i++) {
-        printf("  Testing: '%s'\n", expressions[i]);
-        double multiplier = 0.0;
+        double multiplier = 1.0;
         OCStringRef error = NULL;
         
         OCStringRef expression = OCStringCreateWithCString(expressions[i]);
         SIUnitRef unit = SIUnitFromExpression(expression, &multiplier, &error);
-        if (unit) {
-            OCStringRef symbol = SIUnitCopySymbol(unit);
-            if (symbol) {
-                printf("    -> Unit: %p, Symbol: '%s', Multiplier: %g\n", 
-                       unit, OCStringGetCString(symbol), multiplier);
-                OCRelease(symbol);
-            }
-        } else {
-            printf("    -> FAILED");
+        if (!unit) {
+            printf("  ✗ Failed to create unit from '%s'", expressions[i]);
             if (error) {
                 printf(" (Error: %s)", OCStringGetCString(error));
             }
             printf("\n");
+            OCRelease(expression);
+            return false;
         }
         OCRelease(expression);
     }

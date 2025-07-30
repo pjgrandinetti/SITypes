@@ -478,7 +478,7 @@ bool test_dimensionality_deep_copy(void) {
         goto cleanup;
     }
 
-    printf("  ✓ Both DeepCopy and DeepCopyMutable returned the singleton instance\n");
+    // Success case - no verbose output needed
 
 cleanup:
     if (err)      OCRelease(err);
@@ -492,7 +492,6 @@ cleanup:
 
 bool test_dimensionality_parser_strictness(void) {
     printf("Running %s...\n", __func__);
-    printf("Testing that addition and subtraction are rejected by parser...\n");
     bool success = true;
     OCStringRef err = NULL;
 
@@ -516,40 +515,35 @@ bool test_dimensionality_parser_strictness(void) {
         const char* expr = forbidden_expressions[i];
         err = NULL;
         
-        printf("  Testing rejection of: '%s'\n", expr);
         OCStringRef expr_str = OCStringCreateWithCString(expr);
         SIDimensionalityRef result = SIDimensionalityFromExpression(expr_str, &err);
         
         if (result != NULL) {
-            // Parser incorrectly accepted the expression
+            // Parser incorrectly accepted the expression - this is a failure
             OCStringRef symbol = SIDimensionalityGetSymbol(result);
             const char* symbol_str = symbol ? OCStringGetCString(symbol) : "NULL";
-            printf("    ❌ FAILED: Expression '%s' was incorrectly accepted -> '%s'\n", 
+            printf("  ✗ Expression '%s' was incorrectly accepted -> '%s'\n", 
                    expr, symbol_str);
             printf("    This violates dimensional analysis principles!\n");
             OCRelease(result);
             success = false;
         } else if (err != NULL) {
-            // Parser correctly rejected the expression with an error
-            printf("    ✓ Correctly rejected: '%s' -> %s\n", expr, OCStringGetCString(err));
+            // Parser correctly rejected the expression - expected behavior, no output needed
             OCRelease(err);
         } else {
             // Parser returned NULL without error - unexpected
-            printf("    ? Unexpected: '%s' returned NULL without error\n", expr);
+            printf("  ✗ Unexpected: '%s' returned NULL without error\n", expr);
             success = false;
         }
         
         OCRelease(expr_str);
     }
 
-    if (success) {
-        printf("  ✓ All addition/subtraction expressions correctly rejected\n");
-        printf("%s passed\n", __func__);
-    } else {
-        printf("  ❌ CRITICAL FAILURE: Parser accepts invalid dimensional operations\n");
-        printf("  Addition and subtraction MUST be rejected in dimensional analysis!\n");
-        printf("%s failed ***\n", __func__);
+    if (!success) {
+        printf("  ✗ CRITICAL FAILURE: Parser accepts invalid dimensional operations\n");
+        printf("    Addition and subtraction MUST be rejected in dimensional analysis!\n");
     }
-
+    
+    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }

@@ -94,7 +94,6 @@ SIDimensionalityRef SIDimensionalityFromExpression(OCStringRef expression, OCStr
 
 void yyerror(char *s, ...)
 {
-    fprintf(stderr, "error: %s\n",s);
     sid_syntax_error = true;
 }
 
