@@ -402,7 +402,6 @@ static SIUnitRef AddToLib(
     }
     OCTypeSetStaticInstance(theUnit, true);
     OCDictionaryAddValue(unitsLib, theUnit->symbol, theUnit);
-    OCRelease(theUnit);  // This is a no-op for static instance, but helps AI not get confused
     // Append unit to mutable array value associated with quantity key inside quanity library dictionary
     {
         OCMutableDictionaryRef unitsQuantitiesLib = SIUnitGetQuantitiesLib();
@@ -1059,26 +1058,48 @@ SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit) {
 }
 //
 // Common helper function for finding best matching unit, i.e., one that best matches the target_scale
+// Uses weighted scoring within tolerance bands for backwards compatibility with existing behavior
 static SIUnitRef SIUnitFindBestMatchingUnit(SIDimensionalityRef dimensionality, double target_scale) {
+    // Tunable weighting factors: prioritize scale accuracy but allow symbol length to break ties
+    const double length_weight = 1.0;    // Weight for symbol length penalty
+    const double scale_weight = 100.0;   // Weight for scale difference penalty
+    const double tolerance = 1e-15;      // Tolerance for "exact" scale matches
+    
     OCArrayRef candidates = SIUnitCreateArrayOfUnitsForDimensionality(dimensionality);
     if (!candidates || OCArrayGetCount(candidates) == 0) {
         if (candidates) OCRelease(candidates);
         return NULL;
     }
+    
     SIUnitRef best_match = NULL;
-    OCStringRef shortest_symbol = NULL;
+    double best_score = 1e100;
+    
     for (OCIndex i = 0; i < OCArrayGetCount(candidates); i++) {
         SIUnitRef candidate = (SIUnitRef)OCArrayGetValueAtIndex(candidates, i);
         double scale_diff = fabs(candidate->scale_to_coherent_si - target_scale);
-        // Consider it a close match if within 1% relative error
-        if (scale_diff < 0.01 * target_scale) {
-            if (!best_match ||
-                OCStringGetLength(candidate->symbol) < OCStringGetLength(shortest_symbol)) {
-                best_match = candidate;
-                shortest_symbol = candidate->symbol;
-            }
+        OCIndex candidate_length = OCStringGetLength(candidate->symbol);
+        
+        // For exact matches (within tolerance), only consider symbol length
+        // For non-exact matches, use weighted scoring
+        double score;
+        if (scale_diff < tolerance) {
+            score = length_weight * candidate_length;  // Only length matters for exact matches
+        } else {
+            // Normalized scale difference for weighted scoring
+            double normalized_scale_diff = (target_scale != 0.0) ? scale_diff / fabs(target_scale) : scale_diff;
+            score = scale_weight * normalized_scale_diff * normalized_scale_diff + 
+                   length_weight * candidate_length;
+        }
+        
+        // Update best match if score is better, or if tied, prefer lexicographically first symbol
+        if (score < best_score || 
+            (score == best_score && best_match && 
+             OCStringCompare(candidate->symbol, best_match->symbol, 0) == kOCCompareLessThan)) {
+            best_match = candidate;
+            best_score = score;
         }
     }
+    
     OCRelease(candidates);
     return best_match;
 }
@@ -1180,7 +1201,6 @@ static SIUnitRef SIUnitByMultiplyingInternal(SIUnitRef theUnit1,
     if (error && *error) return NULL;
     // Calculate the new scale factor
     double scale = theUnit1->scale_to_coherent_si * theUnit2->scale_to_coherent_si;
-    *unit_multiplier = scale;
     // First approach: Look for existing units with matching dimensionality
     SIUnitRef best_match = SIUnitFindBestMatchingUnit(dimensionality, scale);
     if (best_match) {
