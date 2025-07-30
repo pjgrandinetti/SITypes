@@ -30,7 +30,7 @@ calclist: /* do nothing */ { $$ = NULL; }
 
 exp: '(' exp ')' {$$ = $2;}
 | exp '*' exp {$$ = SIUnitByMultiplyingWithoutReducing($1,$3,unit_multiplier_ref, &unitError);}
-| exp '/' exp {$$ = SIUnitByDividingWithoutReducing($1,$3,unit_multiplier_ref);}
+| exp '/' exp {$$ = SIUnitByDividingWithoutReducing($1,$3,unit_multiplier_ref, &unitError);}
 | exp '^' INTEGER {$$ = SIUnitByRaisingToPowerWithoutReducing($1,$3,unit_multiplier_ref, &unitError);}
 | exp '^' DECIMAL {
     unitError = STR("Fractional powers are not allowed in unit expressions");

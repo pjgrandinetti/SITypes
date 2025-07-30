@@ -1,9 +1,9 @@
-# SIUnit to SIUnit2 Migration Checklist
+# SIUnit to SIUnit Migration Checklist
 
 ## Overview
-This checklist guides the migration from `SIUnit.c/SIUnit.h` to `SIUnit2.c/SIUnit2.h` in the `SIUnits-refactor` branch.
+This checklist guides the migration from `SIUnit.c/SIUnit.h` to `SIUnit.c/SIUnit.h` in the `SIUnits-refactor` branch.
 
-**Current Status:** SIUnit2 implementation complete but missing 12 critical API functions
+**Current Status:** SIUnit implementation complete but missing 12 critical API functions
 **Risk Level:** 🔴 High - Major API gaps will cause compilation failures
 
 ---
@@ -12,67 +12,67 @@ This checklist guides the migration from `SIUnit.c/SIUnit.h` to `SIUnit2.c/SIUni
 
 ### API Gap Analysis
 - **Original SIUnit.h:** 49 functions
-- **Current SIUnit2.h:** 37 functions  
+- **Current SIUnit.h:** 37 functions  
 - **Missing:** 12 essential functions
 
 ---
 
 ## 📋 Pre-Migration Tasks
 
-### ✅ Phase 1: Complete SIUnit2 API
+### ✅ Phase 1: Complete SIUnit API
 
 #### 🚨 Priority 1: Missing Core Functions
-Add these functions to `SIUnit2.h` and implement in `SIUnit2.c`:
+Add these functions to `SIUnit.h` and implement in `SIUnit.c`:
 
-- [ ] `SIUnit2FromExpression(OCStringRef expression, double *unit_multiplier, OCStringRef *error)`
+- [ ] `SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, OCStringRef *error)`
   - **Critical:** Used heavily in SIScalar.c and SIScalarConstants.c
   - **Current calls:** ~10+ locations across codebase
   
-- [ ] `cJSON *SIUnit2CreateJSON(SIUnit2Ref unit)`
+- [ ] `cJSON *SIUnitCreateJSON(SIUnitRef unit)`
   - **Impact:** JSON serialization will break
   
-- [ ] `SIPrefix SIUnit2GetNumeratorPrefixAtIndex(SIUnit2Ref theUnit, uint8_t index)`
-- [ ] `SIPrefix SIUnit2GetDenominatorPrefixAtIndex(SIUnit2Ref theUnit, uint8_t index)`
+- [ ] `SIPrefix SIUnitGetNumeratorPrefixAtIndex(SIUnitRef theUnit, uint8_t index)`
+- [ ] `SIPrefix SIUnitGetDenominatorPrefixAtIndex(SIUnitRef theUnit, uint8_t index)`
   - **Impact:** Prefix introspection functionality
 
 #### 🔶 Priority 2: Root Property Access
-- [ ] `OCStringRef SIUnit2CopyRootName(SIUnit2Ref theUnit)`
-- [ ] `OCStringRef SIUnit2CopyRootPluralName(SIUnit2Ref theUnit)`  
-- [ ] `OCStringRef SIUnit2CopyRootSymbol(SIUnit2Ref theUnit)`
+- [ ] `OCStringRef SIUnitCopyRootName(SIUnitRef theUnit)`
+- [ ] `OCStringRef SIUnitCopyRootPluralName(SIUnitRef theUnit)`  
+- [ ] `OCStringRef SIUnitCopyRootSymbol(SIUnitRef theUnit)`
   - **Impact:** Unit metadata access
 
 #### 🔶 Priority 3: Prefix Metadata
-- [ ] `bool SIUnit2AllowsSIPrefix(SIUnit2Ref theUnit)`
-- [ ] `SIPrefix SIUnit2GetRootSymbolPrefix(SIUnit2Ref theUnit)`
-- [ ] `bool SIUnit2GetIsSpecialSISymbol(SIUnit2Ref theUnit)`
+- [ ] `bool SIUnitAllowsSIPrefix(SIUnitRef theUnit)`
+- [ ] `SIPrefix SIUnitGetRootSymbolPrefix(SIUnitRef theUnit)`
+- [ ] `bool SIUnitGetIsSpecialSISymbol(SIUnitRef theUnit)`
 
 #### 🔶 Priority 4: Type Checking Functions
-- [ ] `bool SIUnit2IsCoherentSIBaseUnit(SIUnit2Ref theUnit)`
-- [ ] `bool SIUnit2IsSIBaseUnit(SIUnit2Ref theUnit)`
-- [ ] `bool SIUnit2IsDimensionlessAndUnderived(SIUnit2Ref theUnit)`
+- [ ] `bool SIUnitIsCoherentSIBaseUnit(SIUnitRef theUnit)`
+- [ ] `bool SIUnitIsSIBaseUnit(SIUnitRef theUnit)`
+- [ ] `bool SIUnitIsDimensionlessAndUnderived(SIUnitRef theUnit)`
 
 #### 🔶 Priority 5: Unit Arithmetic (if missing)
-- [ ] `SIUnit2Ref SIUnit2ByMultiplying(...)`
-- [ ] `SIUnit2Ref SIUnit2ByDividing(...)`
-- [ ] `SIUnit2Ref SIUnit2ByRaisingToPower(...)`
-- [ ] `SIUnit2Ref SIUnit2ByReducing(...)`
+- [ ] `SIUnitRef SIUnitByMultiplying(...)`
+- [ ] `SIUnitRef SIUnitByDividing(...)`
+- [ ] `SIUnitRef SIUnitByRaisingToPower(...)`
+- [ ] `SIUnitRef SIUnitByReducing(...)`
 
 ### ✅ Phase 2: Fix Internal Dependencies
 
-#### 🚨 Critical: SIUnit2.c Internal Issues
-Fix these mixed function calls in `SIUnit2.c`:
+#### 🚨 Critical: SIUnit.c Internal Issues
+Fix these mixed function calls in `SIUnit.c`:
 
 - [ ] **Line 309:** `SIUnitReduceExpression(raw_symbol)` 
-  - Replace with `SIUnit2ReduceExpression()` or equivalent
+  - Replace with `SIUnitReduceExpression()` or equivalent
   
 - [ ] **Line 311:** `SIUnitCreateLibraryKey(raw_symbol)`
-  - Replace with `SIUnit2CreateLibraryKey()` or equivalent
+  - Replace with `SIUnitCreateLibraryKey()` or equivalent
   
-- [ ] **Lines 581, 585:** `SIUnitsLibrarySetImperialVolumes()`
-  - Should be `SIUnit2LibrarySetImperialVolumes()` (already exists)
+- [ ] **Lines 581, 585:** `SIUnitLibrarySetImperialVolumes()`
+  - Should be `SIUnitLibrarySetImperialVolumes()` (already exists)
 
 ### ✅ Phase 3: Constants & Macros
-Verify these are present in SIUnit2.h:
+Verify these are present in SIUnit.h:
 
 - [ ] `#define kSIUnitMeter STR("meter")`
 - [ ] `#define kSIUnitMeters STR("meters")`
@@ -127,7 +127,7 @@ Verify these are present in SIUnit2.h:
 #### Pre-Migration Backup:
 - [ ] Create backup tag:
   ```bash
-  git tag backup-before-siunit2-rename
+  git tag backup-before-SIUnit-rename
   ```
 
 #### File Operations:
@@ -137,28 +137,28 @@ Verify these are present in SIUnit2.h:
   rm SITypes/src/SIUnit.h
   ```
 
-- [ ] **Rename SIUnit2 files:**
+- [ ] **Rename SIUnit files:**
   ```bash
-  mv SITypes/src/SIUnit2.c SITypes/src/SIUnit.c
-  mv SITypes/src/SIUnit2.h SITypes/src/SIUnit.h
+  mv SITypes/src/SIUnit.c SITypes/src/SIUnit.c
+  mv SITypes/src/SIUnit.h SITypes/src/SIUnit.h
   ```
 
 #### Global Search & Replace:
 - [ ] **In SIUnit.c:**
   ```bash
-  sed -i '' 's/SIUnit2/SIUnit/g' SITypes/src/SIUnit.c
+  sed -i '' 's/SIUnit/SIUnit/g' SITypes/src/SIUnit.c
   ```
   
 - [ ] **In SIUnit.h:**
   ```bash
-  sed -i '' 's/SIUnit2/SIUnit/g' SITypes/src/SIUnit.h
+  sed -i '' 's/SIUnit/SIUnit/g' SITypes/src/SIUnit.h
   ```
 
 #### Update Header Guard:
 - [ ] **In SIUnit.h, change:**
   ```c
-  #ifndef SIUNIT2_H
-  #define SIUNIT2_H
+  #ifndef SIUnit_H
+  #define SIUnit_H
   ```
   **To:**
   ```c
@@ -212,7 +212,7 @@ Verify these are present in SIUnit2.h:
 ### If Issues Arise:
 - [ ] **Quick rollback:**
   ```bash
-  git reset --hard backup-before-siunit2-rename
+  git reset --hard backup-before-SIUnit-rename
   ```
 
 - [ ] **Investigate specific failures:**
@@ -238,7 +238,7 @@ Verify these are present in SIUnit2.h:
 ## 📝 Notes
 
 ### Current Issues Discovered:
-- SIUnit2.c has mixed function calls to old SIUnit functions
+- SIUnit.c has mixed function calls to old SIUnit functions
 - 12 critical functions missing from API
 - Constants/macros may need verification
 
@@ -249,7 +249,7 @@ Verify these are present in SIUnit2.h:
 - **RMNpy:** Python wrapper depends on complete API
 
 ### Performance Considerations:
-- SIUnit2 may have different performance characteristics
+- SIUnit may have different performance characteristics
 - Library loading behavior might differ
 - Memory usage patterns could change
 

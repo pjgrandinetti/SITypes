@@ -3,7 +3,7 @@
     double hbar = kSIPlanckConstant / (2 * kSIPi);
     // (1/(4•π•ε_0))•q_e^2/(c_0•h_P/(2•π))
     double alpha = (1. / (4. * kSIPi * kSIElectricConstant)) * kSIElementaryCharge * kSIElementaryCharge / (kSISpeedOfLight * kSIPlanckConstant / (2 * kSIPi));
-    double lightYear = (double)kSIYear * (double)kSISpeedOfLight;
+    double lightYear = kSIYear *kSISpeedOfLight;
     // E_h = m_e • (q_e^2/(2•ε_0•h_P))^2
     double E_h = kSIElectronMass * (kSIElementaryCharge * kSIElementaryCharge / (2 * kSIElectricConstant * kSIPlanckConstant)) * (kSIElementaryCharge * kSIElementaryCharge / (2 * kSIElectricConstant * kSIPlanckConstant));
     // a_0 = ε_0•h_P^2/(π*m_e•q_e^2)
@@ -56,16 +56,16 @@
     AddToLib(kSIQuantityLength, STR("ångström"), STR("ångströms"), STR("Å"), 1.e-10, &error);
     AddToLib(kSIQuantityLength, STR("atomic unit of length"), STR("atomic unit of length"), STR("a_0"), a_0, &error);
     //  AddToLib(kSIQuantityLength, STR("nautical mile"), STR("nautical miles"), STR("M"),1852., &error);
-    AddToLib(kSIQuantityLength, STR("fathom"), STR("fathoms"), STR("ftm"), 2 * 1609.344 / 1760, &error);
-    AddToLib(kSIQuantityLength, STR("inch"), STR("inches"), STR("in"), 1609.344 / 63360, &error);
-    AddToLib(kSIQuantityLength, STR("foot"), STR("feet"), STR("ft"), 1609.344 / 5280, &error);
-    AddToLib(kSIQuantityLength, STR("yard"), STR("yards"), STR("yd"), 1609.344 / 1760, &error);
-    AddToLib(kSIQuantityLength, STR("mile"), STR("miles"), STR("mi"), 1609.344, &error);
-    AddToLib(kSIQuantityLength, STR("link"), STR("links"), STR("li"), 1609.344 / 5280 * 33 / 50, &error);
-    AddToLib(kSIQuantityLength, STR("rod"), STR("rods"), STR("rod"), 1609.344 / 5280 * 16.5, &error);
-    AddToLib(kSIQuantityLength, STR("chain"), STR("chains"), STR("ch"), 1609.344 / 5280 * 16.5 * 4, &error);
-    AddToLib(kSIQuantityLength, STR("furlong"), STR("furlongs"), STR("fur"), 1609.344 / 5280 * 16.5 * 4 * 10, &error);
-    AddToLib(kSIQuantityLength, STR("league"), STR("leagues"), STR("lea"), 1609.344 * 3, &error);
+    AddToLib(kSIQuantityLength, STR("fathom"), STR("fathoms"), STR("ftm"), 2 * kSIMile / 1760, &error);
+    AddToLib(kSIQuantityLength, STR("inch"), STR("inches"), STR("in"), kSIMile / 63360, &error);
+    AddToLib(kSIQuantityLength, STR("foot"), STR("feet"), STR("ft"), kSIMile / 5280, &error);
+    AddToLib(kSIQuantityLength, STR("yard"), STR("yards"), STR("yd"), kSIMile / 1760, &error);
+    AddToLib(kSIQuantityLength, STR("mile"), STR("miles"), STR("mi"), kSIMile, &error);
+    AddToLib(kSIQuantityLength, STR("link"), STR("links"), STR("li"), kSIMile / 5280 * 33 / 50, &error);
+    AddToLib(kSIQuantityLength, STR("rod"), STR("rods"), STR("rod"), kSIMile / 5280 * 16.5, &error);
+    AddToLib(kSIQuantityLength, STR("chain"), STR("chains"), STR("ch"), kSIMile / 5280 * 16.5 * 4, &error);
+    AddToLib(kSIQuantityLength, STR("furlong"), STR("furlongs"), STR("fur"), kSIMile / 5280 * 16.5 * 4 * 10, &error);
+    AddToLib(kSIQuantityLength, STR("league"), STR("leagues"), STR("lea"), kSIMile * 3, &error);
     AddToLib(kSIQuantityLength, STR("compton wavelength"), STR("compton wavelengths"), STR("λ_C"), kSIPlanckConstant / (kSIElectronMass * kSISpeedOfLight), &error);
     AddToLib(kSIQuantityLength, STR("natural unit of length"), STR("natural units of length"), STR("ƛ_C"), 386.15926764e-15, &error);
     AddToLib(kSIQuantityLength, STR("planck length"), STR("planck length"), STR("l_P"), planckLength, &error);
@@ -74,10 +74,10 @@
     AddToLib(kSIQuantityWavenumber, STR("inverse meter"), STR("inverse meters"), STR("(1/m)"), 1, &error);
     AddToLib(kSIQuantityWavenumber, STR("inverse centimeter"), STR("inverse centimeters"), STR("(1/cm)"), 100, &error);
     AddToLib(kSIQuantityWavenumber, STR("inverse ångström"), STR("inverse ångströms"), STR("(1/Å)"), 1.e10, &error);
-    AddToLib(kSIQuantityWavenumber, STR("inverse mile"), STR("inverse miles"), STR("(1/mi)"), 1. / 1609.344, &error);
-    AddToLib(kSIQuantityWavenumber, STR("inverse yard"), STR("inverse yards"), STR("(1/yd)"), 1. / (1609.344 / 1760), &error);
-    AddToLib(kSIQuantityWavenumber, STR("inverse foot"), STR("inverse feet"), STR("(1/ft)"), 1. / (1609.344 / 5280), &error);
-    AddToLib(kSIQuantityWavenumber, STR("inverse inch"), STR("inverse inches"), STR("(1/in)"), 1. / (1609.344 / 63360), &error);
+    AddToLib(kSIQuantityWavenumber, STR("inverse mile"), STR("inverse miles"), STR("(1/mi)"), 1. / kSIMile, &error);
+    AddToLib(kSIQuantityWavenumber, STR("inverse yard"), STR("inverse yards"), STR("(1/yd)"), 1. / (kSIMile / 1760), &error);
+    AddToLib(kSIQuantityWavenumber, STR("inverse foot"), STR("inverse feet"), STR("(1/ft)"), 1. / (kSIMile / 5280), &error);
+    AddToLib(kSIQuantityWavenumber, STR("inverse inch"), STR("inverse inches"), STR("(1/in)"), 1. / (kSIMile / 63360), &error);
     AddToLib(kSIQuantityWavenumber, STR("rydberg constant"), STR("rydberg constant"), STR("R_∞"), R_H, &error);
     AddToLib(kSIQuantityWavenumber, STR("inverse atomic unit of length"), STR("inverse atomic unit of length"), STR("(1/a_0)"), 1 / a_0, &error);
     OCMutableArrayRef units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityWavenumber);
@@ -102,24 +102,24 @@
     AddToLib(kSIQuantityMass, STR("neutron mass"), STR("neutron mass"), STR("m_n"), kSINeutronMass, &error);
     AddToLib(kSIQuantityMass, STR("alpha particle mass"), STR("alpha particle mass"), STR("m_a"), kSIAlphaParticleMass, &error);
     AddToLib(kSIQuantityMass, STR("muon mass"), STR("muon mass"), STR("m_µ"), kSIMuonMass, &error);
-    AddToLib(kSIQuantityMass, STR("ton"), STR("tons"), STR("ton"), 0.45359237 * 2000, &error);
-    AddToLib(kSIQuantityMass, STR("hundredweight"), STR("hundredweight"), STR("cwt"), 0.45359237 * 100, &error);
-    AddToLib(kSIQuantityMass, STR("pound"), STR("pounds"), STR("lb"), 0.45359237, &error);
+    AddToLib(kSIQuantityMass, STR("ton"), STR("tons"), STR("ton"), kSIPound * 2000, &error);
+    AddToLib(kSIQuantityMass, STR("hundredweight"), STR("hundredweight"), STR("cwt"), kSIPound * 100, &error);
+    AddToLib(kSIQuantityMass, STR("pound"), STR("pounds"), STR("lb"), kSIPound, &error);
     AddToLib(kSIQuantityMass, STR("stone"), STR("stones"), STR("st"), 6.35029318, &error);
-    AddToLib(kSIQuantityMass, STR("ounce"), STR("ounces"), STR("oz"), 0.028349523125, &error);
-    AddToLib(kSIQuantityMass, STR("grain"), STR("grains"), STR("gr"), 0.45359237 / 7000, &error);
-    AddToLib(kSIQuantityMass, STR("dram"), STR("drams"), STR("dr"), 0.45359237 / 256, &error);
-    AddToLib(kSIQuantityMass, STR("tonUK"), STR("tonsUK"), STR("tonUK"), 0.45359237 * 2240, &error);
-    AddToLib(kSIQuantityMass, STR("hundredweightUK"), STR("hundredweightUK"), STR("cwtUK"), 0.45359237 * 112, &error);
+    AddToLib(kSIQuantityMass, STR("ounce"), STR("ounces"), STR("oz"), kSIOunce, &error);
+    AddToLib(kSIQuantityMass, STR("grain"), STR("grains"), STR("gr"), kSIPound / 7000, &error);
+    AddToLib(kSIQuantityMass, STR("dram"), STR("drams"), STR("dr"), kSIPound / 256, &error);
+    AddToLib(kSIQuantityMass, STR("tonUK"), STR("tonsUK"), STR("tonUK"), kSIPound * 2240, &error);
+    AddToLib(kSIQuantityMass, STR("hundredweightUK"), STR("hundredweightUK"), STR("cwtUK"), kSIPound * 112, &error);
     AddToLib(kSIQuantityMass, STR("planck mass"), STR("planck mass"), STR("m_P"), planckMass, &error);
 //
 #pragma mark kSIQuantityInverseMass
     AddToLib(kSIQuantityInverseMass, STR("inverse kilogram"), STR("inverse kilograms"), STR("(1/kg)"), 1., &error);
     AddToLib(kSIQuantityInverseMass, STR("inverse tonne"), STR("inverse tonnes"), STR("(1/t)"), 1. / 1e3, &error);
-    AddToLib(kSIQuantityInverseMass, STR("inverse ton"), STR("inverse tons"), STR("(1/ton)"), 1. / (0.45359237 * 2000), &error);
+    AddToLib(kSIQuantityInverseMass, STR("inverse ton"), STR("inverse tons"), STR("(1/ton)"), 1. / (kSIPound * 2000), &error);
     AddToLib(kSIQuantityInverseMass, STR("inverse stone"), STR("inverse stones"), STR("(1/st)"), 1. / 6.35029318, &error);
-    AddToLib(kSIQuantityInverseMass, STR("inverse pound"), STR("inverse pounds"), STR("(1/lb)"), 1. / 0.45359237, &error);
-    AddToLib(kSIQuantityInverseMass, STR("inverse ounce"), STR("inverse ounces"), STR("(1/oz)"), 1. / 0.028349523125, &error);
+    AddToLib(kSIQuantityInverseMass, STR("inverse pound"), STR("inverse pounds"), STR("(1/lb)"), 1. / kSIPound, &error);
+    AddToLib(kSIQuantityInverseMass, STR("inverse ounce"), STR("inverse ounces"), STR("(1/oz)"), 1. / kSIOunce, &error);
 //
 #pragma mark kSIQuantityMassRatio
     AddToLibPrefixed(kSIQuantityMassRatio, STR("gram per kilogram"), STR("grams per kilogram"), STR("g/kg"), 0.001, &error);
@@ -140,12 +140,12 @@
 //
 #pragma mark kSIQuantityInverseTime
     AddToLib(kSIQuantityInverseTime, STR("inverse seconds"), STR("inverse seconds"), STR("(1/s)"), 1., &error);
-    AddToLib(kSIQuantityInverseTime, STR("inverse minute"), STR("inverse minutes"), STR("(1/min)"), 1. / 60., &error);
-    AddToLib(kSIQuantityInverseTime, STR("inverse hour"), STR("inverse hours"), STR("(1/h)"), 1. / (60. * 60.), &error);
-    AddToLib(kSIQuantityInverseTime, STR("inverse day"), STR("inverse days"), STR("(1/d)"), 1. / (60. * 60 * 24.), &error);
-    AddToLib(kSIQuantityInverseTime, STR("inverse week"), STR("inverse weeks"), STR("(1/wk)"), 1. / (60. * 60 * 24. * 7.), &error);
-    AddToLib(kSIQuantityInverseTime, STR("inverse month"), STR("inverse months"), STR("(1/month)"), 1. / (365.25 * 86400 / 12.), &error);
-    AddToLib(kSIQuantityInverseTime, STR("inverse year"), STR("inverse years"), STR("(1/yr)"), 1. / (365.25 * 86400), &error);
+    AddToLib(kSIQuantityInverseTime, STR("inverse minute"), STR("inverse minutes"), STR("(1/min)"), 1. / kSIMinute, &error);
+    AddToLib(kSIQuantityInverseTime, STR("inverse hour"), STR("inverse hours"), STR("(1/h)"), 1. / kSIHour, &error);
+    AddToLib(kSIQuantityInverseTime, STR("inverse day"), STR("inverse days"), STR("(1/d)"), 1. / kSIDay, &error);
+    AddToLib(kSIQuantityInverseTime, STR("inverse week"), STR("inverse weeks"), STR("(1/wk)"), 1. / (kSIWeek), &error);
+    AddToLib(kSIQuantityInverseTime, STR("inverse month"), STR("inverse months"), STR("(1/month)"), 1. / kSIMonth, &error);
+    AddToLib(kSIQuantityInverseTime, STR("inverse year"), STR("inverse years"), STR("(1/yr)"), 1. /kSIYear, &error);
 //
 #pragma mark kSIQuantityFrequency
     AddToLibPrefixed(kSIQuantityFrequency, STR("hertz"), STR("hertz"), STR("Hz"), 1.0, &error);
@@ -163,8 +163,8 @@
 #pragma mark kSIQuantityInverseTimeSquared
     AddToLib(kSIQuantityInverseTimeSquared, STR("inverse millisecond squared"), STR("inverse milliseconds squared"), STR("(1/ms^2)"), 1000000., &error);
     AddToLib(kSIQuantityInverseTimeSquared, STR("inverse second squared"), STR("inverse seconds squared"), STR("(1/s^2)"), 1., &error);
-    AddToLib(kSIQuantityInverseTimeSquared, STR("inverse hour inverse second"), STR("inverse hour inverse seconds"), STR("(1/(h•s))"), 1. / 3600., &error);
-    AddToLib(kSIQuantityInverseTimeSquared, STR("inverse hour inverse minute"), STR("inverse hour inverse minutes"), STR("(1/(h•min))"), 1. / 3600. / 60., &error);
+    AddToLib(kSIQuantityInverseTimeSquared, STR("inverse hour inverse second"), STR("inverse hour inverse seconds"), STR("(1/(h•s))"), 1. / kSIHour, &error);
+    AddToLib(kSIQuantityInverseTimeSquared, STR("inverse hour inverse minute"), STR("inverse hour inverse minutes"), STR("(1/(h•min))"), 1. / kSIHour / kSIMinute, &error);
 //
 #pragma mark kSIQuantityLinearMomentum
     AddToLib(kSIQuantityLinearMomentum, STR("natural unit of momentum"), STR("natural units of momentum"), STR("m_e•c_0"), naturalMomentumUnit, &error);
@@ -180,9 +180,9 @@
     AddToLib(kSIQuantityEnergy, STR("alpha particle mass energy"), STR("alpha particle mass energy"), STR("m_a•c_0^2"), alphaParticleMassEnergy, &error);
     AddToLibPrefixed(kSIQuantityEnergy, STR("electronvolt"), STR("electronvolts"), STR("eV"), kSIElementaryCharge, &error);
     AddToLibPrefixed(kSIQuantityEnergy, STR("erg"), STR("ergs"), STR("erg"), 1e-7, &error);
-    AddToLibPrefixed(kSIQuantityEnergy, STR("calorie"), STR("calories"), STR("cal"), 4.1868, &error);
+    AddToLibPrefixed(kSIQuantityEnergy, STR("calorie"), STR("calories"), STR("cal"), kSICal, &error);
     AddToLib(kSIQuantityEnergy, STR("atomic unit of energy"), STR("atomic unit of energy"), STR("E_h"), E_h, &error);
-    AddToLib(kSIQuantityEnergy, STR("british thermal unit"), STR("british thermal units"), STR("Btu"), 1055.05585257348, &error);
+    AddToLib(kSIQuantityEnergy, STR("british thermal unit"), STR("british thermal units"), STR("Btu"), kSIBtu, &error);
 //
 #pragma mark kSIQuantityTemperature
     AddToLib(kSIQuantityTemperature, STR("planck temperature"), STR("planck temperature"), STR("T_P"), planckTemperature, &error);
@@ -208,8 +208,8 @@
 #pragma mark kSIQuantityTemperatureGradient
     AddToLibPrefixed(kSIQuantityTemperatureGradient, STR("kelvin per meter"), STR("kelvin per meter"), STR("K/m"), 1., &error);
     AddToLib(kSIQuantityTemperatureGradient, STR("celsius per meter"), STR("celsius per meter"), STR("°C/m"), 1, &error);
-    AddToLib(kSIQuantityTemperatureGradient, STR("fahrenheit per foot"), STR("fahrenheit per foot"), STR("°F/ft"), 0.555555555555556 / (1609.344 / 5280), &error);
-    AddToLib(kSIQuantityTemperatureGradient, STR("rankine per foot"), STR("rankines per foot"), STR("°R/ft"), 0.555555555555556 / (1609.344 / 5280), &error);
+    AddToLib(kSIQuantityTemperatureGradient, STR("fahrenheit per foot"), STR("fahrenheit per foot"), STR("°F/ft"), 0.555555555555556 / (kSIMile / 5280), &error);
+    AddToLib(kSIQuantityTemperatureGradient, STR("rankine per foot"), STR("rankines per foot"), STR("°R/ft"), 0.555555555555556 / (kSIMile / 5280), &error);
 //
 #pragma mark kSIQuantityInverseAmount
     AddToLib(kSIQuantityInverseAmount, STR("inverse mole"), STR("inverse moles"), STR("(1/mol)"), 1., &error);
@@ -236,7 +236,7 @@
     AddToLib(kSIQuantityArea, STR("square mile"), STR("square miles"), STR("mi^2"), 2589988.110336, &error);
     AddToLib(kSIQuantityArea, STR("square rod"), STR("square rods"), STR("rod^2"), 5.029210 * 5.029210, &error);
     AddToLib(kSIQuantityArea, STR("square chain"), STR("square chains"), STR("ch^2"), 5.029210 * 5.029210 * 16, &error);
-    AddToLib(kSIQuantityArea, STR("acre"), STR("acres"), STR("ac"), 4046.8564224, &error);
+    AddToLib(kSIQuantityArea, STR("acre"), STR("acres"), STR("ac"), kSIAcre, &error);
     AddToLib(kSIQuantityArea, STR("township"), STR("townships"), STR("twp"), 2589988.110336 * 36., &error);
 //
 #pragma mark kSIQuantityInverseArea
@@ -247,7 +247,7 @@
     AddToLib(kSIQuantityInverseArea, STR("inverse square inch"), STR("inverse square inches"), STR("(1/in^2)"), 1. / 0.00064516, &error);
     AddToLib(kSIQuantityInverseArea, STR("inverse square foot"), STR("inverse square feet"), STR("(1/ft^2)"), 1. / 0.09290304, &error);
     AddToLib(kSIQuantityInverseArea, STR("inverse square yard"), STR("inverse square yards"), STR("(1/yd^2)"), 1. / 0.83612736, &error);
-    AddToLib(kSIQuantityInverseArea, STR("inverse acre"), STR("inverse acres"), STR("(1/ac)"), 1. / 4046.8564224, &error);
+    AddToLib(kSIQuantityInverseArea, STR("inverse acre"), STR("inverse acres"), STR("(1/ac)"), 1. / kSIAcre, &error);
     AddToLib(kSIQuantityInverseArea, STR("inverse square mile"), STR("inverse square miles"), STR("(1/mi^2)"), 1. / 2589988.110336, &error);
 //
 #pragma mark kSIQuantityRockPermeability
@@ -261,10 +261,10 @@
 //
 #pragma mark kSIQuantityVolume
     AddToLibPrefixed(kSIQuantityVolume, STR("liter"), STR("liters"), STR("L"), 1e-3, &error);
-    AddToLib(kSIQuantityVolume, STR("cubic inch"), STR("cubic inches"), STR("in^3"), (1609.344 / 63360) * (1609.344 / 63360) * (1609.344 / 63360), &error);
-    AddToLib(kSIQuantityVolume, STR("cubic foot"), STR("cubic feet"), STR("ft^3"), (1609.344 / 5280) * (1609.344 / 5280) * (1609.344 / 5280), &error);
-    AddToLib(kSIQuantityVolume, STR("cubic yard"), STR("cubic yards"), STR("yd^3"), (1609.344 / 1760) * (1609.344 / 1760) * (1609.344 / 1760), &error);
-    AddToLib(kSIQuantityVolume, STR("acre foot"), STR("acre feet"), STR("ac•ft"), 1609.344 / 5280 * 4046.8564224, &error);
+    AddToLib(kSIQuantityVolume, STR("cubic inch"), STR("cubic inches"), STR("in^3"),kSIInch * kSIInch * kSIInch, &error);
+    AddToLib(kSIQuantityVolume, STR("cubic foot"), STR("cubic feet"), STR("ft^3"), kSIFoot* kSIFoot * kSIFoot, &error);
+    AddToLib(kSIQuantityVolume, STR("cubic yard"), STR("cubic yards"), STR("yd^3"), kSIYard* kSIYard*kSIYard, &error);
+    AddToLib(kSIQuantityVolume, STR("acre foot"), STR("acre feet"), STR("ac•ft"), kSIAcre*kSIFoot, &error);
     AddToLib(kSIQuantityVolume, STR("oil barrel"), STR("oil barrels"), STR("bbl"), 0.158987295, &error);
     AddToLib(kSIQuantityVolume, STR("thousand oil barrels"), STR("thousand oil barrels"), STR("Mbbl"), 0.158987295e3, &error);
     AddToLib(kSIQuantityVolume, STR("million oil barrels"), STR("million oil barrels"), STR("MMbbl"), 0.158987295e6, &error);
@@ -272,9 +272,9 @@
 #pragma mark kSIQuantityInverseVolume
     AddToLib(kSIQuantityInverseVolume, STR("inverse liter"), STR("inverse liters"), STR("(1/L)"), 1. / 1e-3, &error);
     AddToLib(kSIQuantityInverseVolume, STR("inverse milliliter"), STR("inverse milliliters"), STR("(1/mL)"), 1. / 1e-6, &error);
-    AddToLib(kSIQuantityInverseVolume, STR("inverse cubic inch"), STR("inverse cubic inches"), STR("(1/in^3)"), 1. / ((1609.344 / 63360) * (1609.344 / 63360) * (1609.344 / 63360)), &error);
-    AddToLib(kSIQuantityInverseVolume, STR("inverse cubic foot"), STR("inverse cubic feet"), STR("(1/ft^3)"), 1. / ((1609.344 / 5280) * (1609.344 / 5280) * (1609.344 / 5280)), &error);
-    AddToLib(kSIQuantityInverseVolume, STR("inverse cubic yard"), STR("inverse cubic yards"), STR("(1/yd^3)"), 1. / ((1609.344 / 1760) * (1609.344 / 1760) * (1609.344 / 1760)), &error);
+    AddToLib(kSIQuantityInverseVolume, STR("inverse cubic inch"), STR("inverse cubic inches"), STR("(1/in^3)"), 1. /kSIInch/kSIInch/kSIInch, &error);
+    AddToLib(kSIQuantityInverseVolume, STR("inverse cubic foot"), STR("inverse cubic feet"), STR("(1/ft^3)"), 1. /kSIFoot/kSIFoot/kSIFoot, &error);
+    AddToLib(kSIQuantityInverseVolume, STR("inverse cubic yard"), STR("inverse cubic yards"), STR("(1/yd^3)"), 1. / kSIYard/kSIYard/kSIYard, &error);
     AddToLib(kSIQuantityInverseVolume, STR("inverse cubic centimeter"), STR("inverse cubic centimeters"), STR("(1/cm^3)"), 1000000., &error);
     AddToLib(kSIQuantityInverseVolume, STR("inverse cubic millimeter"), STR("inverse cubic millimeters"), STR("(1/mm^3)"), 1000000000., &error);
     AddToLib(kSIQuantityInverseVolume, STR("inverse cubic micrometer"), STR("inverse cubic micrometers"), STR("(1/µm^3)"), 1e+18, &error);
@@ -289,19 +289,19 @@
 //
 #pragma mark kSIQuantitySpeed
     AddToLibPrefixed(kSIQuantitySpeed, STR("meter per second"), STR("meters per second"), STR("m/s"), 1, &error);
-    AddToLibPrefixed(kSIQuantitySpeed, STR("meter per minute"), STR("meters per minute"), STR("m/min"), 1. / 60., &error);
-    AddToLibPrefixed(kSIQuantitySpeed, STR("meter per hour"), STR("meters per hour"), STR("m/h"), 1. / 3600., &error);
+    AddToLibPrefixed(kSIQuantitySpeed, STR("meter per minute"), STR("meters per minute"), STR("m/min"), 1. / kSIMinute, &error);
+    AddToLibPrefixed(kSIQuantitySpeed, STR("meter per hour"), STR("meters per hour"), STR("m/h"), 1. / kSIHour, &error);
     AddToLib(kSIQuantitySpeed, STR("knot"), STR("knots"), STR("kn"), 0.514444444444444, &error);
     AddToLib(kSIQuantitySpeed, STR("speed of light"), STR("speed of light"), STR("c_0"), kSISpeedOfLight, &error);
-    AddToLib(kSIQuantitySpeed, STR("inch per second"), STR("inches per second"), STR("in/s"), 1609.344 / 63360, &error);
-    AddToLib(kSIQuantitySpeed, STR("inch per minute"), STR("inches per minute"), STR("in/min"), 1609.344 / 63360 / 60., &error);
-    AddToLib(kSIQuantitySpeed, STR("inch per hour"), STR("inches per hour"), STR("in/h"), 1609.344 / 63360 / 3600., &error);
-    AddToLib(kSIQuantitySpeed, STR("foot per second"), STR("feet per second"), STR("ft/s"), 1609.344 / 5280, &error);
-    AddToLib(kSIQuantitySpeed, STR("foot per minute"), STR("feet per minute"), STR("ft/min"), 1609.344 / 5280 / 60., &error);
-    AddToLib(kSIQuantitySpeed, STR("foot per hour"), STR("feet per hour"), STR("ft/h"), 1609.344 / 5280 / 3600., &error);
-    AddToLib(kSIQuantitySpeed, STR("mile per second"), STR("miles per second"), STR("mi/s"), 1609.344, &error);
-    AddToLib(kSIQuantitySpeed, STR("mile per minute"), STR("miles per minute"), STR("mi/min"), 1609.344 / 60., &error);
-    AddToLib(kSIQuantitySpeed, STR("mile per hour"), STR("miles per hour"), STR("mi/h"), 1609.344 / 3600., &error);
+    AddToLib(kSIQuantitySpeed, STR("inch per second"), STR("inches per second"), STR("in/s"), kSIInch, &error);
+    AddToLib(kSIQuantitySpeed, STR("inch per minute"), STR("inches per minute"), STR("in/min"), kSIInch / kSIMinute, &error);
+    AddToLib(kSIQuantitySpeed, STR("inch per hour"), STR("inches per hour"), STR("in/h"), kSIInch / kSIHour, &error);
+    AddToLib(kSIQuantitySpeed, STR("foot per second"), STR("feet per second"), STR("ft/s"), kSIFoot, &error);
+    AddToLib(kSIQuantitySpeed, STR("foot per minute"), STR("feet per minute"), STR("ft/min"), kSIFoot / kSIMinute, &error);
+    AddToLib(kSIQuantitySpeed, STR("foot per hour"), STR("feet per hour"), STR("ft/h"), kSIFoot / kSIHour, &error);
+    AddToLib(kSIQuantitySpeed, STR("mile per second"), STR("miles per second"), STR("mi/s"), kSIMile, &error);
+    AddToLib(kSIQuantitySpeed, STR("mile per minute"), STR("miles per minute"), STR("mi/min"), kSIMile / kSIMinute, &error);
+    AddToLib(kSIQuantitySpeed, STR("mile per hour"), STR("miles per hour"), STR("mi/h"), kSIMile / kSIHour, &error);
     AddToLib(kSIQuantitySpeed, STR("atomic unit of velocity"), STR("atomic units of velocity"), STR("a_0•E_h/ℏ"), a_0 * E_h / hbar, &error);
     units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantitySpeed);
     OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityVelocity, units);
@@ -330,15 +330,15 @@
 //
 #pragma mark kSIQuantityAcceleration
     AddToLibPrefixed(kSIQuantityAcceleration, STR("meter per square second"), STR("meters per square second"), STR("m/s^2"), 1, &error);
-    AddToLibPrefixed(kSIQuantityAcceleration, STR("meter per hour per second"), STR("meters per hour per second"), STR("m/(h•s)"), 1. / 3600., &error);
+    AddToLibPrefixed(kSIQuantityAcceleration, STR("meter per hour per second"), STR("meters per hour per second"), STR("m/(h•s)"), 1. / kSIHour, &error);
     AddToLib(kSIQuantityAcceleration, STR("gravity acceleration"), STR("gravity acceleration"), STR("g_0"), kSIGravityAcceleration, &error);
-    AddToLib(kSIQuantityAcceleration, STR("mile per square second"), STR("miles per square second"), STR("mi/s^2"), 1609.344, &error);
-    AddToLib(kSIQuantityAcceleration, STR("foot per square second"), STR("feet per square second"), STR("ft/s^2"), 1609.344 / 5280, &error);
-    AddToLib(kSIQuantityAcceleration, STR("inch per square second"), STR("inches per square second"), STR("in/s^2"), 1609.344 / 63360, &error);
-    AddToLib(kSIQuantityAcceleration, STR("mile per square minute"), STR("miles per square minute"), STR("mi/min^2"), 1609.344 / 60. / 60., &error);
-    AddToLib(kSIQuantityAcceleration, STR("foot per square minute"), STR("feet per square minute"), STR("ft/min^2"), 1609.344 / 5280 / 60. / 60., &error);
-    AddToLib(kSIQuantityAcceleration, STR("inch per square minute"), STR("inches per square minute"), STR("in/min^2"), 1609.344 / 63360 / 60. / 60., &error);
-    AddToLib(kSIQuantityAcceleration, STR("mile per hour per second"), STR("miles per hour per second"), STR("mi/(h•s)"), 1609.344 / 60. / 60., &error);
+    AddToLib(kSIQuantityAcceleration, STR("mile per square second"), STR("miles per square second"), STR("mi/s^2"), kSIMile, &error);
+    AddToLib(kSIQuantityAcceleration, STR("foot per square second"), STR("feet per square second"), STR("ft/s^2"), kSIFoot, &error);
+    AddToLib(kSIQuantityAcceleration, STR("inch per square second"), STR("inches per square second"), STR("in/s^2"), kSIInch, &error);
+    AddToLib(kSIQuantityAcceleration, STR("mile per square minute"), STR("miles per square minute"), STR("mi/min^2"), kSIMile / kSIMinute / kSIMinute, &error);
+    AddToLib(kSIQuantityAcceleration, STR("foot per square minute"), STR("feet per square minute"), STR("ft/min^2"), kSIFoot / kSIMinute / kSIMinute, &error);
+    AddToLib(kSIQuantityAcceleration, STR("inch per square minute"), STR("inches per square minute"), STR("in/min^2"), kSIInch / kSIMinute / kSIMinute, &error);
+    AddToLib(kSIQuantityAcceleration, STR("mile per hour per second"), STR("miles per hour per second"), STR("mi/(h•s)"), kSIMile / kSIHour, &error);
     AddToLib(kSIQuantityAcceleration, STR("knot per second"), STR("knots per second"), STR("kn/s"), 0.514444444444444, &error);
     AddToLib(kSIQuantityAcceleration, STR("galileo"), STR("galileo"), STR("Gal"), 1e-2, &error);
 //
@@ -394,9 +394,9 @@
 //
 #pragma mark kSIQuantityPressure, kSIQuantityStress, kSIQuantityElasticModulus
     AddToLibPrefixed(kSIQuantityPressure, STR("pascal"), STR("pascals"), STR("Pa"), 1, &error);
-    AddToLib(kSIQuantityPressure, STR("pound force per square inch"), STR("pounds force per square inch"), STR("lbf/in^2"), 6894.75729, &error);
-    AddToLib(kSIQuantityPressure, STR("pound force per square inch"), STR("pounds force per square inch"), STR("psi"), 6894.75729, &error);
-    AddToLib(kSIQuantityPressure, STR("pound force per square foot"), STR("pounds force per square feet"), STR("lbf/ft^2"), 47.880259, &error);
+    AddToLib(kSIQuantityPressure, STR("pound force per square inch"), STR("pounds force per square inch"), STR("lbf/in^2"), kSIPoundsForce/kSIInch/kSIInch, &error);
+    AddToLib(kSIQuantityPressure, STR("pound force per square inch"), STR("pounds force per square inch"), STR("psi"), kSIPoundsForce/kSIInch/kSIInch, &error);
+    AddToLib(kSIQuantityPressure, STR("pound force per square foot"), STR("pounds force per square feet"), STR("lbf/ft^2"), kSIPoundsForce/kSIFoot/kSIFoot, &error);
     AddToLibPrefixed(kSIQuantityPressure, STR("torr"), STR("torrs"), STR("Torr"), 1.01325e5 / 760, &error);
     AddToLibPrefixed(kSIQuantityPressure, STR("bar"), STR("bars"), STR("bar"), 1e5, &error);
     AddToLib(kSIQuantityPressure, STR("millimeter of Hg"), STR("millimeters of Hg"), STR("mmHg"), 133.322, &error);
@@ -414,7 +414,7 @@
 //
 #pragma mark kSIQuantityPressureGradient
     AddToLibPrefixed(kSIQuantityPressureGradient, STR("pascal per meter"), STR("pascals per meter"), STR("Pa/m"), 1, &error);
-    AddToLib(kSIQuantityPressureGradient, STR("pound force per square inch per foot"), STR("pounds force per square inch per foot"), STR("psi/ft"), 6894.75729 / (1609.344 / 5280), &error);
+    AddToLib(kSIQuantityPressureGradient, STR("pound force per square inch per foot"), STR("pounds force per square inch per foot"), STR("psi/ft"), kSIPoundsForce/kSIInch/kSIInch/kSIFoot, &error);
 //
 #pragma mark kSIQuantitySpectralRadiantEnergy
     AddToLibPrefixed(kSIQuantitySpectralRadiantEnergy, STR("joule per nanometer"), STR("joules per nanometer"), STR("J/nm"), 1.e9, &error);
@@ -422,20 +422,20 @@
 #pragma mark kSIQuantityPower, kSIQuantityRadiantFlux
     AddToLibPrefixed(kSIQuantityPower, STR("watt"), STR("watts"), STR("W"), 1, &error);
     AddToLibPrefixed(kSIQuantityPower, STR("Joule per second"), STR("Joules per second"), STR("J/s"), 1, &error);
-    AddToLibPrefixed(kSIQuantityPower, STR("calorie per second"), STR("calories per second"), STR("cal/s"), 4.1868, &error);
-    AddToLibPrefixed(kSIQuantityPower, STR("calorie per minute"), STR("calories per minute"), STR("cal/min"), 4.1868 / 60., &error);
-    AddToLibPrefixed(kSIQuantityPower, STR("calorie per hour"), STR("calories per hour"), STR("cal/h"), 4.1868 / 3600., &error);
-    AddToLib(kSIQuantityPower, STR("horsepower"), STR("horsepower"), STR("hp"), 745.699872, &error);
-    AddToLib(kSIQuantityPower, STR("british thermal unit per hour"), STR("british thermal unit per hour"), STR("Btu/h"), 1055.05585257348 / 3600., &error);
-    AddToLib(kSIQuantityPower, STR("british thermal unit per minute"), STR("british thermal unit per minute"), STR("Btu/min"), 1055.05585257348 / 60, &error);
-    AddToLib(kSIQuantityPower, STR("british thermal unit per second"), STR("british thermal unit per second"), STR("Btu/s"), 1055.05585257348, &error);
+    AddToLibPrefixed(kSIQuantityPower, STR("calorie per second"), STR("calories per second"), STR("cal/s"), kSICal, &error);
+    AddToLibPrefixed(kSIQuantityPower, STR("calorie per minute"), STR("calories per minute"), STR("cal/min"), kSICal / kSIMinute, &error);
+    AddToLibPrefixed(kSIQuantityPower, STR("calorie per hour"), STR("calories per hour"), STR("cal/h"), kSICal / kSIHour, &error);
+    AddToLib(kSIQuantityPower, STR("horsepower"), STR("horsepower"), STR("hp"), kSIhp, &error);
+    AddToLib(kSIQuantityPower, STR("british thermal unit per hour"), STR("british thermal unit per hour"), STR("Btu/h"), kSIBtu / kSIHour, &error);
+    AddToLib(kSIQuantityPower, STR("british thermal unit per minute"), STR("british thermal unit per minute"), STR("Btu/min"), kSIBtu / kSIMinute, &error);
+    AddToLib(kSIQuantityPower, STR("british thermal unit per second"), STR("british thermal unit per second"), STR("Btu/s"), kSIBtu, &error);
     AddToLibPrefixed(kSIQuantityPower, STR("erg per second"), STR("ergs per second"), STR("erg/s"), 1e-7, &error);
-    AddToLib(kSIQuantityPower, STR("foot pound force per hour"), STR("feet pound force per hour"), STR("ft•lbf/h"), (1609.344 / 5280) * 4.4482216152605 / 3600., &error);
-    AddToLib(kSIQuantityPower, STR("foot pound force per minute"), STR("feet pound force per minute"), STR("ft•lbf/min"), (1609.344 / 5280) * 4.4482216152605 / 60., &error);
-    AddToLib(kSIQuantityPower, STR("foot pound force per second"), STR("feet pound force per second"), STR("ft•lbf/s"), (1609.344 / 5280) * 4.4482216152605, &error);
-    AddToLib(kSIQuantityPower, STR("inch pound force per hour"), STR("inches pound force per hour"), STR("in•lbf/h"), 1.3558179483314 / 12. / 3600., &error);
-    AddToLib(kSIQuantityPower, STR("inch pound force per minute"), STR("inches pound force per minute"), STR("in•lbf/min"), 1.3558179483314 / 12. / 60., &error);
-    AddToLib(kSIQuantityPower, STR("inch pound force per second"), STR("inches pound force per second"), STR("in•lbf/s"), 1.3558179483314 / 12., &error);
+    AddToLib(kSIQuantityPower, STR("foot pound force per hour"), STR("feet pound force per hour"), STR("ft•lbf/h"), kSIFoot*kSIPoundsForce / kSIHour, &error);
+    AddToLib(kSIQuantityPower, STR("foot pound force per minute"), STR("feet pound force per minute"), STR("ft•lbf/min"), kSIFoot*kSIPoundsForce / kSIMinute, &error);
+    AddToLib(kSIQuantityPower, STR("foot pound force per second"), STR("feet pound force per second"), STR("ft•lbf/s"), kSIFoot*kSIPoundsForce, &error);
+    AddToLib(kSIQuantityPower, STR("inch pound force per hour"), STR("inches pound force per hour"), STR("in•lbf/h"), kSIInch*kSIPoundsForce / kSIHour, &error);
+    AddToLib(kSIQuantityPower, STR("inch pound force per minute"), STR("inches pound force per minute"), STR("in•lbf/min"), kSIInch*kSIPoundsForce / kSIMinute, &error);
+    AddToLib(kSIQuantityPower, STR("inch pound force per second"), STR("inches pound force per second"), STR("in•lbf/s"), kSIInch*kSIPoundsForce, &error);
     units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityPower);
     OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityRadiantFlux, units);
 //
@@ -448,8 +448,8 @@
 //
 #pragma mark kSIQuantitySpecificPower
     AddToLibPrefixed(kSIQuantitySpecificPower, STR("watt per kilogram"), STR("watts per kilogram"), STR("W/kg"), 1, &error);
-    AddToLib(kSIQuantitySpecificPower, STR("horse power per pound"), STR("horse power per pound"), STR("hp/lb"), 1643.986806920936, &error);
-    AddToLib(kSIQuantitySpecificPower, STR("horse power per ounce"), STR("horse power per ounce"), STR("hp/oz"), 26303.78891073498, &error);
+    AddToLib(kSIQuantitySpecificPower, STR("horse power per pound"), STR("horse power per pound"), STR("hp/lb"), kSIhp/kSIPound, &error);
+    AddToLib(kSIQuantitySpecificPower, STR("horse power per ounce"), STR("horse power per ounce"), STR("hp/oz"), kSIhp/kSIOunce, &error);
 //
 #pragma mark kSIQuantityElectricCharge, kSIQuantityAmountOfElectricity
     AddToLibPrefixed(kSIQuantityElectricCharge, STR("coulomb"), STR("coulombs"), STR("C"), 1, &error);
@@ -474,7 +474,7 @@
 //
 #pragma mark kSIQuantityElectricResistancePerLength
     AddToLibPrefixed(kSIQuantityElectricResistancePerLength, STR("ohm per meter"), STR("ohms per meter"), STR("Ω/m"), 1, &error);
-    AddToLibPrefixed(kSIQuantityElectricResistancePerLength, STR("ohm per feet"), STR("ohms per feet"), STR("Ω/ft"), 1. / (1609.344 / 5280), &error);
+    AddToLibPrefixed(kSIQuantityElectricResistancePerLength, STR("ohm per feet"), STR("ohms per feet"), STR("Ω/ft"), 1. / (kSIMile / 5280), &error);
 //
 #pragma mark kSIQuantityElectricResistivity
     AddToLibPrefixed(kSIQuantityElectricResistivity, STR("ohm meter"), STR("ohms meter"), STR("Ω•m"), 1, &error);
@@ -558,7 +558,7 @@
 #pragma mark kSIQuantityCatalyticActivity
     AddToLibPrefixed(kSIQuantityCatalyticActivity, STR("mole per second"), STR("moles per second"), STR("mol/s"), 1, &error);
     AddToLibPrefixed(kSIQuantityCatalyticActivity, STR("katal"), STR("katals"), STR("kat"), 1, &error);
-    AddToLibPrefixed(kSIQuantityCatalyticActivity, STR("mole per minute"), STR("moles per minute"), STR("mol/min"), 1. / 60., &error);
+    AddToLibPrefixed(kSIQuantityCatalyticActivity, STR("mole per minute"), STR("moles per minute"), STR("mol/min"), 1. / kSIMinute, &error);
 //
 #pragma mark kSIQuantityCatalyticActivityConcentration
     AddToLibPrefixed(kSIQuantityCatalyticActivityConcentration, STR("katal per cubic meter"), STR("katals per cubic meter"), STR("kat/m^3"), 1, &error);
@@ -740,7 +740,7 @@
 //
 #pragma mark kSIQuantityMolarEnergy
     AddToLibPrefixed(kSIQuantityMolarEnergy, STR("joule per mole"), STR("joules per mole"), STR("J/mol"), 1, &error);
-    AddToLibPrefixed(kSIQuantityMolarEnergy, STR("calorie per mole"), STR("calories per mole"), STR("cal/mol"), 4.1868, &error);
+    AddToLibPrefixed(kSIQuantityMolarEnergy, STR("calorie per mole"), STR("calories per mole"), STR("cal/mol"), kSICal, &error);
 //
 #pragma mark kSIQuantityRadiationExposure
     AddToLibPrefixed(kSIQuantityRadiationExposure, STR("coulomb per kilogram"), STR("coulombs per kilogram"), STR("C/kg"), 1, &error);
@@ -788,15 +788,15 @@
     AddToLibPrefixed(kSIQuantityVolumePerLength, STR("liter per 100 kilometers"), STR("liters per 100 kilometers"), STR("L/(100 km)"), 1e-3 / 100000., &error);
 //
 #pragma mark kSIQuantityVolumetricFlowRate
-    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic meter per hour"), STR("cubic meters per hour"), STR("m^3/h"), 1. / 3600., &error);
-    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic meter per minute"), STR("cubic meters per minute"), STR("m^3/min"), 1. / 60., &error);
+    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic meter per hour"), STR("cubic meters per hour"), STR("m^3/h"), 1. / kSIHour, &error);
+    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic meter per minute"), STR("cubic meters per minute"), STR("m^3/min"), 1. / kSIMinute, &error);
     AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic meter per second"), STR("cubic meters per second"), STR("m^3/s"), 1., &error);
-    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic centimeter per hour"), STR("cubic centimeters per hour"), STR("cm^3/h"), 1e-6 / 3600., &error);
-    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic centimeter per minute"), STR("cubic centimeters per minute"), STR("cm^3/min"), 1e-6 / 60., &error);
+    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic centimeter per hour"), STR("cubic centimeters per hour"), STR("cm^3/h"), 1e-6 / kSIHour, &error);
+    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic centimeter per minute"), STR("cubic centimeters per minute"), STR("cm^3/min"), 1e-6 / kSIMinute, &error);
     AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic centimeter per second"), STR("cubic centimeters per second"), STR("cm^3/s"), 1e-6, &error);
-    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic foot per hour"), STR("cubic feet per hour"), STR("ft^3/h"), (1609.344 / 5280) * (1609.344 / 5280) * (1609.344 / 5280) / 3600., &error);
-    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic foot per minute"), STR("cubic feet per minute"), STR("ft^3/min"), (1609.344 / 5280) * (1609.344 / 5280) * (1609.344 / 5280) / 60., &error);
-    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic foot per second"), STR("cubic feet per second"), STR("ft^3/s"), (1609.344 / 5280) * (1609.344 / 5280) * (1609.344 / 5280), &error);
+    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic foot per hour"), STR("cubic feet per hour"), STR("ft^3/h"), (kSIMile / 5280) * (kSIMile / 5280) * (kSIMile / 5280) / kSIHour, &error);
+    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic foot per minute"), STR("cubic feet per minute"), STR("ft^3/min"), (kSIMile / 5280) * (kSIMile / 5280) * (kSIMile / 5280) / kSIMinute, &error);
+    AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic foot per second"), STR("cubic feet per second"), STR("ft^3/s"), (kSIMile / 5280) * (kSIMile / 5280) * (kSIMile / 5280), &error);
 //
 #pragma mark kSIQuantityPowerPerAreaPerTemperatureToFourthPower
     AddToLib(kSIQuantityPowerPerAreaPerTemperatureToFourthPower, STR("stefan-boltzmann constant"), STR("stefan-boltzmann constant"), STR("σ"), kSIStefanBoltzmannConstant, &error);

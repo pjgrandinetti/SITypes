@@ -1145,7 +1145,7 @@ bool SIScalarDivideWithoutReducingUnit(SIMutableScalarRef target, SIScalarRef in
     IF_NO_OBJECT_EXISTS_RETURN(input2, false);
     if (error && *error) return false;
     double unit_multiplier = 1.0;
-    SIUnitRef unit = SIUnitByDividingWithoutReducing(target->unit, input2->unit, &unit_multiplier);
+    SIUnitRef unit = SIUnitByDividingWithoutReducing(target->unit, input2->unit, &unit_multiplier,error);
     if (!unit) return false;
     target->unit = unit;
     // Extract divisor
@@ -1195,7 +1195,7 @@ bool SIScalarDivide(SIMutableScalarRef target, SIScalarRef input2, OCStringRef *
     IF_NO_OBJECT_EXISTS_RETURN(input2, false);
     if (error && *error) return false;
     double unit_multiplier = 1.0;
-    SIUnitRef unit = SIUnitByDividing(target->unit, input2->unit, &unit_multiplier);
+    SIUnitRef unit = SIUnitByDividing(target->unit, input2->unit, &unit_multiplier,error);
     if (!unit) return false;
     target->unit = unit;
     // Get divisor

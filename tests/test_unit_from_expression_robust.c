@@ -199,7 +199,6 @@ bool test_unit_from_expression_robust(void) {
     
     SIUnitRef first_unit = NULL;
     double first_mult = 1.0;
-    OCStringRef first_error = NULL;
     
     for (int i = 0; i < 5; i++) {
         double mult = 1.0;

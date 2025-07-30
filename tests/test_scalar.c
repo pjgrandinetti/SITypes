@@ -944,7 +944,7 @@ bool test_SIScalarCreateByReducingUnit(void) {
     }
 
     double mult2 = 1.0;
-    SIUnitRef m_final = SIUnitByDividing(ms, s_unit, &mult2);
+    SIUnitRef m_final = SIUnitByDividing(ms, s_unit, &mult2, NULL);
     if (!m_final) {
         printf("test_SIScalarCreateByReducingUnit failed: Failed to divide units\n");
         return false;
@@ -998,7 +998,7 @@ bool test_SIScalarReduceUnit(void) {
     }
 
     double mult2 = 1.0;
-    SIUnitRef m_final_unit = SIUnitByDividing(ms, s_unit, &mult2);
+    SIUnitRef m_final_unit = SIUnitByDividing(ms, s_unit, &mult2, NULL);
     if (!m_final_unit) {
         printf("test_SIScalarReduceUnit failed: Failed to divide units\n");
         return false;

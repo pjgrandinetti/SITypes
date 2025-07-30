@@ -5,12 +5,9 @@
 //  Created by philip on 6/7/17.
 //  Copyright © 2017 PhySy Ltd. All rights reserved.
 //
-
-#ifndef SIUnit_h
-#define SIUnit_h
-
+#ifndef SIUnit_H
+#define SIUnit_H
 #include "SILibrary.h"
-
 /*!
  * @file SIUnit.h
  * @brief Interface for defining, manipulating, and comparing SI and derived units.
@@ -58,7 +55,6 @@
  *
  * @author Philip Grandinetti
  */
-
 /** @cond INTERNAL */
 /** @brief SI Prefix enumeration. */
 typedef enum {
@@ -84,246 +80,128 @@ typedef enum {
     kSIPrefixZetta = 21,
     kSIPrefixYotta = 24
 } SIPrefix;
-
-#define kSIUnitMeter             STR("meter")
-#define kSIUnitMeters            STR("meters")
-#define kSIUnitGram              STR("gram")
-#define kSIUnitGrams             STR("grams")
-#define kSIUnitSecond            STR("second")
-#define kSIUnitSeconds           STR("seconds")
-#define kSIUnitAmpere            STR("ampere")
-#define kSIUnitAmperes           STR("amperes")
-#define kSIUnitKelvin            STR("kelvin")
-#define kSIUnitMole              STR("mole")
-#define kSIUnitMoles             STR("moles")
-#define kSIUnitCandela           STR("candela")
-#define kSIUnitCandelas          STR("candelas")
-
-#define kSIMinute       60.
-#define kSIHour         3600
-#define kSIDay          86400
-#define kSIWeek         604800
-#define kSIMonth        2629800
-#define kSIYear         31557600
-#define kSIDecade       315576000
-#define kSICentury      3155760000
-#define kSIMillennium   31557600000
-
-#define kSIPi                       3.141592653589793
-#define kSIEulersNumber             2.718281828459045
-
-#define kSISpeedOfLight             299792458
-#define kSIElementaryCharge         1.602176634e-19
-#define kSIPlanckConstant           6.62607015e-34
-#define kSIBoltmannConstant         1.380649e-23
-#define kSIAvogadroConstant         6.02214076e23
-#define kSIStefanBoltzmannConstant  5.670374419e-8
+#define kSIMinute 60.
+#define kSIHour 3600
+#define kSIDay 86400
+#define kSIWeek 604800
+#define kSIMonth 2629800
+#define kSIYear 31557600
+#define kSIDecade 315576000
+#define kSICentury 3155760000
+#define kSIMillennium 31557600000
+#define kSIInch 0.0254
+#define kSIFoot 0.3048
+#define kSIYard 0.9144
+#define kSIMile 1609.344
+#define kSIAcre 4046.8564224
+#define kSIPoundsForce 4.4482216152605
+#define kSIBtu 1055.05585257348
+#define kSICal 4.1868
+#define kSIhp 745.699872
+#define kSIPound 0.45359237
+#define kSIOunce 0.028349523125
+#define kSIPi 3.141592653589793
+#define kSIEulersNumber 2.718281828459045
+#define kSISpeedOfLight 299792458.
+#define kSIElementaryCharge 1.602176634e-19
+#define kSIPlanckConstant 6.62607015e-34
+#define kSIBoltmannConstant 1.380649e-23
+#define kSIAvogadroConstant 6.02214076e23
+#define kSIStefanBoltzmannConstant 5.670374419e-8
 #define kSIWeinDisplacementConstant 2.897771955e-3
-#define kSIElectronMass             9.109383701528e-31
-#define kSIProtonMass               1.6726219236951e-27
-#define kSINeutronMass              1.6749274980495e-27
-#define kSIMuonMass                 1.883531627459132e-28
-#define kSIAtomicMassConstant       1.6605390666050e-27
-#define kSIAlphaParticleMass        6.64465723082e-27
-#define kSIGravitationalConstant     6.6743015e-11
-
-#define kSIElectricConstant         8.854187817620389e-12  // Defined as 1/sqrt(c_0^2*µ_0)
-
+#define kSIElectronMass 9.109383701528e-31
+#define kSIProtonMass 1.6726219236951e-27
+#define kSINeutronMass 1.6749274980495e-27
+#define kSIMuonMass 1.883531627459132e-28
+#define kSIAtomicMassConstant 1.6605390666050e-27
+#define kSIAlphaParticleMass 6.64465723082e-27
+#define kSIGravitationalConstant 6.6743015e-11
+#define kSIElectricConstant 8.854187817620389e-12  // Defined as 1/sqrt(c_0^2*µ_0)
 // Above updated for 2019 mass definitions
-
-#define kSIElectronMagneticMoment   -928.4764620e-26
-#define kSIElectronGFactor          -2.00231930436182
-
-#define kSIProtonMagneticMoment     1.4106067873e-26
-#define kSIProtonGFactor            5.585694702
-
-#define kSINeutronMagneticMoment    -0.96623650e-26
-#define kSINeutronGFactor           -3.82608545
-
-#define kSIMuonMagneticMoment       -4.49044826e-26
-#define kSIMuonGFactor              -2.0023318418
-
-#define kSIGravityAcceleration      9.80665
-
+#define kSIElectronMagneticMoment -928.4764620e-26
+#define kSIElectronGFactor -2.00231930436182
+#define kSIProtonMagneticMoment 1.4106067873e-26
+#define kSIProtonGFactor 5.585694702
+#define kSINeutronMagneticMoment -0.96623650e-26
+#define kSINeutronGFactor -3.82608545
+#define kSIMuonMagneticMoment -4.49044826e-26
+#define kSIMuonGFactor -2.0023318418
+#define kSIGravityAcceleration 9.80665
 /** @endcond */
-
-#pragma mark Accessors
-
-/** @brief Returns the unique type identifier for SIUnit objects. */
+// Type functions
 OCTypeID SIUnitGetTypeID(void);
-
-cJSON *SIUnitCreateJSON(SIUnitRef unit);
-
+// Constructor functions
+SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef dimensionality);
+SIUnitRef SIUnitDimensionlessAndUnderived(void);
+// Accessor functions
 /** @brief Gets the physical dimensionality for a unit. */
 SIDimensionalityRef SIUnitGetDimensionality(SIUnitRef theUnit);
-
-/** @brief Gets the SI prefix in the numerator for a given base dimension. */
-SIPrefix SIUnitGetNumeratorPrefixAtIndex(SIUnitRef theUnit, uint8_t index);
-
-/** @brief Gets the SI prefix in the denominator for a given base dimension. */
-SIPrefix SIUnitGetDenominatorPrefixAtIndex(SIUnitRef theUnit, uint8_t index);
-
-/** @brief Copies the base (singular) name for a unit. */
-OCStringRef SIUnitCopyRootName(SIUnitRef theUnit);
-
-/** @brief Copies the plural base name for a unit. */
-OCStringRef SIUnitCopyRootPluralName(SIUnitRef theUnit);
-
-/** @brief Copies the base symbol for a unit. */
-OCStringRef SIUnitCopyRootSymbol(SIUnitRef theUnit);
-
-/** @brief Checks if the unit’s root symbol may be modified by an SI prefix. */
-bool SIUnitAllowsSIPrefix(SIUnitRef theUnit);
-
-/** @brief Gets the default SI prefix for the unit’s base symbol. */
-SIPrefix SIUnitGetRootSymbolPrefix(SIUnitRef theUnit);
-
-/** @brief Checks if the unit’s root symbol is a special-case SI symbol. */
-bool SIUnitGetIsSpecialSISymbol(SIUnitRef theUnit);
-
-#pragma mark Tests
-
-/** @brief Returns true if unit is a coherent SI base unit. */
-bool SIUnitIsCoherentSIBaseUnit(SIUnitRef theUnit);
-
-/** @brief Returns true if unit is a base unit or prefix variant. */
-bool SIUnitIsSIBaseUnit(SIUnitRef theUnit);
-
-/** @brief Returns true if unit is a coherent SI derived unit. */
-bool SIUnitIsCoherentUnit(SIUnitRef theUnit);
-
-/** @brief Returns true if unit is the dimensionless underived unit. */
-bool SIUnitIsDimensionlessAndUnderived(SIUnitRef theUnit);
-
-/** @brief Returns true if unit has no net physical dimension. */
-bool SIUnitIsDimensionless(SIUnitRef theUnit);
-
-/** @brief Returns true if both units are equivalent without scaling. */
-bool SIUnitAreEquivalentUnits(SIUnitRef theUnit1, SIUnitRef theUnit2);
-
-/** @brief Returns true if both units are fully equal. */
-bool SIUnitEqual(SIUnitRef theUnit1, SIUnitRef theUnit2);
-
-#pragma mark Operations
-
-/** @brief Returns the SI unit for the dimensionless, underived quantity. */
-SIUnitRef SIUnitDimensionlessAndUnderived(void);
-
-/** @brief Creates an array of all units strictly equivalent to a given unit. */
-OCArrayRef SIUnitCreateArrayOfEquivalentUnits(SIUnitRef theUnit);
-
-/** @brief Returns equivalent unit with the shortest symbol. */
-SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit);
-
-/** @brief Creates an array of units for a given quantity. */
-OCArrayRef SIUnitCreateArrayOfUnitsForQuantity(OCStringRef quantity);
-
-/** @brief Creates an array of units for a given dimensionality. */
-OCArrayRef SIUnitCreateArrayOfUnitsForDimensionality(SIDimensionalityRef theDimensionality);
-
-/** @brief Creates an array of units with same reduced dimensionality. */
-OCArrayRef SIUnitCreateArrayOfUnitsForSameReducedDimensionality(SIDimensionalityRef theDimensionality);
-
-/** @brief Creates an array of units dimensionally equivalent to a given unit. */
-OCArrayRef SIUnitCreateArrayOfConversionUnits(SIUnitRef theUnit);
-
-/** @brief Gets the scale factor to convert a non-SI root unit to coherent SI. */
+OCStringRef SIUnitGetSymbol(SIUnitRef theUnit);
+OCStringRef SIUnitGetName(SIUnitRef theUnit);
+OCStringRef SIUnitGetPluralName(SIUnitRef theUnit);
 double SIUnitGetScaleToCoherentSI(SIUnitRef theUnit);
-
-/** @brief Creates the full human-readable name for a unit. */
-OCStringRef SIUnitCopyName(SIUnitRef theUnit);
-
-/** @brief Creates the plural name for a unit. */
-OCStringRef SIUnitCopyPluralName(SIUnitRef theUnit);
-
-/** @brief Copies the symbol for a unit, including any prefix. */
-OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
-
-/** @brief Gets scale factor to convert value in this unit to coherent SI unit. */
 double SIUnitScaleToCoherentSIUnit(SIUnitRef theUnit);
-
-/** @brief Creates the symbol for a unit. */
 OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
-
-/** @brief Finds a coherent SI unit for a given dimensionality. */
-SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef theDimensionality);
-
-/** @brief Returns the Nth root of a unit, updating multiplier, with error. */
-SIUnitRef SIUnitByTakingNthRoot(SIUnitRef input, uint8_t root, double *unit_multiplier, OCStringRef *error);
-
-/** @brief Returns the reduced (lowest integer exponents) form of a unit. */
-SIUnitRef SIUnitByReducing(SIUnitRef theUnit, double *unit_multiplier);
-
-/** @brief Returns the reduced form of a unit by parsing and simplifying its symbol string. */
-SIUnitRef SIUnitByReducingSymbol(SIUnitRef theUnit, OCStringRef *error);
-
-/** @brief Multiplies two units, reduces result, updates multiplier, with error. */
-SIUnitRef SIUnitByMultiplying(SIUnitRef theUnit1, SIUnitRef theUnit2, double *unit_multiplier, OCStringRef *error);
-
-/** @brief Multiplies two units, does not reduce exponents, with error. */
-SIUnitRef SIUnitByMultiplyingWithoutReducing(SIUnitRef theUnit1, SIUnitRef theUnit2, double *unit_multiplier, OCStringRef *error);
-
-/** @brief Divides one unit by another, reduces result, updates multiplier. */
-SIUnitRef SIUnitByDividing(SIUnitRef theUnit1, SIUnitRef theUnit2, double *unit_multiplier);
-
-/** @brief Divides one unit by another, does not reduce exponents. */
-SIUnitRef SIUnitByDividingWithoutReducing(SIUnitRef theUnit1, SIUnitRef theUnit2, double *unit_multiplier);
-
-/** @brief Raises a unit to a power, reduces exponents, updates multiplier, with error. */
-SIUnitRef SIUnitByRaisingToPower(SIUnitRef input, int power, double *unit_multiplier, OCStringRef *error);
-
-/** @brief Raises a unit to a power without reducing exponents, with error. */
-SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input, int power, double *unit_multiplier, OCStringRef *error);
-
-/** @brief Finds a unit by canonical name. */
-SIUnitRef SIUnitWithName(OCStringRef input);
-
-/** @brief Finds a unit by underived (base) symbol. */
+OCStringRef SIUnitCopyName(SIUnitRef theUnit);
+OCStringRef SIUnitCopyPluralName(SIUnitRef theUnit);
+cJSON *SIUnitCreateJSON(SIUnitRef unit);
+bool SIUnitEqual(SIUnitRef theUnit1, SIUnitRef theUnit2);
+bool SIUnitAreEquivalentUnits(SIUnitRef theUnit1, SIUnitRef theUnit2);
+bool SIUnitIsCoherentUnit(SIUnitRef theUnit);
+bool SIUnitIsDimensionless(SIUnitRef theUnit);
+// Unit conversion
+double SIUnitConversion(SIUnitRef initialUnit, SIUnitRef finalUnit);
+// Unit library management
+void SIUnitLibrarySetImperialVolumes(bool value);
+bool SIUnitLibraryGetImperialVolumes(void);
+void SIUnitLibrariesRelease(void);  // do not call, called by SITypesShutdown()
+// Array creation functions
+OCArrayRef SIUnitCreateArrayOfUnitsForQuantity(OCStringRef quantity);
+OCArrayRef SIUnitCreateArrayOfUnitsForDimensionality(SIDimensionalityRef theDim);
+OCArrayRef SIUnitCreateArrayOfUnitsForSameReducedDimensionality(SIDimensionalityRef theDim);
+OCArrayRef SIUnitCreateArrayOfConversionUnits(SIUnitRef theUnit);
+OCArrayRef SIUnitCreateArrayOfEquivalentUnits(SIUnitRef theUnit);
 SIUnitRef SIUnitWithSymbol(OCStringRef symbol);
-
-/** @brief Parses a symbol and returns the corresponding unit, updating multiplier. */
+SIUnitRef SIUnitFindWithName(OCStringRef input);
+SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit);
+// Unit reduction operations
+SIUnitRef SIUnitByReducing(SIUnitRef theUnit, double *unit_multiplier);
+// Utility functions
+OCStringRef SIUnitGuessQuantityName(SIUnitRef theUnit);
+// Power operations
+SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input,
+                                                int power,
+                                                double *unit_multiplier,
+                                                OCStringRef *error);
+SIUnitRef SIUnitByRaisingToPower(SIUnitRef input,
+                                 int power,
+                                 double *unit_multiplier,
+                                 OCStringRef *error);
+// Multiplication operations
+SIUnitRef SIUnitByMultiplyingWithoutReducing(SIUnitRef theUnit1,
+                                             SIUnitRef theUnit2,
+                                             double *unit_multiplier,
+                                             OCStringRef *error);
+SIUnitRef SIUnitByMultiplying(SIUnitRef theUnit1,
+                              SIUnitRef theUnit2,
+                              double *unit_multiplier,
+                              OCStringRef *error);
+// Division operations
+SIUnitRef SIUnitByDividingWithoutReducing(SIUnitRef theUnit1,
+                                          SIUnitRef theUnit2,
+                                          double *unit_multiplier,
+                                          OCStringRef *error);
+SIUnitRef SIUnitByDividing(SIUnitRef theUnit1,
+                           SIUnitRef theUnit2,
+                           double *unit_multiplier,
+                           OCStringRef *error);
+// Nth root operations
+SIUnitRef SIUnitByTakingNthRoot(SIUnitRef theUnit,
+                                int root,
+                                double *unit_multiplier,
+                                OCStringRef *error);
 SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, OCStringRef *error);
 
-/** @brief Computes the conversion factor between two compatible units. */
-double SIUnitConversion(SIUnitRef initialUnit, SIUnitRef finalUnit);
-
-#pragma mark Library
-
-/** @brief Returns true if library uses US volume units, false for UK/Imperial. */
-bool SIUnitsLibraryGetImperialVolumes(void);
-
-/** @brief Sets library to use US or UK/Imperial volume symbols. */
-void SIUnitsLibrarySetImperialVolumes(bool value);
-
-/** @brief Returns a mutable copy of the current units library. */
 OCMutableDictionaryRef SIUnitGetUnitsLib(void);
 
-
-
-
-
-/**
- * @brief Returns a commonly recognized quantity name associated with the given unit.
- *
- * This function uses the unit's dimensionality to look up known quantity names
- * (e.g., "length", "velocity", "acceleration"). If one or more matches are found,
- * the first is returned. If no matches are found, the dimensionality's symbolic
- * representation is returned (e.g., "L T⁻¹").
- *
- * The result is a borrowed reference and must not be released by the caller.
- *
- * @param theUnit The unit for which to determine an appropriate quantity name.
- * @return A borrowed OCStringRef representing the guessed quantity name or
- *         the dimensionality symbol if no match is found.
- *         Returns NULL only if the unit has no dimensionality or an internal error occurs.
- *
- */
-OCStringRef SIUnitGuessQuantityName(SIUnitRef theUnit);
-
-
-/** @cond INTERNAL */
-/** @brief Cleans up all static and global unit dictionaries. */
-void cleanupUnitsLibraries(void);
-/** @endcond */
-
-#endif /* SIUnit_h */
+#endif  // SIUnit_H

@@ -9,6 +9,8 @@
 
 #include "test_utils.h" // Include the test utilities header
 
+extern OCMutableDictionaryRef SIUnitGetUnitsLib(void);
+
 bool test_unit_0(void) {
     printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
@@ -106,19 +108,14 @@ bool test_unit_3(void) {
         return false;
     }
 
-    OCStringRef root_name = SIUnitCopyRootSymbol(unit);
-    if (!root_name) {
-        printf("test_unit_3 failed: Failed to copy root symbol from unit 'm'\n");
-        return false;
-    }
-
-    if (OCStringCompare(root_name, STR("m"), 0) != kOCCompareEqualTo) {
+    OCStringRef name = SIUnitCopyName(unit);
+    if (OCStringCompare(name, STR("m"), 0) != kOCCompareEqualTo) {
         printf("test_unit_3 failed: Root symbol mismatch (expected 'm')\n");
-        OCRelease(root_name);
+        OCRelease(name);
         return false;
     }
 
-    OCRelease(root_name);
+    OCRelease(name);
     printf("%s passed\n", __func__);
     return true;
 }
@@ -178,7 +175,7 @@ bool test_unit_5(void) {
     }
 
     OCStringRef plural = SIUnitCopyPluralName(unit);
-    if (!rootPlpluralural) {
+    if (!plural) {
         printf("test_unit_5 failed: Failed to retrieve plural name\n");
         return false;
     }
@@ -566,18 +563,10 @@ bool test_unit_13(void) {
         err = NULL;
     }
 
-    OCStringRef root_symbol = SIUnitCopyRootSymbol(unit_lb);
-    if (!root_symbol) {
-        printf("test_unit_13 failed: Failed to copy root symbol for 'lb'\n");
-        OCRelease(unit_lb);
-        return false;
-    }
-
     SIUnitRef kg = SIUnitWithSymbol(STR("kg"));
     if (!kg) {
         printf("test_unit_13 failed: Failed to retrieve 'kg' unit\n");
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         return false;
     }
 
@@ -588,7 +577,6 @@ bool test_unit_13(void) {
     if (OCCompareDoubleValuesLoose(total_conversion, expected_lb_to_kg) != kOCCompareEqualTo) {
         printf("test_unit_13 failed: Expected 0.45359237, got %.12f\n", total_conversion);
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         return false;
     }
@@ -598,7 +586,6 @@ bool test_unit_13(void) {
     if (!SIDimensionalityEqual(dim_lb, dim_kg)) {
         printf("test_unit_13 failed: 'lb' and 'kg' should have the same dimensionality\n");
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         return false;
     }
@@ -614,7 +601,6 @@ bool test_unit_13(void) {
             printf("test_unit_13 failed: Failed to parse 'lbf'\n");
         }
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         return false;
     }
@@ -623,24 +609,12 @@ bool test_unit_13(void) {
         err = NULL;
     }
 
-    OCStringRef lbf_root_symbol = SIUnitCopyRootSymbol(unit_lbf);
-    if (!lbf_root_symbol) {
-        printf("test_unit_13 failed: Failed to copy root symbol for 'lbf'\n");
-        OCRelease(unit_lb);
-        OCRelease(root_symbol);
-        OCRelease(kg);
-        OCRelease(unit_lbf);
-        return false;
-    }
-
     SIUnitRef N = SIUnitWithSymbol(STR("N"));
     if (!N) {
         printf("test_unit_13 failed: Failed to retrieve unit 'N'\n");
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         OCRelease(unit_lbf);
-        OCRelease(lbf_root_symbol);
         return false;
     }
 
@@ -651,10 +625,8 @@ bool test_unit_13(void) {
     if (OCCompareDoubleValuesLoose(total_lbf_conversion, expected_lbf_to_N) != kOCCompareEqualTo) {
         printf("test_unit_13 failed: Expected 4.4482216152605, got %.12f\n", total_lbf_conversion);
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         OCRelease(unit_lbf);
-        OCRelease(lbf_root_symbol);
         OCRelease(N);
         return false;
     }
@@ -664,10 +636,8 @@ bool test_unit_13(void) {
     if (!SIDimensionalityEqual(dim_lbf, dim_N)) {
         printf("test_unit_13 failed: 'lbf' and 'N' should have the same dimensionality\n");
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         OCRelease(unit_lbf);
-        OCRelease(lbf_root_symbol);
         OCRelease(N);
         return false;
     }
@@ -683,10 +653,8 @@ bool test_unit_13(void) {
             printf("test_unit_13 failed: Failed to parse 'g/cm^3'\n");
         }
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         OCRelease(unit_lbf);
-        OCRelease(lbf_root_symbol);
         OCRelease(N);
         return false;
     }
@@ -705,10 +673,8 @@ bool test_unit_13(void) {
             printf("test_unit_13 failed: Failed to parse 'g/mL'\n");
         }
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         OCRelease(unit_lbf);
-        OCRelease(lbf_root_symbol);
         OCRelease(N);
         OCRelease(unit_g_cm3);
         return false;
@@ -724,10 +690,8 @@ bool test_unit_13(void) {
     if (!SIDimensionalityEqual(dim_g_cm3, dim_g_mL)) {
         printf("test_unit_13 failed: 'g/cm^3' and 'g/mL' should have the same dimensionality\n");
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         OCRelease(unit_lbf);
-        OCRelease(lbf_root_symbol);
         OCRelease(N);
         OCRelease(unit_g_cm3);
         OCRelease(unit_g_mL);
@@ -738,10 +702,8 @@ bool test_unit_13(void) {
     if (!SIUnitAreEquivalentUnits(unit_g_cm3, unit_g_mL)) {
         printf("test_unit_13 failed: 'g/cm^3' and 'g/mL' should be equivalent units\n");
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         OCRelease(unit_lbf);
-        OCRelease(lbf_root_symbol);
         OCRelease(N);
         OCRelease(unit_g_cm3);
         OCRelease(unit_g_mL);
@@ -754,10 +716,8 @@ bool test_unit_13(void) {
     if (OCCompareDoubleValuesLoose(density_conversion, 1.0) != kOCCompareEqualTo) {
         printf("test_unit_13 failed: Expected conversion factor 1.0 between g/cm^3 and g/mL, got %.12f\n", density_conversion);
         OCRelease(unit_lb);
-        OCRelease(root_symbol);
         OCRelease(kg);
         OCRelease(unit_lbf);
-        OCRelease(lbf_root_symbol);
         OCRelease(N);
         OCRelease(unit_g_cm3);
         OCRelease(unit_g_mL);
@@ -767,10 +727,8 @@ bool test_unit_13(void) {
     OCRelease(unit_g_cm3);
     OCRelease(unit_g_mL);
     OCRelease(unit_lb);
-    OCRelease(root_symbol);
     OCRelease(kg);
     OCRelease(unit_lbf);
-    OCRelease(lbf_root_symbol);
     OCRelease(N);
     printf("%s passed\n", __func__);
     return true;
@@ -1163,7 +1121,7 @@ bool test_unit_by_dividing_without_reducing(void) {
         goto cleanup;
     }
 
-    m_per_s = SIUnitByDividingWithoutReducing(m, s, &mult);
+    m_per_s = SIUnitByDividingWithoutReducing(m, s, &mult, NULL);
     if (!m_per_s) {
         fprintf(stderr, "  ✗ Division returned NULL\n");
         success = false;

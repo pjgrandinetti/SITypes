@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include "../src/SILibrary.h"
 
+extern OCMutableDictionaryRef SIUnitGetUnitsLib(void);
+
 // Test function to check for duplicate unit pointers in the library
 bool test_check_for_duplicate_units(void) {
     printf("=== Testing for duplicate unit pointers in unitsLibrary ===\n");
@@ -59,16 +61,7 @@ bool test_check_for_duplicate_units(void) {
                     printf("  Unit symbol: '%s'\n", OCStringGetCString(symbol));
                     OCRelease(symbol);
                 }
-                
-                // Check if the unit has a root symbol
-                OCStringRef rootSymbol = SIUnitCopyRootSymbol(units[i]);
-                if (rootSymbol) {
-                    printf("  Root symbol: '%s'\n", OCStringGetCString(rootSymbol));
-                    OCRelease(rootSymbol);
-                } else {
-                    printf("  Root symbol: (null)\n");
-                }
-                
+                                
                 // Check dimensionality
                 SIDimensionalityRef dim = SIUnitGetDimensionality(units[i]);
                 if (dim) {
