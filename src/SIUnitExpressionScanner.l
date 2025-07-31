@@ -13,11 +13,16 @@
 
 /* Generic patterns for potential unit symbols */
 IDENTIFIER [a-zA-Z][a-zA-Z0-9_]*
-SYMBOL {IDENTIFIER}
+UNICODE_IDENTIFIER [^\t\n ()/*^+\-0-9.]+
+SYMBOL {IDENTIFIER}|{UNICODE_IDENTIFIER}
 
 %%
 
 "*"     { return '*'; }
+"/"     { return '/'; }
+"^"     { return '^'; }
+"("     { return '('; }
+")"     { return ')'; }
 
 {SYMBOL} {
     // Create string from matched text

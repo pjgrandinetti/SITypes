@@ -59,6 +59,10 @@ This document defines the expected behavior of the two main unit expression proc
 | `(m/s)^2` | `m^2/s^2` | Division in parentheses |
 | `(m^2*kg)^3` | `kg^3•m^6` | Complex parenthetical expansion |
 
+| `1` | `" "` | Dimensionless number input |
+| `" "` | `" "` | Dimensionless space character input |
+| `m^0` | `" "` | Zero power becomes dimensionless |
+
 #### Parenthetical Expression Handling
 
 **Simple Multiplication**: `(m*kg)^2` → `kg^2•m^2`
@@ -114,7 +118,7 @@ This document defines the expected behavior of the two main unit expression proc
 |-------|-----------------|-------------|
 | `m` | `m` | Single unit unchanged |
 | `m*kg` | `kg•m` | Same as cleaned (no reduction) |
-| `m/m` | `1` | Complete cancellation |
+| `m/m` | `" "` | Complete cancellation |
 | `m^2/m` | `m` | Partial cancellation |
 | `m*kg/kg` | `m` | Cancel kg terms |
 | `m*m*kg/s/s` | `kg•m^2/s^2` | Same as cleaned (no cancellation) |
@@ -126,7 +130,7 @@ This document defines the expected behavior of the two main unit expression proc
 
 #### Cancellation Rules
 
-1. **Identical symbols**: `m/m` → `1`
+1. **Identical symbols**: `m/m` → `" "`
 2. **Power subtraction**: `m^3/m^2` → `m^(3-2)` → `m`
 3. **Complete elimination**: `kg*m/kg` → `m`
 4. **Multiple cancellations**: `kg•m^3/(kg•m^2)` → `m`
@@ -183,7 +187,7 @@ This document defines the expected behavior of the two main unit expression proc
 
 ### Critical Test Cases for SIUnitCreateCleanedAndReducedExpression
 
-1. **Simple Cancellation**: `m/m` → `1`
+1. **Simple Cancellation**: `m/m` → `" "`
 2. **Power Reduction**: `m^3/m^2` → `m`
 3. **Partial Cancellation**: `kg*m/kg` → `m`
 4. **Complex Reduction**: `kg•m^3/(kg•m^2)` → `m`

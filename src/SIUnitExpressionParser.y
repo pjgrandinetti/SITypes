@@ -42,8 +42,51 @@ input: expression { siueSetParsedExpression($1); }
 expression: term_list { 
     $$ = siueCreateExpression($1, NULL);
 }
+| INTEGER {
+    // Handle standalone integer (dimensionless unit)
+    if ($1 == 1) {
+        // Create dimensionless term with space symbol
+        SIUnitTerm* dimensionless = siueCreateTerm(STR(" "), 1);
+        OCMutableArrayRef termArray = OCArrayCreateMutable(1, NULL);
+        OCArrayAppendValue(termArray, dimensionless);
+        $$ = siueCreateExpression(termArray, NULL);
+        OCRelease(termArray);
+    } else {
+        siueError = STR("Only '1' is allowed as a standalone number");
+        YYERROR;
+    }
+}
 | term_list '/' term_list {
     $$ = siueCreateExpression($1, $3);
+}
+| expression '/' unit_term {
+    // For chained division like a/b/c, add c to denominator
+    OCMutableArrayRef newDen = $1->denominator ? OCArrayCreateMutableCopy($1->denominator) : OCArrayCreateMutable(1, NULL);
+    OCArrayAppendValue(newDen, $3);
+    $$ = siueCreateExpression($1->numerator, newDen);
+    OCRelease(newDen);
+}
+| expression '/' '(' term_list ')' {
+    // For division by parenthetical expression like a/(b*c)
+    OCMutableArrayRef newDen = $1->denominator ? OCArrayCreateMutableCopy($1->denominator) : OCArrayCreateMutable(1, NULL);
+    OCIndex count = OCArrayGetCount($4);
+    for (OCIndex i = 0; i < count; i++) {
+        OCArrayAppendValue(newDen, OCArrayGetValueAtIndex($4, i));
+    }
+    $$ = siueCreateExpression($1->numerator, newDen);
+    OCRelease(newDen);
+}
+| '(' expression ')' '^' INTEGER {
+    // Handle parenthetical expression raised to power: (a/b)^n
+    $$ = siueApplyPowerToExpression($2, $5);
+}
+| '(' expression ')' '^' '(' INTEGER ')' {
+    // Handle parenthetical expression raised to parenthetical power: (a/b)^(n)
+    $$ = siueApplyPowerToExpression($2, $6);
+}
+| '(' expression ')' {
+    // Handle parenthetical expression without power: (a/b)
+    $$ = $2;
 }
 ;
 
@@ -53,6 +96,14 @@ term_list: unit_term {
 }
 | term_list '*' unit_term {
     OCArrayAppendValue((OCMutableArrayRef)$1, $3);
+    $$ = $1;
+}
+| term_list '*' '(' term_list ')' {
+    // Handle multiplication with parenthetical expression: term_list * (term_list)
+    OCIndex count = OCArrayGetCount($4);
+    for (OCIndex i = 0; i < count; i++) {
+        OCArrayAppendValue((OCMutableArrayRef)$1, OCArrayGetValueAtIndex($4, i));
+    }
     $$ = $1;
 }
 | '(' term_list ')' {
@@ -68,6 +119,9 @@ unit_term: UNIT_SYMBOL {
 }
 | UNIT_SYMBOL '^' INTEGER {
     $$ = siueCreateTerm($1, $3);
+}
+| UNIT_SYMBOL '^' '(' INTEGER ')' {
+    $$ = siueCreateTerm($1, $4);
 }
 | UNIT_SYMBOL '^' DECIMAL {
     siueError = STR("Fractional powers are not allowed");

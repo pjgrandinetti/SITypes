@@ -4,7 +4,22 @@ set(CMAKE_C_STANDARD 11)
 
 # -------------------------------------------------------------------
 # 1) Find Flex and Bison
-# -------------------------------------------------------------------
+# ----------------------------# Put generated files under a "Generated" group
+source_group(
+    TREE ${CMAKE_CURRENT_BINARY_DIR}
+    PREFIX "Generated"
+    FILES
+      ${BISON_SIDIM_PARSER_OUTPUTS}
+      ${FLEX_SIDIM_SCANNER_OUTPUTS}
+      ${FLEX_SIFORM_SCANNER_OUTPUTS}
+      ${BISON_SIUNIT_PARSER_OUTPUTS}
+      ${FLEX_SIUNIT_SCANNER_OUTPUTS}
+      ${BISON_SISCALAR_PARSER_OUTPUTS}
+      ${FLEX_SISCALAR_SCANNER_OUTPUTS}
+      ${BISON_SIUNITEXPR_PARSER_OUTPUTS}
+      ${FLEX_SIUNITEXPR_SCANNER_OUTPUTS}
+)
+
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 
@@ -64,6 +79,21 @@ FLEX_TARGET(
 )
 ADD_FLEX_BISON_DEPENDENCY(SISCALAR_SCANNER SISCALAR_PARSER)
 
+# SIUnitExpression parser/scanner
+BISON_TARGET(
+    SIUNITEXPR_PARSER
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/SIUnitExpressionParser.y
+    ${CMAKE_CURRENT_BINARY_DIR}/SIUnitExpressionParser.tab.c
+    DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/SIUnitExpressionParser.tab.h
+)
+
+FLEX_TARGET(
+    SIUNITEXPR_SCANNER
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/SIUnitExpressionScanner.l
+    ${CMAKE_CURRENT_BINARY_DIR}/SIUnitExpressionScanner.c
+)
+ADD_FLEX_BISON_DEPENDENCY(SIUNITEXPR_SCANNER SIUNITEXPR_PARSER)
+
 # -------------------------------------------------------------------
 # 3) List your “hand‐written” .c/.h files
 # -------------------------------------------------------------------
@@ -108,6 +138,8 @@ set(ALL_SOURCES
     ${FLEX_SIUNIT_SCANNER_OUTPUTS}
     ${BISON_SISCALAR_PARSER_OUTPUTS}
     ${FLEX_SISCALAR_SCANNER_OUTPUTS}
+    ${BISON_SIUNITEXPR_PARSER_OUTPUTS}
+    ${FLEX_SIUNITEXPR_SCANNER_OUTPUTS}
 )
 
 add_library(SITypes STATIC ${ALL_SOURCES})
@@ -200,4 +232,6 @@ source_group(
       ${FLEX_SIUNIT_SCANNER_OUTPUTS}
       ${BISON_SISCALAR_PARSER_OUTPUTS}
       ${FLEX_SISCALAR_SCANNER_OUTPUTS}
+      ${BISON_SIUNITEXPR_PARSER_OUTPUTS}
+      ${FLEX_SIUNITEXPR_SCANNER_OUTPUTS}
 )

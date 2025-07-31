@@ -1,8 +1,6 @@
 #ifndef TEST_LIBRARY_KEY_H
 #define TEST_LIBRARY_KEY_H
-
 #include <stdbool.h>
-
 // Declare all SIUnitCreateCleanedExpression test functions
 bool test_library_key_basic_canonicalization(void);
 bool test_library_key_power_notation(void);
@@ -17,5 +15,4 @@ bool test_library_key_edge_cases(void);
 bool test_library_key_parenthetical_powers(void);
 bool test_library_key_consistency(void);
 bool test_library_key_comprehensive(void);
-
 #endif /* TEST_LIBRARY_KEY_H */

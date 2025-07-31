@@ -5,12 +5,9 @@
 //  Created by GitHub Copilot on 7/30/25.
 //  Copyright © 2025 PhySy Ltd. All rights reserved.
 //
-
 #ifndef SIUnitExpression_h
 #define SIUnitExpression_h
-
 #include "SILibrary.h"
-
 /*!
  * @file SIUnitExpression.h
  * @brief Internal data structures and functions for unit expression parsing and processing.
@@ -20,9 +17,7 @@
  * functions. These structures represent parsed unit expressions in a form that
  * can be easily manipulated for grouping, sorting, and cancellation operations.
  */
-
 #pragma mark - Data Structures
-
 /*!
  * @struct SIUnitTerm
  * @brief Represents a single unit symbol with its power.
@@ -31,10 +26,9 @@
  * This is the basic building block for representing unit expressions.
  */
 typedef struct SIUnitTerm {
-    OCStringRef symbol;     /*!< Unit symbol (e.g., "m", "kg") */
-    int power;             /*!< Power of the symbol (can be negative) */
+    OCStringRef symbol; /*!< Unit symbol (e.g., "m", "kg") */
+    int power;          /*!< Power of the symbol (can be negative) */
 } SIUnitTerm;
-
 /*!
  * @struct SIUnitExpression
  * @brief Represents a complete unit expression with numerator and denominator.
@@ -47,9 +41,7 @@ typedef struct SIUnitExpression {
     OCArrayRef numerator;   /*!< Array of SIUnitTerm for numerator */
     OCArrayRef denominator; /*!< Array of SIUnitTerm for denominator */
 } SIUnitExpression;
-
 #pragma mark - Term Management
-
 /*!
  * @brief Creates a new unit term with the specified symbol and power.
  *
@@ -60,7 +52,6 @@ typedef struct SIUnitExpression {
  * @note The caller is responsible for releasing the returned term with siueReleaseTerm()
  */
 SIUnitTerm* siueCreateTerm(OCStringRef symbol, int power);
-
 /*!
  * @brief Creates a copy of an existing term.
  *
@@ -70,16 +61,13 @@ SIUnitTerm* siueCreateTerm(OCStringRef symbol, int power);
  * @note The caller is responsible for releasing the returned term with siueReleaseTerm()
  */
 SIUnitTerm* siueCopyTerm(const SIUnitTerm* term);
-
 /*!
  * @brief Releases a unit term and its associated memory.
  *
  * @param term The term to release (can be NULL)
  */
 void siueReleaseTerm(SIUnitTerm* term);
-
 #pragma mark - Expression Management
-
 /*!
  * @brief Creates a new unit expression with the specified numerator and denominator.
  *
@@ -90,7 +78,6 @@ void siueReleaseTerm(SIUnitTerm* term);
  * @note The caller is responsible for releasing the returned expression with siueRelease()
  */
 SIUnitExpression* siueCreateExpression(OCArrayRef numerator, OCArrayRef denominator);
-
 /*!
  * @brief Creates a copy of an existing expression.
  *
@@ -100,16 +87,13 @@ SIUnitExpression* siueCreateExpression(OCArrayRef numerator, OCArrayRef denomina
  * @note The caller is responsible for releasing the returned expression with siueRelease()
  */
 SIUnitExpression* siueCopyExpression(const SIUnitExpression* expr);
-
 /*!
  * @brief Releases a unit expression and its associated memory.
  *
  * @param expr The expression to release (can be NULL)
  */
 void siueRelease(SIUnitExpression* expr);
-
 #pragma mark - Parser Helper Functions
-
 /*!
  * @brief Applies a power to all terms in a term list.
  *
@@ -121,28 +105,31 @@ void siueRelease(SIUnitExpression* expr);
  * @return The modified term list
  */
 OCArrayRef siueApplyPowerToTermList(OCArrayRef term_list, int power);
-
+/*!
+ * @brief Applies a power to a full unit expression (numerator and denominator).
+ *
+ * @param expression The expression to modify
+ * @param power The power to apply to each term
+ * @return The modified expression
+ */
+SIUnitExpression* siueApplyPowerToExpression(SIUnitExpression* expression, int power);
 /*!
  * @brief Gets the parsed expression from the parser.
  *
  * @return The currently parsed expression, or NULL if none
  */
 SIUnitExpression* siueGetParsedExpression(void);
-
 /*!
  * @brief Sets the parsed expression (used by parser).
  *
  * @param expr The expression to set as the current parsed expression
  */
 void siueSetParsedExpression(SIUnitExpression* expr);
-
 /*!
  * @brief Clears the parsed expression and releases its memory.
  */
 void siueClearParsedExpression(void);
-
 #pragma mark - Processing Functions
-
 /*!
  * @brief Groups identical terms in a term list by combining their powers.
  *
@@ -152,14 +139,12 @@ void siueClearParsedExpression(void);
  * @param terms Mutable array of SIUnitTerm to process
  */
 void siueGroupIdenticalTerms(OCMutableArrayRef terms);
-
 /*!
  * @brief Sorts terms alphabetically by symbol.
  *
  * @param terms Mutable array of SIUnitTerm to sort
  */
 void siueSortTermsAlphabetically(OCMutableArrayRef terms);
-
 /*!
  * @brief Cancels terms between numerator and denominator.
  *
@@ -169,7 +154,6 @@ void siueSortTermsAlphabetically(OCMutableArrayRef terms);
  * @param expr The expression to reduce
  */
 void siueCancelTerms(SIUnitExpression* expr);
-
 /*!
  * @brief Formats a unit expression as a string.
  *
@@ -180,9 +164,7 @@ void siueCancelTerms(SIUnitExpression* expr);
  * @note The caller is responsible for releasing the returned string
  */
 OCStringRef siueFormatExpression(const SIUnitExpression* expr, bool reduced);
-
 #pragma mark - Validation Functions
-
 /*!
  * @brief Validates that a symbol is in the allowed token symbols array.
  *
@@ -190,7 +172,6 @@ OCStringRef siueFormatExpression(const SIUnitExpression* expr, bool reduced);
  * @return true if the symbol is valid, false otherwise
  */
 bool siueValidateSymbol(OCStringRef symbol);
-
 /*!
  * @brief Parses a normalized expression string into a SIUnitExpression.
  *
@@ -200,12 +181,9 @@ bool siueValidateSymbol(OCStringRef symbol);
  * @note The caller is responsible for releasing the returned expression
  */
 SIUnitExpression* siueParseExpression(OCStringRef normalized_expr);
-
 #pragma mark - External Variables
-
 /*!
  * @brief Global error string for parser errors.
  */
 extern OCStringRef siueError;
-
 #endif /* SIUnitExpression_h */
