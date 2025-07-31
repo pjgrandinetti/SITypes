@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include "SILibrary.h"
+#include "../src/SILibrary.h"
+#include "../src/SIUnitKey.h"
 #include "test_library_key.h"
 
-// Helper function to test library key creation
+// Helper function to test cleaned expression creation
 static bool test_library_key_creation(const char *input, const char *expected, const char *test_name) {
     OCStringRef input_str = OCStringCreateWithCString(input);
-    OCStringRef result = SIUnitCreateLibraryKey(input_str);
+    OCStringRef result = SIUnitCreateCleanedExpression(input_str);
     
     if (!result) {
-        printf("  ✗ %s: '%s' - SIUnitCreateLibraryKey returned NULL\n", test_name, input);
+        printf("  ✗ %s: '%s' - SIUnitCreateCleanedExpression returned NULL\n", test_name, input);
         OCRelease(input_str);
         return false;
     }
@@ -54,7 +55,7 @@ bool test_library_key_basic_canonicalization(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     
-    // Test basic single units
+    // Test basic single units - should remain unchanged
     struct {
         const char* input;
         const char* expected;
@@ -76,7 +77,7 @@ bool test_library_key_basic_canonicalization(void) {
     int num_tests = sizeof(tests) / sizeof(tests[0]);
     for (int i = 0; i < num_tests; i++) {
         OCStringRef input = OCStringCreateWithCString(tests[i].input);
-        OCStringRef result = SIUnitCreateLibraryKey(input);
+        OCStringRef result = SIUnitCreateCleanedExpression(input);
         OCStringRef expected = OCStringCreateWithCString(tests[i].expected);
         
         if (OCStringCompare(result, expected, 0) != kOCCompareEqualTo) {
@@ -98,7 +99,7 @@ bool test_library_key_power_notation(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     
-    // Test power notation
+    // Test power notation cleaning
     OCStringRef tests[][2] = {
         {STR("m^2"), STR("m^2")},
         {STR("m^3"), STR("m^3")},
@@ -113,7 +114,7 @@ bool test_library_key_power_notation(void) {
     
     int num_tests = sizeof(tests) / sizeof(tests[0]);
     for (int i = 0; i < num_tests; i++) {
-        OCStringRef result = SIUnitCreateLibraryKey(tests[i][0]);
+        OCStringRef result = SIUnitCreateCleanedExpression(tests[i][0]);
         if (OCStringCompare(result, tests[i][1], 0) != kOCCompareEqualTo) {
             printf("FAILED: '%s' should canonicalize to '%s', got '%s'\n", 
                    OCStringGetCString(tests[i][0]), 
@@ -132,7 +133,7 @@ bool test_library_key_multiplication_ordering(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     
-    // Test that multiplication is commutative (alphabetical ordering)
+    // Test that multiplication expressions are cleaned and grouped 
     OCStringRef tests[][2] = {
         {STR("m*kg"), STR("kg*m")},
         {STR("s*m"), STR("m*s")},
@@ -144,8 +145,8 @@ bool test_library_key_multiplication_ordering(void) {
     
     int num_tests = sizeof(tests) / sizeof(tests[0]);
     for (int i = 0; i < num_tests; i++) {
-        OCStringRef result1 = SIUnitCreateLibraryKey(tests[i][0]);
-        OCStringRef result2 = SIUnitCreateLibraryKey(tests[i][1]);
+        OCStringRef result1 = SIUnitCreateCleanedExpression(tests[i][0]);
+        OCStringRef result2 = SIUnitCreateCleanedExpression(tests[i][1]);
         
         if (OCStringCompare(result1, result2, 0) != kOCCompareEqualTo) {
             printf("FAILED: '%s' and '%s' should have same canonical form\n", 
@@ -168,7 +169,7 @@ bool test_library_key_power_consolidation(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     
-    // Test power consolidation for repeated units
+    // Test power consolidation for repeated units (grouping identical symbols)
     OCStringRef tests[][2] = {
         {STR("m*m"), STR("m^2")},
         {STR("m*m*m"), STR("m^3")},
@@ -184,7 +185,7 @@ bool test_library_key_power_consolidation(void) {
     
     int num_tests = sizeof(tests) / sizeof(tests[0]);
     for (int i = 0; i < num_tests; i++) {
-        OCStringRef result = SIUnitCreateLibraryKey(tests[i][0]);
+        OCStringRef result = SIUnitCreateCleanedExpression(tests[i][0]);
         if (OCStringCompare(result, tests[i][1], 0) != kOCCompareEqualTo) {
             printf("FAILED: '%s' should canonicalize to '%s', got '%s'\n", 
                    OCStringGetCString(tests[i][0]), 
@@ -219,7 +220,7 @@ bool test_library_key_division_operations(void) {
     
     int num_tests = sizeof(tests) / sizeof(tests[0]);
     for (int i = 0; i < num_tests; i++) {
-        OCStringRef result = SIUnitCreateLibraryKey(tests[i][0]);
+        OCStringRef result = SIUnitCreateCleanedExpression(tests[i][0]);
         if (OCStringCompare(result, tests[i][1], 0) != kOCCompareEqualTo) {
             printf("FAILED: '%s' should canonicalize to '%s', got '%s'\n", 
                    OCStringGetCString(tests[i][0]), 
@@ -262,7 +263,7 @@ bool test_library_key_complex_expressions(void) {
     for (int i = 0; i < num_tests; i++) {
         OCStringRef input = OCStringCreateWithCString(tests[i].input);
         OCStringRef expected = OCStringCreateWithCString(tests[i].expected);
-        OCStringRef result = SIUnitCreateLibraryKey(input);
+        OCStringRef result = SIUnitCreateCleanedExpression(input);
         
         if (OCStringCompare(result, expected, 0) != kOCCompareEqualTo) {
             printf("FAILED: '%s' should canonicalize to '%s', got '%s'\n", 
@@ -306,7 +307,7 @@ bool test_library_key_unicode_operators(void) {
     for (int i = 0; i < num_tests; i++) {
         OCStringRef input = OCStringCreateWithCString(tests[i].input);
         OCStringRef expected = OCStringCreateWithCString(tests[i].expected);
-        OCStringRef result = SIUnitCreateLibraryKey(input);
+        OCStringRef result = SIUnitCreateCleanedExpression(input);
         
         if (OCStringCompare(result, expected, 0) != kOCCompareEqualTo) {
             printf("FAILED: '%s' should canonicalize to '%s', got '%s'\n", 
@@ -344,8 +345,8 @@ bool test_library_key_unicode_normalization(void) {
     for (int i = 0; i < num_tests; i++) {
         OCStringRef input1 = OCStringCreateWithCString(tests[i].input1);
         OCStringRef input2 = OCStringCreateWithCString(tests[i].input2);
-        OCStringRef result1 = SIUnitCreateLibraryKey(input1);
-        OCStringRef result2 = SIUnitCreateLibraryKey(input2);
+        OCStringRef result1 = SIUnitCreateCleanedExpression(input1);
+        OCStringRef result2 = SIUnitCreateCleanedExpression(input2);
         
         if (OCStringCompare(result1, result2, 0) != kOCCompareEqualTo) {
             printf("FAILED: Unicode normalization for %s\n", tests[i].description);
@@ -393,12 +394,12 @@ bool test_library_key_expression_equivalence(void) {
     for (int group = 0; group < num_groups; group++) {
         // Get canonical form of first expression
         OCStringRef first_expr = OCStringCreateWithCString(equivalent_groups[group][0]);
-        OCStringRef first_canonical = SIUnitCreateLibraryKey(first_expr);
+        OCStringRef first_canonical = SIUnitCreateCleanedExpression(first_expr);
         
         // Test all other expressions in the group
         for (int i = 1; i < 6 && equivalent_groups[group][i] != NULL; i++) {
             OCStringRef expr = OCStringCreateWithCString(equivalent_groups[group][i]);
-            OCStringRef canonical = SIUnitCreateLibraryKey(expr);
+            OCStringRef canonical = SIUnitCreateCleanedExpression(expr);
             
             if (OCStringCompare(first_canonical, canonical, 0) != kOCCompareEqualTo) {
                 printf("  ✗ Equivalence group %d failure:\n", group + 1);
@@ -452,7 +453,7 @@ bool test_library_key_edge_cases(void) {
     for (int i = 0; i < num_tests; i++) {
         OCStringRef input = OCStringCreateWithCString(tests[i].input);
         OCStringRef expected = OCStringCreateWithCString(tests[i].expected);
-        OCStringRef result = SIUnitCreateLibraryKey(input);
+        OCStringRef result = SIUnitCreateCleanedExpression(input);
         
         if (OCStringCompare(result, expected, 0) != kOCCompareEqualTo) {
             printf("FAILED: %s\n", tests[i].description);
@@ -495,9 +496,9 @@ bool test_library_key_consistency(void) {
         OCStringRef expr = OCStringCreateWithCString(test_expressions[i]);
         
         // Call multiple times and ensure identical results
-        OCStringRef result1 = SIUnitCreateLibraryKey(expr);
-        OCStringRef result2 = SIUnitCreateLibraryKey(expr);
-        OCStringRef result3 = SIUnitCreateLibraryKey(expr);
+        OCStringRef result1 = SIUnitCreateCleanedExpression(expr);
+        OCStringRef result2 = SIUnitCreateCleanedExpression(expr);
+        OCStringRef result3 = SIUnitCreateCleanedExpression(expr);
         
         if (OCStringCompare(result1, result2, 0) != kOCCompareEqualTo ||
             OCStringCompare(result2, result3, 0) != kOCCompareEqualTo) {
@@ -540,7 +541,7 @@ bool test_library_key_parenthetical_powers(void) {
     for (int i = 0; i < num_tests; i++) {
         OCStringRef input = OCStringCreateWithCString(tests[i].input);
         OCStringRef expected = OCStringCreateWithCString(tests[i].expected);
-        OCStringRef result = SIUnitCreateLibraryKey(input);
+        OCStringRef result = SIUnitCreateCleanedExpression(input);
         
         if (!result || OCStringCompare(result, expected, 0) != kOCCompareEqualTo) {
             printf("FAILED: %s\n", tests[i].description);
@@ -560,7 +561,7 @@ bool test_library_key_parenthetical_powers(void) {
 }
 
 bool test_library_key_comprehensive(void) {
-    printf("Running comprehensive SIUnitCreateLibraryKey test suite...\n\n");
+    printf("Running comprehensive SIUnitCreateCleanedExpression test suite...\n\n");
     
     bool overall_success = true;
     
@@ -577,7 +578,7 @@ bool test_library_key_comprehensive(void) {
     overall_success &= test_library_key_parenthetical_powers();
     overall_success &= test_library_key_consistency();
     
-    printf("\n=== SIUnitCreateLibraryKey Comprehensive Test Results ===\n");
+    printf("\n=== SIUnitCreateCleanedExpression Comprehensive Test Results ===\n");
     printf("Overall result: %s\n", overall_success ? "ALL TESTS PASSED" : "SOME TESTS FAILED");
     
     return overall_success;

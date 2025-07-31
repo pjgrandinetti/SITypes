@@ -24,43 +24,43 @@
 
 // Forward declarations from SILibrary.h
 typedef const struct impl_OCString * OCStringRef;
+typedef struct impl_OCString * OCMutableStringRef;
 
 /**
- * @brief Creates a canonical (normalized) form of a unit expression.
+ * @brief Creates a cleaned form of a unit expression by grouping identical symbols.
  * 
- * This function parses a unit expression and returns a standardized representation
- * that is consistent regardless of the input ordering or formatting. Equivalent
- * expressions will always produce the same canonical form.
+ * This function parses a unit expression and groups identical unit symbols in both
+ * the numerator and denominator separately, without performing cancellation between
+ * numerator and denominator. This is useful for organizing expressions while
+ * preserving the original structure.
  *
  * Examples:
- * - "lb*ft^2/s^2" → "ft^2•lb/s^2"
- * - "ft^2*lb/s^2" → "ft^2•lb/s^2"  
- * - "(ft^2*lb)/s^2" → "ft^2•lb/s^2"
- * - "m*kg" → "kg•m"
- * - "kg*m" → "kg•m"
- * - "m*m" → "m^2"
+ * - "m*m*kg/s/s" → "kg•m^2/s^2"
+ * - "ft*lb*ft/s" → "ft^2•lb/s"  
+ * - "kg*m*m*kg" → "kg^2•m^2"
+ * - "m/s/m" → "m/(m•s)"
  *
- * @param expression The unit expression to canonicalize (e.g., "lb*ft^2/s^2")
- * @return A new OCStringRef containing the canonical form, or NULL if input is NULL.
+ * @param expression The unit expression to clean (e.g., "m*m*kg/s/s")
+ * @return A new OCStringRef containing the cleaned form, or NULL if input is invalid.
  *         The caller is responsible for releasing the returned string.
  *
- * @note The canonical form uses:
- *       - Alphabetical ordering of symbols
+ * @note The cleaned form uses:
+ *       - Grouping of identical symbols within numerator and denominator
  *       - "•" character for multiplication  
  *       - "^" for powers (omitted for power of 1)
- *       - Parentheses around multi-term denominators
+ *       - No cancellation between numerator and denominator
  *
- * @see SIUnitAreExpressionsEquivalent
+ * @see SIUnitCreateCleanedAndReducedExpression
  * @ingroup SIUnit
  */
-OCStringRef SIUnitCreateLibraryKey(OCStringRef expression);
+OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression);
 
 /**
- * @brief Reduces a unit expression by combining like terms algebraically.
+ * @brief Reduces a unit expression by combining like terms and canceling between numerator/denominator.
  *
- * This function takes a unit expression and reduces it by combining powers of
- * the same unit symbols. Unlike SIUnitCreateLibraryKey, which creates a canonical
- * form for library lookups, this function performs actual algebraic reduction.
+ * This function takes a unit expression and performs full algebraic reduction by
+ * combining powers of the same unit symbols and canceling terms between numerator
+ * and denominator. This produces the most simplified form possible.
  *
  * Examples:
  * - "in^4/in^2" → "in^2"
@@ -68,15 +68,16 @@ OCStringRef SIUnitCreateLibraryKey(OCStringRef expression);
  * - "m^6/m^2" → "m^4"
  * - "kg•m^2/m" → "kg•m"
  * - "s^4/(s^2•s)" → "s"
+ * - "m*kg/m" → "kg"
  *
  * @param expression The unit expression to reduce
  * @return A new reduced expression, or NULL if the input is invalid
  *
  * @note The caller is responsible for releasing the returned OCStringRef.
- * @see SIUnitByReducingSymbol
+ * @see SIUnitCreateCleanedExpression
  * @ingroup SIUnit
  */
-OCStringRef SIUnitReduceExpression(OCStringRef expression);
+OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression);
 
 /**
  * @brief Checks if two unit expressions are equivalent.

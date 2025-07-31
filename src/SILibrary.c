@@ -8,7 +8,7 @@ void SITypesShutdown(void) {
     #if !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
     OCReportLeaksForType(SIScalarGetTypeID());
     #endif
-    SIUnitLibrariesRelease();
+    SIUnitLibrariesShutdown();
     #if !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
     OCReportLeaksForType(SIUnitGetTypeID());
     #endif

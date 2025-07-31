@@ -5,7 +5,8 @@
 #include <stdbool.h>
 #include <math.h>   // For fabs, fabsf, creal, cimag
 #include <complex.h> // For complex numbers and I macro
-#include "SILibrary.h"
+#include "../src/SILibrary.h"
+#include "../src/SIUnitKey.h"
 
 #include "test_utils.h" // Include the test utilities header
 
@@ -1568,29 +1569,29 @@ bool test_unit_canonical_expressions(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     
-    // Test basic canonicalization
+    // Test basic expression cleaning (grouping identical symbols)
     
-    OCStringRef result1 = SIUnitCreateLibraryKey(STR("m"));
+    OCStringRef result1 = SIUnitCreateCleanedExpression(STR("m"));
     if (OCStringCompare(result1, STR("m"), 0) != kOCCompareEqualTo) {
-        printf("  ✗ 'm' should canonicalize to 'm', got '%s'\n", OCStringGetCString(result1));
+        printf("  ✗ 'm' should clean to 'm', got '%s'\n", OCStringGetCString(result1));
         success = false;
     }
     OCRelease(result1);
     
-    OCStringRef result2 = SIUnitCreateLibraryKey(STR("m^2"));
+    OCStringRef result2 = SIUnitCreateCleanedExpression(STR("m^2"));
     if (OCStringCompare(result2, STR("m^2"), 0) != kOCCompareEqualTo) {
-        printf("  ✗ 'm^2' should canonicalize to 'm^2', got '%s'\n", OCStringGetCString(result2));
+        printf("  ✗ 'm^2' should clean to 'm^2', got '%s'\n", OCStringGetCString(result2));
         success = false;
     }
     OCRelease(result2);
     
     // Test multiplication ordering
     
-    OCStringRef result3 = SIUnitCreateLibraryKey(STR("m*kg"));
-    OCStringRef result4 = SIUnitCreateLibraryKey(STR("kg*m"));
+    OCStringRef result3 = SIUnitCreateCleanedExpression(STR("m*kg"));
+    OCStringRef result4 = SIUnitCreateCleanedExpression(STR("kg*m"));
     
     if (OCStringCompare(result3, result4, 0) != kOCCompareEqualTo) {
-        printf("  ✗ 'm*kg' and 'kg*m' should have same canonical form\n");
+        printf("  ✗ 'm*kg' and 'kg*m' should have same cleaned form\n");
         printf("    'm*kg' -> '%s'\n", OCStringGetCString(result3));
         printf("    'kg*m' -> '%s'\n", OCStringGetCString(result4));
         success = false;
@@ -1609,18 +1610,18 @@ bool test_unit_canonical_expressions(void) {
     };
     
     int num_tests = sizeof(test_expressions) / sizeof(test_expressions[0]);
-    OCStringRef canonical_forms[num_tests];
+    OCStringRef cleaned_forms[num_tests];
     
     for (int i = 0; i < num_tests; i++) {
         OCStringRef expr = OCStringCreateWithCString(test_expressions[i]);
-        canonical_forms[i] = SIUnitCreateLibraryKey(expr);
+        cleaned_forms[i] = SIUnitCreateCleanedExpression(expr);
         OCRelease(expr);
     }
     
-    // Check if all produce the same canonical form
+    // Check if all produce the same cleaned form
     bool all_equivalent = true;
     for (int i = 1; i < num_tests; i++) {
-        if (OCStringCompare(canonical_forms[0], canonical_forms[i], 0) != kOCCompareEqualTo) {
+        if (OCStringCompare(cleaned_forms[0], cleaned_forms[i], 0) != kOCCompareEqualTo) {
             all_equivalent = false;
             break;
         }
@@ -1629,28 +1630,28 @@ bool test_unit_canonical_expressions(void) {
     if (!all_equivalent) {
         printf("  ✗ All Imperial/SI expressions should be equivalent\n");
         for (int i = 0; i < num_tests; i++) {
-            printf("    '%s' -> '%s'\n", test_expressions[i], OCStringGetCString(canonical_forms[i]));
+            printf("    '%s' -> '%s'\n", test_expressions[i], OCStringGetCString(cleaned_forms[i]));
         }
         success = false;
     }
     
     // Clean up
     for (int i = 0; i < num_tests; i++) {
-        OCRelease(canonical_forms[i]);
+        OCRelease(cleaned_forms[i]);
     }
     
     // Test power consolidation
     
-    OCStringRef result5 = SIUnitCreateLibraryKey(STR("m*m"));
+    OCStringRef result5 = SIUnitCreateCleanedExpression(STR("m*m"));
     if (OCStringCompare(result5, STR("m^2"), 0) != kOCCompareEqualTo) {
-        printf("  ✗ 'm*m' should canonicalize to 'm^2', got '%s'\n", OCStringGetCString(result5));
+        printf("  ✗ 'm*m' should clean to 'm^2', got '%s'\n", OCStringGetCString(result5));
         success = false;
     }
     OCRelease(result5);
     
-    OCStringRef result6 = SIUnitCreateLibraryKey(STR("m^2*m"));
+    OCStringRef result6 = SIUnitCreateCleanedExpression(STR("m^2*m"));
     if (OCStringCompare(result6, STR("m^3"), 0) != kOCCompareEqualTo) {
-        printf("  ✗ 'm^2*m' should canonicalize to 'm^3', got '%s'\n", OCStringGetCString(result6));
+        printf("  ✗ 'm^2*m' should clean to 'm^3', got '%s'\n", OCStringGetCString(result6));
         success = false;
     }
     OCRelease(result6);

@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-// Declare all SIUnitCreateLibraryKey test functions
+// Declare all SIUnitCreateCleanedExpression test functions
 bool test_library_key_basic_canonicalization(void);
 bool test_library_key_power_notation(void);
 bool test_library_key_multiplication_ordering(void);

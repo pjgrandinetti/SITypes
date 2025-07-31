@@ -39,11 +39,42 @@ bool test_check_for_duplicate_units(void) {
     
     OCDictionaryGetKeysAndValues(unitsLib, (const void**)keys, (const void**)units);
     
-    // Track duplicate pointers
+    // Track duplicate pointers and static instance violations
     bool duplicatesFound = false;
+    bool staticInstanceViolations = false;
     int duplicateCount = 0;
+    int nonStaticCount = 0;
     
-    // Check for duplicate unit pointers
+    // First pass: Check that all units are static instances
+    printf("\n=== Checking static instance status ===\n");
+    for (uint64_t i = 0; i < count; i++) {
+        if (!OCTypeGetStaticInstance(units[i])) {
+            staticInstanceViolations = true;
+            nonStaticCount++;
+            
+            printf("*** NON-STATIC UNIT FOUND ***\n");
+            printf("Unit pointer: %p (Key: '%s')\n", units[i], OCStringGetCString(keys[i]));
+            
+            // Get the unit's symbol for identification
+            OCStringRef symbol = SIUnitCopySymbol(units[i]);
+            if (symbol) {
+                printf("  Unit symbol: '%s'\n", OCStringGetCString(symbol));
+                OCRelease(symbol);
+            }
+            
+            printf("*** This unit should be a static instance! ***\n\n");
+        }
+    }
+    
+    if (staticInstanceViolations) {
+        printf("!!! FOUND %d NON-STATIC UNITS IN LIBRARY !!!\n", nonStaticCount);
+        printf("All units in the library should be static instances.\n\n");
+    } else {
+        printf("✓ All %llu units are static instances.\n\n", count);
+    }
+    
+    // Second pass: Check for duplicate unit pointers
+    printf("=== Checking for duplicate unit pointers ===\n");
     for (uint64_t i = 0; i < count; i++) {
         for (uint64_t j = i + 1; j < count; j++) {
             if (units[i] == units[j]) {
@@ -83,12 +114,21 @@ bool test_check_for_duplicate_units(void) {
     free(keys);
     free(units);
     
-    if (duplicatesFound) {
-        printf("\n!!! FOUND %d DUPLICATE UNIT POINTERS !!!\n", duplicateCount);
-        printf("This explains the bus error during cleanup.\n");
+    // Report final results
+    if (duplicatesFound || staticInstanceViolations) {
+        printf("\n!!! LIBRARY INTEGRITY ISSUES FOUND !!!\n");
+        if (duplicatesFound) {
+            printf("- %d duplicate unit pointers\n", duplicateCount);
+        }
+        if (staticInstanceViolations) {
+            printf("- %d non-static units in library\n", nonStaticCount);
+        }
+        printf("These issues may cause memory management problems.\n");
         return false;
     } else {
-        printf("\nNo duplicate unit pointers found.\n");
+        printf("\n✓ Library integrity check passed:\n");
+        printf("  - No duplicate unit pointers\n");
+        printf("  - All units are static instances\n");
         return true;
     }
 }

@@ -154,13 +154,14 @@ double SIUnitConversion(SIUnitRef initialUnit, SIUnitRef finalUnit);
 // Unit library management
 void SIUnitLibrarySetImperialVolumes(bool value);
 bool SIUnitLibraryGetImperialVolumes(void);
-void SIUnitLibrariesRelease(void);  // do not call, called by SITypesShutdown()
+void SIUnitLibrariesShutdown(void);  // do not call, called by SITypesShutdown()
 // Array creation functions
 OCArrayRef SIUnitCreateArrayOfUnitsForQuantity(OCStringRef quantity);
 OCArrayRef SIUnitCreateArrayOfUnitsForDimensionality(SIDimensionalityRef theDim);
 OCArrayRef SIUnitCreateArrayOfUnitsForSameReducedDimensionality(SIDimensionalityRef theDim);
 OCArrayRef SIUnitCreateArrayOfConversionUnits(SIUnitRef theUnit);
 OCArrayRef SIUnitCreateArrayOfEquivalentUnits(SIUnitRef theUnit);
+OCMutableArrayRef SIUnitGetTokenSymbolsLib(void);
 SIUnitRef SIUnitWithSymbol(OCStringRef symbol);
 SIUnitRef SIUnitFindWithName(OCStringRef input);
 SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit);

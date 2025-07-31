@@ -72,9 +72,17 @@ int main(int argc, const char* argv[]) {
     TRACK(test_unit_canonical_expressions);
     TRACK(test_unit_from_expression_equivalence);
     
-    printf("\n=== SIUnitCreateLibraryKey Comprehensive Tests ===\n");
+    printf("\n=== SIUnitCreateCleanedExpression Comprehensive Tests ===\n");
     TRACK(test_library_key_comprehensive);
-    
+    printf("\n=== Duplicate Units Tests ===\n");
+    TRACK(test_create_potential_duplicates);
+    TRACK(test_check_for_duplicate_units);
+
+    printf("\n=== Unit Power Operations Tests ===\n");
+    TRACK(test_unit_negative_power_operations);
+    TRACK(test_unit_inverse_expression_parsing);
+    TRACK(test_unit_negative_exponent_parsing);
+
     printf("\n=== SIUnitFromExpression Robust Tests ===\n");
     TRACK(test_unit_from_expression_robust);
 
@@ -187,14 +195,6 @@ int main(int argc, const char* argv[]) {
     TRACK(test_SIScalarWriteReadJSON_complex_unit);
     TRACK(test_SIScalarWriteReadJSON_array_and_dictionary);
 
-    printf("\n=== Duplicate Units Tests ===\n");
-    TRACK(test_create_potential_duplicates);
-    TRACK(test_check_for_duplicate_units);
-
-    printf("\n=== Unit Power Operations Tests ===\n");
-    TRACK(test_unit_negative_power_operations);
-    TRACK(test_unit_inverse_expression_parsing);
-    TRACK(test_unit_negative_exponent_parsing);
     
     if (failures) {
         fprintf(stderr, "\n%d test(s) failed.\n", failures);
