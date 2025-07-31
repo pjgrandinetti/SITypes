@@ -203,6 +203,61 @@ SIUnitRef SIUnitByTakingNthRoot(SIUnitRef theUnit,
                                 OCStringRef *error);
 SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, OCStringRef *error);
 
+/*!
+ * @brief Temporary normalization function for existing parser compatibility.
+ * TODO: Implement proper Unicode normalization
+ */
+OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool flag);
+
+/*!
+ * @brief Temporary function for expression equivalence checking.
+ * TODO: Implement proper expression equivalence checking
+ */
+bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2);
+
+/*!
+ * @brief Creates a cleaned and normalized unit expression by grouping and sorting terms.
+ *
+ * This function takes a unit expression string and returns a cleaned version where:
+ * - Unicode characters are normalized
+ * - Identical unit symbols are grouped together (powers combined)
+ * - Terms are sorted alphabetically
+ * - Expression is formatted in a canonical form
+ *
+ * Unlike SIUnitCreateCleanedAndReducedExpression, this function does NOT perform
+ * algebraic cancellation between numerator and denominator terms.
+ *
+ * @param expression The input unit expression string to clean
+ * @return A cleaned unit expression string, or NULL on error
+ *
+ * @note The caller is responsible for releasing the returned string with OCRelease()
+ *
+ * Examples:
+ * - "m*kg*m" → "kg•m^2"
+ * - "kg*m/s/s" → "kg•m/s^2"  
+ * - "m/kg*s" → "m•s/kg"
+ */
+OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression);
+
+/*!
+ * @brief Creates a cleaned, normalized, and algebraically reduced unit expression.
+ *
+ * This function performs all the operations of SIUnitCreateCleanedExpression plus:
+ * - Algebraic cancellation of identical terms between numerator and denominator
+ * - Simplification to the most reduced form
+ *
+ * @param expression The input unit expression string to clean and reduce
+ * @return A cleaned and reduced unit expression string, or NULL on error
+ *
+ * @note The caller is responsible for releasing the returned string with OCRelease()
+ *
+ * Examples:
+ * - "m*kg/m" → "kg"
+ * - "m^2*s/m/s" → "m"
+ * - "kg*m*s^2/kg/m" → "s^2"
+ */
+OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression);
+
 OCMutableDictionaryRef SIUnitGetUnitsLib(void);
 
 #endif  // SIUnit_H

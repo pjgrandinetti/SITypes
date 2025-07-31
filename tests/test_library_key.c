@@ -2,7 +2,6 @@
 #include <string.h>
 #include <assert.h>
 #include "../src/SILibrary.h"
-#include "../src/SIUnitKey.h"
 #include "test_library_key.h"
 
 // Helper function to test cleaned expression creation

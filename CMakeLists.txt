@@ -77,7 +77,7 @@ set(SITYPE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIScalarConstants.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIScalarParserHelpers.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIUnit.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/SIUnitKey.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/SIUnitExpression.c
 )
 
 set(SITYPE_HDR
@@ -92,7 +92,7 @@ set(SITYPE_HDR
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIScalarConstantsData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIUnit.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIUnitParser.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/SIUnitKey.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/SIUnitExpression.h
 )
 
 # -------------------------------------------------------------------

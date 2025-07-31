@@ -31,7 +31,7 @@ OBJ_DIR        := $(BUILD_DIR)/obj
 GEN_DIR        := $(BUILD_DIR)/gen
 BIN_DIR        := $(BUILD_DIR)/bin
 
-CPPFLAGS := -I. -I$(SRC_DIR) -I$(TP_INCLUDE_DIR) -I$(OCT_INCLUDE)
+CPPFLAGS := -I. -I$(SRC_DIR) -I$(GEN_DIR) -I$(TP_INCLUDE_DIR) -I$(OCT_INCLUDE)
 CFLAGS   := -fPIC -O3 -Wall -Wextra \
              -Wno-sign-compare -Wno-unused-parameter \
              -Wno-missing-field-initializers -Wno-unused-function \
@@ -189,7 +189,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | dirs
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)/%.o: $(GEN_DIR)/%.c | dirs
-	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(GEN_DIR) -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)/%.o: $(TEST_SRC_DIR)/%.c | dirs
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<

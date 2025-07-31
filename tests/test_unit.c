@@ -6,7 +6,6 @@
 #include <math.h>   // For fabs, fabsf, creal, cimag
 #include <complex.h> // For complex numbers and I macro
 #include "../src/SILibrary.h"
-#include "../src/SIUnitKey.h"
 
 #include "test_utils.h" // Include the test utilities header
 
