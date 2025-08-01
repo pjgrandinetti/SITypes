@@ -129,8 +129,8 @@ struct impl_SIUnit {
         unsigned int isImperialUnit : 1; // Unit belongs to the Imperial/British system
         unsigned int isAtomicUnit : 1;   // Unit belongs to the Atomic units system
         unsigned int isPlanckUnit : 1;   // Unit belongs to the Planck units system
-        unsigned int reserved6 : 1;      // Reserved for future use (e.g., isUSCustomary)
-        unsigned int reserved7 : 1;      // Reserved for future use (e.g., isEngineering)
+        unsigned int reserved6 : 1;      // Reserved for future use
+        unsigned int reserved7 : 1;      // Reserved for future use
         unsigned int isConstant : 1;     // Unit represents a physical constant
     } flags;
 };
