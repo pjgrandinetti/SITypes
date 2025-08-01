@@ -114,6 +114,14 @@ OCArrayRef siueApplyPowerToTermList(OCArrayRef term_list, int power);
  */
 SIUnitExpression* siueApplyPowerToExpression(SIUnitExpression* expression, int power);
 /*!
+ * @brief Applies a fractional power to a unit expression, validating that result has integer powers.
+ *
+ * @param expression The expression to modify
+ * @param power The fractional power to apply
+ * @return The modified expression if all resulting powers are integers, NULL otherwise
+ */
+SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* expression, double power);
+/*!
  * @brief Gets the parsed expression from the parser.
  *
  * @return The currently parsed expression, or NULL if none

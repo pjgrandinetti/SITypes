@@ -2155,7 +2155,6 @@ bool test_SIScalarTakeAbsoluteValue(void) {
     SIMutableScalarRef target = SIScalarCreateMutableWithFloat(-5.0f, u);
     if (!target) {
         printf("test_SIScalarTakeAbsoluteValue failed: Failed to create mutable scalar\n");
-        OCRelease(u);
         return false;
     }
 
@@ -2169,7 +2168,6 @@ bool test_SIScalarTakeAbsoluteValue(void) {
             printf("test_SIScalarTakeAbsoluteValue failed: Operation returned false without error\n");
         }
         OCRelease(target);
-        OCRelease(u);
         return false;
     }
 
@@ -2177,7 +2175,6 @@ bool test_SIScalarTakeAbsoluteValue(void) {
         printf("test_SIScalarTakeAbsoluteValue failed: Unexpected error string after successful operation\n");
         OCRelease(error);
         OCRelease(target);
-        OCRelease(u);
         return false;
     }
 
@@ -2185,12 +2182,10 @@ bool test_SIScalarTakeAbsoluteValue(void) {
     if (fabsf(result - 5.0f) >= 1e-6f) {
         printf("test_SIScalarTakeAbsoluteValue failed: Expected 5.0f, got %.6f\n", result);
         OCRelease(target);
-        OCRelease(u);
         return false;
     }
 
     OCRelease(target);
-    OCRelease(u);
     printf("test_SIScalarTakeAbsoluteValue passed\n");
     return true;
 }
@@ -2293,14 +2288,12 @@ bool test_SIScalarCreateByTakingNthRoot(void) {
     SIUnitRef m_cubed_unit = SIUnitByRaisingToPower(m, 3, &mult, NULL);
     if (!m_cubed_unit) {
         printf("test_SIScalarCreateByTakingNthRoot failed: Failed to create m^3 unit\n");
-        OCRelease(m);
         return false;
     }
 
     SIScalarRef s = SIScalarCreateWithFloat(8.0f, m_cubed_unit); // 8 m^3
     if (!s) {
         printf("test_SIScalarCreateByTakingNthRoot failed: Failed to create scalar with m^3\n");
-        OCRelease(m);
         OCRelease(m_cubed_unit);
         return false;
     }
@@ -2315,7 +2308,6 @@ bool test_SIScalarCreateByTakingNthRoot(void) {
             printf("test_SIScalarCreateByTakingNthRoot failed: Root operation returned NULL without error\n");
         }
         OCRelease(s);
-        OCRelease(m);
         OCRelease(m_cubed_unit);
         return false;
     }
@@ -2325,7 +2317,6 @@ bool test_SIScalarCreateByTakingNthRoot(void) {
         OCRelease(error);
         OCRelease(s);
         OCRelease(root_s);
-        OCRelease(m);
         OCRelease(m_cubed_unit);
         return false;
     }
@@ -2335,7 +2326,6 @@ bool test_SIScalarCreateByTakingNthRoot(void) {
         printf("test_SIScalarCreateByTakingNthRoot failed: Expected 2.0f, got %.6f\n", value);
         OCRelease(s);
         OCRelease(root_s);
-        OCRelease(m);
         OCRelease(m_cubed_unit);
         return false;
     }
@@ -2346,7 +2336,6 @@ bool test_SIScalarCreateByTakingNthRoot(void) {
         OCRelease(unit_str);
         OCRelease(s);
         OCRelease(root_s);
-        OCRelease(m);
         OCRelease(m_cubed_unit);
         return false;
     }
@@ -2354,7 +2343,6 @@ bool test_SIScalarCreateByTakingNthRoot(void) {
     OCRelease(unit_str);
     OCRelease(s);
     OCRelease(root_s);
-    OCRelease(m);
     OCRelease(m_cubed_unit);
     printf("test_SIScalarCreateByTakingNthRoot passed\n");
     return true;
@@ -2371,14 +2359,12 @@ bool test_SIScalarTakeNthRoot(void) {
     SIUnitRef m_cubed_unit = SIUnitByRaisingToPower(m, 3, &mult, NULL);
     if (!m_cubed_unit) {
         printf("test_SIScalarTakeNthRoot failed: Failed to create m^3 unit\n");
-        OCRelease(m);
         return false;
     }
 
     SIMutableScalarRef target = SIScalarCreateMutableWithFloat(8.0f, m_cubed_unit); // 8 m^3
     if (!target) {
         printf("test_SIScalarTakeNthRoot failed: Failed to create scalar\n");
-        OCRelease(m);
         OCRelease(m_cubed_unit);
         return false;
     }
@@ -2393,7 +2379,6 @@ bool test_SIScalarTakeNthRoot(void) {
             printf("test_SIScalarTakeNthRoot failed: Operation returned false with no error message\n");
         }
         OCRelease(target);
-        OCRelease(m);
         OCRelease(m_cubed_unit);
         return false;
     }
@@ -2402,7 +2387,6 @@ bool test_SIScalarTakeNthRoot(void) {
         printf("test_SIScalarTakeNthRoot failed: Unexpected error string after successful operation\n");
         OCRelease(error);
         OCRelease(target);
-        OCRelease(m);
         OCRelease(m_cubed_unit);
         return false;
     }
@@ -2411,7 +2395,6 @@ bool test_SIScalarTakeNthRoot(void) {
     if (fabsf(result - 2.0f) >= 1e-6f) {
         printf("test_SIScalarTakeNthRoot failed: Expected 2.0f, got %.6f\n", result);
         OCRelease(target);
-        OCRelease(m);
         OCRelease(m_cubed_unit);
         return false;
     }
@@ -2421,14 +2404,12 @@ bool test_SIScalarTakeNthRoot(void) {
         printf("test_SIScalarTakeNthRoot failed: Expected unit 'm', got '%s'\n", OCStringGetCString(unit_str));
         OCRelease(unit_str);
         OCRelease(target);
-        OCRelease(m);
         OCRelease(m_cubed_unit);
         return false;
     }
 
     OCRelease(unit_str);
     OCRelease(target);
-    OCRelease(m);
     OCRelease(m_cubed_unit);
     printf("test_SIScalarTakeNthRoot passed\n");
     return true;
@@ -2446,7 +2427,6 @@ bool test_SIScalarTakeLog10(void) {
     SIMutableScalarRef target = SIScalarCreateMutableWithFloat(100.0f, dimensionless);
     if (!target) {
         printf("test_SIScalarTakeLog10 failed: Failed to create scalar\n");
-        OCRelease(dimensionless);
         return false;
     }
 
@@ -2460,7 +2440,6 @@ bool test_SIScalarTakeLog10(void) {
             printf("test_SIScalarTakeLog10 failed: Operation returned false with no error message\n");
         }
         OCRelease(target);
-        OCRelease(dimensionless);
         return false;
     }
 
@@ -2468,7 +2447,6 @@ bool test_SIScalarTakeLog10(void) {
         printf("test_SIScalarTakeLog10 failed: Unexpected error string after success\n");
         OCRelease(error);
         OCRelease(target);
-        OCRelease(dimensionless);
         return false;
     }
 
@@ -2476,7 +2454,6 @@ bool test_SIScalarTakeLog10(void) {
     if (fabsf(value - 2.0f) >= 1e-6f) {
         printf("test_SIScalarTakeLog10 failed: Expected 2.0f, got %.6f\n", value);
         OCRelease(target);
-        OCRelease(dimensionless);
         return false;
     }
 
@@ -2484,12 +2461,10 @@ bool test_SIScalarTakeLog10(void) {
     if (!SIUnitIsDimensionless(final_unit)) {
         printf("test_SIScalarTakeLog10 failed: Resulting unit is not dimensionless\n");
         OCRelease(target);
-        OCRelease(dimensionless);
         return false;
     }
 
     OCRelease(target);
-    OCRelease(dimensionless);
     printf("test_SIScalarTakeLog10 passed\n");
     return true;
 }
@@ -2690,7 +2665,6 @@ bool test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant(void) {
     SIMutableScalarRef m = SIScalarCreateMutableWithFloat(2.0f, u); // 2 m
     if (!m) {
         printf("test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant failed: Failed to create first scalar\n");
-        OCRelease(u);
         return false;
     }
 
@@ -2699,7 +2673,6 @@ bool test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant(void) {
     if (!success) {
         printf("test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant failed: Multiplication by (1+i) failed\n");
         OCRelease(m);
-        OCRelease(u);
         return false;
     }
 
@@ -2709,7 +2682,6 @@ bool test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant(void) {
     if (fabsf(real_part - 2.0f) >= 1e-6f || fabsf(imag_part - 2.0f) >= 1e-6f) {
         printf("test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant failed: Expected (2+2i), got (%.6f+%.6fi)\n", real_part, imag_part);
         OCRelease(m);
-        OCRelease(u);
         return false;
     }
     OCRelease(m);
@@ -2718,7 +2690,6 @@ bool test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant(void) {
     m = SIScalarCreateMutableWithFloat(3.0f, u); // 3 m
     if (!m) {
         printf("test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant failed: Failed to create second scalar\n");
-        OCRelease(u);
         return false;
     }
 
@@ -2727,7 +2698,6 @@ bool test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant(void) {
     if (!success) {
         printf("test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant failed: Multiplication by 2i failed\n");
         OCRelease(m);
-        OCRelease(u);
         return false;
     }
 
@@ -2737,12 +2707,10 @@ bool test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant(void) {
     if (fabsf(real_part) >= 1e-6f || fabsf(imag_part - 6.0f) >= 1e-6f) {
         printf("test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant failed: Expected (0+6i), got (%.6f+%.6fi)\n", real_part, imag_part);
         OCRelease(m);
-        OCRelease(u);
         return false;
     }
 
     OCRelease(m);
-    OCRelease(u);
     printf("test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant passed\n");
     return true;
 }

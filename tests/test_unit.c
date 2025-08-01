@@ -892,7 +892,7 @@ bool test_unit_14(void) {
         
         OCRelease(area_unit);
         OCRelease(sqrt_area);
-        OCRelease(meter);
+        // Don't release meter - SIUnitWithSymbol doesn't transfer ownership
         return false;
     }
 
@@ -906,7 +906,7 @@ bool test_unit_14(void) {
         }
         OCRelease(area_unit);
         OCRelease(sqrt_area);
-        OCRelease(meter);
+        // Don't release meter - SIUnitWithSymbol doesn't transfer ownership
         return false;
     }
     if (err) {
@@ -923,7 +923,7 @@ bool test_unit_14(void) {
         }
         OCRelease(area_unit);
         OCRelease(sqrt_area);
-        OCRelease(meter);
+        // Don't release meter - SIUnitWithSymbol doesn't transfer ownership
         OCRelease(volume_unit);
         return false;
     }
@@ -936,7 +936,7 @@ bool test_unit_14(void) {
         printf("  ✗ cbrt(m^3) should be equivalent to m\n");
         OCRelease(area_unit);
         OCRelease(sqrt_area);
-        OCRelease(meter);
+        // Don't release meter - SIUnitWithSymbol doesn't transfer ownership
         OCRelease(volume_unit);
         if (cbrt_volume) OCRelease(cbrt_volume);
         return false;
@@ -951,7 +951,7 @@ bool test_unit_14(void) {
         OCRelease(invalid_sqrt);
         OCRelease(area_unit);
         OCRelease(sqrt_area);
-        OCRelease(meter);
+        // Don't release meter - SIUnitWithSymbol doesn't transfer ownership
         OCRelease(volume_unit);
         OCRelease(cbrt_volume);
         return false;
@@ -964,7 +964,7 @@ bool test_unit_14(void) {
     // Clean up
     OCRelease(area_unit);
     OCRelease(sqrt_area);
-    OCRelease(meter);
+    // Don't release meter - SIUnitWithSymbol doesn't transfer ownership
     OCRelease(volume_unit);
     OCRelease(cbrt_volume);
     

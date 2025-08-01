@@ -347,9 +347,9 @@ cJSON *SIUnitCreateJSON(SIUnitRef unit) {
 }
 //
 static OCMutableDictionaryRef unitsLibrary = NULL;
-static OCMutableDictionaryRef units2QuantitiesLibrary = NULL;
-static OCMutableDictionaryRef units2DimensionalitiesLibrary = NULL;
-static OCMutableArrayRef units2NamesLibrary = NULL;
+static OCMutableDictionaryRef unitsQuantitiesLibrary = NULL;
+static OCMutableDictionaryRef unitsDimensionalitiesLibrary = NULL;
+static OCMutableArrayRef unitsNamesLibrary = NULL;
 static OCMutableArrayRef underivedSymbolsLibrary = NULL;
 static bool imperialVolumes = false;
 // Function prototypes
@@ -360,16 +360,16 @@ OCMutableDictionaryRef SIUnitGetUnitsLib(void) {
     return unitsLibrary;
 }
 static OCMutableDictionaryRef SIUnitGetQuantitiesLib(void) {
-    if (NULL == units2QuantitiesLibrary) SIUnitCreateLibraries();
-    return units2QuantitiesLibrary;
+    if (NULL == unitsQuantitiesLibrary) SIUnitCreateLibraries();
+    return unitsQuantitiesLibrary;
 }
 static OCMutableDictionaryRef SIUnitGetDimensionalitiesLib(void) {
-    if (NULL == units2DimensionalitiesLibrary) SIUnitCreateLibraries();
-    return units2DimensionalitiesLibrary;
+    if (NULL == unitsDimensionalitiesLibrary) SIUnitCreateLibraries();
+    return unitsDimensionalitiesLibrary;
 }
 static OCMutableArrayRef SIUnitGetNamesLib(void) {
-    if (NULL == units2NamesLibrary) SIUnitCreateLibraries();
-    return units2NamesLibrary;
+    if (NULL == unitsNamesLibrary) SIUnitCreateLibraries();
+    return unitsNamesLibrary;
 }
 // Helper function to check if a symbol is underived (contains no operators)
 static bool SIUnitSymbolIsUnderived(OCStringRef symbol) {
@@ -427,7 +427,9 @@ static SIUnitRef AddToLib(
         // Check if symbol is already in the underived symbols library
         bool contains = OCArrayContainsValue(underivedSymbolsLibrary, symbol);
         if (!contains) {
-            OCArrayAppendValue(underivedSymbolsLibrary, symbol);
+            OCStringRef symbol_copy = OCStringCreateCopy(symbol);
+            OCArrayAppendValue(underivedSymbolsLibrary, symbol_copy);
+            OCRelease(symbol_copy);
         }
     }
     
@@ -653,12 +655,12 @@ static bool SIUnitCreateLibraries(void) {
     setlocale(LC_ALL, "");
     const struct lconv *const currentlocale = localeconv();
     unitsLibrary = OCDictionaryCreateMutable(0);
-    units2QuantitiesLibrary = OCDictionaryCreateMutable(0);
-    units2DimensionalitiesLibrary = OCDictionaryCreateMutable(0);
+    unitsQuantitiesLibrary = OCDictionaryCreateMutable(0);
+    unitsDimensionalitiesLibrary = OCDictionaryCreateMutable(0);
     underivedSymbolsLibrary = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     IF_NO_OBJECT_EXISTS_RETURN(unitsLibrary, false);
-    IF_NO_OBJECT_EXISTS_RETURN(units2QuantitiesLibrary, false);
-    IF_NO_OBJECT_EXISTS_RETURN(units2DimensionalitiesLibrary, false);
+    IF_NO_OBJECT_EXISTS_RETURN(unitsQuantitiesLibrary, false);
+    IF_NO_OBJECT_EXISTS_RETURN(unitsDimensionalitiesLibrary, false);
     IF_NO_OBJECT_EXISTS_RETURN(underivedSymbolsLibrary, false);
     // Initialize all units by including the definitions
 #include "SIUnitDefinitions.h"
@@ -673,26 +675,26 @@ static bool SIUnitCreateLibraries(void) {
         }
     }
     OCArrayRef allUnits = OCDictionaryCreateArrayWithAllValues(unitsLibrary);
-    units2NamesLibrary = OCArrayCreateMutableCopy(allUnits);
+    unitsNamesLibrary = OCArrayCreateMutableCopy(allUnits);
     OCRelease(allUnits);
-    OCArraySortValues(units2NamesLibrary, OCRangeMake(0, OCArrayGetCount(units2NamesLibrary)), unitNameLengthSort, NULL);
+    OCArraySortValues(unitsNamesLibrary, OCRangeMake(0, OCArrayGetCount(unitsNamesLibrary)), unitNameLengthSort, NULL);
     return true;
 }
 // Add a cleanup function for static dictionaries and array
 void SIUnitLibrariesShutdown(void) {
     if (!unitsLibrary)
         return;
-    if (units2QuantitiesLibrary) {
-        OCRelease(units2QuantitiesLibrary);
-        units2QuantitiesLibrary = NULL;
+    if (unitsQuantitiesLibrary) {
+        OCRelease(unitsQuantitiesLibrary);
+        unitsQuantitiesLibrary = NULL;
     }
-    if (units2DimensionalitiesLibrary) {
-        OCRelease(units2DimensionalitiesLibrary);
-        units2DimensionalitiesLibrary = NULL;
+    if (unitsDimensionalitiesLibrary) {
+        OCRelease(unitsDimensionalitiesLibrary);
+        unitsDimensionalitiesLibrary = NULL;
     }
-    if (units2NamesLibrary) {
-        OCRelease(units2NamesLibrary);
-        units2NamesLibrary = NULL;
+    if (unitsNamesLibrary) {
+        OCRelease(unitsNamesLibrary);
+        unitsNamesLibrary = NULL;
     }
     if(underivedSymbolsLibrary) {
         OCRelease(underivedSymbolsLibrary);
@@ -1016,8 +1018,8 @@ bool SIUnitIsDimensionless(SIUnitRef theUnit) {
 OCArrayRef SIUnitCreateArrayOfUnitsForQuantity(OCStringRef quantity) {
     IF_NO_OBJECT_EXISTS_RETURN(quantity, NULL);
     if (NULL == unitsLibrary) SIUnitCreateLibraries();
-    if (OCDictionaryContainsKey(units2QuantitiesLibrary, quantity)) {
-        OCMutableArrayRef array = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, quantity);
+    if (OCDictionaryContainsKey(unitsQuantitiesLibrary, quantity)) {
+        OCMutableArrayRef array = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, quantity);
         return OCArrayCreateCopy(array);
     }
     return NULL;
@@ -1026,8 +1028,8 @@ OCArrayRef SIUnitCreateArrayOfUnitsForDimensionality(SIDimensionalityRef theDim)
     IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
     if (NULL == unitsLibrary) SIUnitCreateLibraries();
     OCStringRef symbol = SIDimensionalityGetSymbol(theDim);
-    if (OCDictionaryContainsKey(units2DimensionalitiesLibrary, symbol)) {
-        OCMutableArrayRef array = (OCMutableArrayRef)OCDictionaryGetValue(units2DimensionalitiesLibrary, symbol);
+    if (OCDictionaryContainsKey(unitsDimensionalitiesLibrary, symbol)) {
+        OCMutableArrayRef array = (OCMutableArrayRef)OCDictionaryGetValue(unitsDimensionalitiesLibrary, symbol);
         return OCArrayCreateCopy(array);
     }
     return NULL;
@@ -1040,8 +1042,8 @@ OCArrayRef SIUnitCreateArrayOfUnitsForSameReducedDimensionality(SIDimensionality
     for (uint64_t index = 0; index < OCArrayGetCount(dimensionalities); index++) {
         SIDimensionalityRef dimensionality = OCArrayGetValueAtIndex(dimensionalities, index);
         OCStringRef symbol = SIDimensionalityGetSymbol(dimensionality);
-        if (OCDictionaryContainsKey(units2DimensionalitiesLibrary, symbol)) {
-            OCMutableArrayRef array = (OCMutableArrayRef)OCDictionaryGetValue(units2DimensionalitiesLibrary, symbol);
+        if (OCDictionaryContainsKey(unitsDimensionalitiesLibrary, symbol)) {
+            OCMutableArrayRef array = (OCMutableArrayRef)OCDictionaryGetValue(unitsDimensionalitiesLibrary, symbol);
             OCArrayAppendArray(result, array, OCRangeMake(0, OCArrayGetCount(array)));
         }
     }

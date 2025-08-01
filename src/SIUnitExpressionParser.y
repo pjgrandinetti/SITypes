@@ -17,6 +17,7 @@
 %union {
     OCStringRef unit_symbol;
     int iVal;
+    double dVal;
     SIUnitTerm* term;
     OCArrayRef term_list;
     SIUnitExpression* expression;
@@ -24,14 +25,16 @@
 
 %token <unit_symbol> UNIT_SYMBOL
 %token <iVal> INTEGER
-%token DECIMAL UNKNOWN_SYMBOL
+%token <dVal> DECIMAL
+%token UNKNOWN_SYMBOL
 
 %type <term> unit_term
 %type <term_list> term_list
 %type <expression> expression
 
 %left '*' '/'
-%left '^'
+%right '^'
+%left '(' ')'
 
 %%
 
@@ -53,6 +56,30 @@ expression: term_list {
         OCRelease(termArray);
     } else {
         siueError = STR("Only '1' is allowed as a standalone number");
+        YYERROR;
+    }
+}
+| INTEGER '/' term_list {
+    // Handle expressions like "1/m" - numerator is empty, denominator has the terms
+    if ($1 == 1) {
+        // Create empty numerator, put terms in denominator
+        OCMutableArrayRef emptyNum = OCArrayCreateMutable(0, NULL);
+        $$ = siueCreateExpression(emptyNum, $3);
+        OCRelease(emptyNum);
+    } else {
+        siueError = STR("Only '1' is allowed as a numeric coefficient");
+        YYERROR;
+    }
+}
+| INTEGER '/' '(' term_list ')' {
+    // Handle expressions like "1/(m*s)" - numerator is empty, denominator has the terms
+    if ($1 == 1) {
+        // Create empty numerator, put terms in denominator
+        OCMutableArrayRef emptyNum = OCArrayCreateMutable(0, NULL);
+        $$ = siueCreateExpression(emptyNum, $4);
+        OCRelease(emptyNum);
+    } else {
+        siueError = STR("Only '1' is allowed as a numeric coefficient");
         YYERROR;
     }
 }
@@ -79,6 +106,10 @@ expression: term_list {
 | '(' expression ')' '^' INTEGER {
     // Handle parenthetical expression raised to power: (a/b)^n
     $$ = siueApplyPowerToExpression($2, $5);
+}
+| '(' expression ')' '^' DECIMAL {
+    // Handle parenthetical expression raised to decimal power: (a/b)^0.5
+    $$ = siueApplyFractionalPowerToExpression($2, $5);
 }
 | '(' expression ')' '^' '(' INTEGER ')' {
     // Handle parenthetical expression raised to parenthetical power: (a/b)^(n)
@@ -112,6 +143,24 @@ term_list: unit_term {
 | '(' term_list ')' '^' INTEGER {
     $$ = siueApplyPowerToTermList($2, $5);
 }
+| '(' term_list ')' '^' DECIMAL {
+    // Handle decimal power for term lists too
+    // Convert term_list to expression first, then apply fractional power
+    SIUnitExpression* temp_expr = siueCreateExpression($2, NULL);
+    if (temp_expr) {
+        SIUnitExpression* result = siueApplyFractionalPowerToExpression(temp_expr, $5);
+        if (result && result->numerator) {
+            $$ = result->numerator;
+            OCRetain($$); // Keep the numerator
+        } else {
+            $$ = NULL;
+        }
+        OCRelease(temp_expr);
+        if (result) OCRelease(result);
+    } else {
+        $$ = NULL;
+    }
+}
 ;
 
 unit_term: UNIT_SYMBOL {
@@ -123,22 +172,9 @@ unit_term: UNIT_SYMBOL {
 | UNIT_SYMBOL '^' '(' INTEGER ')' {
     $$ = siueCreateTerm($1, $4);
 }
-| UNIT_SYMBOL '^' DECIMAL {
-    siueError = STR("Fractional powers are not allowed");
-    YYERROR;
-}
 | UNKNOWN_SYMBOL {
     siueError = STR("Unknown unit symbol");
     YYERROR;
-}
-| INTEGER '/' term_list {
-    if ($1 == 1) {
-        // Handle 1/expression case
-        $$ = NULL; // This will be handled specially
-    } else {
-        siueError = STR("Only '1' is allowed as a numeric coefficient");
-        YYERROR;
-    }
 }
 ;
 

@@ -80,16 +80,16 @@ AddToLib(kSIQuantityWavenumber, STR("inverse foot"), STR("inverse feet"), STR("(
 AddToLib(kSIQuantityWavenumber, STR("inverse inch"), STR("inverse inches"), STR("(1/in)"), 1. / (kSIMile / 63360), &error);
 AddToLib(kSIQuantityWavenumber, STR("rydberg constant"), STR("rydberg constant"), STR("R_∞"), R_H, &error);
 AddToLib(kSIQuantityWavenumber, STR("inverse atomic unit of length"), STR("inverse atomic unit of length"), STR("(1/a_0)"), 1 / a_0, &error);
-OCMutableArrayRef units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityWavenumber);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityInverseLength, units);
+OCMutableArrayRef units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityWavenumber);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityInverseLength, units);
 //
 #pragma mark kSIQuantityLengthRatio, kSIQuantityPlaneAngle
 AddToLibPrefixed(kSIQuantityLengthRatio, STR("meter per meter"), STR("meters per meter"), STR("m/m"), 1.0, &error);
 AddToLibPrefixed(kSIQuantityLengthRatio, STR("radian"), STR("radians"), STR("rad"), 1.0, &error);
 AddToLibPrefixed(kSIQuantityLengthRatio, STR("degree"), STR("degrees"), STR("°"), kSIPi / 180., &error);
 AddToLib(kSIQuantityLengthRatio, STR("pi"), STR("pi"), STR("π"), kSIPi, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityLengthRatio);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityPlaneAngle, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityLengthRatio);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityPlaneAngle, units);
 //
 #pragma mark kSIQuantityMass
 AddToLib(kSIQuantityMass, STR("microgram"), STR("micrograms"), STR("mcg"), 1e-9, &error);
@@ -303,8 +303,8 @@ AddToLib(kSIQuantitySpeed, STR("mile per second"), STR("miles per second"), STR(
 AddToLib(kSIQuantitySpeed, STR("mile per minute"), STR("miles per minute"), STR("mi/min"), kSIMile / kSIMinute, &error);
 AddToLib(kSIQuantitySpeed, STR("mile per hour"), STR("miles per hour"), STR("mi/h"), kSIMile / kSIHour, &error);
 AddToLib(kSIQuantitySpeed, STR("atomic unit of velocity"), STR("atomic units of velocity"), STR("a_0•E_h/ℏ"), a_0* E_h / hbar, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantitySpeed);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityVelocity, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantitySpeed);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityVelocity, units);
 //
 #pragma mark kSIQuantityAngularMomentum
 AddToLibPrefixed(kSIQuantityAngularMomentum, STR("joule second"), STR("joules second"), STR("J•s"), 1, &error);
@@ -402,9 +402,9 @@ AddToLibPrefixed(kSIQuantityPressure, STR("bar"), STR("bars"), STR("bar"), 1e5, 
 AddToLib(kSIQuantityPressure, STR("millimeter of Hg"), STR("millimeters of Hg"), STR("mmHg"), 133.322, &error);
 AddToLib(kSIQuantityPressure, STR("atmosphere"), STR("atmospheres"), STR("atm"), 1.01325e5, &error);
 AddToLibPrefixed(kSIQuantityPressure, STR("newton per square meter"), STR("newtons per square meter"), STR("N/m^2"), 1, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityPressure);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityStress, units);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityElasticModulus, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityPressure);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityStress, units);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityElasticModulus, units);
 //
 #pragma mark kSIQuantityCompressibility
 AddToLib(kSIQuantityCompressibility, STR("inverse pascal"), STR("inverse pascals"), STR("1/Pa"), 1, &error);
@@ -436,8 +436,8 @@ AddToLib(kSIQuantityPower, STR("foot pound force per second"), STR("feet pound f
 AddToLib(kSIQuantityPower, STR("inch pound force per hour"), STR("inches pound force per hour"), STR("in•lbf/h"), kSIInch* kSIPoundsForce / kSIHour, &error);
 AddToLib(kSIQuantityPower, STR("inch pound force per minute"), STR("inches pound force per minute"), STR("in•lbf/min"), kSIInch* kSIPoundsForce / kSIMinute, &error);
 AddToLib(kSIQuantityPower, STR("inch pound force per second"), STR("inches pound force per second"), STR("in•lbf/s"), kSIInch* kSIPoundsForce, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityPower);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityRadiantFlux, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityPower);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityRadiantFlux, units);
 //
 #pragma mark kSIQuantitySpectralPower
 AddToLibPrefixed(kSIQuantitySpectralPower, STR("watt per nanometer"), STR("watts per nanometer"), STR("W/nm"), 1.e9, &error);
@@ -454,15 +454,15 @@ AddToLib(kSIQuantitySpecificPower, STR("horse power per ounce"), STR("horse powe
 #pragma mark kSIQuantityElectricCharge, kSIQuantityAmountOfElectricity
 AddToLibPrefixed(kSIQuantityElectricCharge, STR("coulomb"), STR("coulombs"), STR("C"), 1, &error);
 AddToLib(kSIQuantityElectricCharge, STR("elementary charge"), STR("elementary charge"), STR("q_e"), kSIElementaryCharge, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityElectricCharge);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityAmountOfElectricity, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityElectricCharge);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityAmountOfElectricity, units);
 //
 #pragma mark kSIQuantityElectricPotentialDifference, kSIQuantityElectromotiveForce, kSIQuantityVoltage
 AddToLibPrefixed(kSIQuantityElectricPotentialDifference, STR("volt"), STR("volts"), STR("V"), 1, &error);
 AddToLib(kSIQuantityElectricPotentialDifference, STR("atomic unit of electric potential"), STR("atomic units of electric potential"), STR("E_h/q_e"), E_h / kSIElementaryCharge, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityElectricPotentialDifference);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityElectromotiveForce, units);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityVoltage, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityElectricPotentialDifference);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityElectromotiveForce, units);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityVoltage, units);
 //
 #pragma mark kSIQuantityElectricFieldGradient
 AddToLibPrefixed(kSIQuantityElectricFieldGradient, STR("volt per square meter"), STR("volts per square meter"), STR("V/m^2"), 1, &error);
@@ -646,8 +646,8 @@ AddToLibPrefixed(kSIQuantitySurfaceEnergy, STR("dyne per square centimeter"), ST
 //
 #pragma mark kSIQuantityAngularSpeed, kSIQuantityAngularVelocity
 AddToLib(kSIQuantityAngularSpeed, STR("radian per second"), STR("radians per second"), STR("rad/s"), 1, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityAngularSpeed);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityAngularVelocity, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityAngularSpeed);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityAngularVelocity, units);
 //
 #pragma mark kSIQuantityAngularAcceleration
 AddToLib(kSIQuantityAngularAcceleration, STR("radian per square second"), STR("radians per square second"), STR("rad/s^2"), 1, &error);
@@ -657,8 +657,8 @@ AddToLibPrefixed(kSIQuantityHeatFluxDensity, STR("watt per square meter"), STR("
 AddToLibPrefixed(kSIQuantityHeatFluxDensity, STR("watt per square centimeter"), STR("watts per square centimeter"), STR("W/cm^2"), 10000., &error);
 AddToLibPrefixed(kSIQuantityHeatFluxDensity, STR("watt per square foot"), STR("watts per square foot"), STR("W/ft^2"), 10.76391041670972, &error);
 AddToLibPrefixed(kSIQuantityHeatFluxDensity, STR("watt per square inch"), STR("watts per square inch"), STR("W/in^2"), 10.76391041670972 / 12., &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityHeatFluxDensity);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityIrradiance, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityHeatFluxDensity);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityIrradiance, units);
 //
 #pragma mark kSIQuantitySpectralRadiantFluxDensity
 AddToLibPrefixed(kSIQuantitySpectralRadiantFluxDensity, STR("watt per square meter per nanometer"), STR("watts per square meter per nanometer"), STR("W/(m^2•nm)"), 1.e9, &error);
@@ -666,15 +666,15 @@ AddToLibPrefixed(kSIQuantitySpectralRadiantFluxDensity, STR("watt per square met
 #pragma mark kSIQuantityEntropy, kSIQuantityHeatCapacity
 AddToLibPrefixed(kSIQuantityEntropy, STR("joule per kelvin"), STR("joules per kelvin"), STR("J/K"), 1, &error);
 AddToLib(kSIQuantityEntropy, STR("boltzmann constant"), STR("boltzmann constant"), STR("k_B"), kSIBoltmannConstant, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityEntropy);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityHeatCapacity, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityEntropy);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityHeatCapacity, units);
 //
 #pragma mark kSIQuantitySpecificHeatCapacity, kSIQuantitySpecificEntropy
 AddToLibPrefixed(kSIQuantitySpecificHeatCapacity, STR("joule per kilogram kelvin"), STR("joules per kilogram kelvin"), STR("J/(kg•K)"), 1, &error);
 AddToLibPrefixed(kSIQuantitySpecificHeatCapacity, STR("joule per gram kelvin"), STR("joules per gram kelvin"), STR("J/(g•K)"), 1000., &error);
 AddToLibPrefixed(kSIQuantitySpecificHeatCapacity, STR("calorie per gram per kelvin"), STR("calories per gram per kelvin"), STR("cal/(g•K)"), 4186.8, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantitySpecificHeatCapacity);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantitySpecificEntropy, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantitySpecificHeatCapacity);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantitySpecificEntropy, units);
 //
 #pragma mark kSIQuantityMolarMass
 AddToLibPrefixed(kSIQuantityMolarMass, STR("gram per mole"), STR("grams per mole"), STR("g/mol"), 1e-3, &error);
@@ -721,9 +721,9 @@ AddToLib(kSIQuantityElectricChargeDensity, STR("atomic unit of charge density"),
 //
 #pragma mark kSIQuantitySurfaceChargeDensity, kSIQuantityElectricFluxDensity, kSIQuantityElectricDisplacement
 AddToLibPrefixed(kSIQuantitySurfaceChargeDensity, STR("coulomb per square meter"), STR("coulombs per square meter"), STR("C/m^2"), 1, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantitySurfaceChargeDensity);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityElectricFluxDensity, units);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityElectricDisplacement, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantitySurfaceChargeDensity);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityElectricFluxDensity, units);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityElectricDisplacement, units);
 //
 #pragma mark kSIQuantityPermeability
 AddToLibPrefixed(kSIQuantityPermeability, STR("henry per meter"), STR("henries per meter"), STR("H/m"), 1., &error);
@@ -735,8 +735,8 @@ AddToLib(kSIQuantityPermeability, STR("magnetic constant"), STR("magnetic consta
 #pragma mark kSIQuantityMolarEntropy, kSIQuantityMolarHeatCapacity
 AddToLibPrefixed(kSIQuantityMolarEntropy, STR("joule per mole kelvin"), STR("joules per mole kelvin"), STR("J/(mol•K)"), 1, &error);
 AddToLib(kSIQuantityMolarEntropy, STR("gas constant"), STR("gas constant"), STR("R"), kSIBoltmannConstant* kSIAvogadroConstant, &error);
-units = (OCMutableArrayRef)OCDictionaryGetValue(units2QuantitiesLibrary, kSIQuantityMolarEntropy);
-OCDictionaryAddValue(units2QuantitiesLibrary, kSIQuantityMolarHeatCapacity, units);
+units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityMolarEntropy);
+OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityMolarHeatCapacity, units);
 //
 #pragma mark kSIQuantityMolarEnergy
 AddToLibPrefixed(kSIQuantityMolarEnergy, STR("joule per mole"), STR("joules per mole"), STR("J/mol"), 1, &error);

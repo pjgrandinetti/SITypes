@@ -467,6 +467,90 @@ bool test_library_key_parenthetical_powers(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
+
+bool test_library_key_reciprocal_expressions(void) {
+    printf("Running %s...\n", __func__);
+    bool success = true;
+    
+    // Test reciprocal expressions (1/unit) - these were the critical bug cases
+    struct {
+        const char* input;
+        const char* expected;
+        const char* description;
+    } tests[] = {
+        {"1/m", "1/m", "reciprocal meter"},
+        {"1/s", "1/s", "reciprocal second (frequency)"},
+        {"1/kg", "1/kg", "reciprocal kilogram"},
+        {"1/(m*s)", "1/(m•s)", "reciprocal of meter-second product"},
+        {"1/m^2", "1/m^2", "reciprocal square meter"},
+        {"1/s^2", "1/s^2", "reciprocal square second"},
+        {"1/(m^2*kg)", "1/(kg•m^2)", "reciprocal of complex expression"},
+        {"1/(kg*m*s)", "1/(kg•m•s)", "reciprocal of three-unit product"},
+        
+        // Note: Complex expressions like "1/(m/s)" are not currently supported
+        // and return NULL - this is acceptable for now as it requires more complex parsing
+        
+        // Test that standalone 1 still behaves correctly (dimensionless)
+        {"1", " ", "standalone dimensionless number"},
+        
+        // Test that numeric coefficients other than 1 are rejected
+        // These should return NULL (tested separately below)
+    };
+    
+    int num_tests = sizeof(tests) / sizeof(tests[0]);
+    
+    for (int i = 0; i < num_tests; i++) {
+        OCStringRef input = OCStringCreateWithCString(tests[i].input);
+        OCStringRef expected = OCStringCreateWithCString(tests[i].expected);
+        OCStringRef result = SIUnitCreateCleanedExpression(input);
+        
+        if (!result) {
+            printf("  ✗ %s: '%s' returned NULL (expected '%s')\n", 
+                   tests[i].description, tests[i].input, tests[i].expected);
+            success = false;
+        } else if (OCStringCompare(result, expected, 0) != kOCCompareEqualTo) {
+            printf("  ✗ %s: '%s'\n", tests[i].description, tests[i].input);
+            printf("    Expected: '%s'\n", tests[i].expected);
+            printf("    Actual:   '%s'\n", OCStringGetCString(result));
+            success = false;
+        }
+        
+        OCRelease(input);
+        OCRelease(expected);
+        if (result) OCRelease(result);
+    }
+    
+    // Test that invalid numeric coefficients return NULL
+    const char* invalid_tests[] = {
+        "2/m",
+        "3/s", 
+        "0/kg",
+        "-1/m",
+        "2.5/m",
+        "m/1",  // This should also be NULL - units divided by numbers aren't allowed
+        "1/(m/s)"  // Complex nested division not currently supported
+    };
+    
+    int num_invalid = sizeof(invalid_tests) / sizeof(invalid_tests[0]);
+    
+    for (int i = 0; i < num_invalid; i++) {
+        OCStringRef input = OCStringCreateWithCString(invalid_tests[i]);
+        OCStringRef result = SIUnitCreateCleanedExpression(input);
+        
+        if (result != NULL) {
+            printf("  ✗ Invalid expression '%s' should return NULL but got '%s'\n", 
+                   invalid_tests[i], OCStringGetCString(result));
+            success = false;
+            OCRelease(result);
+        }
+        
+        OCRelease(input);
+    }
+    
+    printf("%s %s\n", __func__, success ? "passed" : "failed");
+    return success;
+}
+
 bool test_library_key_comprehensive(void) {
     printf("Running comprehensive SIUnitCreateCleanedExpression test suite...\n\n");
     bool overall_success = true;
@@ -482,6 +566,7 @@ bool test_library_key_comprehensive(void) {
     overall_success &= test_library_key_edge_cases();
     overall_success &= test_library_key_parenthetical_powers();
     overall_success &= test_library_key_consistency();
+    overall_success &= test_library_key_reciprocal_expressions();
     printf("\n=== SIUnitCreateCleanedExpression Comprehensive Test Results ===\n");
     printf("Overall result: %s\n", overall_success ? "ALL TESTS PASSED" : "SOME TESTS FAILED");
     return overall_success;

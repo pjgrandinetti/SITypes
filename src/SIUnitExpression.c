@@ -8,6 +8,7 @@
 #include "SIUnitExpression.h"
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "SIUnitExpressionParser.tab.h"
 // External functions from scanner/parser
 extern int siueparse(void);
@@ -16,6 +17,7 @@ extern void siue_delete_buffer(void* buffer);
 // Forward declarations
 OCArrayRef siueApplyPowerToTermList(OCArrayRef term_list, int power);
 SIUnitExpression* siueApplyPowerToExpression(SIUnitExpression* expression, int power);
+SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* expression, double power);
 // Global error string
 OCStringRef siueError = NULL;
 #pragma mark - Term Management
@@ -132,6 +134,68 @@ SIUnitExpression* siueApplyPowerToExpression(SIUnitExpression* expression, int p
     if (expression->denominator) {
         siueApplyPowerToTermList(expression->denominator, power);
     }
+    return expression;
+}
+
+SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* expression, double power) {
+    if (!expression) return NULL;
+    
+    // Check if applying this fractional power would result in integer powers for all terms
+    // First check numerator
+    if (expression->numerator) {
+        OCIndex count = OCArrayGetCount(expression->numerator);
+        for (OCIndex i = 0; i < count; i++) {
+            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expression->numerator, i);
+            if (term) {
+                double resultPower = term->power * power;
+                // Check if the result is an integer (within floating point precision)
+                if (fabs(resultPower - round(resultPower)) > 1e-10) {
+                    // This would result in a fractional power - reject
+                    return NULL;
+                }
+            }
+        }
+    }
+    
+    // Check denominator
+    if (expression->denominator) {
+        OCIndex count = OCArrayGetCount(expression->denominator);
+        for (OCIndex i = 0; i < count; i++) {
+            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expression->denominator, i);
+            if (term) {
+                double resultPower = term->power * power;
+                // Check if the result is an integer (within floating point precision)
+                if (fabs(resultPower - round(resultPower)) > 1e-10) {
+                    // This would result in a fractional power - reject
+                    return NULL;
+                }
+            }
+        }
+    }
+    
+    // All resulting powers would be integers, so apply the fractional power
+    // Apply power to numerator
+    if (expression->numerator) {
+        OCIndex count = OCArrayGetCount(expression->numerator);
+        for (OCIndex i = 0; i < count; i++) {
+            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expression->numerator, i);
+            if (term) {
+                term->power = (int)round(term->power * power);
+            }
+        }
+    }
+    
+    // Apply power to denominator
+    if (expression->denominator) {
+        OCIndex count = OCArrayGetCount(expression->denominator);
+        for (OCIndex i = 0; i < count; i++) {
+            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expression->denominator, i);
+            if (term) {
+                term->power = (int)round(term->power * power);
+            }
+        }
+    }
+    
     return expression;
 }
 #pragma mark - Processing Functions
@@ -469,13 +533,31 @@ OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool
     OCStringFindAndReplace(mutString, STR(" - "), STR("-"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     return mutString;
 }
-// Temporary implementation to support existing tests
-// TODO: Implement proper expression equivalence checking
+
 bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2) {
     if (!expr1 || !expr2) return false;
-    // For now, just do a simple string comparison
-    // This should be replaced with proper expression parsing and comparison
-    return OCStringEqual(expr1, expr2);
+    
+    // Handle identical strings quickly
+    if (OCStringEqual(expr1, expr2)) return true;
+    
+    // Get cleaned expressions for both inputs
+    OCStringRef cleaned1 = SIUnitCreateCleanedExpression(expr1);
+    OCStringRef cleaned2 = SIUnitCreateCleanedExpression(expr2);
+    
+    // If either cleaning failed, they can't be equivalent
+    if (!cleaned1 || !cleaned2) {
+        if (cleaned1) OCRelease(cleaned1);
+        if (cleaned2) OCRelease(cleaned2);
+        return false;
+    }
+    
+    // Compare the cleaned expressions
+    bool equivalent = OCStringEqual(cleaned1, cleaned2);
+    
+    OCRelease(cleaned1);
+    OCRelease(cleaned2);
+    
+    return equivalent;
 }
 OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
     if (!expression) return NULL;

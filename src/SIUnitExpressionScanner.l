@@ -48,9 +48,7 @@ SYMBOL {IDENTIFIER}|{UNICODE_IDENTIFIER}
 }
 
 [0-9]+\.[0-9]+ {
-    char error_msg[256];
-    snprintf(error_msg, sizeof(error_msg), "Fractional powers are not allowed in unit expressions");
-    siueError = OCStringCreateWithCString(error_msg);
+    siuelval.dVal = atof(yytext);
     return DECIMAL;
 }
 
