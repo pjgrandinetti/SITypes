@@ -278,6 +278,7 @@ AddToLib(kSIQuantityArea, STR("township"), STR("townships"), STR("twp"), 2589988
 #pragma mark kSIQuantityInverseArea
 AddToLib(kSIQuantityInverseArea, STR("inverse hectare"), STR("inverse hectares"), STR("(1/ha)"), 1e-4, &error);
 AddToLib(kSIQuantityInverseArea, STR("inverse barn"), STR("inverse barns"), STR("(1/b)"), 1.e28, &error);
+AddSIToLib(kSIQuantityInverseArea, STR("inverse square meter"), STR("inverse square meter"), STR("(1/m^2)"), 1., &error);
 AddSIToLib(kSIQuantityInverseArea, STR("inverse square kilometer"), STR("inverse square kilometer"), STR("(1/km^2)"), 1. / 1000000, &error);
 AddSIToLib(kSIQuantityInverseArea, STR("inverse square centimeter"), STR("inverse square centimeters"), STR("(1/cm^2)"), 1. / 0.0001, &error);
 AddToLib(kSIQuantityInverseArea, STR("inverse square inch"), STR("inverse square inches"), STR("(1/in^2)"), 1. / 0.00064516, &error);
