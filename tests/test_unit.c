@@ -108,11 +108,13 @@ bool test_unit_3(void) {
         return false;
     }
 
-    OCStringRef symbol = SIUnitGetSymbol(unit);
+    OCStringRef symbol = SIUnitCopySymbol(unit);
     if (OCStringCompare(symbol, STR("m"), 0) != kOCCompareEqualTo) {
+        OCRelease(symbol);
         printf("test_unit_3 failed: Symbol mismatch (expected 'm')\n");
         return false;
     }
+    OCRelease(symbol);
 
     printf("%s passed\n", __func__);
     return true;
@@ -140,7 +142,7 @@ bool test_unit_4(void) {
         return false;
     }
 
-    OCStringRef name = SIUnitGetName(unit);
+    OCStringRef name = SIUnitCopyName(unit);
     if (!name) {
         printf("test_unit_4 failed: Failed to retrieve name\n");
         OCRelease(unit);

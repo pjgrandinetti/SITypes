@@ -96,9 +96,10 @@ bool test_check_for_duplicate_units(void) {
                 // Check dimensionality
                 SIDimensionalityRef dim = SIUnitGetDimensionality(units[i]);
                 if (dim) {
-                    OCStringRef dimSymbol = SIDimensionalityGetSymbol(dim);
+                    OCStringRef dimSymbol = SIDimensionalityCopySymbol(dim);
                     if (dimSymbol) {
                         printf("  Dimensionality: '%s'\n", OCStringGetCString(dimSymbol));
+                        OCRelease(dimSymbol);
                     }
                 }
                 

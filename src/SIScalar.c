@@ -1923,15 +1923,17 @@ bool SIScalarValidateProposedStringValue(SIScalarRef theScalar, OCStringRef prop
     if (proposedValue == NULL) {
         if (error) {
             SIDimensionalityRef dimensionality = SIQuantityGetUnitDimensionality((SIQuantityRef)theScalar);
-            OCStringRef dimensionalitySymbol = SIDimensionalityGetSymbol(dimensionality);
+            OCStringRef dimensionalitySymbol = SIDimensionalityCopySymbol(dimensionality);
             *error = OCStringCreateWithFormat(STR("Unrecognized input. Value must have dimensionality: %@"), dimensionalitySymbol);
+            OCRelease(dimensionalitySymbol);
         }
         return false;
     } else if (!SIQuantityHasSameReducedDimensionality((SIQuantityRef)proposedValue, (SIQuantityRef)theScalar)) {
         if (error) {
             SIDimensionalityRef dimensionality = SIQuantityGetUnitDimensionality((SIQuantityRef)theScalar);
-            OCStringRef dimensionalitySymbol = SIDimensionalityGetSymbol(dimensionality);
+            OCStringRef dimensionalitySymbol = SIDimensionalityCopySymbol(dimensionality);
             *error = OCStringCreateWithFormat(STR("Unrecognized input. Value must have dimensionality: %@"), dimensionalitySymbol);
+            OCRelease(dimensionalitySymbol);
         }
         OCRelease(proposedValue);
         return false;

@@ -71,7 +71,7 @@ SIDimensionalityRef SIDimensionalityFromExpression(OCStringRef expression, OCStr
 OCTypeID SIDimensionalityGetTypeID(void);
 
 /** @brief Gets the canonical symbol representation of a dimensionality. */
-OCStringRef SIDimensionalityGetSymbol(SIDimensionalityRef theDim);
+OCStringRef SIDimensionalityCopySymbol(SIDimensionalityRef theDim);
 
 /** @brief Gets the numerator of the rational exponent for a base dimension. */
 uint8_t SIDimensionalityGetNumExpAtIndex(SIDimensionalityRef theDim, SIBaseDimensionIndex index);

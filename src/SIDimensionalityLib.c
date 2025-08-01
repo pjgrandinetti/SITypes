@@ -381,13 +381,14 @@ OCArrayRef SIDimensionalityCreateArrayOfQuantityNamesWithSameReducedDimensionali
             OCArrayAppendArray(result, quantityNames, OCRangeMake(0, OCArrayGetCount(quantityNames)));
             OCRelease(quantityNames);
         } else {
-            OCStringRef symbol = SIDimensionalityGetSymbol(equivDim);
+            OCStringRef symbol = SIDimensionalityCopySymbol(equivDim);
             if (symbol) {
                 OCMutableStringRef fallback = OCStringCreateMutable(0);
                 OCStringAppendCString(fallback, "Dimensionality: ");
                 OCStringAppend(fallback, symbol);
                 OCArrayAppendValue(result, fallback);
                 OCRelease(fallback);
+                OCRelease(symbol);
             }
         }
     }

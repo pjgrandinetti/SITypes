@@ -136,9 +136,6 @@ SIUnitRef SIUnitDimensionlessAndUnderived(void);
 // Accessor functions
 /** @brief Gets the physical dimensionality for a unit. */
 SIDimensionalityRef SIUnitGetDimensionality(SIUnitRef theUnit);
-OCStringRef SIUnitGetSymbol(SIUnitRef theUnit);
-OCStringRef SIUnitGetName(SIUnitRef theUnit);
-OCStringRef SIUnitGetPluralName(SIUnitRef theUnit);
 double SIUnitGetScaleToCoherentSI(SIUnitRef theUnit);
 double SIUnitScaleToCoherentSIUnit(SIUnitRef theUnit);
 OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
@@ -146,6 +143,21 @@ OCStringRef SIUnitCopyName(SIUnitRef theUnit);
 OCStringRef SIUnitCopyPluralName(SIUnitRef theUnit);
 cJSON *SIUnitCreateJSON(SIUnitRef unit);
 bool SIUnitEqual(SIUnitRef theUnit1, SIUnitRef theUnit2);
+// Boolean property getters
+bool SIUnitIsSIUnit(SIUnitRef theUnit);
+bool SIUnitIsCGSUnit(SIUnitRef theUnit);
+bool SIUnitIsImperialUnit(SIUnitRef theUnit);
+bool SIUnitIsAtomicUnit(SIUnitRef theUnit);
+bool SIUnitIsPlanckUnit(SIUnitRef theUnit);
+bool SIUnitIsConstant(SIUnitRef theUnit);
+
+// Boolean property setters (for internal use)
+void SIUnitSetIsSIUnit(SIUnitRef theUnit, bool value);
+void SIUnitSetIsCGSUnit(SIUnitRef theUnit, bool value);
+void SIUnitSetIsImperialUnit(SIUnitRef theUnit, bool value);
+void SIUnitSetIsAtomicUnit(SIUnitRef theUnit, bool value);
+void SIUnitSetIsPlanckUnit(SIUnitRef theUnit, bool value);
+void SIUnitSetIsConstant(SIUnitRef theUnit, bool value);
 bool SIUnitAreEquivalentUnits(SIUnitRef theUnit1, SIUnitRef theUnit2);
 bool SIUnitIsCoherentUnit(SIUnitRef theUnit);
 bool SIUnitIsDimensionless(SIUnitRef theUnit);
@@ -168,7 +180,7 @@ SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit);
 // Unit reduction operations
 SIUnitRef SIUnitByReducing(SIUnitRef theUnit, double *unit_multiplier);
 // Utility functions
-OCStringRef SIUnitGuessQuantityName(SIUnitRef theUnit);
+OCStringRef SIUnitCreateQuantityNameGuess(SIUnitRef theUnit);
 // Power operations
 SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input,
                                                 int power,

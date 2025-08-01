@@ -19,7 +19,7 @@ bool test_dimensionality_0(void) {
     }
     if (err) { OCRelease(err); err = NULL; }
 
-    OCStringRef symbol1 = SIDimensionalityGetSymbol(dimensionality1);
+    OCStringRef dimSym1 = SIDimensionalityCopySymbol(dimensionality1);
     SIDimensionalityRef dimensionality2 = SIDimensionalityWithBaseDimensionSymbol(STR("L"), &err);
     if (!dimensionality2) {
         if (err) {
@@ -30,18 +30,15 @@ bool test_dimensionality_0(void) {
     }
     if (err) { OCRelease(err); err = NULL; }
 
-    assert(OCStringCompare(symbol1, STR("L"), 0) == kOCCompareEqualTo);
-    assert(
-        OCStringCompare(
-            SIDimensionalityGetSymbol(dimensionality1),
-            SIDimensionalityGetSymbol(dimensionality2),
-            0
-        ) == kOCCompareEqualTo
-    );
+    assert(OCStringCompare(dimSym1, STR("L"), 0) == kOCCompareEqualTo);
+    OCStringRef dimSym2 = SIDimensionalityCopySymbol(dimensionality2);
+    assert(OCStringCompare(dimSym1,dimSym2,0) == kOCCompareEqualTo);
     assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSILengthIndex) == 1);
     assert(SIDimensionalityGetNumExpAtIndex(dimensionality1, kSIMassIndex) == 0);
 
     printf("%s passed\n", __func__);
+    OCRelease(dimSym1);
+    OCRelease(dimSym2);
     OCRelease(dimensionality1);
     OCRelease(dimensionality2);
     return true;
@@ -207,10 +204,11 @@ bool test_dimensionality_show(void) {
     if (err) { OCRelease(err); err = NULL; }
 
     // Compare symbol to expected representation
-    OCStringRef sym = SIDimensionalityGetSymbol(force);
+    OCStringRef sym = SIDimensionalityCopySymbol(force);
     if (!sym || OCStringCompare(sym, STR("L•M/T^2"), 0) != kOCCompareEqualTo) {
         success = false;
     }
+    OCRelease(sym);
 
     OCRelease(force);
 
@@ -233,10 +231,11 @@ bool test_dimensionality_symbol_acceleration(void) {
     }
     if (err) { OCRelease(err); err = NULL; }
 
-    OCStringRef symAccel = SIDimensionalityGetSymbol(accel);
+    OCStringRef symAccel = SIDimensionalityCopySymbol(accel);
     if (!symAccel || OCStringCompare(symAccel, STR("L/T^2"), 0) != kOCCompareEqualTo) {
         success = false;
     }
+    OCRelease(symAccel);
 
     OCRelease(accel);
     if (success) printf("%s passed\n", __func__);
@@ -268,10 +267,11 @@ bool test_dimensionality_divide_mass(void) {
     }
 
     SIDimensionalityRef mass = SIDimensionalityByDividing(force, accel);
-    OCStringRef symMass = SIDimensionalityGetSymbol(mass);
+    OCStringRef symMass = SIDimensionalityCopySymbol(mass);
     if (!symMass || OCStringCompare(symMass, STR("M"), 0) != kOCCompareEqualTo) {
         success = false;
     }
+    OCRelease(symMass);
 
     OCRelease(force);
     OCRelease(accel);
@@ -317,10 +317,11 @@ bool test_dimensionality_multiply_work(void) {
         return false;
     }
 
-    OCStringRef symWork = SIDimensionalityGetSymbol(work);
+    OCStringRef symWork = SIDimensionalityCopySymbol(work);
     if (!symWork || OCStringCompare(symWork, STR("L^2•M/T^2"), 0) != kOCCompareEqualTo) {
         success = false;
     }
+    OCRelease(symWork);
 
     OCRelease(force);
     OCRelease(dist);
@@ -355,10 +356,11 @@ bool test_dimensionality_power_area(void) {
         return false;
     }
 
-    OCStringRef symArea = SIDimensionalityGetSymbol(area);
+    OCStringRef symArea = SIDimensionalityCopySymbol(area);
     if (!symArea || OCStringCompare(symArea, STR("L^2"), 0) != kOCCompareEqualTo) {
         success = false;
     }
+    OCRelease(symArea);
 
     OCRelease(dist);
     OCRelease(area);
@@ -383,8 +385,9 @@ bool test_dimensionality_reduction_behavior(void) {
     OCRelease(err); err = NULL;
 
     SIDimensionalityRef angle = SIDimensionalityByDividing(dist, dist);
-    OCStringRef symAngle = SIDimensionalityGetSymbol(angle);
+    OCStringRef symAngle = SIDimensionalityCopySymbol(angle);
     if (!symAngle || OCStringCompare(symAngle, STR("1"), 0) != kOCCompareEqualTo) success = false;
+    OCRelease(symAngle);
 
     SIDimensionalityRef area = SIDimensionalityByRaisingToPower(dist, 2, &err);
     if (!area || err) {
@@ -399,16 +402,19 @@ bool test_dimensionality_reduction_behavior(void) {
     OCRelease(err); err = NULL;
 
     SIDimensionalityRef solidAngle = SIDimensionalityByDividing(area, area);
-    OCStringRef symSolid = SIDimensionalityGetSymbol(solidAngle);
+    OCStringRef symSolid = SIDimensionalityCopySymbol(solidAngle);
     if (!symSolid || OCStringCompare(symSolid, STR("1"), 0) != kOCCompareEqualTo) success = false;
+    OCRelease(symSolid);
 
     SIDimensionalityRef angleDerived = SIDimensionalityByDividingWithoutReducing(dist, dist);
-    OCStringRef symAD = SIDimensionalityGetSymbol(angleDerived);
+    OCStringRef symAD = SIDimensionalityCopySymbol(angleDerived);
     if (!symAD || OCStringCompare(symAD, STR("L/L"), 0) != kOCCompareEqualTo) success = false;
+    OCRelease(symAD);
 
     SIDimensionalityRef solidDerived = SIDimensionalityByDividingWithoutReducing(area, area);
-    OCStringRef symSD = SIDimensionalityGetSymbol(solidDerived);
+    OCStringRef symSD = SIDimensionalityCopySymbol(solidDerived);
     if (!symSD || OCStringCompare(symSD, STR("L^2/L^2"), 0) != kOCCompareEqualTo) success = false;
+    OCRelease(symSD);
 
     if (!SIDimensionalityEqual(angle, solidAngle)) success = false;
     if (SIDimensionalityEqual(angleDerived, solidDerived)) success = false;
@@ -520,12 +526,13 @@ bool test_dimensionality_parser_strictness(void) {
         
         if (result != NULL) {
             // Parser incorrectly accepted the expression - this is a failure
-            OCStringRef symbol = SIDimensionalityGetSymbol(result);
+            OCStringRef symbol = SIDimensionalityCopySymbol(result);
             const char* symbol_str = symbol ? OCStringGetCString(symbol) : "NULL";
             printf("  ✗ Expression '%s' was incorrectly accepted -> '%s'\n", 
                    expr, symbol_str);
             printf("    This violates dimensional analysis principles!\n");
             OCRelease(result);
+            OCRelease(symbol);
             success = false;
         } else if (err != NULL) {
             // Parser correctly rejected the expression - expected behavior, no output needed
