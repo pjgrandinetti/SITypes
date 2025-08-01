@@ -62,7 +62,7 @@ def emit(groups):
             print(f"{indent}OCDictionaryAddValue(dimQuantitiesLibrary, {macro_for(q)}, dim);")
         print()
     print("}")
-    
+
 def main():
     if len(sys.argv) != 2:
         print(f"Usage: {sys.argv[0]} SIDimensionality.csv", file=sys.stderr)

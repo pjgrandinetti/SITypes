@@ -86,7 +86,8 @@ else
 endif
 
 .PHONY: all dirs prepare test test-debug test-asan \
-        test-werror install clean clean-objects clean-docs synclib docs doxygen html xcode xcode-open xcode-run octypes help
+        test-werror install clean clean-objects clean-docs synclib docs doxygen html xcode xcode-open xcode-run octypes help \
+        format format-check lint pre-commit-install
 
 help:
 	@echo "SITypes Makefile - Available targets:"
@@ -115,6 +116,12 @@ help:
 	@echo "  docs           Build complete documentation (Doxygen + Sphinx)"
 	@echo "  doxygen        Generate Doxygen XML documentation"
 	@echo "  html           Build Sphinx HTML documentation"
+	@echo ""
+	@echo "Code Quality:"
+	@echo "  format         Format all source code with clang-format"
+	@echo "  format-check   Check if code formatting is correct"
+	@echo "  lint           Run static analysis with clang-tidy and cppcheck"
+	@echo "  pre-commit-install  Install pre-commit hooks"
 	@echo ""
 	@echo "Cleaning:"
 	@echo "  clean          Remove all build artifacts"
@@ -303,5 +310,54 @@ xcode-run: xcode
 	           -scheme SITypes \
 	           -destination 'platform=macOS' \
 	           build | xcpretty || true
+
+##────────────────────────────────────────────────────────────────────────────
+## Code Quality Targets
+##────────────────────────────────────────────────────────────────────────────
+
+# Source files for formatting and linting (exclude generated files)
+FORMAT_SRC := $(shell find src tests -name "*.c" -o -name "*.h" | grep -v -E "(\.tab\.(c|h)|Scanner\.c)$$")
+
+# Format all source code with clang-format
+format:
+	@echo "Formatting source code with clang-format..."
+	@clang-format -i $(FORMAT_SRC)
+	@echo "✅ Code formatting complete"
+
+# Check if code formatting is correct
+format-check:
+	@echo "Checking code formatting..."
+	@if clang-format --dry-run --Werror $(FORMAT_SRC) > /dev/null 2>&1; then \
+		echo "✅ Code formatting is correct"; \
+	else \
+		echo "❌ Code formatting issues found. Run 'make format' to fix."; \
+		clang-format --dry-run --Werror $(FORMAT_SRC); \
+		exit 1; \
+	fi
+
+# Run static analysis
+lint:
+	@echo "Running static analysis..."
+	@echo "Running clang-tidy..."
+	@clang-tidy $(filter-out $(wildcard tests/*),$(FORMAT_SRC)) \
+		--checks=-*,readability-*,bugprone-*,clang-analyzer-*,performance-* \
+		--header-filter=src/.*\.h \
+		-- $(CPPFLAGS) $(CFLAGS) || true
+	@echo "Running cppcheck..."
+	@cppcheck --error-exitcode=0 --enable=warning,style,performance,portability \
+		--suppress=missingIncludeSystem --suppress=unusedFunction \
+		--suppress=unmatchedSuppression --inline-suppr \
+		$(filter-out $(wildcard tests/*),$(FORMAT_SRC)) || true
+	@echo "✅ Static analysis complete"
+
+# Install pre-commit hooks
+pre-commit-install:
+	@echo "Installing pre-commit hooks..."
+	@if ! command -v pre-commit >/dev/null 2>&1; then \
+		echo "Installing pre-commit..."; \
+		pip install pre-commit; \
+	fi
+	@pre-commit install
+	@echo "✅ Pre-commit hooks installed"
 
 ##────────────────────────────────────────────────────────────────────────────
