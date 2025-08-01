@@ -150,14 +150,6 @@ bool SIUnitIsImperialUnit(SIUnitRef theUnit);
 bool SIUnitIsAtomicUnit(SIUnitRef theUnit);
 bool SIUnitIsPlanckUnit(SIUnitRef theUnit);
 bool SIUnitIsConstant(SIUnitRef theUnit);
-
-// Boolean property setters (for internal use)
-void SIUnitSetIsSIUnit(SIUnitRef theUnit, bool value);
-void SIUnitSetIsCGSUnit(SIUnitRef theUnit, bool value);
-void SIUnitSetIsImperialUnit(SIUnitRef theUnit, bool value);
-void SIUnitSetIsAtomicUnit(SIUnitRef theUnit, bool value);
-void SIUnitSetIsPlanckUnit(SIUnitRef theUnit, bool value);
-void SIUnitSetIsConstant(SIUnitRef theUnit, bool value);
 bool SIUnitAreEquivalentUnits(SIUnitRef theUnit1, SIUnitRef theUnit2);
 bool SIUnitIsCoherentUnit(SIUnitRef theUnit);
 bool SIUnitIsDimensionless(SIUnitRef theUnit);
@@ -214,19 +206,16 @@ SIUnitRef SIUnitByTakingNthRoot(SIUnitRef theUnit,
                                 double *unit_multiplier,
                                 OCStringRef *error);
 SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, OCStringRef *error);
-
 /*!
  * @brief Temporary normalization function for existing parser compatibility.
  * TODO: Implement proper Unicode normalization
  */
 OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool flag);
-
 /*!
  * @brief Temporary function for expression equivalence checking.
  * TODO: Implement proper expression equivalence checking
  */
 bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2);
-
 /*!
  * @brief Creates a cleaned and normalized unit expression by grouping and sorting terms.
  *
@@ -246,11 +235,10 @@ bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2);
  *
  * Examples:
  * - "m*kg*m" → "kg•m^2"
- * - "kg*m/s/s" → "kg•m/s^2"  
+ * - "kg*m/s/s" → "kg•m/s^2"
  * - "m/kg*s" → "m•s/kg"
  */
 OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression);
-
 /*!
  * @brief Creates a cleaned, normalized, and algebraically reduced unit expression.
  *
@@ -269,7 +257,6 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression);
  * - "kg*m*s^2/kg/m" → "s^2"
  */
 OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression);
-
+int SIUnitCountTokenSymbols(OCStringRef cleanedExpression);
 OCMutableDictionaryRef SIUnitGetUnitsLib(void);
-
 #endif  // SIUnit_H

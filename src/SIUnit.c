@@ -119,19 +119,19 @@ struct impl_SIUnit {
     SIDimensionalityRef dimensionality;  // required: dimensionality of the unit
     double scale_to_coherent_si;         // required: Scale factor to convert from this unit to its coherent SI unit
     OCStringRef symbol;                  // required: Symbol of the unit, e.g., "m", "kg", "s", etc.
+    OCStringRef key;                     // string key for the unit, used in dictionaries
     OCStringRef name;                    // optional: name of the unit, e.g., "meter", "gram", "second", etc.
     OCStringRef plural_name;             // optional: Plural name of the unit, e.g., "meters", "grams", "seconds", etc.
- 
     // Boolean flags packed into a single byte
     struct {
-        unsigned int isSIUnit : 1;       // Unit belongs to the SI system
-        unsigned int isCGSUnit : 1;      // Unit belongs to the CGS system
-        unsigned int isImperialUnit : 1; // Unit belongs to the Imperial/British system
-        unsigned int isAtomicUnit : 1;   // Unit belongs to the Atomic units system
-        unsigned int isPlanckUnit : 1;   // Unit belongs to the Planck units system
-        unsigned int reserved6 : 1;      // Reserved for future use
-        unsigned int reserved7 : 1;      // Reserved for future use
-        unsigned int isConstant : 1;     // Unit represents a physical constant
+        unsigned int isSIUnit : 1;        // Unit belongs to the SI system
+        unsigned int isCGSUnit : 1;       // Unit belongs to the CGS system
+        unsigned int isImperialUnit : 1;  // Unit belongs to the Imperial/British system
+        unsigned int isAtomicUnit : 1;    // Unit belongs to the Atomic units system
+        unsigned int isPlanckUnit : 1;    // Unit belongs to the Planck units system
+        unsigned int reserved6 : 1;       // Reserved for future use
+        unsigned int reserved7 : 1;       // Reserved for future use
+        unsigned int isConstant : 1;      // Unit represents a physical constant
     } flags;
 };
 static struct impl_SIUnit *SIUnitAllocate();
@@ -252,7 +252,7 @@ static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
         theUnit->symbol = OCStringCreateCopy(symbol);
     else
         theUnit->symbol = NULL;
-
+    theUnit->key = SIUnitCreateCleanedExpression(symbol);
     // Initialize all flags to false/0
     memset(&theUnit->flags, 0, sizeof(theUnit->flags));
     return (SIUnitRef)theUnit;
@@ -283,58 +283,51 @@ bool SIUnitIsSIUnit(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, false);
     return theUnit->flags.isSIUnit;
 }
-
 bool SIUnitIsCGSUnit(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, false);
     return theUnit->flags.isCGSUnit;
 }
-
 bool SIUnitIsImperialUnit(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, false);
     return theUnit->flags.isImperialUnit;
 }
-
 bool SIUnitIsAtomicUnit(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, false);
     return theUnit->flags.isAtomicUnit;
 }
-
 bool SIUnitIsPlanckUnit(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, false);
     return theUnit->flags.isPlanckUnit;
 }
-
 bool SIUnitIsConstant(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, false);
     return theUnit->flags.isConstant;
 }
-
+static void SIUnitSetKey(SIUnitRef theUnit, OCStringRef key) {
+    IF_NO_OBJECT_EXISTS_RETURN(theUnit, );
+    ((struct impl_SIUnit *)theUnit)->key = OCStringCreateCopy(key);
+}
 // Boolean property setters (for internal use)
 void SIUnitSetIsSIUnit(SIUnitRef theUnit, bool value) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, );
     ((struct impl_SIUnit *)theUnit)->flags.isSIUnit = value ? 1 : 0;
 }
-
 void SIUnitSetIsCGSUnit(SIUnitRef theUnit, bool value) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, );
     ((struct impl_SIUnit *)theUnit)->flags.isCGSUnit = value ? 1 : 0;
 }
-
 void SIUnitSetIsImperialUnit(SIUnitRef theUnit, bool value) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, );
     ((struct impl_SIUnit *)theUnit)->flags.isImperialUnit = value ? 1 : 0;
 }
-
 void SIUnitSetIsAtomicUnit(SIUnitRef theUnit, bool value) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, );
     ((struct impl_SIUnit *)theUnit)->flags.isAtomicUnit = value ? 1 : 0;
 }
-
 void SIUnitSetIsPlanckUnit(SIUnitRef theUnit, bool value) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, );
     ((struct impl_SIUnit *)theUnit)->flags.isPlanckUnit = value ? 1 : 0;
 }
-
 void SIUnitSetIsConstant(SIUnitRef theUnit, bool value) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, );
     ((struct impl_SIUnit *)theUnit)->flags.isConstant = value ? 1 : 0;
@@ -438,10 +431,8 @@ static OCMutableArrayRef SIUnitCopyNamesLib(void) {
 // Helper function to check if a symbol is underived (contains no operators)
 static bool SIUnitSymbolIsUnderived(OCStringRef symbol) {
     if (!symbol) return false;
-    
     const char *cstr = OCStringGetCString(symbol);
     if (!cstr) return false;
-    
     // Check for mathematical operators that indicate derived units
     for (const char *p = cstr; *p; p++) {
         if (*p == '^' || *p == '*' || *p == '/' || *p == '(' || *p == ')') {
@@ -450,7 +441,6 @@ static bool SIUnitSymbolIsUnderived(OCStringRef symbol) {
     }
     return true;
 }
-
 OCMutableArrayRef SIUnitGetTokenSymbolsLib(void) {
     if (NULL == underivedSymbolsLibrary) SIUnitCreateLibraries();
     return underivedSymbolsLibrary;
@@ -478,7 +468,6 @@ static SIUnitRef AddToLib(
         return NULL;
     }
     OCMutableDictionaryRef unitsLib = SIUnitGetUnitsLib();
-    
     // Collect underived symbols for validation purposes BEFORE checking for existing units
     // This ensures we collect all symbols, including base units that might already exist
     if (SIUnitSymbolIsUnderived(symbol)) {
@@ -487,8 +476,7 @@ static SIUnitRef AddToLib(
             // This should not happen if SIUnitCreateLibraries was called, but be safe
             return NULL;
         }
-        
-        // Check if symbol is already in the underived symbols library
+        // Check if key is already in the underived symbols library
         bool contains = OCArrayContainsValue(underivedSymbolsLibrary, symbol);
         if (!contains) {
             OCStringRef symbol_copy = OCStringCreateCopy(symbol);
@@ -496,26 +484,25 @@ static SIUnitRef AddToLib(
             OCRelease(symbol_copy);
         }
     }
-    
     // Add unit to units library dictionary
-    if (OCDictionaryContainsKey(unitsLib, theUnit->symbol)) {
+    if (OCDictionaryContainsKey(unitsLib, theUnit->key)) {
         // Get the existing unit before releasing the newly created one
-        SIUnitRef existingUnit = OCDictionaryGetValue(unitsLib, theUnit->symbol);
+        SIUnitRef existingUnit = OCDictionaryGetValue(unitsLib, theUnit->key);
         OCRelease(theUnit);
-        
         // IMPORTANT: Also collect the symbol even if the unit already exists
         // This ensures base units that were added early are still collected
-        if (SIUnitSymbolIsUnderived(symbol)) {
-            OCMutableArrayRef underivedLib = underivedSymbolsLibrary; // Use direct access since we're inside the library
+        if (SIUnitSymbolIsUnderived(theUnit->symbol)) {
+            OCMutableArrayRef underivedLib = underivedSymbolsLibrary;  // Use direct access since we're inside the library
             if (underivedLib && !OCArrayContainsValue(underivedLib, symbol)) {
-                OCArrayAppendValue(underivedLib, symbol);
+                OCStringRef existingSymbol = OCStringCreateCopy(theUnit->symbol);
+                OCArrayAppendValue(underivedLib, existingSymbol);
+                OCRelease(existingSymbol);
             }
         }
-        
         return existingUnit;
     }
     OCTypeSetStaticInstance(theUnit, true);
-    OCDictionaryAddValue(unitsLib, theUnit->symbol, theUnit);
+    OCDictionaryAddValue(unitsLib, theUnit->key, theUnit);
     // Append unit to mutable array value associated with quantity key inside quanity library dictionary
     {
         OCMutableDictionaryRef unitsQuantitiesLib = SIUnitGetQuantitiesLib();
@@ -544,7 +531,6 @@ static SIUnitRef AddToLib(
         }
         OCRelease(dimensionalitySymbol);
     }
-    
     return theUnit;
 }
 static SIUnitRef AddSIToLib(
@@ -554,9 +540,9 @@ static SIUnitRef AddSIToLib(
     OCStringRef symbol,
     double scale_to_coherent_si,
     OCStringRef *error) {
-        SIUnitRef unit = AddToLib(quantity,name,plural_name,symbol,scale_to_coherent_si,error);
-        SIUnitSetIsSIUnit(unit, true);
-        return unit;
+    SIUnitRef unit = AddToLib(quantity, name, plural_name, symbol, scale_to_coherent_si, error);
+    SIUnitSetIsSIUnit(unit, true);
+    return unit;
 }
 static SIUnitRef AddCGSToLib(
     OCStringRef quantity,
@@ -565,9 +551,9 @@ static SIUnitRef AddCGSToLib(
     OCStringRef symbol,
     double scale_to_coherent_si,
     OCStringRef *error) {
-        SIUnitRef unit = AddToLib(quantity,name,plural_name,symbol,scale_to_coherent_si,error);
-        SIUnitSetIsCGSUnit(unit, true);
-        return unit;
+    SIUnitRef unit = AddToLib(quantity, name, plural_name, symbol, scale_to_coherent_si, error);
+    SIUnitSetIsCGSUnit(unit, true);
+    return unit;
 }
 static SIUnitRef AddAtomicUnitToLib(
     OCStringRef quantity,
@@ -576,9 +562,9 @@ static SIUnitRef AddAtomicUnitToLib(
     OCStringRef symbol,
     double scale_to_coherent_si,
     OCStringRef *error) {
-        SIUnitRef unit = AddToLib(quantity,name,plural_name,symbol,scale_to_coherent_si,error);
-        SIUnitSetIsAtomicUnit(unit, true);
-        return unit;
+    SIUnitRef unit = AddToLib(quantity, name, plural_name, symbol, scale_to_coherent_si, error);
+    SIUnitSetIsAtomicUnit(unit, true);
+    return unit;
 }
 static SIUnitRef AddConstantToLib(
     OCStringRef quantity,
@@ -587,9 +573,9 @@ static SIUnitRef AddConstantToLib(
     OCStringRef symbol,
     double scale_to_coherent_si,
     OCStringRef *error) {
-        SIUnitRef unit = AddToLib(quantity,name,plural_name,symbol,scale_to_coherent_si,error);
-        SIUnitSetIsConstant(unit, true);
-        return unit;
+    SIUnitRef unit = AddToLib(quantity, name, plural_name, symbol, scale_to_coherent_si, error);
+    SIUnitSetIsConstant(unit, true);
+    return unit;
 }
 static SIUnitRef AddPlanckUnitToLib(
     OCStringRef quantity,
@@ -598,9 +584,9 @@ static SIUnitRef AddPlanckUnitToLib(
     OCStringRef symbol,
     double scale_to_coherent_si,
     OCStringRef *error) {
-        SIUnitRef unit = AddToLib(quantity,name,plural_name,symbol,scale_to_coherent_si,error);
-        SIUnitSetIsPlanckUnit(unit, true);
-        return unit;
+    SIUnitRef unit = AddToLib(quantity, name, plural_name, symbol, scale_to_coherent_si, error);
+    SIUnitSetIsPlanckUnit(unit, true);
+    return unit;
 }
 #define SIPREFIX_DEFINITIONS             \
     X(kSIPrefixYotta, 24, "Y", "yotta")  \
@@ -735,16 +721,13 @@ static bool AddToLibPrefixedWithUnitSystem(
         OCStringRef finalPrefixedName = OCStringCreateCopy(prefixedName);
         OCStringRef finalPrefixedPluralName = OCStringCreateCopy(prefixedPluralName);
         OCStringRef finalPrefixedSymbol = OCStringCreateCopy(prefixedSymbol);
-        
         SIUnitRef theUnit = AddToLib(quantity, finalPrefixedName, finalPrefixedPluralName, finalPrefixedSymbol, scale_to_coherent_si * prefixValueForSIPrefix(prefix), error);
         // Set the unit system flag
         if (unitSystemSetter) unitSystemSetter(theUnit, true);
-
         // Release the immutable copies
         OCRelease(finalPrefixedName);
         OCRelease(finalPrefixedPluralName);
         OCRelease(finalPrefixedSymbol);
-        
         if (!theUnit) {
             OCRelease(prefixedName);
             OCRelease(prefixedPluralName);
@@ -761,9 +744,8 @@ static bool AddToLibPrefixed(
     OCStringRef symbol,
     double scale_to_coherent_si,
     OCStringRef *error) {
-    
-    return AddToLibPrefixedWithUnitSystem(quantity, name, plural_name, symbol, 
-                                         scale_to_coherent_si, NULL, error);
+    return AddToLibPrefixedWithUnitSystem(quantity, name, plural_name, symbol,
+                                          scale_to_coherent_si, NULL, error);
 }
 static bool AddSIToLibPrefixed(
     OCStringRef quantity,
@@ -772,11 +754,9 @@ static bool AddSIToLibPrefixed(
     OCStringRef symbol,
     double scale_to_coherent_si,
     OCStringRef *error) {
-    
-    return AddToLibPrefixedWithUnitSystem(quantity, name, plural_name, symbol, 
-                                         scale_to_coherent_si, SIUnitSetIsSIUnit, error);
+    return AddToLibPrefixedWithUnitSystem(quantity, name, plural_name, symbol,
+                                          scale_to_coherent_si, SIUnitSetIsSIUnit, error);
 }
-
 static bool AddCGSToLibPrefixed(
     OCStringRef quantity,
     OCStringRef name,
@@ -784,9 +764,8 @@ static bool AddCGSToLibPrefixed(
     OCStringRef symbol,
     double scale_to_coherent_si,
     OCStringRef *error) {
-    
-    return AddToLibPrefixedWithUnitSystem(quantity, name, plural_name, symbol, 
-                                         scale_to_coherent_si, SIUnitSetIsCGSUnit, error);
+    return AddToLibPrefixedWithUnitSystem(quantity, name, plural_name, symbol,
+                                          scale_to_coherent_si, SIUnitSetIsCGSUnit, error);
 }
 static OCComparisonResult unitNameLengthSort(const void *val1, const void *val2, void *context) {
     SIUnitRef unit1 = (SIUnitRef)val1;
@@ -853,7 +832,7 @@ void SIUnitLibrariesShutdown(void) {
         OCRelease(unitsNamesLibrary);
         unitsNamesLibrary = NULL;
     }
-    if(underivedSymbolsLibrary) {
+    if (underivedSymbolsLibrary) {
         OCRelease(underivedSymbolsLibrary);
         underivedSymbolsLibrary = NULL;
     }
@@ -1153,7 +1132,7 @@ static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
     return tempUnit;
 }
 SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef dimensionality) {
-    OCMutableStringRef symbol = (OCMutableStringRef) SIDimensionalityCopySymbol(dimensionality);
+    OCMutableStringRef symbol = (OCMutableStringRef)SIDimensionalityCopySymbol(dimensionality);
     // Create Coherent Unit symbol by simply replacing base dimensionality symbols with base SI symbols
     OCStringFindAndReplace2(symbol, STR("L"), STR("m"));
     OCStringFindAndReplace2(symbol, STR("M"), STR("kg"));
@@ -1286,21 +1265,16 @@ SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit) {
 // Helper function to check if a scale is approximately a power of 10 (SI unit)
 static bool is_si_scale(double scale) {
     if (scale <= 0.0) return false;
-    
     // Check for common SI prefixes by looking at powers of 1000
     double log_val = log10(scale);
     double rounded = round(log_val / 3.0) * 3.0;  // Round to nearest multiple of 3
-    
     // Check if it's close to a multiple of 3 (1000-based prefixes)
     if (fabs(log_val - rounded) < 0.01) return true;
-    
     // Also check for simple powers of 10
     double simple_rounded = round(log_val);
     if (fabs(log_val - simple_rounded) < 0.01) return true;
-    
     return false;
 }
-
 //
 // Common helper function for finding best matching unit with SI preference
 static SIUnitRef SIUnitFindBestMatchingUnit(SIDimensionalityRef dimensionality, double target_scale) {
@@ -1309,38 +1283,43 @@ static SIUnitRef SIUnitFindBestMatchingUnit(SIDimensionalityRef dimensionality, 
         if (candidates) OCRelease(candidates);
         return NULL;
     }
-    
     SIUnitRef best_match = NULL;
-    SIUnitRef best_si_match = NULL;
+    int best_token_count = INT_MAX;
     double best_scale_diff = 1e100;
-    double best_si_scale_diff = 1e100;
-    
+    bool best_is_si = false;
     for (OCIndex i = 0; i < OCArrayGetCount(candidates); i++) {
         SIUnitRef candidate = (SIUnitRef)OCArrayGetValueAtIndex(candidates, i);
-        if (!candidate) continue;
-        
-        double scale = candidate->scale_to_coherent_si;
-        double scale_diff = fabs(scale - target_scale);
-        
-        // Track the best overall match
-        if (scale_diff < best_scale_diff) {
+        int symbol_token_count = SIUnitCountTokenSymbols(candidate->symbol);
+        double scale_diff = fabs(candidate->scale_to_coherent_si - target_scale);
+        bool is_si = SIUnitIsSIUnit(candidate);
+        // Determine if this candidate is better than the current best
+        bool is_better = false;
+        if (best_match == NULL) {
+            // First candidate is automatically the best so far
+            is_better = true;
+        } else {
+            // Priority 1: Prefer fewer token symbols (simpler units)
+            if (symbol_token_count < best_token_count) {
+                is_better = true;
+            } else if (symbol_token_count == best_token_count) {
+                // Priority 2: Among units with same token count, prefer SI units
+                if (is_si && !best_is_si) {
+                    is_better = true;
+                } else if (is_si == best_is_si) {
+                    // Priority 3: Among units with same token count and SI status, prefer smaller scale difference
+                    if (scale_diff < best_scale_diff) {
+                        is_better = true;
+                    }
+                }
+            }
+        }
+        if (is_better) {
             best_match = candidate;
+            best_token_count = symbol_token_count;
             best_scale_diff = scale_diff;
-        }
-        
-        // Track the best SI unit match
-        if (is_si_scale(scale) && scale_diff < best_si_scale_diff) {
-            best_si_match = candidate;
-            best_si_scale_diff = scale_diff;
+            best_is_si = is_si;
         }
     }
-    
-    // Prefer SI units if the scale difference is reasonable (within 50% tolerance)
-    if (best_si_match && best_si_scale_diff < 1.5 * best_scale_diff) {
-        OCRelease(candidates);
-        return best_si_match;
-    }
-    
     OCRelease(candidates);
     return best_match;
 }
@@ -1648,13 +1627,6 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     }
     // Try library lookup first
     OCStringRef key = SIUnitCreateCleanedExpression(expression);
-    if (!key) {
-        // NULL key indicates fractional power error
-        if (error) {
-            *error = STR("Fractional powers are not allowed in unit expressions");
-        }
-        return NULL;
-    }
     SIUnitRef unit = OCDictionaryGetValue(unitsLibrary, key);
     if (unit) {
         if (unit_multiplier) *unit_multiplier = 1.0;
@@ -1663,30 +1635,30 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     }
     // Parse the expression if not found in library
     double multiplier = 1.0;  // Default multiplier
-    OCStringRef canonical_expr = SIUnitCreateCleanedExpression(expression);
-    if (!canonical_expr) {
-        // NULL canonical_expr indicates fractional power error
+    OCStringRef cleaned_exp = SIUnitCreateCleanedExpression(expression);
+    if (!cleaned_exp) {
         if (error) {
-            *error = STR("Fractional powers are not allowed in unit expressions");
+            *error = OCStringCreateWithFormat(
+                STR("Error in unit expression: %%@ "),
+                expression);
         }
         OCRelease(key);
         return NULL;
     }
-    unit = SIUnitFromExpressionInternal(canonical_expr, &multiplier, error);
+    unit = SIUnitFromExpressionInternal(cleaned_exp, &multiplier, error);
     if (unit && multiplier != 1.0) {
         SIDimensionalityRef dimensionality = SIUnitGetDimensionality(unit);
         OCStringRef dimensionalitySymbol = SIDimensionalityCopySymbol(dimensionality);
-        AddToLib(dimensionalitySymbol, NULL, NULL, key, multiplier, error);
+        unit = AddToLib(dimensionalitySymbol, NULL, NULL, key, multiplier, error);
         OCRelease(dimensionalitySymbol);
-        unit = (SIUnitRef)OCDictionaryGetValue(unitsLibrary, key);
         if (unit_multiplier) *unit_multiplier = 1.0;
         OCRelease(key);
-        OCRelease(canonical_expr);
+        OCRelease(cleaned_exp);
         return unit;
     }
     if (unit_multiplier) *unit_multiplier = multiplier;
     OCRelease(key);
-    OCRelease(canonical_expr);
+    OCRelease(cleaned_exp);
     // error returned from SIUnitFromExpressionInternal
     return unit;
 }

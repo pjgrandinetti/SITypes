@@ -6,9 +6,9 @@
 //  Copyright © 2025 PhySy Ltd. All rights reserved.
 //
 #include "SIUnitExpression.h"
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include "SIUnitExpressionParser.tab.h"
 // External functions from scanner/parser
 extern int siueparse(void);
@@ -136,10 +136,8 @@ SIUnitExpression* siueApplyPowerToExpression(SIUnitExpression* expression, int p
     }
     return expression;
 }
-
 SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* expression, double power) {
     if (!expression) return NULL;
-    
     // Check if applying this fractional power would result in integer powers for all terms
     // First check numerator
     if (expression->numerator) {
@@ -156,7 +154,6 @@ SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* express
             }
         }
     }
-    
     // Check denominator
     if (expression->denominator) {
         OCIndex count = OCArrayGetCount(expression->denominator);
@@ -172,7 +169,6 @@ SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* express
             }
         }
     }
-    
     // All resulting powers would be integers, so apply the fractional power
     // Apply power to numerator
     if (expression->numerator) {
@@ -184,7 +180,6 @@ SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* express
             }
         }
     }
-    
     // Apply power to denominator
     if (expression->denominator) {
         OCIndex count = OCArrayGetCount(expression->denominator);
@@ -195,7 +190,6 @@ SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* express
             }
         }
     }
-    
     return expression;
 }
 #pragma mark - Processing Functions
@@ -533,30 +527,23 @@ OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool
     OCStringFindAndReplace(mutString, STR(" - "), STR("-"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     return mutString;
 }
-
 bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2) {
     if (!expr1 || !expr2) return false;
-    
     // Handle identical strings quickly
     if (OCStringEqual(expr1, expr2)) return true;
-    
     // Get cleaned expressions for both inputs
     OCStringRef cleaned1 = SIUnitCreateCleanedExpression(expr1);
     OCStringRef cleaned2 = SIUnitCreateCleanedExpression(expr2);
-    
     // If either cleaning failed, they can't be equivalent
     if (!cleaned1 || !cleaned2) {
         if (cleaned1) OCRelease(cleaned1);
         if (cleaned2) OCRelease(cleaned2);
         return false;
     }
-    
     // Compare the cleaned expressions
     bool equivalent = OCStringEqual(cleaned1, cleaned2);
-    
     OCRelease(cleaned1);
     OCRelease(cleaned2);
-    
     return equivalent;
 }
 OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
@@ -743,4 +730,89 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
     OCStringRef result = siueConvertDimensionlessOutput(bullets);
     OCRelease(bullets);
     return result;
+}
+int SIUnitCountTokenSymbols(OCStringRef cleanedExpression) {
+    if (!cleanedExpression) return 0;
+    // Handle empty or dimensionless expressions
+    if (OCStringGetLength(cleanedExpression) == 0) return 0;
+    if (OCStringEqual(cleanedExpression, STR(" ")) || OCStringEqual(cleanedExpression, STR("1"))) return 0;
+    // Create a mutable set to track unique symbols
+    OCMutableSetRef uniqueSymbols = OCSetCreateMutable(20);
+    if (!uniqueSymbols) return 0;
+    // Create a working copy to manipulate
+    OCMutableStringRef workingCopy = OCStringCreateMutableCopy(cleanedExpression);
+    if (!workingCopy) {
+        OCRelease(uniqueSymbols);
+        return 0;
+    }
+    // Replace operators with spaces to simplify parsing
+    OCStringFindAndReplace2(workingCopy, STR("•"), STR(" "));
+    OCStringFindAndReplace2(workingCopy, STR("/"), STR(" "));
+    OCStringFindAndReplace2(workingCopy, STR("("), STR(" "));
+    OCStringFindAndReplace2(workingCopy, STR(")"), STR(" "));
+    // Remove power notations (^n)
+    OCRange powerRange;
+    do {
+        powerRange = OCStringFind(workingCopy, STR("^"), 0);
+        if (powerRange.location != kOCNotFound) {
+            // Find the end of the power value
+            OCIndex powerStart = powerRange.location;
+            OCIndex powerEnd = powerStart + 1;  // Start after the '^'
+            // Skip optional minus sign
+            if (powerEnd < OCStringGetLength(workingCopy)) {
+                uint32_t ch = OCStringGetCharacterAtIndex(workingCopy, powerEnd);
+                if (ch == '-') powerEnd++;
+            }
+            // Skip digits
+            while (powerEnd < OCStringGetLength(workingCopy)) {
+                uint32_t ch = OCStringGetCharacterAtIndex(workingCopy, powerEnd);
+                if (ch >= '0' && ch <= '9') {
+                    powerEnd++;
+                } else {
+                    break;
+                }
+            }
+            // Replace the power notation with a space
+            OCStringFindAndReplace(workingCopy,
+                                   OCStringCreateWithSubstring(workingCopy, OCRangeMake(powerStart, powerEnd - powerStart)),
+                                   STR(" "),
+                                   OCRangeMake(0, OCStringGetLength(workingCopy)),
+                                   0);
+        }
+    } while (powerRange.location != kOCNotFound);
+    // Now split by whitespace and collect unique symbols
+    OCIndex length = OCStringGetLength(workingCopy);
+    OCIndex start = 0;
+    for (OCIndex i = 0; i <= length; i++) {
+        bool isSpace = (i == length) || (OCStringGetCharacterAtIndex(workingCopy, i) == ' ') ||
+                       (OCStringGetCharacterAtIndex(workingCopy, i) == '\t') ||
+                       (OCStringGetCharacterAtIndex(workingCopy, i) == '\n');
+        if (isSpace) {
+            if (i > start) {
+                // Extract the symbol
+                OCStringRef symbol = OCStringCreateWithSubstring(workingCopy, OCRangeMake(start, i - start));
+                if (symbol && OCStringGetLength(symbol) > 0) {
+                    // Check if it's not just whitespace
+                    bool hasContent = false;
+                    for (OCIndex j = 0; j < OCStringGetLength(symbol); j++) {
+                        uint32_t ch = OCStringGetCharacterAtIndex(symbol, j);
+                        if (ch != ' ' && ch != '\t' && ch != '\n') {
+                            hasContent = true;
+                            break;
+                        }
+                    }
+                    if (hasContent) {
+                        OCSetAddValue(uniqueSymbols, (OCTypeRef)symbol);
+                    }
+                    OCRelease(symbol);
+                }
+            }
+            start = i + 1;
+        }
+    }
+    // Get count and cleanup
+    int count = (int)OCSetGetCount(uniqueSymbols);
+    OCRelease(uniqueSymbols);
+    OCRelease(workingCopy);
+    return count;
 }

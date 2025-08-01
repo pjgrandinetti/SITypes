@@ -1,20 +1,19 @@
 #ifdef LEAK_SANITIZER
 #include <sanitizer/lsan_interface.h>
 #endif
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include "SILibrary.h"
-
 #include "test_dimensionality.h"
+#include "test_duplicate_units.h"
+#include "test_library_key.h"
 #include "test_octypes.h"
 #include "test_scalar.h"
 #include "test_scalar_parser.h"
 #include "test_unit.h"
 #include "test_unit_from_expression_robust.h"
-#include "test_duplicate_units.h"
-#include "test_library_key.h"
 #include "test_unit_power_operations.h"
 #ifdef LEAK_SANITIZER
 extern void __lsan_do_leak_check() __attribute__((weak));
@@ -24,7 +23,7 @@ int failures = 0;
     do {                                     \
         if (!test_fn()) {                    \
             printf("[FAIL] %s\n", #test_fn); \
-            failures++;                  \
+            failures++;                      \
         }                                    \
     } while (0)
 int main(int argc, const char* argv[]) {
@@ -71,22 +70,18 @@ int main(int argc, const char* argv[]) {
     TRACK(test_unit_registration);
     TRACK(test_unit_canonical_expressions);
     TRACK(test_unit_from_expression_equivalence);
-    
+    TRACK(test_unit_count_token_symbols);
     printf("\n=== SIUnitCreateCleanedExpression Comprehensive Tests ===\n");
     TRACK(test_library_key_comprehensive);
     printf("\n=== Duplicate Units Tests ===\n");
     TRACK(test_create_potential_duplicates);
     TRACK(test_check_for_duplicate_units);
-
     printf("\n=== Unit Power Operations Tests ===\n");
     TRACK(test_unit_negative_power_operations);
     TRACK(test_unit_inverse_expression_parsing);
     TRACK(test_unit_negative_exponent_parsing);
-
     printf("\n=== SIUnitFromExpression Robust Tests ===\n");
     TRACK(test_unit_from_expression_robust);
-
-
     printf("\n=== SIScalar Parser Tests ===\n");
     TRACK(test_scalar_parser_1);
     TRACK(test_scalar_parser_2);
@@ -100,7 +95,6 @@ int main(int argc, const char* argv[]) {
     TRACK(test_scalar_parser_10);
     TRACK(test_scalar_parser_11);
     TRACK(test_scalar_parser_12);
-    
     printf("\n=== NMR Function Tests ===\n");
     TRACK(test_nmr_functions);
     printf("\n=== SIScalar Tests ===\n");
@@ -189,26 +183,19 @@ int main(int argc, const char* argv[]) {
     TRACK(test_SIScalarBestConversionForQuantity_noop);
     TRACK(test_SIScalarBestConversionForQuantity_zero);
     TRACK(test_SIScalarBestConversionForQuantity_negative);
-
     TRACK(test_SIScalarWriteReadJSON_simple);
     TRACK(test_SIScalarWriteReadJSON_negative);
     TRACK(test_SIScalarWriteReadJSON_complex_unit);
     TRACK(test_SIScalarWriteReadJSON_array_and_dictionary);
-
-    
     if (failures) {
         fprintf(stderr, "\n%d test(s) failed.\n", failures);
-    }
-    else printf("\n%d test(s) failed\n", failures);
-
-
-
+    } else
+        printf("\n%d test(s) failed\n", failures);
 #ifdef LEAK_SANITIZER
     if (&__lsan_do_leak_check) {
         __lsan_do_leak_check();
     }
 #endif
-
     SITypesShutdown();
     return failures > 0 ? 1 : 0;
 }

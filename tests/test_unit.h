@@ -1,6 +1,5 @@
 #ifndef TEST_UNIT_H
 #define TEST_UNIT_H
-
 // Declare all test functions from unit_tests.c
 bool test_unit_0(void);
 bool test_unit_1(void);
@@ -24,8 +23,7 @@ bool test_unit_unicode_normalization(void);
 bool test_unit_registration(void);
 bool test_unit_canonical_expressions(void);
 bool test_unit_from_expression_equivalence(void);
-
+bool test_unit_count_token_symbols(void);
 // Library key tests
 bool test_library_key_comprehensive(void);
-
 #endif /* TEST_UNIT_H */
