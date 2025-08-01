@@ -181,8 +181,8 @@ $(OCT_INCLUDE)/OCLibrary.h: | $(TP_DIR)
 prepare: $(GEN_H)
 
 # Library
-libSITypes.a: $(OBJ)
-	$(AR) rcs $@ $^
+libSITypes.a: prepare $(OBJ)
+	$(AR) rcs $@ $(filter %.o,$^)
 
 # Pattern rules
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | dirs
@@ -216,16 +216,16 @@ $(BIN_DIR)/runTests: libSITypes.a $(TEST_OBJ)
 		-L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) -lm -o $@
 
 # Run tests
-test: octypes libSITypes.a $(TEST_OBJ)
+test: octypes prepare libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests
 	./runTests
 
-test-debug: octypes libSITypes.a $(TEST_OBJ)
+test-debug: octypes prepare libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O0 -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests.debug
 
-test-asan: octypes libSITypes.a $(TEST_OBJ)
+test-asan: octypes prepare libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
 	  -I$(TEST_SRC_DIR) $(TEST_OBJ) -L. -L$(OCT_LIBDIR) \
 	  -lSITypes -lOCTypes -lm -o runTests.asan

@@ -1287,7 +1287,6 @@ static SIUnitRef SIUnitFindBestMatchingUnit(SIDimensionalityRef dimensionality, 
     SIUnitRef best_match = NULL;
     int best_token_count = INT_MAX;
     double best_scale_diff = 1e100;
-    bool best_is_si = false;
     for (OCIndex i = 0; i < OCArrayGetCount(candidates); i++) {
         SIUnitRef candidate = (SIUnitRef)OCArrayGetValueAtIndex(candidates, i);
         int symbol_token_count = SIUnitCountTokenSymbols(candidate->symbol);
@@ -1319,7 +1318,6 @@ static SIUnitRef SIUnitFindBestMatchingUnit(SIDimensionalityRef dimensionality, 
             best_match = candidate;
             best_token_count = symbol_token_count;
             best_scale_diff = scale_diff;
-            best_is_si = is_si;
         }
     }
     OCRelease(candidates);
