@@ -1,10 +1,10 @@
-#include "test_library_key.h"
+#include "test_unit_expression.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include "../src/SILibrary.h"
 // Helper function to test cleaned expression creation
-static bool test_library_key_creation(const char* input, const char* expected, const char* test_name) {
+static bool test_unit_expression_cleaner_creation(const char* input, const char* expected, const char* test_name) {
     OCStringRef input_str = OCStringCreateWithCString(input);
     OCStringRef result = SIUnitCreateCleanedExpression(input_str);
     if (!result) {
@@ -40,7 +40,7 @@ static bool test_equivalence(const char* expr1, const char* expr2, bool should_b
     OCRelease(str2);
     return passed;
 }
-bool test_library_key_basic_canonicalization(void) {
+bool test_unit_expression_cleaner_basic_canonicalization(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test basic single units - should remain unchanged
@@ -77,7 +77,7 @@ bool test_library_key_basic_canonicalization(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_power_notation(void) {
+bool test_unit_expression_cleaner_power_notation(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test power notation cleaning
@@ -106,7 +106,7 @@ bool test_library_key_power_notation(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_multiplication_ordering(void) {
+bool test_unit_expression_cleaner_multiplication_ordering(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test that multiplication expressions are cleaned and grouped
@@ -135,7 +135,7 @@ bool test_library_key_multiplication_ordering(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_power_consolidation(void) {
+bool test_unit_expression_cleaner_power_consolidation(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test power consolidation for repeated units (grouping identical symbols)
@@ -165,7 +165,7 @@ bool test_library_key_power_consolidation(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_division_operations(void) {
+bool test_unit_expression_cleaner_division_operations(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test division operations
@@ -195,7 +195,7 @@ bool test_library_key_division_operations(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_complex_expressions(void) {
+bool test_unit_expression_cleaner_complex_expressions(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test complex expressions with multiple operations
@@ -233,7 +233,7 @@ bool test_library_key_complex_expressions(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_unicode_operators(void) {
+bool test_unit_expression_cleaner_unicode_operators(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test Unicode multiplication and division operators
@@ -270,7 +270,7 @@ bool test_library_key_unicode_operators(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_unicode_normalization(void) {
+bool test_unit_expression_cleaner_unicode_normalization(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test Unicode normalization (Greek mu vs micro sign)
@@ -304,7 +304,7 @@ bool test_library_key_unicode_normalization(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_expression_equivalence(void) {
+bool test_unit_expression_cleaner_expression_equivalence(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test that equivalent expressions produce identical library keys
@@ -350,7 +350,7 @@ bool test_library_key_expression_equivalence(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_edge_cases(void) {
+bool test_unit_expression_cleaner_edge_cases(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test edge cases and special behaviors (including no-cancellation)
@@ -394,7 +394,7 @@ bool test_library_key_edge_cases(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_consistency(void) {
+bool test_unit_expression_cleaner_consistency(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test that repeated calls produce identical results
@@ -432,7 +432,7 @@ bool test_library_key_consistency(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-bool test_library_key_parenthetical_powers(void) {
+bool test_unit_expression_cleaner_parenthetical_powers(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test parenthetical power expansion
@@ -468,7 +468,7 @@ bool test_library_key_parenthetical_powers(void) {
     return success;
 }
 
-bool test_library_key_reciprocal_expressions(void) {
+bool test_unit_expression_cleaner_reciprocal_expressions(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     
@@ -551,22 +551,22 @@ bool test_library_key_reciprocal_expressions(void) {
     return success;
 }
 
-bool test_library_key_comprehensive(void) {
+bool test_unit_expression_cleaner_comprehensive(void) {
     printf("Running comprehensive SIUnitCreateCleanedExpression test suite...\n\n");
     bool overall_success = true;
-    overall_success &= test_library_key_basic_canonicalization();
-    overall_success &= test_library_key_power_notation();
-    overall_success &= test_library_key_multiplication_ordering();
-    overall_success &= test_library_key_power_consolidation();
-    overall_success &= test_library_key_division_operations();
-    overall_success &= test_library_key_complex_expressions();
-    overall_success &= test_library_key_unicode_operators();
-    overall_success &= test_library_key_unicode_normalization();
-    overall_success &= test_library_key_expression_equivalence();
-    overall_success &= test_library_key_edge_cases();
-    overall_success &= test_library_key_parenthetical_powers();
-    overall_success &= test_library_key_consistency();
-    overall_success &= test_library_key_reciprocal_expressions();
+    overall_success &= test_unit_expression_cleaner_basic_canonicalization();
+    overall_success &= test_unit_expression_cleaner_power_notation();
+    overall_success &= test_unit_expression_cleaner_multiplication_ordering();
+    overall_success &= test_unit_expression_cleaner_power_consolidation();
+    overall_success &= test_unit_expression_cleaner_division_operations();
+    overall_success &= test_unit_expression_cleaner_complex_expressions();
+    overall_success &= test_unit_expression_cleaner_unicode_operators();
+    overall_success &= test_unit_expression_cleaner_unicode_normalization();
+    overall_success &= test_unit_expression_cleaner_expression_equivalence();
+    overall_success &= test_unit_expression_cleaner_edge_cases();
+    overall_success &= test_unit_expression_cleaner_parenthetical_powers();
+    overall_success &= test_unit_expression_cleaner_consistency();
+    overall_success &= test_unit_expression_cleaner_reciprocal_expressions();
     printf("\n=== SIUnitCreateCleanedExpression Comprehensive Test Results ===\n");
     printf("Overall result: %s\n", overall_success ? "ALL TESTS PASSED" : "SOME TESTS FAILED");
     return overall_success;

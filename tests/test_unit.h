@@ -25,5 +25,5 @@ bool test_unit_canonical_expressions(void);
 bool test_unit_from_expression_equivalence(void);
 bool test_unit_count_token_symbols(void);
 // Library key tests
-bool test_library_key_comprehensive(void);
+bool test_unit_expression_cleaner_comprehensive(void);
 #endif /* TEST_UNIT_H */

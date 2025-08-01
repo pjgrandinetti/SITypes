@@ -8,6 +8,7 @@
 #include "../src/SILibrary.h"
 #include "test_utils.h"  // Include the test utilities header
 extern OCMutableDictionaryRef SIUnitGetUnitsLib(void);
+
 bool test_unit_0(void) {
     printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
@@ -20,7 +21,7 @@ bool test_unit_0(void) {
             printf("test_unit_0 failed: Unknown error parsing first unit\n");
         }
         return false;
-    }
+    }    
     OCStringRef plist = SIUnitCopySymbol(unit);
     if (!plist) {
         printf("test_unit_0 failed: Failed to serialize unit to symbol string\n");

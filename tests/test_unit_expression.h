@@ -1,0 +1,19 @@
+#ifndef TEST_unit_expression_cleaner_H
+#define TEST_unit_expression_cleaner_H
+#include <stdbool.h>
+// Declare all SIUnitCreateCleanedExpression test functions
+bool test_unit_expression_cleaner_basic_canonicalization(void);
+bool test_unit_expression_cleaner_power_notation(void);
+bool test_unit_expression_cleaner_multiplication_ordering(void);
+bool test_unit_expression_cleaner_power_consolidation(void);
+bool test_unit_expression_cleaner_division_operations(void);
+bool test_unit_expression_cleaner_complex_expressions(void);
+bool test_unit_expression_cleaner_unicode_operators(void);
+bool test_unit_expression_cleaner_unicode_normalization(void);
+bool test_unit_expression_cleaner_expression_equivalence(void);
+bool test_unit_expression_cleaner_edge_cases(void);
+bool test_unit_expression_cleaner_parenthetical_powers(void);
+bool test_unit_expression_cleaner_consistency(void);
+bool test_unit_expression_cleaner_reciprocal_expressions(void);
+bool test_unit_expression_cleaner_comprehensive(void);
+#endif /* TEST_unit_expression_cleaner_H */

@@ -818,42 +818,31 @@ void SIUnitLibrariesShutdown(void) {
 
     // All SIUnits inside these Arrays should be static instances.
     if (unitsQuantitiesLibrary) {
-        printf("Releasing unitsQuantitiesLibrary\n");
         OCRelease(unitsQuantitiesLibrary);
         unitsQuantitiesLibrary = NULL;
     }
     if (unitsDimensionalitiesLibrary) {
-        printf("Releasing unitsDimensionalitiesLibrary\n");
 
         OCRelease(unitsDimensionalitiesLibrary);
         unitsDimensionalitiesLibrary = NULL;
     }
-    if (unitNamesLibrary) {
-        printf("Releasing unitNamesLibrary\n");
-        OCRelease(unitNamesLibrary);
-        unitNamesLibrary = NULL;
-    }
     if (tokenSymbolLibrary) {
-        printf("Releasing tokenSymbolLibrary\n");
         OCRelease(tokenSymbolLibrary);
         tokenSymbolLibrary = NULL;
     }
-    // Simple approach: clear static flags on all units, then let OCDictionary handle cleanup
-    printf("Releasing unitsLibrary\n");
-    OCArrayRef keys = OCDictionaryCreateArrayWithAllKeys((OCDictionaryRef)unitsLibrary);
-    if (keys) {
-        for (uint64_t i = 0; i < OCArrayGetCount(keys); i++) {
-            OCStringRef key = (OCStringRef)OCArrayGetValueAtIndex(keys, i);
-            SIUnitRef unit = (SIUnitRef)OCDictionaryGetValue(unitsLibrary, key);
-
-            OCDictionaryRemoveValue(unitsLibrary, key);
-            OCTypeSetStaticInstance(unit, false);
-            OCRelease(unit);
-        }
-        OCRelease(keys);
+    if(unitsLibrary) {
+        OCRelease(unitsLibrary);
+        unitsLibrary = NULL;
     }
-    OCRelease(unitsLibrary);
-    unitsLibrary = NULL;
+
+    if (unitNamesLibrary) {
+        for(OCIndex index = 0; index<OCArrayGetCount(unitNamesLibrary); index++) {
+            SIUnitRef unit = (SIUnitRef) OCArrayGetValueAtIndex(unitNamesLibrary,index);
+            OCTypeSetStaticInstance(unit, false);
+        }
+        OCRelease(unitNamesLibrary);
+        unitNamesLibrary = NULL;
+    }
 }
 SIUnitRef SIUnitWithSymbol(OCStringRef symbol) {
     if (NULL == symbol) {
@@ -868,11 +857,11 @@ SIUnitRef SIUnitWithSymbol(OCStringRef symbol) {
 }
 static bool SIUnitLibraryRemoveUnitWithSymbol(OCStringRef symbol) {
     if (NULL == unitsLibrary) SIUnitCreateLibraries();
-    if (OCDictionaryContainsKey(unitsLibrary, symbol)) {
-        SIUnitRef unit = (SIUnitRef)OCDictionaryGetValue(unitsLibrary, symbol);
-        OCDictionaryRemoveValue(unitsLibrary, symbol);
+    OCStringRef key = SIUnitCreateCleanedExpression(symbol);
+    if (OCDictionaryContainsKey(unitsLibrary, key)) {
+        SIUnitRef unit = (SIUnitRef)OCDictionaryGetValue(unitsLibrary, key);
         OCTypeSetStaticInstance(unit, false);
-        OCRelease(unit);
+        OCDictionaryRemoveValue(unitsLibrary, key);
         return true;
     }
     return false;
@@ -1136,6 +1125,7 @@ static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
     // No existing unit found, so add this fresh unit to library
     OCTypeSetStaticInstance(tempUnit, true);
     OCDictionaryAddValue(unitsLibrary, key, tempUnit);
+    OCArrayAppendValue(unitNamesLibrary,tempUnit);
     OCRelease(tempUnit);
     OCRelease(key);
     return tempUnit;
