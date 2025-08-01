@@ -43,6 +43,7 @@ input: expression { siueSetParsedExpression($1); }
 
 expression: term_list {
     $$ = siueCreateExpression($1, NULL);
+    siueReleaseTermArray($1);  // Release the term array and its terms since siueCreateExpression copied them
 }
 | INTEGER {
     // Handle standalone integer (dimensionless unit)
@@ -53,6 +54,7 @@ expression: term_list {
         OCArrayAppendValue(termArray, dimensionless);
         $$ = siueCreateExpression(termArray, NULL);
         OCRelease(termArray);
+        siueReleaseTerm(dimensionless);  // Release the term after copying into expression
     } else {
         siueError = STR("Only '1' is allowed as a standalone number");
         YYERROR;
@@ -65,6 +67,7 @@ expression: term_list {
         OCMutableArrayRef emptyNum = OCArrayCreateMutable(0, NULL);
         $$ = siueCreateExpression(emptyNum, $3);
         OCRelease(emptyNum);
+        siueReleaseTermArray($3);  // Release the term_list and its terms since siueCreateExpression copied them
     } else {
         siueError = STR("Only '1' is allowed as a numeric coefficient");
         YYERROR;
@@ -77,6 +80,7 @@ expression: term_list {
         OCMutableArrayRef emptyNum = OCArrayCreateMutable(0, NULL);
         $$ = siueCreateExpression(emptyNum, $4);
         OCRelease(emptyNum);
+        siueReleaseTermArray($4);  // Release the term_list and its terms since siueCreateExpression copied them
     } else {
         siueError = STR("Only '1' is allowed as a numeric coefficient");
         YYERROR;
@@ -84,13 +88,17 @@ expression: term_list {
 }
 | term_list '/' term_list {
     $$ = siueCreateExpression($1, $3);
+    siueReleaseTermArray($1);  // Release since siueCreateExpression copied it
+    siueReleaseTermArray($3);  // Release since siueCreateExpression copied it
 }
 | expression '/' unit_term {
     // For chained division like a/b/c, add c to denominator
     OCMutableArrayRef newDen = $1->denominator ? OCArrayCreateMutableCopy($1->denominator) : OCArrayCreateMutable(1, NULL);
     OCArrayAppendValue(newDen, $3);
     $$ = siueCreateExpression($1->numerator, newDen);
-    OCRelease(newDen);
+    OCRelease(newDen);  // Just release the array, not the terms (they're copied by siueCreateExpression)
+    siueReleaseTerm($3);  // Release the unit_term since it was copied into the expression
+    siueRelease($1);  // Free the intermediate expression
 }
 | expression '/' '(' term_list ')' {
     // For division by parenthetical expression like a/(b*c)
@@ -101,6 +109,8 @@ expression: term_list {
     }
     $$ = siueCreateExpression($1->numerator, newDen);
     OCRelease(newDen);
+    siueRelease($1);  // Free the intermediate expression
+    siueReleaseTermArray($4);    // Release the term_list and its terms since they were copied
 }
 | '(' expression ')' '^' INTEGER {
     // Handle parenthetical expression raised to power: (a/b)^n
@@ -130,11 +140,15 @@ term_list: unit_term {
 }
 | term_list '*' '(' term_list ')' {
     // Handle multiplication with parenthetical expression: term_list * (term_list)
+    // We need to copy the terms from $4 to $1, then release $4 properly
     OCIndex count = OCArrayGetCount($4);
     for (OCIndex i = 0; i < count; i++) {
-        OCArrayAppendValue((OCMutableArrayRef)$1, OCArrayGetValueAtIndex($4, i));
+        SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex($4, i);
+        SIUnitTerm* termCopy = siueCopyTerm(term);  // Make a copy for $1
+        OCArrayAppendValue((OCMutableArrayRef)$1, termCopy);
     }
     $$ = $1;
+    siueReleaseTermArray($4);  // Release the source array and its terms
 }
 | '(' term_list ')' {
     $$ = $2;
@@ -143,33 +157,35 @@ term_list: unit_term {
     $$ = siueApplyPowerToTermList($2, $5);
 }
 | '(' term_list ')' '^' DECIMAL {
-    // Handle decimal power for term lists too
-    // Convert term_list to expression first, then apply fractional power
+    // Handle decimal power for term lists - convert to expression, apply power, extract numerator
     SIUnitExpression* temp_expr = siueCreateExpression($2, NULL);
-    if (temp_expr) {
-        SIUnitExpression* result = siueApplyFractionalPowerToExpression(temp_expr, $5);
-        if (result && result->numerator) {
-            $$ = result->numerator;
-            OCRetain($$); // Keep the numerator
-        } else {
-            $$ = NULL;
-        }
-        OCRelease(temp_expr);
-        if (result) OCRelease(result);
+    if (temp_expr && siueApplyFractionalPowerToExpression(temp_expr, $5)) {
+        // Extract the numerator from the modified expression
+        $$ = temp_expr->numerator;
+        OCRetain($$);  // Keep the numerator
+        // Clean up the expression wrapper without freeing the numerator
+        if (temp_expr->denominator) OCRelease(temp_expr->denominator);
+        free(temp_expr);
     } else {
         $$ = NULL;
+        if (temp_expr) siueRelease(temp_expr);
     }
+    // $2 was already copied by siueCreateExpression, so we still need to clean it up
+    siueReleaseTermArray($2);
 }
 ;
 
 unit_term: UNIT_SYMBOL {
     $$ = siueCreateTerm($1, 1);
+    OCRelease($1);  // Release the string from lexer since siueCreateTerm copied it
 }
 | UNIT_SYMBOL '^' INTEGER {
     $$ = siueCreateTerm($1, $3);
+    OCRelease($1);  // Release the string from lexer since siueCreateTerm copied it
 }
 | UNIT_SYMBOL '^' '(' INTEGER ')' {
     $$ = siueCreateTerm($1, $4);
+    OCRelease($1);  // Release the string from lexer since siueCreateTerm copied it
 }
 | UNKNOWN_SYMBOL {
     siueError = STR("Unknown unit symbol");

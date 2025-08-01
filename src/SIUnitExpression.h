@@ -93,6 +93,14 @@ SIUnitExpression* siueCopyExpression(const SIUnitExpression* expr);
  * @param expr The expression to release (can be NULL)
  */
 void siueRelease(SIUnitExpression* expr);
+
+/*!
+ * @brief Releases an array of terms and their associated memory.
+ *
+ * @param term_array The array of terms to release (can be NULL)
+ */
+void siueReleaseTermArray(OCArrayRef term_array);
+
 #pragma mark - Parser Helper Functions
 /*!
  * @brief Applies a power to all terms in a term list.

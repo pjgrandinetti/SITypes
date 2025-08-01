@@ -259,6 +259,7 @@ clean:
 	$(RM) -r $(BUILD_DIR) libSITypes.a runTests runTests.asan runTests.debug *.dSYM
 	$(RM) *.tab.* *Scanner.c *.d core.*
 	$(RM) -rf docs/doxygen docs/_build docs/html build-xcode install
+	$(RM) rebuild.log
 
 clean-docs:
 	@echo "Cleaning documentation..."
@@ -359,5 +360,22 @@ pre-commit-install:
 	fi
 	@pre-commit install
 	@echo "✅ Pre-commit hooks installed"
+
+# Complete rebuild from scratch including OCTypes dependency
+rebuild-all:
+	@echo "🔄 Starting complete rebuild of OCTypes and SITypes..."
+	@echo "📝 All output will be logged to rebuild.log"
+	@echo "Step 1: Cleaning and rebuilding OCTypes..." | tee rebuild.log
+	cd ../OCTypes && $(MAKE) clean && $(MAKE) && $(MAKE) install >> ../SITypes/rebuild.log 2>&1
+	@echo "Step 2: Cleaning SITypes..." | tee -a rebuild.log
+	$(MAKE) clean >> rebuild.log 2>&1
+	@echo "Step 3: Syncing OCTypes library..." | tee -a rebuild.log
+	$(MAKE) synclib >> rebuild.log 2>&1
+	@echo "Step 4: Building SITypes..." | tee -a rebuild.log
+	$(MAKE) >> rebuild.log 2>&1
+	@echo "Step 5: Running AddressSanitizer tests..." | tee -a rebuild.log
+	$(MAKE) test-asan >> rebuild.log 2>&1
+	@echo "✅ Complete rebuild finished successfully!" | tee -a rebuild.log
+	@echo "📋 Full log available in rebuild.log"
 
 ##────────────────────────────────────────────────────────────────────────────

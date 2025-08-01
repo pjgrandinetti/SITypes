@@ -12,8 +12,9 @@
 #include "SIUnitExpressionParser.tab.h"
 // External functions from scanner/parser
 extern int siueparse(void);
-extern void siue_scan_string(const char* str);
-extern void siue_delete_buffer(void* buffer);
+typedef struct yy_buffer_state *YY_BUFFER_STATE;
+extern YY_BUFFER_STATE siue_scan_string(const char* str);
+extern void siue_delete_buffer(YY_BUFFER_STATE buffer);
 // Forward declarations
 OCArrayRef siueApplyPowerToTermList(OCArrayRef term_list, int power);
 SIUnitExpression* siueApplyPowerToExpression(SIUnitExpression* expression, int power);
@@ -102,6 +103,18 @@ void siueRelease(SIUnitExpression* expr) {
     }
     free(expr);
 }
+
+void siueReleaseTermArray(OCArrayRef term_array) {
+    if (!term_array) return;
+    // Release all terms in the array
+    OCIndex count = OCArrayGetCount(term_array);
+    for (OCIndex i = 0; i < count; i++) {
+        SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(term_array, i);
+        siueReleaseTerm(term);
+    }
+    OCRelease(term_array);
+}
+
 #pragma mark - Parser Helper Functions
 OCArrayRef siueApplyPowerToTermList(OCArrayRef term_list, int power) {
     if (!term_list || power == 0) return term_list;
@@ -439,27 +452,41 @@ bool siueValidateSymbol(OCStringRef symbol) {
 }
 SIUnitExpression* siueParseExpression(OCStringRef normalized_expr) {
     if (!normalized_expr) return NULL;
+
     // Clear any previous error
     if (siueError) {
         OCRelease(siueError);
         siueError = NULL;
     }
+
     // Clear any previous parsed expression
     siueClearParsedExpression();
+
     // Convert to C string for parser
     const char* exprStr = OCStringGetCString(normalized_expr);
     if (!exprStr) return NULL;
+
     // Parse the expression
-    siue_scan_string(exprStr);
+    YY_BUFFER_STATE buffer = siue_scan_string(exprStr);
     int parseResult = siueparse();
+
+    // Clean up the scanner buffer immediately after parsing
+    siue_delete_buffer(buffer);
+
     if (parseResult != 0 || siueError) {
         // Parse failed - clean up state
         siueClearParsedExpression();
         return NULL;
     }
+
     // Get the parsed expression
     SIUnitExpression* result = siueGetParsedExpression();
-    return result ? siueCopyExpression(result) : NULL;
+    if (result) {
+        // Transfer ownership instead of copying
+        g_parsed_expression = NULL;  // Clear the global pointer without freeing
+        return result;
+    }
+    return NULL;
 }
 #pragma mark - Unicode Conversion Helpers
 // Convert bullet characters to asterisks for parsing
@@ -572,72 +599,27 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
     OCRelease(preprocessed);
     if (!parsed) return NULL;
     // Step 3: Process the expression (group and sort)
-    // Create deep copies of the arrays to avoid double-free issues
-    OCMutableArrayRef numCopy = OCArrayCreateMutable(10, NULL);
+    // Work directly with the parsed expression arrays
     if (parsed->numerator) {
-        OCIndex count = OCArrayGetCount(parsed->numerator);
-        for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(parsed->numerator, i);
-            SIUnitTerm* termCopy = siueCopyTerm(term);
-            if (termCopy) {
-                OCArrayAppendValue(numCopy, termCopy);
-            }
-        }
+        OCMutableArrayRef mutableNum = OCArrayCreateMutableCopy(parsed->numerator);
+        siueGroupIdenticalTerms(mutableNum);
+        siueSortTermsAlphabetically(mutableNum);
+        siueMoveNegativePowersToDenominator(mutableNum, (OCMutableArrayRef*)&parsed->denominator);
+        if (parsed->numerator) OCRelease(parsed->numerator);
+        parsed->numerator = mutableNum;
     }
-    OCMutableArrayRef denCopy = NULL;
+
     if (parsed->denominator) {
-        OCIndex count = OCArrayGetCount(parsed->denominator);
-        denCopy = OCArrayCreateMutable(count, NULL);
-        for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(parsed->denominator, i);
-            SIUnitTerm* termCopy = siueCopyTerm(term);
-            if (termCopy) {
-                OCArrayAppendValue(denCopy, termCopy);
-            }
-        }
+        OCMutableArrayRef mutableDen = OCArrayCreateMutableCopy(parsed->denominator);
+        siueGroupIdenticalTerms(mutableDen);
+        siueSortTermsAlphabetically(mutableDen);
+        if (parsed->denominator) OCRelease(parsed->denominator);
+        parsed->denominator = mutableDen;
     }
-    // Group identical terms
-    siueGroupIdenticalTerms(numCopy);
-    if (denCopy) {
-        siueGroupIdenticalTerms(denCopy);
-    }
-    // Sort terms alphabetically
-    siueSortTermsAlphabetically(numCopy);
-    if (denCopy) {
-        siueSortTermsAlphabetically(denCopy);
-    }
-    // Move negative powers from numerator to denominator
-    siueMoveNegativePowersToDenominator(numCopy, &denCopy);
-    // Sort again after moving negative powers to ensure denominator is alphabetical
-    if (denCopy) {
-        siueSortTermsAlphabetically(denCopy);
-    }
-    // Create processed expression (no cancellation for "Cleaned" function)
-    SIUnitExpression* processed = siueCreateExpression(numCopy, denCopy);
-    siueRelease(parsed);
-    if (!processed) {
-        return NULL;
-    }
+
     // Step 4: Format the result
-    OCStringRef formatted = siueFormatExpression(processed, false);
-    siueRelease(processed);
-    // Clean up the deep-copied arrays after we're done with processed
-    if (numCopy) {
-        OCIndex count = OCArrayGetCount(numCopy);
-        for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(numCopy, i);
-            siueReleaseTerm(term);
-        }
-        OCRelease(numCopy);
-    }
-    if (denCopy) {
-        OCIndex count = OCArrayGetCount(denCopy);
-        for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(denCopy, i);
-            siueReleaseTerm(term);
-        }
-        OCRelease(denCopy);
-    }
+    OCStringRef formatted = siueFormatExpression(parsed, false);
+    siueRelease(parsed);
     if (!formatted) return NULL;
     // Step 5: Convert asterisks back to bullet characters
     OCStringRef bullets = siueConvertAsterisksToBuilets(formatted);
@@ -662,77 +644,42 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
     OCRelease(preprocessed);
     if (!parsed) return NULL;
     // Step 3: Process the expression (group, sort, and cancel)
-    // Create deep copies of the arrays to avoid double-free issues
-    OCMutableArrayRef numCopy = OCArrayCreateMutable(10, NULL);
+    // Work directly with the parsed expression arrays
     if (parsed->numerator) {
-        OCIndex count = OCArrayGetCount(parsed->numerator);
-        for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(parsed->numerator, i);
-            SIUnitTerm* termCopy = siueCopyTerm(term);
-            if (termCopy) {
-                OCArrayAppendValue(numCopy, termCopy);
-            }
-        }
+        OCMutableArrayRef mutableNum = OCArrayCreateMutableCopy(parsed->numerator);
+        siueGroupIdenticalTerms(mutableNum);
+        siueMoveNegativePowersToDenominator(mutableNum, (OCMutableArrayRef*)&parsed->denominator);
+        if (parsed->numerator) OCRelease(parsed->numerator);
+        parsed->numerator = mutableNum;
     }
-    OCMutableArrayRef denCopy = NULL;
+
     if (parsed->denominator) {
-        OCIndex count = OCArrayGetCount(parsed->denominator);
-        denCopy = OCArrayCreateMutable(count, NULL);
-        for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(parsed->denominator, i);
-            SIUnitTerm* termCopy = siueCopyTerm(term);
-            if (termCopy) {
-                OCArrayAppendValue(denCopy, termCopy);
-            }
-        }
+        OCMutableArrayRef mutableDen = OCArrayCreateMutableCopy(parsed->denominator);
+        siueGroupIdenticalTerms(mutableDen);
+        if (parsed->denominator) OCRelease(parsed->denominator);
+        parsed->denominator = mutableDen;
     }
-    // Group identical terms
-    siueGroupIdenticalTerms(numCopy);
-    if (denCopy) {
-        siueGroupIdenticalTerms(denCopy);
-    }
-    // Move negative powers from numerator to denominator
-    siueMoveNegativePowersToDenominator(numCopy, &denCopy);
-    // Create temporary expression for cancellation
-    SIUnitExpression* temp = siueCreateExpression(numCopy, denCopy);
+
     // Cancel terms between numerator and denominator
-    siueCancelTerms(temp);
+    siueCancelTerms(parsed);
+
     // Sort terms alphabetically after cancellation
-    if (temp->numerator) {
-        OCMutableArrayRef sortableNum = OCArrayCreateMutableCopy(temp->numerator);
+    if (parsed->numerator) {
+        OCMutableArrayRef sortableNum = OCArrayCreateMutableCopy(parsed->numerator);
         siueSortTermsAlphabetically(sortableNum);
-        OCRelease(temp->numerator);
-        temp->numerator = sortableNum;
+        OCRelease(parsed->numerator);
+        parsed->numerator = sortableNum;
     }
-    if (temp->denominator) {
-        OCMutableArrayRef sortableDen = OCArrayCreateMutableCopy(temp->denominator);
+    if (parsed->denominator) {
+        OCMutableArrayRef sortableDen = OCArrayCreateMutableCopy(parsed->denominator);
         siueSortTermsAlphabetically(sortableDen);
-        OCRelease(temp->denominator);
-        temp->denominator = sortableDen;
+        OCRelease(parsed->denominator);
+        parsed->denominator = sortableDen;
     }
-    // Clean up the deep-copied arrays
-    // Release all terms in numCopy
-    if (numCopy) {
-        OCIndex count = OCArrayGetCount(numCopy);
-        for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(numCopy, i);
-            siueReleaseTerm(term);
-        }
-        OCRelease(numCopy);
-    }
-    // Release all terms in denCopy
-    if (denCopy) {
-        OCIndex count = OCArrayGetCount(denCopy);
-        for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(denCopy, i);
-            siueReleaseTerm(term);
-        }
-        OCRelease(denCopy);
-    }
-    siueRelease(parsed);
+
     // Step 4: Format the result
-    OCStringRef formatted = siueFormatExpression(temp, true);
-    siueRelease(temp);
+    OCStringRef formatted = siueFormatExpression(parsed, true);
+    siueRelease(parsed);
     if (!formatted) return NULL;
     // Step 5: Convert asterisks back to bullet characters
     OCStringRef bullets = siueConvertAsterisksToBuilets(formatted);
