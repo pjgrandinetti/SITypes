@@ -84,13 +84,13 @@ bool test_library_key_power_notation(void) {
     OCStringRef tests[][2] = {
         {STR("m^2"), STR("m^2")},
         {STR("m^3"), STR("m^3")},
-        {STR("m^(-1)"), STR("1/m")},
-        {STR("m^(-2)"), STR("1/m^2")},
+        {STR("m^(-1)"), STR("(1/m)")},
+        {STR("m^(-2)"), STR("(1/m^2)")},
         {STR("kg^2"), STR("kg^2")},
-        {STR("s^(-1)"), STR("1/s")},
+        {STR("s^(-1)"), STR("(1/s)")},
         {STR("m^(2)"), STR("m^2")},
         {STR("m^(3)"), STR("m^3")},
-        {STR("m^(-3)"), STR("1/m^3")}};
+        {STR("m^(-3)"), STR("(1/m^3)")}};
     int num_tests = sizeof(tests) / sizeof(tests[0]);
     for (int i = 0; i < num_tests; i++) {
         OCStringRef result = SIUnitCreateCleanedExpression(tests[i][0]);
@@ -370,7 +370,7 @@ bool test_library_key_edge_cases(void) {
         {"m^(1)", "m", "unnecessary power notation"},
         {"", " ", "empty string"},
         {"   m   ", "m", "whitespace trimming"},
-        {"m^(-1)*s^(-1)", "1/(m•s)", "multiple negative powers"},
+        {"m^(-1)*s^(-1)", "(1/(m•s))", "multiple negative powers"},
         {"ft*ft*ft*ft*ft", "ft^5", "many repeated units"},
         {"μm×μm×μm", "µm^3", "Unicode repeated units"},
         {"Pa/Pa", "Pa/Pa", "pressure ratio - no cancellation"},
@@ -478,14 +478,14 @@ bool test_library_key_reciprocal_expressions(void) {
         const char* expected;
         const char* description;
     } tests[] = {
-        {"1/m", "1/m", "reciprocal meter"},
-        {"1/s", "1/s", "reciprocal second (frequency)"},
-        {"1/kg", "1/kg", "reciprocal kilogram"},
-        {"1/(m*s)", "1/(m•s)", "reciprocal of meter-second product"},
-        {"1/m^2", "1/m^2", "reciprocal square meter"},
-        {"1/s^2", "1/s^2", "reciprocal square second"},
-        {"1/(m^2*kg)", "1/(kg•m^2)", "reciprocal of complex expression"},
-        {"1/(kg*m*s)", "1/(kg•m•s)", "reciprocal of three-unit product"},
+        {"1/m", "(1/m)", "reciprocal meter"},
+        {"1/s", "(1/s)", "reciprocal second (frequency)"},
+        {"1/kg", "(1/kg)", "reciprocal kilogram"},
+        {"1/(m*s)", "(1/(m•s))", "reciprocal of meter-second product"},
+        {"1/m^2", "(1/m^2)", "reciprocal square meter"},
+        {"1/s^2", "(1/s^2)", "reciprocal square second"},
+        {"1/(m^2*kg)", "(1/(kg•m^2))", "reciprocal of complex expression"},
+        {"1/(kg*m*s)", "(1/(kg•m•s))", "reciprocal of three-unit product"},
         
         // Note: Complex expressions like "1/(m/s)" are not currently supported
         // and return NULL - this is acceptable for now as it requires more complex parsing

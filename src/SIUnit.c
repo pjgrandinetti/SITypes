@@ -171,7 +171,6 @@ bool impl_SIUnitEqual(const void *theType1, const void *theType2) {
 void impl_SIUnitFinalize(const void *theType) {
     if (NULL == theType) return;
     SIUnitRef theUnit = (SIUnitRef)theType;
-    printf("Finalizing %s\n",OCStringGetCString(theUnit->symbol));
     if (theUnit->dimensionality) OCRelease(theUnit->dimensionality);
     if (theUnit->symbol) OCRelease(theUnit->symbol);
     if (theUnit->name) OCRelease(theUnit->name);
@@ -508,6 +507,18 @@ static SIUnitRef AddToLib(
     }
     return theUnit;
 }
+SIUnitRef AddNonExistingToLib(
+    OCStringRef quantity,
+    OCStringRef name,
+    OCStringRef plural_name,
+    OCStringRef symbol,
+    double scale_to_coherent_si,
+    OCStringRef *error) {
+    SIUnitRef unit = AddToLib(quantity, name, plural_name, symbol, scale_to_coherent_si, error);
+    OCDictionaryAddValue(SIUnitGetUnitsLib(), unit->symbol, unit);
+    return unit;
+}
+
 static SIUnitRef AddSIToLib(
     OCStringRef quantity,
     OCStringRef name,
@@ -1115,15 +1126,18 @@ static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
     if (NULL == tempUnit)
         return NULL;
     // Check if unit with this symbol already exists
-    if (OCDictionaryContainsKey(unitsLibrary, tempUnit->symbol)) {
-        SIUnitRef existingUnit = OCDictionaryGetValue(unitsLibrary, tempUnit->symbol);
+    OCStringRef key  = SIUnitCreateCleanedExpression(tempUnit->symbol);
+    if (OCDictionaryContainsKey(unitsLibrary, key)) {
+        SIUnitRef existingUnit = OCDictionaryGetValue(unitsLibrary, key);
         OCRelease(tempUnit);  // Discard the temporary unit
+        OCRelease(key);
         return existingUnit;
     }
     // No existing unit found, so add this fresh unit to library
     OCTypeSetStaticInstance(tempUnit, true);
-    OCDictionaryAddValue(unitsLibrary, tempUnit->symbol, tempUnit);
+    OCDictionaryAddValue(unitsLibrary, key, tempUnit);
     OCRelease(tempUnit);
+    OCRelease(key);
     return tempUnit;
 }
 SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef dimensionality) {
@@ -1289,24 +1303,25 @@ static SIUnitRef SIUnitFindBestMatchingUnit(SIDimensionalityRef dimensionality, 
         int symbol_token_count = SIUnitCountTokenSymbols(candidate->symbol);
         double scale_diff = fabs(candidate->scale_to_coherent_si - target_scale);
         bool is_si = SIUnitIsSIUnit(candidate);
+        
+        // Only consider SI units as candidates
+        if (!is_si) {
+            continue;
+        }
+        
         // Determine if this candidate is better than the current best
         bool is_better = false;
         if (best_match == NULL) {
-            // First candidate is automatically the best so far
+            // First SI candidate is automatically the best so far
             is_better = true;
         } else {
-            // Priority 1: Prefer fewer token symbols (simpler units)
-            if (symbol_token_count < best_token_count) {
+            // Priority 1: Prefer smaller scale difference (closest to target scale)
+            if (scale_diff < best_scale_diff) {
                 is_better = true;
-            } else if (symbol_token_count == best_token_count) {
-                // Priority 2: Among units with same token count, prefer SI units
-                if (is_si && !best_is_si) {
+            } else if (fabs(scale_diff - best_scale_diff) < 1e-15) {
+                // Priority 2: Among units with same scale difference, prefer fewer token symbols
+                if (symbol_token_count < best_token_count) {
                     is_better = true;
-                } else if (is_si == best_is_si) {
-                    // Priority 3: Among units with same token count and SI status, prefer smaller scale difference
-                    if (scale_diff < best_scale_diff) {
-                        is_better = true;
-                    }
                 }
             }
         }
@@ -1494,8 +1509,8 @@ static SIUnitRef SIUnitByDividingInternal(SIUnitRef theUnit1,
     }
     if (error && *error) return NULL;
     // Calculate the new scale factor
+    
     double scale = theUnit1->scale_to_coherent_si / theUnit2->scale_to_coherent_si;
-    *unit_multiplier = scale;
     // First approach: Look for existing units with matching dimensionality
     SIUnitRef best_match = SIUnitFindBestMatchingUnit(dimensionality, scale);
     if (best_match) {
@@ -1632,30 +1647,18 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     }
     // Parse the expression if not found in library
     double multiplier = 1.0;  // Default multiplier
-    OCStringRef cleaned_exp = SIUnitCreateCleanedExpression(expression);
-    if (!cleaned_exp) {
-        if (error) {
-            *error = OCStringCreateWithFormat(
-                STR("Error in unit expression: %%@ "),
-                expression);
-        }
-        OCRelease(key);
-        return NULL;
-    }
-    unit = SIUnitFromExpressionInternal(cleaned_exp, &multiplier, error);
+    unit = SIUnitFromExpressionInternal(expression, &multiplier, error);
     if (unit && multiplier != 1.0) {
         SIDimensionalityRef dimensionality = SIUnitGetDimensionality(unit);
         OCStringRef dimensionalitySymbol = SIDimensionalityCopySymbol(dimensionality);
-        unit = AddToLib(dimensionalitySymbol, NULL, NULL, key, multiplier, error);
+        unit = AddNonExistingToLib(dimensionalitySymbol, NULL, NULL, key, multiplier, error);
         OCRelease(dimensionalitySymbol);
         if (unit_multiplier) *unit_multiplier = 1.0;
         OCRelease(key);
-        OCRelease(cleaned_exp);
         return unit;
     }
     if (unit_multiplier) *unit_multiplier = multiplier;
     OCRelease(key);
-    OCRelease(cleaned_exp);
     // error returned from SIUnitFromExpressionInternal
     return unit;
 }

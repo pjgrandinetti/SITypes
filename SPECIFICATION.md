@@ -45,6 +45,7 @@ This document defines the expected behavior of the two main unit expression proc
 | Input | Expected Output | Description |
 |-------|-----------------|-------------|
 | `m` | `m` | Single unit unchanged |
+| `m^-1` | `(1/m)` | Single unit unchanged |
 | `m*kg` | `kg•m` | Alphabetical ordering |
 | `kg*m` | `kg•m` | Same result regardless of input order |
 | `m*m` | `m^2` | Power consolidation |
@@ -122,7 +123,7 @@ This document defines the expected behavior of the two main unit expression proc
 | `m^2/m` | `m` | Partial cancellation |
 | `m*kg/kg` | `m` | Cancel kg terms |
 | `m*m*kg/s/s` | `kg•m^2/s^2` | Same as cleaned (no cancellation) |
-| `m/s/m` | `1/s` | Cancel m terms |
+| `m/s/m` | `(1/s)` | Cancel m terms |
 | `kg*m/kg` | `m` | Cancel kg terms |
 | `m^3/m^2` | `m` | Power subtraction |
 | `m^6/m^2` | `m^4` | Power subtraction |
@@ -424,7 +425,7 @@ static void siueCancelTerms(SIUnitExpression* expr) {
 
 #### **Edge Cases**
 - Handle partial cancellation (`m^5/m^2` → `m^3`)
-- Handle negative result powers (`m^2/m^5` → `1/m^3`)
+- Handle negative result powers (`m^2/m^5` → `(1/m^3)`)
 - Handle complete cancellation → return `"1"`
 
 ### **Phase 4: Testing & Validation (Week 7-8)**

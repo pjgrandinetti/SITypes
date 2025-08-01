@@ -96,7 +96,6 @@ SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multipli
 
 void yyerror(char *s, ...)
 {
-    fprintf(stderr, "error: %s\n",s);
     siu_syntax_error = true;
 }
 
