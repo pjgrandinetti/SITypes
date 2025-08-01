@@ -857,7 +857,8 @@ SIUnitRef SIUnitWithSymbol(OCStringRef symbol) {
     }
     if (NULL == unitsLibrary) SIUnitCreateLibraries();
     IF_NO_OBJECT_EXISTS_RETURN(unitsLibrary, NULL);
-    SIUnitRef unit = OCDictionaryGetValue(unitsLibrary, symbol);
+    OCStringRef key = SIUnitCreateCleanedExpression(symbol);
+    SIUnitRef unit = OCDictionaryGetValue(unitsLibrary, key);
     return unit;
 }
 static bool SIUnitLibraryRemoveUnitWithSymbol(OCStringRef symbol) {
