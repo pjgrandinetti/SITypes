@@ -221,5 +221,3 @@ I[ ]*\*[ ]*{REALNUMBER}[ ]*/{UNIT} {
 .               {return(yytext[0]);}
 
 %%
-
-

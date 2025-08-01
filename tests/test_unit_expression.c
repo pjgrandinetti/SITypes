@@ -467,11 +467,9 @@ bool test_unit_expression_cleaner_parenthetical_powers(void) {
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-
 bool test_unit_expression_cleaner_reciprocal_expressions(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
-    
     // Test reciprocal expressions (1/unit) - these were the critical bug cases
     struct {
         const char* input;
@@ -486,26 +484,20 @@ bool test_unit_expression_cleaner_reciprocal_expressions(void) {
         {"1/s^2", "(1/s^2)", "reciprocal square second"},
         {"1/(m^2*kg)", "(1/(kg•m^2))", "reciprocal of complex expression"},
         {"1/(kg*m*s)", "(1/(kg•m•s))", "reciprocal of three-unit product"},
-        
         // Note: Complex expressions like "1/(m/s)" are not currently supported
         // and return NULL - this is acceptable for now as it requires more complex parsing
-        
         // Test that standalone 1 still behaves correctly (dimensionless)
         {"1", " ", "standalone dimensionless number"},
-        
         // Test that numeric coefficients other than 1 are rejected
         // These should return NULL (tested separately below)
     };
-    
     int num_tests = sizeof(tests) / sizeof(tests[0]);
-    
     for (int i = 0; i < num_tests; i++) {
         OCStringRef input = OCStringCreateWithCString(tests[i].input);
         OCStringRef expected = OCStringCreateWithCString(tests[i].expected);
         OCStringRef result = SIUnitCreateCleanedExpression(input);
-        
         if (!result) {
-            printf("  ✗ %s: '%s' returned NULL (expected '%s')\n", 
+            printf("  ✗ %s: '%s' returned NULL (expected '%s')\n",
                    tests[i].description, tests[i].input, tests[i].expected);
             success = false;
         } else if (OCStringCompare(result, expected, 0) != kOCCompareEqualTo) {
@@ -514,43 +506,35 @@ bool test_unit_expression_cleaner_reciprocal_expressions(void) {
             printf("    Actual:   '%s'\n", OCStringGetCString(result));
             success = false;
         }
-        
         OCRelease(input);
         OCRelease(expected);
         if (result) OCRelease(result);
     }
-    
     // Test that invalid numeric coefficients return NULL
     const char* invalid_tests[] = {
         "2/m",
-        "3/s", 
+        "3/s",
         "0/kg",
         "-1/m",
         "2.5/m",
-        "m/1",  // This should also be NULL - units divided by numbers aren't allowed
+        "m/1",     // This should also be NULL - units divided by numbers aren't allowed
         "1/(m/s)"  // Complex nested division not currently supported
     };
-    
     int num_invalid = sizeof(invalid_tests) / sizeof(invalid_tests[0]);
-    
     for (int i = 0; i < num_invalid; i++) {
         OCStringRef input = OCStringCreateWithCString(invalid_tests[i]);
         OCStringRef result = SIUnitCreateCleanedExpression(input);
-        
         if (result != NULL) {
-            printf("  ✗ Invalid expression '%s' should return NULL but got '%s'\n", 
+            printf("  ✗ Invalid expression '%s' should return NULL but got '%s'\n",
                    invalid_tests[i], OCStringGetCString(result));
             success = false;
             OCRelease(result);
         }
-        
         OCRelease(input);
     }
-    
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
-
 bool test_unit_expression_cleaner_comprehensive(void) {
     printf("Running comprehensive SIUnitCreateCleanedExpression test suite...\n\n");
     bool overall_success = true;

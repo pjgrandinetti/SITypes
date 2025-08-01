@@ -4,90 +4,74 @@
 //
 //  Comprehensive tests for SIUnitFromExpression to catch compatibility issues
 //
-
 #include "test_unit_from_expression_robust.h"
-#include "SILibrary.h"
-#include <stdio.h>
 #include <math.h>
-
+#include <stdio.h>
+#include "SILibrary.h"
 // Test helper to verify unit behavior
 static bool verify_unit_behavior(OCStringRef expression, double expected_multiplier, OCStringRef expected_symbol, const char* test_name) {
     double multiplier = 1.0;
     OCStringRef error = NULL;
     SIUnitRef unit = SIUnitFromExpression(expression, &multiplier, &error);
-    
     if (error) {
         printf("    ERROR: Testing '%s': %s\n", OCStringGetCString(expression), OCStringGetCString(error));
         return false;
     }
-    
     if (!unit) {
         printf("    ERROR: Testing '%s': Returned NULL unit\n", OCStringGetCString(expression));
         return false;
     }
-    
     // Check multiplier
     if (fabs(multiplier - expected_multiplier) > 1e-10) {
-        printf("    ERROR: Testing '%s': Expected multiplier %.10f, got %.10f\n", 
+        printf("    ERROR: Testing '%s': Expected multiplier %.10f, got %.10f\n",
                OCStringGetCString(expression), expected_multiplier, multiplier);
         return false;
     }
-    
     // Check symbol
     OCStringRef symbol = SIUnitCopySymbol(unit);
     if (expected_symbol && OCStringCompare(symbol, expected_symbol, 0) != kOCCompareEqualTo) {
-        printf("    ERROR: Testing '%s': Expected symbol '%s', got '%s'\n", 
+        printf("    ERROR: Testing '%s': Expected symbol '%s', got '%s'\n",
                OCStringGetCString(expression),
                OCStringGetCString(expected_symbol),
                OCStringGetCString(symbol));
         OCRelease(symbol);
         return false;
     }
-    
     OCRelease(symbol);
     return true;
 }
-
 // Test that multiple calls with same expression return identical results
 static bool test_expression_consistency(OCStringRef expression) {
     double mult1 = 1.0, mult2 = 1.0;
     OCStringRef error1 = NULL, error2 = NULL;
-    
     SIUnitRef unit1 = SIUnitFromExpression(expression, &mult1, &error1);
     SIUnitRef unit2 = SIUnitFromExpression(expression, &mult2, &error2);
-    
     if (error1 || error2) {
-        printf("    ERROR: Testing consistency for '%s': Got errors on parsing\n", 
+        printf("    ERROR: Testing consistency for '%s': Got errors on parsing\n",
                OCStringGetCString(expression));
         return false;
     }
-    
     if (!unit1 || !unit2) {
-        printf("    ERROR: Testing consistency for '%s': Got NULL units\n", 
+        printf("    ERROR: Testing consistency for '%s': Got NULL units\n",
                OCStringGetCString(expression));
         return false;
     }
-    
     // Should return same unit object
     if (unit1 != unit2) {
-        printf("    ERROR: Testing consistency for '%s': Different unit objects returned\n", 
+        printf("    ERROR: Testing consistency for '%s': Different unit objects returned\n",
                OCStringGetCString(expression));
         return false;
     }
-    
     // Should return same multiplier
     if (fabs(mult1 - mult2) > 1e-10) {
-        printf("    ERROR: Testing consistency for '%s': Different multipliers: %.10f vs %.10f\n", 
+        printf("    ERROR: Testing consistency for '%s': Different multipliers: %.10f vs %.10f\n",
                OCStringGetCString(expression), mult1, mult2);
         return false;
     }
-    
     return true;
 }
-
 bool test_unit_from_expression_robust(void) {
     bool allPassed = true;
-    
     // Test 1: Basic SI units should always return multiplier 1.0
     allPassed &= verify_unit_behavior(STR("m"), 1.0, STR("m"), "meter");
     allPassed &= verify_unit_behavior(STR("kg"), 1.0, STR("kg"), "kilogram");
@@ -96,45 +80,37 @@ bool test_unit_from_expression_robust(void) {
     allPassed &= verify_unit_behavior(STR("K"), 1.0, STR("K"), "kelvin");
     allPassed &= verify_unit_behavior(STR("mol"), 1.0, STR("mol"), "mole");
     allPassed &= verify_unit_behavior(STR("cd"), 1.0, STR("cd"), "candela");
-    
     // Test 2: Derived SI units should return multiplier 1.0
     allPassed &= verify_unit_behavior(STR("N"), 1.0, STR("N"), "newton");
     allPassed &= verify_unit_behavior(STR("Pa"), 1.0, STR("Pa"), "pascal");
     allPassed &= verify_unit_behavior(STR("J"), 1.0, STR("J"), "joule");
     allPassed &= verify_unit_behavior(STR("W"), 1.0, STR("W"), "watt");
     allPassed &= verify_unit_behavior(STR("Hz"), 1.0, STR("Hz"), "hertz");
-    
     // Test 3: Prefixed units should return multiplier 1.0
     allPassed &= verify_unit_behavior(STR("km"), 1.0, STR("km"), "kilometer");
     allPassed &= verify_unit_behavior(STR("mm"), 1.0, STR("mm"), "millimeter");
     allPassed &= verify_unit_behavior(STR("kN"), 1.0, STR("kN"), "kilonewton");
     allPassed &= verify_unit_behavior(STR("mA"), 1.0, STR("mA"), "milliampere");
-    
     // Test 4: Compound expressions that should be in library
     allPassed &= verify_unit_behavior(STR("m/s"), 1.0, STR("m/s"), "velocity");
     allPassed &= verify_unit_behavior(STR("m/s^2"), 1.0, STR("m/s^2"), "acceleration");
     allPassed &= verify_unit_behavior(STR("kg*m/s^2"), 1.0, STR("N"), "force compound");
     allPassed &= verify_unit_behavior(STR("kg*m^2/s^2"), 1.0, STR("J"), "energy compound");
-    
     // Test 5: Expression consistency (multiple calls should return same results)
     allPassed &= test_expression_consistency(STR("m"));
     allPassed &= test_expression_consistency(STR("N"));
     allPassed &= test_expression_consistency(STR("kg*m/s^2"));
     allPassed &= test_expression_consistency(STR("m/s"));
-    
     // Test 6: Non-SI units that should be in library
     allPassed &= verify_unit_behavior(STR("in"), 1.0, STR("in"), "inch");
     allPassed &= verify_unit_behavior(STR("ft"), 1.0, STR("ft"), "foot");
     allPassed &= verify_unit_behavior(STR("lb"), 1.0, STR("lb"), "pound mass");
     allPassed &= verify_unit_behavior(STR("lbf"), 1.0, STR("lbf"), "pound force");
-    
     // Test 7: Expression variants should return same unit
     double mult1 = 1.0, mult2 = 1.0;
     OCStringRef error1 = NULL, error2 = NULL;
-    
     SIUnitRef unit1 = SIUnitFromExpression(STR("kg*m/s^2"), &mult1, &error1);
     SIUnitRef unit2 = SIUnitFromExpression(STR("m*kg/s^2"), &mult2, &error2);
-    
     if (!unit1 || !unit2) {
         printf("    ERROR: Testing expression variants: Failed to parse variants\n");
         allPassed = false;
@@ -144,59 +120,47 @@ bool test_unit_from_expression_robust(void) {
             printf("    ERROR: Testing expression variants: Variants are not equivalent\n");
             allPassed = false;
         }
-        
         if (fabs(mult1 - mult2) > 1e-10) {
             printf("    ERROR: Testing expression variants: Different multipliers for variants: %.10f vs %.10f\n", mult1, mult2);
             allPassed = false;
         }
     }
-    
     // Test 8: Test that library lookup happens before parsing
-    
     // First parse an expression to ensure it's in library
     double tempMult = 1.0;
     OCStringRef tempError = NULL;
     SIUnitRef tempUnit = SIUnitFromExpression(STR("in*lb"), &tempMult, &tempError);
-    
     if (tempUnit) {
         // Now parse it again - should get same result without parsing
         double mult3 = 1.0;
         OCStringRef error3 = NULL;
         SIUnitRef unit3 = SIUnitFromExpression(STR("in*lb"), &mult3, &error3);
-        
         if (unit3 != tempUnit || fabs(mult3 - 1.0) >= 1e-10) {
             printf("    ERROR: Testing library lookup priority: Library lookup not working as expected\n");
             allPassed = false;
         }
     }
-    
     // Test 9: Verify canonical form doesn't break existing behavior
-    
     // These should all resolve to the same canonical form
     const char* equivalent_expressions[] = {
         "lb*ft^2/s^2",
-        "ft^2*lb/s^2", 
+        "ft^2*lb/s^2",
         "(ft^2*lb)/s^2",
         "ft*ft*lb/s/s",
-        "lb*ft*ft/(s*s)"
-    };
-    
+        "lb*ft*ft/(s*s)"};
     SIUnitRef first_unit = NULL;
     double first_mult = 1.0;
-    
     for (int i = 0; i < 5; i++) {
         double mult = 1.0;
         OCStringRef error = NULL;
         OCStringRef expr = OCStringCreateWithCString(equivalent_expressions[i]);
         SIUnitRef unit = SIUnitFromExpression(expr, &mult, &error);
-        
         if (error || !unit) {
             printf("    ERROR: Failed to parse '%s'\n", equivalent_expressions[i]);
             OCRelease(expr);
             allPassed = false;
             continue;
         }
-        
         if (first_unit == NULL) {
             first_unit = unit;
             first_mult = mult;
@@ -206,20 +170,16 @@ bool test_unit_from_expression_robust(void) {
                 printf("    ERROR: Different units for equivalent expressions\n");
                 allPassed = false;
             }
-            
             if (fabs(mult - first_mult) > 1e-10) {
                 printf("    ERROR: Different multipliers for equivalent expressions\n");
                 allPassed = false;
             }
         }
-        
         OCRelease(expr);
     }
-    
     if (allPassed) {
         printf("    SUCCESS: Canonical form working correctly\n");
     }
-    
     printf("\nSIUnitFromExpression robust test %s\n", allPassed ? "PASSED" : "FAILED");
     return allPassed;
 }

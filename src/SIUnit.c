@@ -461,14 +461,13 @@ static SIUnitRef AddToLib(
         }
         return NULL;
     }
-    if(OCArrayContainsValue(unitNamesLibrary,theUnit)) {
+    if (OCArrayContainsValue(unitNamesLibrary, theUnit)) {
         OCIndex index = OCArrayGetFirstIndexOfValue(unitNamesLibrary, theUnit);
         OCRelease(theUnit);
-        return OCArrayGetValueAtIndex(unitNamesLibrary,index);
+        return OCArrayGetValueAtIndex(unitNamesLibrary, index);
     }
     OCTypeSetStaticInstance(theUnit, true);
-    OCArrayAppendValue(unitNamesLibrary,theUnit);
-
+    OCArrayAppendValue(unitNamesLibrary, theUnit);
     // If unit symbol is underived, i.e., one of the token unit symbols, add to tokenSymbolLibrary
     if (SIUnitSymbolIsUnderived(theUnit->symbol)) {
         if (!OCArrayContainsValue(tokenSymbolLibrary, symbol)) {
@@ -518,7 +517,6 @@ SIUnitRef AddNonExistingToLib(
     OCDictionaryAddValue(SIUnitGetUnitsLib(), unit->symbol, unit);
     return unit;
 }
-
 static SIUnitRef AddSIToLib(
     OCStringRef quantity,
     OCStringRef name,
@@ -797,32 +795,29 @@ static bool SIUnitCreateLibraries(void) {
             SIUnitLibrarySetImperialVolumes(true);
         }
     }
-
     OCArraySortValues(unitNamesLibrary, OCRangeMake(0, OCArrayGetCount(unitNamesLibrary)), unitNameLengthSort, NULL);
     // Add unit to units library dictionary
     OCMutableDictionaryRef unitsLib = SIUnitGetUnitsLib();
-    for(OCIndex index = 0;index<OCArrayGetCount(unitNamesLibrary); index++) {
-        SIUnitRef unit = OCArrayGetValueAtIndex(unitNamesLibrary,index);
-        if(!SIUnitSymbolIsUnderived(unit->symbol)) {
+    for (OCIndex index = 0; index < OCArrayGetCount(unitNamesLibrary); index++) {
+        SIUnitRef unit = OCArrayGetValueAtIndex(unitNamesLibrary, index);
+        if (!SIUnitSymbolIsUnderived(unit->symbol)) {
             OCStringRef key = SIUnitCreateCleanedExpression(unit->symbol);
             OCDictionaryAddValue(unitsLib, key, unit);
             OCRelease(key);
-        }
-        else OCDictionaryAddValue(unitsLib, unit->symbol, unit);
+        } else
+            OCDictionaryAddValue(unitsLib, unit->symbol, unit);
     }
     return true;
 }
 // Add a cleanup function for static dictionaries and array
 void SIUnitLibrariesShutdown(void) {
     if (!unitsLibrary) return;
-
     // All SIUnits inside these Arrays should be static instances.
     if (unitsQuantitiesLibrary) {
         OCRelease(unitsQuantitiesLibrary);
         unitsQuantitiesLibrary = NULL;
     }
     if (unitsDimensionalitiesLibrary) {
-
         OCRelease(unitsDimensionalitiesLibrary);
         unitsDimensionalitiesLibrary = NULL;
     }
@@ -830,14 +825,13 @@ void SIUnitLibrariesShutdown(void) {
         OCRelease(tokenSymbolLibrary);
         tokenSymbolLibrary = NULL;
     }
-    if(unitsLibrary) {
+    if (unitsLibrary) {
         OCRelease(unitsLibrary);
         unitsLibrary = NULL;
     }
-
     if (unitNamesLibrary) {
-        for(OCIndex index = 0; index<OCArrayGetCount(unitNamesLibrary); index++) {
-            SIUnitRef unit = (SIUnitRef) OCArrayGetValueAtIndex(unitNamesLibrary,index);
+        for (OCIndex index = 0; index < OCArrayGetCount(unitNamesLibrary); index++) {
+            SIUnitRef unit = (SIUnitRef)OCArrayGetValueAtIndex(unitNamesLibrary, index);
             OCTypeSetStaticInstance(unit, false);
         }
         OCRelease(unitNamesLibrary);
@@ -1115,7 +1109,7 @@ static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
     if (NULL == tempUnit)
         return NULL;
     // Check if unit with this symbol already exists
-    OCStringRef key  = SIUnitCreateCleanedExpression(tempUnit->symbol);
+    OCStringRef key = SIUnitCreateCleanedExpression(tempUnit->symbol);
     if (OCDictionaryContainsKey(unitsLibrary, key)) {
         SIUnitRef existingUnit = OCDictionaryGetValue(unitsLibrary, key);
         OCRelease(tempUnit);  // Discard the temporary unit
@@ -1125,7 +1119,7 @@ static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
     // No existing unit found, so add this fresh unit to library
     OCTypeSetStaticInstance(tempUnit, true);
     OCDictionaryAddValue(unitsLibrary, key, tempUnit);
-    OCArrayAppendValue(unitNamesLibrary,tempUnit);
+    OCArrayAppendValue(unitNamesLibrary, tempUnit);
     OCRelease(tempUnit);
     OCRelease(key);
     return tempUnit;
@@ -1191,7 +1185,7 @@ OCArrayRef SIUnitCreateArrayOfUnitsForSameReducedDimensionality(SIDimensionality
     return result;
 }
 SIUnitRef SIUnitDimensionlessAndUnderived(void) {
-    return OCDictionaryGetValue(unitsLibrary,STR(" "));
+    return OCDictionaryGetValue(unitsLibrary, STR(" "));
 }
 // Equivalent units can be substituted for each other without changing the associated numerical value
 OCArrayRef SIUnitCreateArrayOfEquivalentUnits(SIUnitRef theUnit) {
@@ -1292,12 +1286,10 @@ static SIUnitRef SIUnitFindBestMatchingUnit(SIDimensionalityRef dimensionality, 
         int symbol_token_count = SIUnitCountTokenSymbols(candidate->symbol);
         double scale_diff = fabs(candidate->scale_to_coherent_si - target_scale);
         bool is_si = SIUnitIsSIUnit(candidate);
-        
         // Only consider SI units as candidates
         if (!is_si) {
             continue;
         }
-        
         // Determine if this candidate is better than the current best
         bool is_better = false;
         if (best_match == NULL) {
@@ -1497,7 +1489,6 @@ static SIUnitRef SIUnitByDividingInternal(SIUnitRef theUnit1,
     }
     if (error && *error) return NULL;
     // Calculate the new scale factor
-    
     double scale = theUnit1->scale_to_coherent_si / theUnit2->scale_to_coherent_si;
     // First approach: Look for existing units with matching dimensionality
     SIUnitRef best_match = SIUnitFindBestMatchingUnit(dimensionality, scale);

@@ -330,17 +330,14 @@ void siueMoveNegativePowersToDenominator(OCMutableArrayRef numerator, OCMutableA
 OCStringRef siueFormatExpression(const SIUnitExpression* expr, bool reduced) {
     if (!expr) return NULL;
     OCMutableStringRef result = OCStringCreateMutable(256);
-    
     // Check if we have an empty numerator with a non-empty denominator
     bool hasEmptyNumerator = (!expr->numerator || OCArrayGetCount(expr->numerator) == 0);
     bool hasNonEmptyDenominator = (expr->denominator && OCArrayGetCount(expr->denominator) > 0);
     bool needsOuterParens = hasEmptyNumerator && hasNonEmptyDenominator;
-    
     // If we need outer parentheses, add opening parenthesis
     if (needsOuterParens) {
         OCStringAppendCString(result, "(");
     }
-    
     // Format numerator
     if (expr->numerator && OCArrayGetCount(expr->numerator) > 0) {
         OCIndex count = OCArrayGetCount(expr->numerator);
@@ -393,12 +390,10 @@ OCStringRef siueFormatExpression(const SIUnitExpression* expr, bool reduced) {
             OCStringAppendCString(result, ")");
         }
     }
-    
     // If we need outer parentheses, add closing parenthesis
     if (needsOuterParens) {
         OCStringAppendCString(result, ")");
     }
-    
     return OCStringCreateCopy(result);
 }
 // Helper function to convert internal "1" back to space for dimensionless output
@@ -444,30 +439,24 @@ bool siueValidateSymbol(OCStringRef symbol) {
 }
 SIUnitExpression* siueParseExpression(OCStringRef normalized_expr) {
     if (!normalized_expr) return NULL;
-    
     // Clear any previous error
     if (siueError) {
         OCRelease(siueError);
         siueError = NULL;
     }
-    
     // Clear any previous parsed expression
     siueClearParsedExpression();
-    
     // Convert to C string for parser
     const char* exprStr = OCStringGetCString(normalized_expr);
     if (!exprStr) return NULL;
-    
     // Parse the expression
     siue_scan_string(exprStr);
     int parseResult = siueparse();
-    
     if (parseResult != 0 || siueError) {
         // Parse failed - clean up state
         siueClearParsedExpression();
         return NULL;
     }
-    
     // Get the parsed expression
     SIUnitExpression* result = siueGetParsedExpression();
     return result ? siueCopyExpression(result) : NULL;

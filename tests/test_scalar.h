@@ -1,6 +1,5 @@
 #ifndef TEST_SCALAR_H
 #define TEST_SCALAR_H
-
 // Prototypes for all tests (skip SIScalarCreateFromExpression)
 bool test_SIScalarGetTypeID(void);
 bool test_SIScalarCreateCopy(void);
@@ -102,6 +101,4 @@ bool test_SIScalarWriteReadJSON_simple(void);
 bool test_SIScalarWriteReadJSON_negative(void);
 bool test_SIScalarWriteReadJSON_complex_unit(void);
 bool test_SIScalarWriteReadJSON_array_and_dictionary(void);
-
-
 #endif /* TEST_SCALAR_H */

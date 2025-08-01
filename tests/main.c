@@ -8,11 +8,11 @@
 #include "SILibrary.h"
 #include "test_dimensionality.h"
 #include "test_duplicate_units.h"
-#include "test_unit_expression.h"
 #include "test_octypes.h"
 #include "test_scalar.h"
 #include "test_scalar_parser.h"
 #include "test_unit.h"
+#include "test_unit_expression.h"
 #include "test_unit_from_expression_robust.h"
 #include "test_unit_power_operations.h"
 #ifdef LEAK_SANITIZER
@@ -28,16 +28,12 @@ int failures = 0;
     } while (0)
 int main(int argc, const char* argv[]) {
     printf("=== OCTypes Tests ===\n");
-
-
     TRACK(octypesTest1);
     TRACK(octypesTest2);
     TRACK(octypesTest3);
     TRACK(octypesTest4);
     TRACK(octypesTest5);
     TRACK(octypesTest6);
-
-
     printf("\n=== Dimensionality Tests ===\n");
     TRACK(test_dimensionality_0);
     TRACK(test_dimensionality_1);
@@ -51,7 +47,6 @@ int main(int argc, const char* argv[]) {
     TRACK(test_dimensionality_reduction_behavior);
     TRACK(test_dimensionality_deep_copy);
     TRACK(test_dimensionality_parser_strictness);
-
     printf("\n=== SIUnit Tests ===\n");
     TRACK(test_unit_0);
     TRACK(test_unit_1);
@@ -87,9 +82,6 @@ int main(int argc, const char* argv[]) {
     TRACK(test_unit_negative_exponent_parsing);
     printf("\n=== SIUnitFromExpression Robust Tests ===\n");
     TRACK(test_unit_from_expression_robust);
-
-
-
     printf("\n=== SIScalar Parser Tests ===\n");
     TRACK(test_scalar_parser_1);
     TRACK(test_scalar_parser_2);

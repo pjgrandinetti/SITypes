@@ -1,6 +1,5 @@
 #ifndef TEST_SCALAR_PARSER_H
 #define TEST_SCALAR_PARSER_H
-
 bool test_scalar_parser_1(void);
 bool test_scalar_parser_2(void);
 bool test_scalar_parser_3(void);
@@ -14,7 +13,4 @@ bool test_scalar_parser_10(void);
 bool test_scalar_parser_11(void);
 bool test_scalar_parser_12(void);
 bool test_nmr_functions(void);
-
 #endif /* TEST_SCALAR_PARSER_H */
-
-

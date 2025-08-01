@@ -2,7 +2,7 @@
     #include <stdio.h>
     #include "SILibrary.h"
     #include "SIUnitParser.h"
-    
+
     void yyerror(char *s, ...);
     static SIUnitRef final_unit;
     OCStringRef unitError;
@@ -56,7 +56,7 @@ bool siu_syntax_error;
 SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multiplier, OCStringRef *error)
 {
     if(error) if(*error) return NULL;
-    
+
     // Use the shared normalization function for parsing
     OCMutableStringRef mutString = SIUnitCreateNormalizedExpression(string, false);
     if(OCStringGetLength(string) == 1 && (
@@ -65,7 +65,7 @@ SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multipli
         OCRelease(mutString);
         return SIUnitDimensionlessAndUnderived();
     }
-    
+
     final_unit = NULL;
     unitError = NULL;
     unit_multiplier_ref = unit_multiplier;
@@ -78,7 +78,7 @@ SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multipli
         siulex_destroy();
         OCRelease(mutString);
     }
-    
+
     if(siu_syntax_error || unitError) {
         if(error) {
             if(unitError) {
@@ -98,5 +98,3 @@ void yyerror(char *s, ...)
 {
     siu_syntax_error = true;
 }
-
-

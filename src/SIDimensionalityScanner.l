@@ -22,5 +22,3 @@ SYMBOL (L|M|T|I|@|N|J)
 }
 .      {return yytext[0];}
 %%
-
-

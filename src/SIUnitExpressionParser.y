@@ -2,12 +2,12 @@
     #include <stdio.h>
     #include "SILibrary.h"
     #include "SIUnitExpression.h"
-    
+
     void siueerror(char *s, ...);
-    
+
     // External variables and functions defined in SIUnitExpression.c
     extern OCStringRef siueError;
-    
+
     // External lexer function
     int siuelex(void);
 %}
@@ -41,7 +41,7 @@
 input: expression { siueSetParsedExpression($1); }
      ;
 
-expression: term_list { 
+expression: term_list {
     $$ = siueCreateExpression($1, NULL);
 }
 | INTEGER {

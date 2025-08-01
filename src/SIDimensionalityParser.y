@@ -7,7 +7,7 @@
     static SIDimensionalityRef final_dimensionality;
     OCStringRef dimensionalityError;
     int sidlex(void);
-    
+
     %}
 
 %name-prefix="sid"
@@ -53,13 +53,13 @@ SIDimensionalityRef SIDimensionalityFromExpression(OCStringRef expression, OCStr
 
     OCMutableStringRef  mutString = OCStringCreateMutableCopy(expression);
     OCStringTrimWhitespace(mutString);
-    
+
     if(OCStringGetLength(mutString) == 1) {
         SIDimensionalityRef result = SIDimensionalityWithBaseDimensionSymbol(mutString,error);
         OCRelease(mutString);
         return result;
     }
-    
+
     OCStringFindAndReplace2(mutString,STR("•"),STR("*"));
     OCStringFindAndReplace2(mutString,STR("ϴ"), STR("@"));
 
@@ -69,13 +69,13 @@ SIDimensionalityRef SIDimensionalityFromExpression(OCStringRef expression, OCStr
     uint64_t length = OCStringGetLength(mutString);
     if(length) {
         const char *cString = OCStringGetCString(mutString);
-        
+
         sid_scan_string(cString);
         sidparse();
         sidlex_destroy();
         OCRelease(mutString);
     }
-    
+
     // Check for syntax errors and reject the parse if any occurred
     if(sid_syntax_error) {
         if(final_dimensionality) {
@@ -86,9 +86,9 @@ SIDimensionalityRef SIDimensionalityFromExpression(OCStringRef expression, OCStr
             dimensionalityError = STR("Invalid expression: addition and subtraction are not valid in dimensional analysis");
         }
     }
-    
+
     if(dimensionalityError) *error = dimensionalityError;
-    
+
     return final_dimensionality;
 }
 
@@ -96,5 +96,3 @@ void yyerror(char *s, ...)
 {
     sid_syntax_error = true;
 }
-
-

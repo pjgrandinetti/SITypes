@@ -6,7 +6,7 @@
     #include "SILibrary.h"
     #include "SIUnitParser.tab.h"
     #include "SIUnitParser.h"
-    
+
     extern void siuerror(char *s, ...);
     extern OCStringRef unitError;
 %}

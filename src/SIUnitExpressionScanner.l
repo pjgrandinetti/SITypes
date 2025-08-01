@@ -6,7 +6,7 @@
     #include "SILibrary.h"
     #include "SIUnitExpression.h"
     #include "SIUnitExpressionParser.tab.h"
-    
+
     extern void siueerror(char *s, ...);
     extern OCStringRef siueError;
 %}
@@ -27,7 +27,7 @@ SYMBOL {IDENTIFIER}|{UNICODE_IDENTIFIER}
 {SYMBOL} {
     // Create string from matched text
     OCStringRef string = OCStringCreateWithCString(yytext);
-    
+
     // Validate against the dynamic token library
     if (siueValidateSymbol(string)) {
         siuelval.unit_symbol = string;

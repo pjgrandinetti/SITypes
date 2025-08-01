@@ -1,6 +1,5 @@
 #ifndef SIDIMENSIONALITY_PRIVATE_H
 #define SIDIMENSIONALITY_PRIVATE_H
-
 #include "SILibrary.h"
 #define BASE_DIMENSION_COUNT 7
 // SIDimensionality Opaque Type
@@ -23,5 +22,4 @@ static SIDimensionalityRef SIDimensionalityWithExponents(uint8_t length_num_exp,
                                                          uint8_t amount_num_exp, uint8_t amount_den_exp,
                                                          uint8_t luminous_num_exp, uint8_t luminous_den_exp);
 void cleanupDimensionalityLibraries(void);
-
 #endif /* SIDIMENSIONALITY_PRIVATE_H */

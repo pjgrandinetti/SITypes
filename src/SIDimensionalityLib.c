@@ -182,8 +182,7 @@ SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensiona
     if (error && *error) return NULL;
     // 2) Validate input
     IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
-    if(power ==0) return SIDimensionalityDimensionless();
-    
+    if (power == 0) return SIDimensionalityDimensionless();
     // 3) Compute new exponents in two small arrays
     uint8_t num_exp[BASE_DIMENSION_COUNT];
     uint8_t den_exp[BASE_DIMENSION_COUNT];
@@ -987,17 +986,14 @@ bool DimensionalityLibraryDumpCSV(const char *csvPath) {
         OCStringRef key = (OCStringRef)OCArrayGetValueAtIndex(keys, i);
         const void *vdim = OCDictionaryGetValue(dimQuantitiesLibrary, key);
         if (!vdim) continue;
-
         // quantity name – use OCStringGetCString, not the non‐existent GetCharactersPtr
         const char *quantity = OCStringGetCString(key);
-
         // cast to our internal struct
         struct impl_SIDimensionality *impl =
             (struct impl_SIDimensionality *)vdim;
-
         // 3) write one CSV row
         fprintf(fp,
-                "\"%s\","         // quantity (quoted in case the string contains commas)
+                "\"%s\","     // quantity (quoted in case the string contains commas)
                 "{%u,%u},"    // Length
                 "{%u,%u},"    // Mass
                 "{%u,%u},"    // Time
@@ -1006,12 +1002,12 @@ bool DimensionalityLibraryDumpCSV(const char *csvPath) {
                 "{%u,%u},"    // Amount
                 "{%u,%u}\n",  // LuminousIntensity
                 quantity,
-                impl->num_exp[kSILengthIndex],         impl->den_exp[kSILengthIndex],
-                impl->num_exp[kSIMassIndex],           impl->den_exp[kSIMassIndex],
-                impl->num_exp[kSITimeIndex],           impl->den_exp[kSITimeIndex],
-                impl->num_exp[kSICurrentIndex],        impl->den_exp[kSICurrentIndex],
-                impl->num_exp[kSITemperatureIndex],    impl->den_exp[kSITemperatureIndex],
-                impl->num_exp[kSIAmountIndex],         impl->den_exp[kSIAmountIndex],
+                impl->num_exp[kSILengthIndex], impl->den_exp[kSILengthIndex],
+                impl->num_exp[kSIMassIndex], impl->den_exp[kSIMassIndex],
+                impl->num_exp[kSITimeIndex], impl->den_exp[kSITimeIndex],
+                impl->num_exp[kSICurrentIndex], impl->den_exp[kSICurrentIndex],
+                impl->num_exp[kSITemperatureIndex], impl->den_exp[kSITemperatureIndex],
+                impl->num_exp[kSIAmountIndex], impl->den_exp[kSIAmountIndex],
                 impl->num_exp[kSILuminousIntensityIndex], impl->den_exp[kSILuminousIntensityIndex]);
     }
     OCRelease(keys);

@@ -4,13 +4,11 @@
 //  Created by PhySy Ltd on 5/5/13.
 //  Copyright (c) 2008-2014 PhySy Ltd. All rights reserved.
 //
-
-#include "SILibrary.h"
-#include <math.h> // For INFINITY
 #include "SIScalarConstants.h"
+#include <math.h>  // For INFINITY
+#include "SILibrary.h"
 #include "SIScalarConstantsData.h"
 #include "SIUnitParser.h"
-
 OCMutableDictionaryRef molarMassLibrary = NULL;
 OCMutableDictionaryRef isotopeAbundanceLibrary = NULL;
 OCMutableDictionaryRef isotopeStableLibrary = NULL;
@@ -20,7 +18,6 @@ OCMutableDictionaryRef isotopeHalfLifeLibrary = NULL;
 OCMutableDictionaryRef nuclearMagneticMomentLibrary = NULL;
 OCMutableDictionaryRef nuclearElectricQuadrupoleMomentLibrary = NULL;
 OCMutableDictionaryRef nuclearGyromagneticRatioLibrary = NULL;
-
 void cleanupScalarConstantsLibraries() {
     if (molarMassLibrary) {
         OCRelease(molarMassLibrary);
@@ -59,18 +56,14 @@ void cleanupScalarConstantsLibraries() {
         nuclearGyromagneticRatioLibrary = NULL;
     }
 }
-
-static bool SIPeriodicTableCreateMolarMassLibrary(OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return false;
-    
-    molarMassLibrary  = OCDictionaryCreateMutable(0);
-    
+static bool SIPeriodicTableCreateMolarMassLibrary(OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return false;
+    molarMassLibrary = OCDictionaryCreateMutable(0);
     double multiplier = 1.0;
     SIUnitRef unit = SIUnitFromExpression(STR("g/mol"), &multiplier, errorString);
-    
-    for(int64_t index=0;index<118;index++) {
-        SIScalarRef value = SIScalarCreateWithDouble(atomicMass[index]*multiplier,unit);
+    for (int64_t index = 0; index < 118; index++) {
+        SIScalarRef value = SIScalarCreateWithDouble(atomicMass[index] * multiplier, unit);
         OCStringRef key = OCStringCreateWithCString(atomicSymbol[index]);
         OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(key);
         OCStringLowercase(lowerCaseKey);
@@ -79,10 +72,9 @@ static bool SIPeriodicTableCreateMolarMassLibrary(OCStringRef *errorString)
         OCRelease(key);
         OCRelease(lowerCaseKey);
     }
-    
-    for(int64_t index=0;index<3181;index++) {
-        if(isotopeMass[index]) {
-            SIScalarRef value = SIScalarCreateWithDouble(isotopeMass[index],unit);
+    for (int64_t index = 0; index < 3181; index++) {
+        if (isotopeMass[index]) {
+            SIScalarRef value = SIScalarCreateWithDouble(isotopeMass[index], unit);
             OCStringRef key = OCStringCreateWithCString(isotopeSymbol[index]);
             OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(key);
             OCStringLowercase(lowerCaseKey);
@@ -94,27 +86,23 @@ static bool SIPeriodicTableCreateMolarMassLibrary(OCStringRef *errorString)
     }
     return true;
 }
-
-OCArrayRef SIPeriodicTableCreateElementSymbols(OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
+OCArrayRef SIPeriodicTableCreateElementSymbols(OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
     OCMutableArrayRef symbols = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
-    
-    for(int64_t index=0;index<118;index++) {
+    for (int64_t index = 0; index < 118; index++) {
         OCStringRef symbol = OCStringCreateWithCString(atomicSymbol[index]);
         OCArrayAppendValue(symbols, symbol);
         OCRelease(symbol);
     }
     return symbols;
 }
-
-OCArrayRef SIPeriodicTableCreateIsotopeSymbols(OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
+OCArrayRef SIPeriodicTableCreateIsotopeSymbols(OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
     OCMutableArrayRef symbols = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
-    
-    for(int64_t index=0;index<3181;index++) {
-        if(isotopeSpin[index]>=0) {
+    for (int64_t index = 0; index < 3181; index++) {
+        if (isotopeSpin[index] >= 0) {
             OCStringRef symbol = OCStringCreateWithCString(isotopeSymbol[index]);
             OCArrayAppendValue(symbols, symbol);
             OCRelease(symbol);
@@ -122,14 +110,12 @@ OCArrayRef SIPeriodicTableCreateIsotopeSymbols(OCStringRef *errorString)
     }
     return symbols;
 }
-
-OCArrayRef SIPeriodicTableCreateNMRActiveIsotopeSymbols(OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
+OCArrayRef SIPeriodicTableCreateNMRActiveIsotopeSymbols(OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
     OCMutableArrayRef symbols = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
-    
-    for(int64_t index=0;index<3181;index++) {
-        if(isotopeSpin[index]>0) {
+    for (int64_t index = 0; index < 3181; index++) {
+        if (isotopeSpin[index] > 0) {
             OCStringRef symbol = OCStringCreateWithCString(isotopeSymbol[index]);
             OCArrayAppendValue(symbols, symbol);
             OCRelease(symbol);
@@ -137,14 +123,12 @@ OCArrayRef SIPeriodicTableCreateNMRActiveIsotopeSymbols(OCStringRef *errorString
     }
     return symbols;
 }
-
-OCArrayRef SIPeriodicTableCreateStableIsotopeSymbols(OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
+OCArrayRef SIPeriodicTableCreateStableIsotopeSymbols(OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
     OCMutableArrayRef symbols = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
-    
-    for(int64_t index=0;index<3181;index++) {
-        if(isotopeStable[index]) {
+    for (int64_t index = 0; index < 3181; index++) {
+        if (isotopeStable[index]) {
             OCStringRef symbol = OCStringCreateWithCString(isotopeSymbol[index]);
             OCArrayAppendValue(symbols, symbol);
             OCRelease(symbol);
@@ -152,14 +136,12 @@ OCArrayRef SIPeriodicTableCreateStableIsotopeSymbols(OCStringRef *errorString)
     }
     return symbols;
 }
-
-OCArrayRef SIPeriodicTableCreateStableNMRActiveIsotopeSymbols(OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
+OCArrayRef SIPeriodicTableCreateStableNMRActiveIsotopeSymbols(OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
     OCMutableArrayRef symbols = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
-    
-    for(int64_t index=0;index<3181;index++) {
-        if(isotopeSpin[index]>0 && isotopeStable[index]) {
+    for (int64_t index = 0; index < 3181; index++) {
+        if (isotopeSpin[index] > 0 && isotopeStable[index]) {
             OCStringRef symbol = OCStringCreateWithCString(isotopeSymbol[index]);
             OCArrayAppendValue(symbols, symbol);
             OCRelease(symbol);
@@ -167,44 +149,37 @@ OCArrayRef SIPeriodicTableCreateStableNMRActiveIsotopeSymbols(OCStringRef *error
     }
     return symbols;
 }
-
-int64_t SIPeriodicTableGetAtomicNumber(OCStringRef elementSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return kOCNotFound;
-    for(int64_t index=0;index<118;index++) {
+int64_t SIPeriodicTableGetAtomicNumber(OCStringRef elementSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return kOCNotFound;
+    for (int64_t index = 0; index < 118; index++) {
         OCStringRef symbol = OCStringCreateWithCString(atomicSymbol[index]);
-        
-        if(OCStringCompare(symbol, elementSymbol, kOCCompareCaseInsensitive) == kOCCompareEqualTo) {
+        if (OCStringCompare(symbol, elementSymbol, kOCCompareCaseInsensitive) == kOCCompareEqualTo) {
             OCRelease(symbol);
-            return index+1;
+            return index + 1;
         }
         OCRelease(symbol);
     }
     return kOCNotFound;
 }
-
-SIScalarRef SIPeriodicTableCreateMolarMass(OCStringRef elementSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
-    
-    if(NULL==molarMassLibrary) SIPeriodicTableCreateMolarMassLibrary(errorString);
+SIScalarRef SIPeriodicTableCreateMolarMass(OCStringRef elementSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
+    if (NULL == molarMassLibrary) SIPeriodicTableCreateMolarMassLibrary(errorString);
     OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(elementSymbol);
     OCStringLowercase(lowerCaseKey);
-    SIScalarRef molarMass = (SIScalarRef) OCDictionaryGetValue(molarMassLibrary, lowerCaseKey);
+    SIScalarRef molarMass = (SIScalarRef)OCDictionaryGetValue(molarMassLibrary, lowerCaseKey);
     OCRelease(lowerCaseKey);
-    if(NULL == molarMass && errorString !=NULL) {
+    if (NULL == molarMass && errorString != NULL) {
         *errorString = STR("Symbol not found");
     }
     return SIScalarCreateCopy(molarMass);
 }
-
-static void SIPeriodicTableIsotopeStableibrary(void)
-{
-    isotopeStableLibrary  = OCDictionaryCreateMutable(0);
-    
-    for(int64_t index=0;index<3181;index++) {
+static void SIPeriodicTableIsotopeStableibrary(void) {
+    isotopeStableLibrary = OCDictionaryCreateMutable(0);
+    for (int64_t index = 0; index < 3181; index++) {
         OCBooleanRef value = kOCBooleanFalse;
-        if(isotopeStable[index]) value = kOCBooleanTrue;
+        if (isotopeStable[index]) value = kOCBooleanTrue;
         OCStringRef key = OCStringCreateWithCString(isotopeSymbol[index]);
         OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(key);
         OCStringLowercase(lowerCaseKey);
@@ -214,31 +189,24 @@ static void SIPeriodicTableIsotopeStableibrary(void)
         OCRelease(lowerCaseKey);
     }
 }
-
-bool SIPeriodicTableCreateIsotopeStable(OCStringRef isotopeSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
-    
-    if(NULL==isotopeStableLibrary) SIPeriodicTableIsotopeStableibrary();
+bool SIPeriodicTableCreateIsotopeStable(OCStringRef isotopeSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
+    if (NULL == isotopeStableLibrary) SIPeriodicTableIsotopeStableibrary();
     OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(isotopeSymbol);
     OCStringLowercase(lowerCaseKey);
-    OCBooleanRef stable = (OCBooleanRef) OCDictionaryGetValue(isotopeStableLibrary, lowerCaseKey);
+    OCBooleanRef stable = (OCBooleanRef)OCDictionaryGetValue(isotopeStableLibrary, lowerCaseKey);
     OCRelease(lowerCaseKey);
-    if(NULL == stable && errorString!=NULL) {
+    if (NULL == stable && errorString != NULL) {
         *errorString = STR("Symbol not found");
     }
     return OCBooleanGetValue(stable);
 }
-
-
-static void SIPeriodicTableIsotopeHalfLifeLibrary(void)
-{
-    isotopeHalfLifeLibrary  = OCDictionaryCreateMutable(0);
-    
+static void SIPeriodicTableIsotopeHalfLifeLibrary(void) {
+    isotopeHalfLifeLibrary = OCDictionaryCreateMutable(0);
     SIUnitRef unit = SIUnitWithSymbol(STR("s"));
-    
-    for(int64_t index=0;index<3181;index++) {
-        SIScalarRef value = SIScalarCreateWithDouble(isotopeHalfLife[index],unit);
+    for (int64_t index = 0; index < 3181; index++) {
+        SIScalarRef value = SIScalarCreateWithDouble(isotopeHalfLife[index], unit);
         OCStringRef key = OCStringCreateWithCString(isotopeSymbol[index]);
         OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(key);
         OCStringLowercase(lowerCaseKey);
@@ -248,32 +216,24 @@ static void SIPeriodicTableIsotopeHalfLifeLibrary(void)
         OCRelease(lowerCaseKey);
     }
 }
-
-SIScalarRef SIPeriodicTableCreateIsotopeHalfLife(OCStringRef isotopeSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
-    
-    if(NULL==isotopeHalfLifeLibrary) SIPeriodicTableIsotopeHalfLifeLibrary();
+SIScalarRef SIPeriodicTableCreateIsotopeHalfLife(OCStringRef isotopeSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
+    if (NULL == isotopeHalfLifeLibrary) SIPeriodicTableIsotopeHalfLifeLibrary();
     OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(isotopeSymbol);
     OCStringLowercase(lowerCaseKey);
-    SIScalarRef halfLife = (SIScalarRef) OCDictionaryGetValue(isotopeHalfLifeLibrary, lowerCaseKey);
+    SIScalarRef halfLife = (SIScalarRef)OCDictionaryGetValue(isotopeHalfLifeLibrary, lowerCaseKey);
     OCRelease(lowerCaseKey);
-    if(NULL == halfLife && errorString!=NULL) {
+    if (NULL == halfLife && errorString != NULL) {
         *errorString = STR("Symbol not found");
     }
     return SIScalarCreateCopy(halfLife);
 }
-
-
-
-static void SIPeriodicTableIsotopeLifetimeLibrary(void)
-{
-    isotopeLifetimeLibrary  = OCDictionaryCreateMutable(0);
-    
+static void SIPeriodicTableIsotopeLifetimeLibrary(void) {
+    isotopeLifetimeLibrary = OCDictionaryCreateMutable(0);
     SIUnitRef unit = SIUnitWithSymbol(STR("s"));
-    
-    for(int64_t index=0;index<3181;index++) {
-        SIScalarRef value = SIScalarCreateWithDouble(isotopeLifeTime[index],unit);
+    for (int64_t index = 0; index < 3181; index++) {
+        SIScalarRef value = SIScalarCreateWithDouble(isotopeLifeTime[index], unit);
         OCStringRef key = OCStringCreateWithCString(isotopeSymbol[index]);
         OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(key);
         OCStringLowercase(lowerCaseKey);
@@ -283,31 +243,24 @@ static void SIPeriodicTableIsotopeLifetimeLibrary(void)
         OCRelease(lowerCaseKey);
     }
 }
-
-SIScalarRef SIPeriodicTableCreateIsotopeLifetime(OCStringRef isotopeSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
-    
-    if(NULL==isotopeLifetimeLibrary) SIPeriodicTableIsotopeLifetimeLibrary();
+SIScalarRef SIPeriodicTableCreateIsotopeLifetime(OCStringRef isotopeSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
+    if (NULL == isotopeLifetimeLibrary) SIPeriodicTableIsotopeLifetimeLibrary();
     OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(isotopeSymbol);
     OCStringLowercase(lowerCaseKey);
-    SIScalarRef lifetime = (SIScalarRef) OCDictionaryGetValue(isotopeLifetimeLibrary, lowerCaseKey);
+    SIScalarRef lifetime = (SIScalarRef)OCDictionaryGetValue(isotopeLifetimeLibrary, lowerCaseKey);
     OCRelease(lowerCaseKey);
-    if(NULL == lifetime && errorString!=NULL) {
+    if (NULL == lifetime && errorString != NULL) {
         *errorString = STR("Symbol not found");
     }
     return SIScalarCreateCopy(lifetime);
 }
-
-
-static void SIPeriodicTableIsotopeAbundanceLibrary(void)
-{
-    isotopeAbundanceLibrary  = OCDictionaryCreateMutable(0);
-    
+static void SIPeriodicTableIsotopeAbundanceLibrary(void) {
+    isotopeAbundanceLibrary = OCDictionaryCreateMutable(0);
     SIUnitRef unit = SIUnitDimensionlessAndUnderived();
-    
-    for(int64_t index=0;index<3181;index++) {
-        SIScalarRef value = SIScalarCreateWithDouble(isotopeAbundance[index],unit);
+    for (int64_t index = 0; index < 3181; index++) {
+        SIScalarRef value = SIScalarCreateWithDouble(isotopeAbundance[index], unit);
         OCStringRef key = OCStringCreateWithCString(isotopeSymbol[index]);
         OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(key);
         OCStringLowercase(lowerCaseKey);
@@ -317,35 +270,29 @@ static void SIPeriodicTableIsotopeAbundanceLibrary(void)
         OCRelease(lowerCaseKey);
     }
 }
-
-
-SIScalarRef SIPeriodicTableCreateIsotopeAbundance(OCStringRef isotopeSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
-    
-    if(NULL==isotopeAbundanceLibrary) SIPeriodicTableIsotopeAbundanceLibrary();
+SIScalarRef SIPeriodicTableCreateIsotopeAbundance(OCStringRef isotopeSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
+    if (NULL == isotopeAbundanceLibrary) SIPeriodicTableIsotopeAbundanceLibrary();
     OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(isotopeSymbol);
     OCStringLowercase(lowerCaseKey);
-    SIScalarRef abundance = (SIScalarRef) OCDictionaryGetValue(isotopeAbundanceLibrary, lowerCaseKey);
+    SIScalarRef abundance = (SIScalarRef)OCDictionaryGetValue(isotopeAbundanceLibrary, lowerCaseKey);
     OCRelease(lowerCaseKey);
-    if(NULL == abundance && errorString!=NULL) {
+    if (NULL == abundance && errorString != NULL) {
         *errorString = STR("Symbol not found");
     }
     return SIScalarCreateCopy(abundance);
 }
-
-static bool SIPeriodicTableNuclearElectricQuadrupoleMomentLibrary(OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return false;
+static bool SIPeriodicTableNuclearElectricQuadrupoleMomentLibrary(OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return false;
     nuclearElectricQuadrupoleMomentLibrary = OCDictionaryCreateMutable(0);
-    
     SIUnitRef unit = SIUnitWithSymbol(STR("b"));
-    
-    for(int64_t index=0;index<3181;index++) {
-        if(quadMoment[index] != -99) {
+    for (int64_t index = 0; index < 3181; index++) {
+        if (quadMoment[index] != -99) {
             double moment = quadMoment[index];
-            SIScalarRef value = SIScalarCreateWithDouble(moment,unit);
-            OCStringRef key = OCStringCreateWithCString( isotopeSymbol[index]);
+            SIScalarRef value = SIScalarCreateWithDouble(moment, unit);
+            OCStringRef key = OCStringCreateWithCString(isotopeSymbol[index]);
             OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(key);
             OCStringLowercase(lowerCaseKey);
             OCDictionaryAddValue(nuclearElectricQuadrupoleMomentLibrary, lowerCaseKey, value);
@@ -356,34 +303,28 @@ static bool SIPeriodicTableNuclearElectricQuadrupoleMomentLibrary(OCStringRef *e
     }
     return true;
 }
-
-SIScalarRef SIPeriodicTableCreateIsotopeElectricQuadrupoleMoment(OCStringRef isotopeSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
-    
-    if(NULL==nuclearElectricQuadrupoleMomentLibrary) SIPeriodicTableNuclearElectricQuadrupoleMomentLibrary(errorString);
+SIScalarRef SIPeriodicTableCreateIsotopeElectricQuadrupoleMoment(OCStringRef isotopeSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
+    if (NULL == nuclearElectricQuadrupoleMomentLibrary) SIPeriodicTableNuclearElectricQuadrupoleMomentLibrary(errorString);
     OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(isotopeSymbol);
     OCStringLowercase(lowerCaseKey);
-    SIScalarRef electricQuadrupoleMoment = (SIScalarRef) OCDictionaryGetValue(nuclearElectricQuadrupoleMomentLibrary, lowerCaseKey);
+    SIScalarRef electricQuadrupoleMoment = (SIScalarRef)OCDictionaryGetValue(nuclearElectricQuadrupoleMomentLibrary, lowerCaseKey);
     OCRelease(lowerCaseKey);
-    if(NULL == electricQuadrupoleMoment && errorString!=NULL) {
+    if (NULL == electricQuadrupoleMoment && errorString != NULL) {
         *errorString = STR("Symbol not found");
     }
     return SIScalarCreateCopy(electricQuadrupoleMoment);
 }
-
-
-static bool SIPeriodicTableNuclearMagneticDipoleMomentLibrary(OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return false;
-    nuclearMagneticMomentLibrary  = OCDictionaryCreateMutable(0);
-    
+static bool SIPeriodicTableNuclearMagneticDipoleMomentLibrary(OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return false;
+    nuclearMagneticMomentLibrary = OCDictionaryCreateMutable(0);
     SIUnitRef unit = SIUnitWithSymbol(STR("µ_N"));
-    
-    for(int64_t index=0;index<3181;index++) {
-        if(isotopeSpin[index] != -99) {
+    for (int64_t index = 0; index < 3181; index++) {
+        if (isotopeSpin[index] != -99) {
             double moment = isotopeMagneticMoment[index];
-            SIScalarRef value = SIScalarCreateWithDouble(moment,unit);
+            SIScalarRef value = SIScalarCreateWithDouble(moment, unit);
             OCStringRef key = OCStringCreateWithCString(isotopeSymbol[index]);
             OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(key);
             OCStringLowercase(lowerCaseKey);
@@ -395,31 +336,25 @@ static bool SIPeriodicTableNuclearMagneticDipoleMomentLibrary(OCStringRef *error
     }
     return true;
 }
-
-SIScalarRef SIPeriodicTableCreateIsotopeMagneticDipoleMoment(OCStringRef isotopeSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
-    
-    if(NULL==nuclearMagneticMomentLibrary) SIPeriodicTableNuclearMagneticDipoleMomentLibrary(errorString);
+SIScalarRef SIPeriodicTableCreateIsotopeMagneticDipoleMoment(OCStringRef isotopeSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
+    if (NULL == nuclearMagneticMomentLibrary) SIPeriodicTableNuclearMagneticDipoleMomentLibrary(errorString);
     OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(isotopeSymbol);
     OCStringLowercase(lowerCaseKey);
-    SIScalarRef magneticDipoleMoment = (SIScalarRef) OCDictionaryGetValue(nuclearMagneticMomentLibrary, lowerCaseKey);
+    SIScalarRef magneticDipoleMoment = (SIScalarRef)OCDictionaryGetValue(nuclearMagneticMomentLibrary, lowerCaseKey);
     OCRelease(lowerCaseKey);
-    if(NULL == magneticDipoleMoment && errorString!=NULL) {
+    if (NULL == magneticDipoleMoment && errorString != NULL) {
         *errorString = STR("Symbol not found");
     }
     return SIScalarCreateCopy(magneticDipoleMoment);
 }
-
-static void SIPeriodicTableIsotopeSpinLibrary(void)
-{
-    isotopeSpinLibrary  = OCDictionaryCreateMutable(0);
-    
+static void SIPeriodicTableIsotopeSpinLibrary(void) {
+    isotopeSpinLibrary = OCDictionaryCreateMutable(0);
     SIUnitRef unit = SIUnitDimensionlessAndUnderived();
-    
-    for(int64_t index=0;index<3181;index++) {
-        if(isotopeSpin[index] != -99) {
-            SIScalarRef value = SIScalarCreateWithDouble(isotopeSpin[index],unit);
+    for (int64_t index = 0; index < 3181; index++) {
+        if (isotopeSpin[index] != -99) {
+            SIScalarRef value = SIScalarCreateWithDouble(isotopeSpin[index], unit);
             OCStringRef key = OCStringCreateWithCString(isotopeSymbol[index]);
             OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(key);
             OCStringLowercase(lowerCaseKey);
@@ -430,36 +365,30 @@ static void SIPeriodicTableIsotopeSpinLibrary(void)
         }
     }
 }
-
-SIScalarRef SIPeriodicTableCreateIsotopeSpin(OCStringRef isotopeSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
-    
-    if(NULL==isotopeSpinLibrary) SIPeriodicTableIsotopeSpinLibrary();
-    
+SIScalarRef SIPeriodicTableCreateIsotopeSpin(OCStringRef isotopeSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
+    if (NULL == isotopeSpinLibrary) SIPeriodicTableIsotopeSpinLibrary();
     OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(isotopeSymbol);
     OCStringLowercase(lowerCaseKey);
-    SIScalarRef spin = (SIScalarRef) OCDictionaryGetValue(isotopeSpinLibrary, lowerCaseKey);
+    SIScalarRef spin = (SIScalarRef)OCDictionaryGetValue(isotopeSpinLibrary, lowerCaseKey);
     OCRelease(lowerCaseKey);
-    if(NULL == spin && errorString!=NULL) {
+    if (NULL == spin && errorString != NULL) {
         *errorString = STR("Symbol not found");
     }
     return SIScalarCreateCopy(spin);
 }
-
-static bool SIPeriodicTableNuclearGyromagneticRatioLibrary(OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return false;
-    nuclearGyromagneticRatioLibrary  = OCDictionaryCreateMutable(0);
-    
+static bool SIPeriodicTableNuclearGyromagneticRatioLibrary(OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return false;
+    nuclearGyromagneticRatioLibrary = OCDictionaryCreateMutable(0);
     double multiplier = 1.0;
     SIUnitRef unit = SIUnitFromExpression(STR("rad/(s•T)"), &multiplier, errorString);
-    
-    for(int64_t index=0;index<3181;index++) {
-        if(isotopeMagneticMoment[index] && isotopeSpin[index] != -99) {
-            double spin =isotopeSpin[index];
+    for (int64_t index = 0; index < 3181; index++) {
+        if (isotopeMagneticMoment[index] && isotopeSpin[index] != -99) {
+            double spin = isotopeSpin[index];
             double moment = isotopeMagneticMoment[index];
-            SIScalarRef value = SIScalarCreateWithDouble(moment*5.0507832413e-27*multiplier/spin,unit);
+            SIScalarRef value = SIScalarCreateWithDouble(moment * 5.0507832413e-27 * multiplier / spin, unit);
             OCStringRef key = OCStringCreateWithCString(isotopeSymbol[index]);
             OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(key);
             OCStringLowercase(lowerCaseKey);
@@ -471,66 +400,53 @@ static bool SIPeriodicTableNuclearGyromagneticRatioLibrary(OCStringRef *errorStr
     }
     return true;
 }
-
-SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
-    
-    if(NULL==nuclearMagneticMomentLibrary) SIPeriodicTableNuclearMagneticDipoleMomentLibrary(errorString);
-    if(NULL==isotopeSpinLibrary) SIPeriodicTableIsotopeSpinLibrary();
-    
+SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
+    if (NULL == nuclearMagneticMomentLibrary) SIPeriodicTableNuclearMagneticDipoleMomentLibrary(errorString);
+    if (NULL == isotopeSpinLibrary) SIPeriodicTableIsotopeSpinLibrary();
     OCMutableStringRef lowerCaseKey = OCStringCreateMutableCopy(isotopeSymbol);
     OCStringLowercase(lowerCaseKey);
-    SIScalarRef magneticMoment = (SIScalarRef) OCDictionaryGetValue(nuclearMagneticMomentLibrary, lowerCaseKey);
-    SIScalarRef spin = (SIScalarRef) OCDictionaryGetValue(isotopeSpinLibrary, lowerCaseKey);
-
-    SIScalarRef hbar = SIScalarCreateWithDouble(1,SIUnitWithSymbol(STR("ℏ")));
+    SIScalarRef magneticMoment = (SIScalarRef)OCDictionaryGetValue(nuclearMagneticMomentLibrary, lowerCaseKey);
+    SIScalarRef spin = (SIScalarRef)OCDictionaryGetValue(isotopeSpinLibrary, lowerCaseKey);
+    SIScalarRef hbar = SIScalarCreateWithDouble(1, SIUnitWithSymbol(STR("ℏ")));
     OCRelease(lowerCaseKey);
-    if(NULL == magneticMoment || NULL == spin || NULL == hbar ) {
-        if(hbar) OCRelease(hbar);
-        if(errorString) *errorString = STR("Symbol not found");
+    if (NULL == magneticMoment || NULL == spin || NULL == hbar) {
+        if (hbar) OCRelease(hbar);
+        if (errorString) *errorString = STR("Symbol not found");
         return NULL;
     }
-    
     SIMutableScalarRef gyromagneticRatio = SIScalarCreateMutableCopy(magneticMoment);
     SIScalarDivide(gyromagneticRatio, hbar, errorString);
-    if(hbar) OCRelease(hbar);
-    
-    if(SIScalarDoubleValue(spin)>0) SIScalarMultiplyByDimensionlessRealConstant(gyromagneticRatio, 1./SIScalarDoubleValue(spin));
-    
+    if (hbar) OCRelease(hbar);
+    if (SIScalarDoubleValue(spin) > 0) SIScalarMultiplyByDimensionlessRealConstant(gyromagneticRatio, 1. / SIScalarDoubleValue(spin));
     double multiplier = 1;
     SIUnitRef unit = SIUnitFromExpression(STR("rad/(s•T)"), &multiplier, errorString);
     if (unit) {
         SIScalarConvertToUnit(gyromagneticRatio, unit, errorString);
     }
-    
     return gyromagneticRatio;
 }
-
-SIScalarRef SIPeriodicTableCreateNMRFrequency(OCStringRef isotopeSymbol, OCStringRef *errorString)
-{
-    if(errorString) if(*errorString) return NULL;
-    
+SIScalarRef SIPeriodicTableCreateNMRFrequency(OCStringRef isotopeSymbol, OCStringRef *errorString) {
+    if (errorString)
+        if (*errorString) return NULL;
     SIScalarRef gyro = SIPeriodicTableCreateIsotopeGyromagneticRatio(isotopeSymbol, errorString);
-    if(NULL == gyro  && errorString!=NULL) {
+    if (NULL == gyro && errorString != NULL) {
         *errorString = STR("Symbol not found");
         return NULL;
     }
     SIMutableScalarRef nmr = SIScalarCreateMutableCopy(gyro);
     OCRelease(gyro);  // Release the gyro scalar after copying it
-    SIScalarMultiplyByDimensionlessRealConstant(nmr, 1./6.283185307179586);
-    
+    SIScalarMultiplyByDimensionlessRealConstant(nmr, 1. / 6.283185307179586);
     double multiplier = 1;
     SIUnitRef unit = SIUnitFromExpression(STR("MHz/T"), &multiplier, errorString);
     SIScalarConvertToUnit(nmr, unit, errorString);
     return nmr;
 }
-
-bool SIPeriodicTableIsElement(OCStringRef elementSymbol)
-{
-    for(int64_t index=0;index<118;index++) {
+bool SIPeriodicTableIsElement(OCStringRef elementSymbol) {
+    for (int64_t index = 0; index < 118; index++) {
         OCStringRef key = OCStringCreateWithCString(atomicSymbol[index]);
-        if(OCStringCompare(elementSymbol, key, 0)==kOCCompareEqualTo) {
+        if (OCStringCompare(elementSymbol, key, 0) == kOCCompareEqualTo) {
             OCRelease(key);
             return true;
         }
@@ -538,4 +454,3 @@ bool SIPeriodicTableIsElement(OCStringRef elementSymbol)
     }
     return false;
 }
-

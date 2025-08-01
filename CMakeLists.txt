@@ -25,7 +25,7 @@ find_package(FLEX REQUIRED)
 
 # -------------------------------------------------------------------
 # 2) Tell CMake to generate parser & scanners into the current binary dir
-#    (When you later run `cmake -G "Xcode" -B build-xcode`, 
+#    (When you later run `cmake -G "Xcode" -B build-xcode`,
 #    CMAKE_CURRENT_BINARY_DIR == SITypes/build-xcode.)
 # -------------------------------------------------------------------
 

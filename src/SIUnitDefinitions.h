@@ -15,8 +15,6 @@ double Λ_0 = E_h / (kSIElementaryCharge * a_0 * a_0);
 double G_0 = 2 * kSIElementaryCharge * kSIElementaryCharge / kSIPlanckConstant;
 double mu_N = kSIElementaryCharge * hbar / (2 * kSIProtonMass);
 double mu_e = kSIElementaryCharge * hbar / (2 * kSIElectronMass);
-
-
 // Planck Units
 // planckTime t_P
 double planckTime = sqrt(hbar * (double)kSIGravitationalConstant / ((double)kSISpeedOfLight * kSISpeedOfLight * kSISpeedOfLight * kSISpeedOfLight * kSISpeedOfLight));
@@ -50,9 +48,6 @@ double planckTemperature = planckMass * kSISpeedOfLight * kSISpeedOfLight / kSIB
 // double planckAcceleration = kSISpeedOfLight / planckTime;
 // // planckPressure E_P/l_P^3
 // double planckPressure = planckForce / planckArea;
-
-
-
 //
 double naturalTimeUnit = hbar / (kSIElectronMass * kSISpeedOfLight * kSISpeedOfLight);
 double naturalMomentumUnit = kSIElectronMass * kSISpeedOfLight;
@@ -132,7 +127,7 @@ AddToLibPrefixed(kSIQuantityMass, STR("dalton"), STR("daltons"), STR("Da"), kSIA
 AddAtomicUnitToLib(kSIQuantityMass, STR("atomic mass unit"), STR("atomic mass units"), STR("u"), kSIAtomicMassConstant, &error);
 AddConstantToLib(kSIQuantityMass, STR("atomic mass constant"), STR("atomic mass constant"), STR("m_u"), kSIAtomicMassConstant, &error);
 unit = AddConstantToLib(kSIQuantityMass, STR("electron mass"), STR("electron mass"), STR("m_e"), kSIElectronMass, &error);
-SIUnitSetIsAtomicUnit(unit,true);
+SIUnitSetIsAtomicUnit(unit, true);
 AddConstantToLib(kSIQuantityMass, STR("proton mass"), STR("proton mass"), STR("m_p"), kSIProtonMass, &error);
 AddConstantToLib(kSIQuantityMass, STR("neutron mass"), STR("neutron mass"), STR("m_n"), kSINeutronMass, &error);
 AddConstantToLib(kSIQuantityMass, STR("alpha particle mass"), STR("alpha particle mass"), STR("m_a"), kSIAlphaParticleMass, &error);
@@ -147,7 +142,7 @@ AddToLib(kSIQuantityMass, STR("dram"), STR("drams"), STR("dr"), kSIPound / 256, 
 AddToLib(kSIQuantityMass, STR("tonUK"), STR("tonsUK"), STR("tonUK"), kSIPound * 2240, &error);
 AddToLib(kSIQuantityMass, STR("hundredweightUK"), STR("hundredweightUK"), STR("cwtUK"), kSIPound * 112, &error);
 unit = AddConstantToLib(kSIQuantityMass, STR("planck mass"), STR("planck mass"), STR("m_P"), planckMass, &error);
-SIUnitSetIsPlanckUnit(unit,true);
+SIUnitSetIsPlanckUnit(unit, true);
 //
 #pragma mark kSIQuantityInverseMass
 AddToLib(kSIQuantityInverseMass, STR("inverse kilogram"), STR("inverse kilograms"), STR("(1/kg)"), 1., &error);
@@ -491,7 +486,7 @@ AddToLib(kSIQuantitySpecificPower, STR("horse power per ounce"), STR("horse powe
 #pragma mark kSIQuantityElectricCharge, kSIQuantityAmountOfElectricity
 AddSIToLibPrefixed(kSIQuantityElectricCharge, STR("coulomb"), STR("coulombs"), STR("C"), 1, &error);
 unit = AddConstantToLib(kSIQuantityElectricCharge, STR("elementary charge"), STR("elementary charge"), STR("q_e"), kSIElementaryCharge, &error);
-SIUnitSetIsAtomicUnit(unit,true);
+SIUnitSetIsAtomicUnit(unit, true);
 units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityElectricCharge);
 OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityAmountOfElectricity, units);
 //

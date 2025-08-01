@@ -8,7 +8,7 @@
 
     SIScalarRef result;
     OCStringRef scalarError;
-    int sislex(void);    
+    int sislex(void);
 %}
 
 %name-prefix="sis"
