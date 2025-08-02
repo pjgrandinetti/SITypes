@@ -20,9 +20,9 @@ SEPARATE_MEMBER_PAGES   = NO
 TAB_SIZE                = 4
 OPTIMIZE_OUTPUT_FOR_C   = YES
 
-#--------------------------------------------------------------------------- 
-# Build related configuration options 
-#--------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------
+# Build related configuration options
+#---------------------------------------------------------------------------
 EXTRACT_ALL             = YES
 EXTRACT_PRIVATE         = YES
 EXTRACT_STATIC          = YES
@@ -32,9 +32,9 @@ TYPEDEF_HIDES_STRUCT    = YES
 HIDE_UNDOC_MEMBERS      = NO
 HIDE_UNDOC_CLASSES      = NO
 
-#--------------------------------------------------------------------------- 
-# Configuration options related to source browsing 
-#--------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------
+# Configuration options related to source browsing
+#---------------------------------------------------------------------------
 SOURCE_BROWSER          = YES
 INLINE_SOURCES          = NO
 STRIP_CODE_COMMENTS     = YES
@@ -50,9 +50,9 @@ RECURSIVE               = YES
 EXCLUDE                 =
 EXCLUDE_SYMLINKS        = NO
 
-#--------------------------------------------------------------------------- 
-# Configuration options related to the output 
-#--------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------
+# Configuration options related to the output
+#---------------------------------------------------------------------------
 GENERATE_HTML           = YES
 HTML_OUTPUT             = html
 HTML_FILE_EXTENSION     = .html
@@ -79,30 +79,29 @@ GENERATE_AUTOGEN_DEF   = NO
 
 GENERATE_PERLMOD       = NO
 
-#--------------------------------------------------------------------------- 
-# Configuration options related to warnings and progress messages 
-#--------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------
+# Configuration options related to warnings and progress messages
+#---------------------------------------------------------------------------
 WARNINGS                = YES
 WARN_IF_UNDOCUMENTED    = YES
 WARN_NO_PARAMDOC        = YES
 
-#--------------------------------------------------------------------------- 
-# Configuration options related to the preprocessor 
-#--------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------
+# Configuration options related to the preprocessor
+#---------------------------------------------------------------------------
 ENABLE_PREPROCESSING    = YES
 MACRO_EXPANSION         = YES
 EXPAND_ONLY_PREDEF      = NO
 PREDEFINED              =
 SKIP_FUNCTION_MACROS    = NO
 
-#--------------------------------------------------------------------------- 
-# Configuration options related to external tools 
-#--------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------
+# Configuration options related to external tools
+#---------------------------------------------------------------------------
 HAVE_DOT                = NO
 
-#--------------------------------------------------------------------------- 
-# Miscellaneous options 
-#--------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------
+# Miscellaneous options
+#---------------------------------------------------------------------------
 QUIET                   = NO
 INTERNAL_DOCS           = NO
-

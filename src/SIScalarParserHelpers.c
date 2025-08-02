@@ -1,26 +1,20 @@
-#include "SIScalarParser.h"
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
+#include "SIDimensionality.h"
 #include "SILibrary.h"
 #include "SIScalar.h"
-#include "SIDimensionality.h"
+#include "SIScalarParser.h"
 #include "SIUnitParser.h"
-
 extern bool sis_syntax_error;
 extern ScalarNodeRef sis_root;
-
 extern SIScalarRef result;
 extern OCStringRef scalarError;
-
 extern int sis_scan_string(const char *);
 extern int sisparse(void);
 extern void sislex_destroy(void);
 extern int sislex(void);
-
 OCStringRef scalarErrorString;
-
-
 // ——— UTF-8 iterator: decode next code-point and advance pointer ———
 static uint32_t utf8_next(const char **p) {
     const unsigned char *s = (const unsigned char *)*p;
@@ -32,15 +26,15 @@ static uint32_t utf8_next(const char **p) {
     } else if ((s[0] & 0xE0) == 0xC0 && (s[1] & 0xC0) == 0x80) {
         // 2-byte sequence
         ch = ((s[0] & 0x1F) << 6) |
-              (s[1] & 0x3F);
+             (s[1] & 0x3F);
         *p += 2;
     } else if ((s[0] & 0xF0) == 0xE0 &&
                (s[1] & 0xC0) == 0x80 &&
                (s[2] & 0xC0) == 0x80) {
         // 3-byte sequence
         ch = ((s[0] & 0x0F) << 12) |
-             ((s[1] & 0x3F) <<  6) |
-              (s[2] & 0x3F);
+             ((s[1] & 0x3F) << 6) |
+             (s[2] & 0x3F);
         *p += 3;
     } else if ((s[0] & 0xF8) == 0xF0 &&
                (s[1] & 0xC0) == 0x80 &&
@@ -49,8 +43,8 @@ static uint32_t utf8_next(const char **p) {
         // 4-byte sequence
         ch = ((s[0] & 0x07) << 18) |
              ((s[1] & 0x3F) << 12) |
-             ((s[2] & 0x3F) <<  6) |
-              (s[3] & 0x3F);
+             ((s[2] & 0x3F) << 6) |
+             (s[3] & 0x3F);
         *p += 4;
     } else {
         // Invalid UTF-8: emit U+FFFD and skip one byte
@@ -59,9 +53,6 @@ static uint32_t utf8_next(const char **p) {
     }
     return ch;
 }
-
-
-
 /**
  * @brief  Produce a new OCMutableString in which implicit multiplications
  *         around “(” and “)” have “*” inserted.
@@ -69,36 +60,32 @@ static uint32_t utf8_next(const char **p) {
  * @return A brand-new OCMutableStringRef; caller must release it.
  */
 OCMutableStringRef
-insertAsterisks(OCMutableStringRef original)
-{
+insertAsterisks(OCMutableStringRef original) {
     if (!original) return NULL;
     const char *src = OCStringGetCString((OCStringRef)original);
-    if (!src)       return NULL;
-
+    if (!src) return NULL;
     // 1) Measure code-points & collect code-point values
-    size_t   cp_count  = OCStringGetLength((OCStringRef)original);
-    uint32_t *cps      = malloc(cp_count * sizeof(uint32_t));
+    size_t cp_count = OCStringGetLength((OCStringRef)original);
+    uint32_t *cps = malloc(cp_count * sizeof(uint32_t));
     if (NULL == cps) {
         fprintf(stderr, "insertAsterisks: Memory allocation failed for code points.\n");
         return NULL;
-    } 
-    size_t   *byte_off = malloc((cp_count + 1) * sizeof(size_t));
+    }
+    size_t *byte_off = malloc((cp_count + 1) * sizeof(size_t));
     if (NULL == byte_off) {
         fprintf(stderr, "insertAsterisks: Memory allocation failed for byte offsets.\n");
         free(cps);
         return NULL;
     }
-
     const char *p = src;
-    size_t       bo = 0;
+    size_t bo = 0;
     for (size_t i = 0; i < cp_count; i++) {
         byte_off[i] = bo;
-        cps[i]      = utf8_next(&p);
-        bo          = p - src;
+        cps[i] = utf8_next(&p);
+        bo = p - src;
     }
-    byte_off[cp_count] = bo;               // one past final byte
+    byte_off[cp_count] = bo;  // one past final byte
     size_t orig_bytes = bo;
-
     // 2) Determine where to insert “*”
     bool *ins_before = calloc(cp_count, sizeof(bool));
     if (!ins_before) {
@@ -107,7 +94,7 @@ insertAsterisks(OCMutableStringRef original)
         free(byte_off);
         return NULL;
     }
-    bool *ins_after  = calloc(cp_count, sizeof(bool));
+    bool *ins_after = calloc(cp_count, sizeof(bool));
     if (!ins_after) {
         fprintf(stderr, "insertAsterisks: Memory allocation failed for insertion flags.\n");
         free(cps);
@@ -115,10 +102,9 @@ insertAsterisks(OCMutableStringRef original)
         free(ins_before);
         return NULL;
     }
-
     // Track square-bracket nesting
-    int    bracket_level = 0;
-    int   *levels        = malloc(cp_count * sizeof(int));
+    int bracket_level = 0;
+    int *levels = malloc(cp_count * sizeof(int));
     if (NULL == levels) {
         fprintf(stderr, "insertAsterisks: Memory allocation failed for bracket levels.\n");
         free(cps);
@@ -127,7 +113,6 @@ insertAsterisks(OCMutableStringRef original)
         free(ins_after);
         return NULL;
     }
-
     for (size_t i = 0; i < cp_count; i++) {
         if (cps[i] == '[') {
             bracket_level++;
@@ -137,31 +122,28 @@ insertAsterisks(OCMutableStringRef original)
             bracket_level = (bracket_level > 0 ? bracket_level - 1 : 0);
         }
     }
-
     for (size_t i = 0; i < cp_count; i++) {
         // Insert before “(” if preceded by digit/point and not inside [ ]
-        if (cps[i] == '(' && i > 0 && levels[i-1] == 0) {
-            if (characterIsDigitOrDecimalPoint(cps[i-1])) {
+        if (cps[i] == '(' && i > 0 && levels[i - 1] == 0) {
+            if (characterIsDigitOrDecimalPoint(cps[i - 1])) {
                 ins_before[i] = true;
             }
         }
         // Insert after “)” if followed by a “term” and not inside [ ]
-        else if (cps[i] == ')' && i+1 < cp_count && levels[i] == levels[i+1]) {
-            uint32_t next = cps[i+1];
-            if ( next != '+'  && next != '-'  && next != '*' &&
-                 next != '/'  && next != '^'  && next != ')' &&
-                 next != 0x2022 /* bullet */ )
-            {
+        else if (cps[i] == ')' && i + 1 < cp_count && levels[i] == levels[i + 1]) {
+            uint32_t next = cps[i + 1];
+            if (next != '+' && next != '-' && next != '*' &&
+                next != '/' && next != '^' && next != ')' &&
+                next != 0x2022 /* bullet */) {
                 ins_after[i] = true;
             }
         }
     }
-
     // 3) Count total insertions, allocate output buffer
     size_t insertions = 0;
     for (size_t i = 0; i < cp_count; i++) {
         if (ins_before[i]) insertions++;
-        if (ins_after[i])  insertions++;
+        if (ins_after[i]) insertions++;
     }
     size_t new_bytes = orig_bytes + insertions * /* strlen("*") == */ 1;
     char *out = malloc(new_bytes + 1);
@@ -174,14 +156,13 @@ insertAsterisks(OCMutableStringRef original)
         free(byte_off);
         return NULL;
     }
-    char *d   = out;
-
+    char *d = out;
     // 4) Build the new UTF-8 in one pass
     for (size_t i = 0; i < cp_count; i++) {
         if (ins_before[i]) {
             *d++ = '*';
         }
-        size_t chunk_len = byte_off[i+1] - byte_off[i];
+        size_t chunk_len = byte_off[i + 1] - byte_off[i];
         memcpy(d, src + byte_off[i], chunk_len);
         d += chunk_len;
         if (ins_after[i]) {
@@ -189,10 +170,8 @@ insertAsterisks(OCMutableStringRef original)
         }
     }
     *d = '\0';
-
     // 5) Wrap into an OCMutableStringRef
     OCMutableStringRef result = OCMutableStringCreateWithCString(out);
-
     // 6) Cleanup
     free(cps);
     free(levels);
@@ -200,29 +179,21 @@ insertAsterisks(OCMutableStringRef original)
     free(ins_after);
     free(byte_off);
     free(out);
-
     return result;
 }
-
-
-SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
-{
-    if(error) if(*error) return NULL;
-
+SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error) {
+    if (error)
+        if (*error) return NULL;
     if (OCStringCompare(string, kSIQuantityDimensionless, kOCCompareCaseInsensitive) == kOCCompareEqualTo) return NULL;
-
     OCMutableStringRef mutString = OCStringCreateMutableCopy(string);
-
     /* perform all Unicode-aware replacements */
     OCStringFindAndReplace(mutString, STR("*"), STR("•"),
-        OCRangeMake(0, OCStringGetLength(mutString)), 0);
-
+                           OCRangeMake(0, OCStringGetLength(mutString)), 0);
     result = NULL;
     scalarErrorString = NULL;
     // check for and get the final conversion unit
     double unit_multiplier = 1.0;
     SIUnitRef finalUnit = ConversionWithDefinedUnit(mutString, &unit_multiplier, error);
-
     OCStringFindAndReplace(mutString, STR("•"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("×"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("÷"), STR("/"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
@@ -234,40 +205,32 @@ SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
     OCStringFindAndReplace(mutString, STR("º"), STR("°"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("h_p"), STR("h_P"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("ɣ"), STR("𝛾"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
-
     OCStringFindAndReplace(mutString, STR("√"), STR("sqrt"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
-
     OCStringFindAndReplace(mutString, STR("∛"), STR("cbrt"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("∜"), STR("qtrt"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR(" "), STR(""), OCRangeMake(0, OCStringGetLength(mutString)), 0);
-
     // Quick fix for quartertsp
     OCStringFindAndReplace(mutString, STR("qtertsp"), STR("quartertsp"), OCRangeMake(0, OCStringGetLength(mutString)), kOCCompareCaseInsensitive);
-
     OCMutableStringRef newMutString = insertAsterisks(mutString);
     OCRelease(mutString);
     mutString = newMutString;
-
-// Ready to Parse  
+    // Ready to Parse
     const char *cString = OCStringGetCString(mutString);
-
     SIScalarRef out = NULL;
     if (cString) {
         // Create a local autorelease pool
         OCAutoreleasePoolRef pool = OCAutoreleasePoolCreate();
         sis_syntax_error = false;
         scalarErrorString = NULL;  // Reset error string from previous parse attempts
-        scalarError = NULL;  // Reset bison parser error from previous parse attempts
-        result = NULL;  // Reset result from previous parse attempts
+        scalarError = NULL;        // Reset bison parser error from previous parse attempts
+        result = NULL;             // Reset result from previous parse attempts
         sis_scan_string(cString);
         sisparse();
         sislex_destroy();
-        
         if (!sis_syntax_error && result) {
             out = SIScalarCreateCopy(result);
         }
         OCAutoreleasePoolRelease(pool);
-
         /* whether parse succeeded or not, free the tree once here */
         if (sis_root) {
             ScalarNodeFree(sis_root);
@@ -275,7 +238,6 @@ SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
         }
         OCRelease(mutString);
     }
-
     if (error) {
         if (scalarErrorString) *error = scalarErrorString;
         if (*error) {
@@ -283,7 +245,6 @@ SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
             return NULL;
         }
     }
-
     if (out) {
         /* unit conversion and real-part extraction logic */
         if (finalUnit) {
@@ -303,9 +264,7 @@ SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
     }
     return out;
 }
-
-void siserror(char *s, ...)
-{
+void siserror(char *s, ...) {
     scalarErrorString = STR("Syntax Error");
     sis_syntax_error = true;
 }

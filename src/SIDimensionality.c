@@ -8,8 +8,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "SILibrary.h"
 #include "SIDimensionalityPrivate.h"
+#include "SILibrary.h"
 static OCTypeID kSIDimensionalityID = kOCNotATypeID;
 OCTypeID SIDimensionalityGetTypeID(void) {
     if (kSIDimensionalityID == kOCNotATypeID)
@@ -46,45 +46,16 @@ static OCStringRef impl_SIDimensionalityCopyFormattingDescription(OCTypeRef cf) 
     return OCStringCreateWithCString("<SIDimensionality>");
 }
 static void *
-impl_SIDimensionalityDeepCopy(const void *obj)
-{
-    if (obj == NULL) {
-        return NULL;
-    }
-
+impl_SIDimensionalityDeepCopy(const void *obj) {
+    if (obj == NULL) return NULL;
     // Raw-access to the exponent arrays
     const struct impl_SIDimensionality *src =
         (const struct impl_SIDimensionality *)obj;
-
     // Intern (or create) the SIDimensionality with the same numerator/denominator exponents
-    SIDimensionalityRef copy =
-        SIDimensionalityWithExponentArrays(src->num_exp, src->den_exp);
-
+    SIDimensionalityRef copy = SIDimensionalityWithExponentArrays(src->num_exp, src->den_exp);
     // copy may be NULL if exponents were invalid
     return (void *)copy;
 }
-
-// static void * impl_SIDimensionalityDeepCopy(const void *obj) {
-//     if (!obj) return NULL;
-//     SIDimensionalityRef src = (SIDimensionalityRef)obj;
-//     // 1) Serialize to a plain OCDictionary
-//     OCDictionaryRef dict = SIDimensionalityCopyDictionary(src);
-//     if (!dict) return NULL;
-//     // 2) Re-hydrate (and intern) from the dictionary
-//     OCStringRef error = NULL;
-//     SIDimensionalityRef copy = SIDimensionalityFromDictionary(dict, &error);
-//     OCRelease(dict);
-//     if (!copy) {
-//         if (error) {
-//             fprintf(stderr,
-//                     "SIDimensionalityDeepCopy: CreateFromDictionary failed: %s\n",
-//                     OCStringGetCString(error));
-//             OCRelease(error);
-//         }
-//         return NULL;
-//     }
-//     return (void *) copy;
-// }
 // mutable‐copy is the same for this “interned” type
 static void *
 impl_SIDimensionalityDeepCopyMutable(const void *obj) {
@@ -136,7 +107,7 @@ OCDictionaryRef SIDimensionalityCopyDictionary(SIDimensionalityRef dim) {
 }
 cJSON *SIDimensionalityCreateJSON(SIDimensionalityRef dim) {
     if (!dim) return cJSON_CreateNull();
-    OCStringRef symbol = SIDimensionalityGetSymbol(dim);
+    OCStringRef symbol = SIDimensionalityCopySymbol(dim);
     if (!symbol) {
         fprintf(stderr, "SIDimensionalityCreateJSON: Failed to get symbol.\n");
         return cJSON_CreateNull();
@@ -153,7 +124,7 @@ SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json) {
     OCStringRef str = OCStringCreateWithCString(symbol);
     if (!str) return NULL;
     OCStringRef err = NULL;
-    SIDimensionalityRef dim = SIDimensionalityParseExpression(str, &err);
+    SIDimensionalityRef dim = SIDimensionalityFromExpression(str, &err);
     OCRelease(str);
     OCRelease(err);
     return dim;
@@ -265,9 +236,9 @@ SIDimensionalityRef SIDimensionalityCreate(const uint8_t *num_exp, const uint8_t
     return (SIDimensionalityRef)theDim;
 }
 #pragma mark Accessors
-OCStringRef SIDimensionalityGetSymbol(SIDimensionalityRef theDim) {
+OCStringRef SIDimensionalityCopySymbol(SIDimensionalityRef theDim) {
     IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
-    return theDim->symbol;
+    return OCStringCreateCopy(theDim->symbol);
 }
 int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDim, SIBaseDimensionIndex index) {
     IF_NO_OBJECT_EXISTS_RETURN(theDim, 0);
@@ -437,24 +408,24 @@ bool SIDimensionalityHasSameReducedDimensionality(SIDimensionalityRef theDim1, S
     return true;
 }
 static bool SIDimensionalityHasExponents(SIDimensionalityRef theDim,
-                             uint8_t length_num_exp, uint8_t length_den_exp,
-                             uint8_t mass_num_exp, uint8_t mass_den_exp,
-                             uint8_t time_num_exp, uint8_t time_den_exp,
-                             uint8_t current_num_exp, uint8_t current_den_exp,
-                             uint8_t temperature_num_exp, uint8_t temperature_den_exp,
-                             uint8_t amount_num_exp, uint8_t amount_den_exp,
-                             uint8_t luminous_num_exp, uint8_t luminous_den_exp) {
+                                         uint8_t length_num_exp, uint8_t length_den_exp,
+                                         uint8_t mass_num_exp, uint8_t mass_den_exp,
+                                         uint8_t time_num_exp, uint8_t time_den_exp,
+                                         uint8_t current_num_exp, uint8_t current_den_exp,
+                                         uint8_t temperature_num_exp, uint8_t temperature_den_exp,
+                                         uint8_t amount_num_exp, uint8_t amount_den_exp,
+                                         uint8_t luminous_num_exp, uint8_t luminous_den_exp) {
     // Treat NULL as the dimensionless case
     if (!theDim) {
         theDim = SIDimensionalityDimensionless();
     }
     // Pack expected exponents into two arrays
     uint8_t expected_num[BASE_DIMENSION_COUNT] = {
-        length_num_exp, mass_num_exp, time_num_exp,current_num_exp,
-        temperature_num_exp,amount_num_exp,luminous_num_exp};
+        length_num_exp, mass_num_exp, time_num_exp, current_num_exp,
+        temperature_num_exp, amount_num_exp, luminous_num_exp};
     uint8_t expected_den[BASE_DIMENSION_COUNT] = {
-        length_den_exp, mass_den_exp, time_den_exp,current_den_exp,
-        temperature_den_exp,amount_den_exp,luminous_den_exp};
+        length_den_exp, mass_den_exp, time_den_exp, current_den_exp,
+        temperature_den_exp, amount_den_exp, luminous_den_exp};
     // Compare in one loop
     for (size_t i = 0; i < BASE_DIMENSION_COUNT; ++i) {
         if (theDim->num_exp[i] != expected_num[i] ||
@@ -490,7 +461,7 @@ bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
         }
     }
     return true;
-} 
+}
 /*
   @function SIDimensionalityHasSameDimensionlessAndDerivedDimensionalities
   @abstract Determines if the two Dimensionalities have the same dimensionless exponents,

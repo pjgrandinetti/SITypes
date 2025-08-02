@@ -6,7 +6,7 @@
     #include "SILibrary.h"
     #include "SIUnitParser.tab.h"
     #include "SIUnitParser.h"
-    
+
     extern void siuerror(char *s, ...);
     extern OCStringRef unitError;
 %}
@@ -17,7 +17,7 @@ UNIT {SYMBOL1}|{SYMBOL2}|{SYMBOL3}
 %%
 {UNIT} {
     OCStringRef string = OCStringCreateWithCString(yytext);
-    siulval.unit = SIUnitFindWithUnderivedSymbol(string);
+    siulval.unit = SIUnitWithSymbol(string);
     OCRelease(string);
     return UNIT;
 }
