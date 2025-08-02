@@ -119,6 +119,10 @@ expression: term_list {
 | '(' expression ')' '^' DECIMAL {
     // Handle parenthetical expression raised to decimal power: (a/b)^0.5
     $$ = siueApplyFractionalPowerToExpression($2, $5);
+    if (!$$) {
+        // If fractional power was rejected, we need to clean up the expression
+        siueRelease($2);
+    }
 }
 | '(' expression ')' '^' '(' INTEGER ')' {
     // Handle parenthetical expression raised to parenthetical power: (a/b)^(n)

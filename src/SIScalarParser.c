@@ -318,7 +318,6 @@ void ScalarNodeFree(ScalarNodeRef node) {
             break;
     }
     free((void *)node);  // Always free the node structure itself
-    node = NULL;         // Set to NULL to avoid dangling pointer
 }
 SIScalarRef builtInConstantFunction(ScalarNodeConstantFunctionRef func, OCStringRef *errorString) {
     if (errorString)
@@ -338,55 +337,46 @@ SIScalarRef builtInConstantFunction(ScalarNodeConstantFunctionRef func, OCString
             SIScalarRef theScalar = SIPeriodicTableCreateMolarMass(func->string, errorString);
             if (theScalar) OCAutorelease(theScalar);
             return theScalar;
-            break;
         }
         case BC_FW: {
             SIScalarRef theScalar = SIPeriodicTableCreateFormulaMass(func->string, errorString);
             if (theScalar) OCAutorelease(theScalar);
             return theScalar;
-            break;
         }
         case BC_Isotope_Abundance: {
             SIScalarRef theScalar = SIPeriodicTableCreateIsotopeAbundance(func->string, errorString);
             if (theScalar) OCAutorelease(theScalar);
             return theScalar;
-            break;
         }
         case BC_Isotope_Spin: {
             SIScalarRef theScalar = SIPeriodicTableCreateIsotopeSpin(func->string, errorString);
             if (theScalar) OCAutorelease(theScalar);
             return theScalar;
-            break;
         }
         case BC_Isotope_HalfLife: {
             SIScalarRef theScalar = SIPeriodicTableCreateIsotopeHalfLife(func->string, errorString);
             if (theScalar) OCAutorelease(theScalar);
             return theScalar;
-            break;
         }
         case BC_Isotope_Gyromag: {
             SIScalarRef theScalar = SIPeriodicTableCreateIsotopeGyromagneticRatio(func->string, errorString);
             if (theScalar) OCAutorelease(theScalar);
             return theScalar;
-            break;
         }
         case BC_Isotope_MagneticDipole: {
             SIScalarRef theScalar = SIPeriodicTableCreateIsotopeMagneticDipoleMoment(func->string, errorString);
             if (theScalar) OCAutorelease(theScalar);
             return theScalar;
-            break;
         }
         case BC_Isotope_ElectricQuadrupole: {
             SIScalarRef theScalar = SIPeriodicTableCreateIsotopeElectricQuadrupoleMoment(func->string, errorString);
             if (theScalar) OCAutorelease(theScalar);
             return theScalar;
-            break;
         }
         case BC_nmr: {
             SIScalarRef theScalar = SIPeriodicTableCreateNMRFrequency(func->string, errorString);
             if (theScalar) OCAutorelease(theScalar);
             return theScalar;
-            break;
         }
         default: {
             return NULL;
@@ -502,187 +492,187 @@ SIScalarRef builtInMathFunction(ScalarNodeMathFunctionRef func, OCStringRef *err
             }
             if (errorString) {
                 *errorString = STR("acos requires dimensionless unit.");
-                return NULL;
             }
-            case BM_acosh: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    double complex value = cacosh(SIScalarDoubleComplexValue(scalar));
-                    SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("acosh requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_asin: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    double complex value = casin(SIScalarDoubleComplexValue(scalar));
-                    SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("asin requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_asinh: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
-                    double complex value = casinh(SIScalarDoubleComplexValue(scalar));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("asinh requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_atan: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
-                    double complex value = catan(SIScalarDoubleComplexValue(scalar));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("atan requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_atanh: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
-                    double complex value = catanh(SIScalarDoubleComplexValue(scalar));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("atanh requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_cos: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    double complex value = complex_cosine(SIScalarDoubleComplexValue(scalar));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("cos requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_cosh: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    double complex value = ccosh(SIScalarDoubleComplexValue(scalar));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("cosh requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_sin: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    double complex value = complex_sine(SIScalarDoubleComplexValue(scalar));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("sin requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_sinh: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    double complex value = csinh(SIScalarDoubleComplexValue(scalar));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("sinh requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_tan: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    double complex value = complex_tangent(SIScalarDoubleComplexValue(scalar));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("tan requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_tanh: {
-                if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
-                    SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
-                    double complex value = ctanh(SIScalarDoubleComplexValue(scalar));
-                    SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
-                    if (result) OCAutorelease(result);
-                    return result;
-                }
-                if (errorString) {
-                    *errorString = STR("tanh requires dimensionless unit.");
-                }
-                return NULL;
-            }
-            case BM_conj: {
-                SIScalarRef result = SIScalarCreateByConjugation(scalar);
+            return NULL;
+        }
+        case BM_acosh: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                double complex value = cacosh(SIScalarDoubleComplexValue(scalar));
+                SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
                 if (result) OCAutorelease(result);
                 return result;
             }
-            case BM_creal: {
-                SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIRealPart);
+            if (errorString) {
+                *errorString = STR("acosh requires dimensionless unit.");
+            }
+            return NULL;
+        }
+        case BM_asin: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                double complex value = casin(SIScalarDoubleComplexValue(scalar));
+                SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
                 if (result) OCAutorelease(result);
                 return result;
             }
-            case BM_cimag: {
-                SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIImaginaryPart);
+            if (errorString) {
+                *errorString = STR("asin requires dimensionless unit.");
+            }
+            return NULL;
+        }
+        case BM_asinh: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
+                double complex value = casinh(SIScalarDoubleComplexValue(scalar));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
                 if (result) OCAutorelease(result);
                 return result;
             }
-            case BM_carg: {
-                SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIArgumentPart);
+            if (errorString) {
+                *errorString = STR("asinh requires dimensionless unit.");
+            }
+            return NULL;
+        }
+        case BM_atan: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
+                double complex value = catan(SIScalarDoubleComplexValue(scalar));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
                 if (result) OCAutorelease(result);
                 return result;
             }
-            case BM_cabs: {
-                SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIMagnitudePart);
+            if (errorString) {
+                *errorString = STR("atan requires dimensionless unit.");
+            }
+            return NULL;
+        }
+        case BM_atanh: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                SIUnitRef unit = SIUnitWithSymbol(STR("rad"));
+                double complex value = catanh(SIScalarDoubleComplexValue(scalar));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, unit);
                 if (result) OCAutorelease(result);
                 return result;
             }
-            default: {
-                if (errorString) {
-                    *errorString = STR("unknown function.");
-                }
-                return NULL;
+            if (errorString) {
+                *errorString = STR("atanh requires dimensionless unit.");
             }
+            return NULL;
+        }
+        case BM_cos: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                double complex value = complex_cosine(SIScalarDoubleComplexValue(scalar));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
+                if (result) OCAutorelease(result);
+                return result;
+            }
+            if (errorString) {
+                *errorString = STR("cos requires dimensionless unit.");
+            }
+            return NULL;
+        }
+        case BM_cosh: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                double complex value = ccosh(SIScalarDoubleComplexValue(scalar));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
+                if (result) OCAutorelease(result);
+                return result;
+            }
+            if (errorString) {
+                *errorString = STR("cosh requires dimensionless unit.");
+            }
+            return NULL;
+        }
+        case BM_sin: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                double complex value = complex_sine(SIScalarDoubleComplexValue(scalar));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
+                if (result) OCAutorelease(result);
+                return result;
+            }
+            if (errorString) {
+                *errorString = STR("sin requires dimensionless unit.");
+            }
+            return NULL;
+        }
+        case BM_sinh: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                double complex value = csinh(SIScalarDoubleComplexValue(scalar));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
+                if (result) OCAutorelease(result);
+                return result;
+            }
+            if (errorString) {
+                *errorString = STR("sinh requires dimensionless unit.");
+            }
+            return NULL;
+        }
+        case BM_tan: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                double complex value = complex_tangent(SIScalarDoubleComplexValue(scalar));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
+                if (result) OCAutorelease(result);
+                return result;
+            }
+            if (errorString) {
+                *errorString = STR("tan requires dimensionless unit.");
+            }
+            return NULL;
+        }
+        case BM_tanh: {
+            if (SIDimensionalityIsDimensionless(SIQuantityGetUnitDimensionality((SIQuantityRef)scalar))) {
+                SIScalarConvertToCoherentUnit((SIMutableScalarRef)scalar, errorString);
+                double complex value = ctanh(SIScalarDoubleComplexValue(scalar));
+                SIScalarRef result = SIScalarCreateWithDoubleComplex(value, NULL);
+                if (result) OCAutorelease(result);
+                return result;
+            }
+            if (errorString) {
+                *errorString = STR("tanh requires dimensionless unit.");
+            }
+            return NULL;
+        }
+        case BM_conj: {
+            SIScalarRef result = SIScalarCreateByConjugation(scalar);
+            if (result) OCAutorelease(result);
+            return result;
+        }
+        case BM_creal: {
+            SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIRealPart);
+            if (result) OCAutorelease(result);
+            return result;
+        }
+        case BM_cimag: {
+            SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIImaginaryPart);
+            if (result) OCAutorelease(result);
+            return result;
+        }
+        case BM_carg: {
+            SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIArgumentPart);
+            if (result) OCAutorelease(result);
+            return result;
+        }
+        case BM_cabs: {
+            SIScalarRef result = SIScalarCreateByTakingComplexPart(scalar, kSIMagnitudePart);
+            if (result) OCAutorelease(result);
+            return result;
+        }
+        default: {
+            if (errorString) {
+                *errorString = STR("unknown function.");
+            }
+            return NULL;
         }
     }
 }

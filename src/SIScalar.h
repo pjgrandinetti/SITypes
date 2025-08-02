@@ -261,9 +261,9 @@ OCComparisonResult SIScalarCompareLoose(SIScalarRef theScalar, SIScalarRef theOt
 /** @brief Performs a “loose” comparison between two scalars in reduced units and returns an ordering result. */
 OCComparisonResult SIScalarCompareLooseReduced(SIScalarRef theScalar, SIScalarRef theOtherScalar);
 OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar);
-#pragma mark Best‐fit Unit Conversion
+#pragma mark Best-fit Unit Conversion
 /*!
- @brief  Pick the “best” SI unit for this scalar (so the mantissa is ~1–1000)
+ @brief  Pick the “best” SI unit for this scalar (so the mantissa is ~1-1000)
  @param  theScalar   mutable scalar to rescale in-place
  @param  quantity    a quantity name (e.g. "time", "length", …)
  @param  outError    on failure, set to an OCStringRef describing the problem
@@ -273,7 +273,7 @@ bool SIScalarBestConversionForQuantity(SIMutableScalarRef theScalar,
                                        OCStringRef quantity,
                                        OCStringRef *outError);
 /*!
- @brief  For a given scalar, return an array of alternate‐unit scalars and (optionally) string splits
+ @brief  For a given scalar, return an array of alternate-unit scalars and (optionally) string splits
  @param  theScalar      the input scalar
  @param  quantity       if non-NULL, only units for that quantity
  @param  outError       on failure, set to an OCStringRef

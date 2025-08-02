@@ -12,7 +12,7 @@
 #include "SIUnitExpressionParser.tab.h"
 // External functions from scanner/parser
 extern int siueparse(void);
-typedef struct yy_buffer_state *YY_BUFFER_STATE;
+typedef struct yy_buffer_state* YY_BUFFER_STATE;
 extern YY_BUFFER_STATE siue_scan_string(const char* str);
 extern void siue_delete_buffer(YY_BUFFER_STATE buffer);
 // Forward declarations
@@ -47,22 +47,19 @@ SIUnitExpression* siueCreateExpression(OCArrayRef numerator, OCArrayRef denomina
     SIUnitExpression* expr = malloc(sizeof(SIUnitExpression));
     if (!expr) return NULL;
     // Create deep copies of the arrays with deep copying of terms
-    if (numerator) {
-        OCIndex count = OCArrayGetCount(numerator);
-        OCMutableArrayRef numCopy = OCArrayCreateMutable(count, NULL);
-        for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(numerator, i);
-            SIUnitTerm* termCopy = siueCopyTerm(term);
-            if (termCopy) {
-                OCArrayAppendValue(numCopy, termCopy);
-            }
+    // numerator is guaranteed to be non-NULL at this point due to early return above
+    OCIndex count = OCArrayGetCount(numerator);
+    OCMutableArrayRef numCopy = OCArrayCreateMutable(count, NULL);
+    for (OCIndex i = 0; i < count; i++) {
+        SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(numerator, i);
+        SIUnitTerm* termCopy = siueCopyTerm(term);
+        if (termCopy) {
+            OCArrayAppendValue(numCopy, termCopy);
         }
-        expr->numerator = numCopy;
-    } else {
-        expr->numerator = NULL;
     }
+    expr->numerator = numCopy;
     if (denominator) {
-        OCIndex count = OCArrayGetCount(denominator);
+        count = OCArrayGetCount(denominator);
         OCMutableArrayRef denCopy = OCArrayCreateMutable(count, NULL);
         for (OCIndex i = 0; i < count; i++) {
             SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(denominator, i);
@@ -103,7 +100,6 @@ void siueRelease(SIUnitExpression* expr) {
     }
     free(expr);
 }
-
 void siueReleaseTermArray(OCArrayRef term_array) {
     if (!term_array) return;
     // Release all terms in the array
@@ -114,7 +110,6 @@ void siueReleaseTermArray(OCArrayRef term_array) {
     }
     OCRelease(term_array);
 }
-
 #pragma mark - Parser Helper Functions
 OCArrayRef siueApplyPowerToTermList(OCArrayRef term_list, int power) {
     if (!term_list || power == 0) return term_list;
@@ -334,6 +329,8 @@ void siueMoveNegativePowersToDenominator(OCMutableArrayRef numerator, OCMutableA
             if (newTerm) {
                 OCArrayAppendValue(*denominator, newTerm);
             }
+            // Free the original term before removing from numerator
+            siueReleaseTerm(term);
             // Remove from numerator
             OCArrayRemoveValueAtIndex(numerator, i);
         }
@@ -452,33 +449,26 @@ bool siueValidateSymbol(OCStringRef symbol) {
 }
 SIUnitExpression* siueParseExpression(OCStringRef normalized_expr) {
     if (!normalized_expr) return NULL;
-
     // Clear any previous error
     if (siueError) {
         OCRelease(siueError);
         siueError = NULL;
     }
-
     // Clear any previous parsed expression
     siueClearParsedExpression();
-
     // Convert to C string for parser
     const char* exprStr = OCStringGetCString(normalized_expr);
     if (!exprStr) return NULL;
-
     // Parse the expression
     YY_BUFFER_STATE buffer = siue_scan_string(exprStr);
     int parseResult = siueparse();
-
     // Clean up the scanner buffer immediately after parsing
     siue_delete_buffer(buffer);
-
     if (parseResult != 0 || siueError) {
         // Parse failed - clean up state
         siueClearParsedExpression();
         return NULL;
     }
-
     // Get the parsed expression
     SIUnitExpression* result = siueGetParsedExpression();
     if (result) {
@@ -529,7 +519,8 @@ OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool
     OCStringFindAndReplace(mutString, STR("−"), STR("-"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("μ"), STR("µ"), OCRangeMake(0, OCStringGetLength(mutString)), 0);  // Greek letter mu to micro sign
     OCStringFindAndReplace(mutString, STR("º"), STR("°"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
-    // Additional Unicode multiplication operators → •
+    // Additional Unicode multiplication operators → *
+    OCStringFindAndReplace(mutString, STR("•"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);  // BULLET (U+2022)
     OCStringFindAndReplace(mutString, STR("⋅"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);  // DOT OPERATOR
     OCStringFindAndReplace(mutString, STR("∙"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);  // BULLET OPERATOR
     OCStringFindAndReplace(mutString, STR("·"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);  // MIDDLE DOT
@@ -608,7 +599,6 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
         if (parsed->numerator) OCRelease(parsed->numerator);
         parsed->numerator = mutableNum;
     }
-
     if (parsed->denominator) {
         OCMutableArrayRef mutableDen = OCArrayCreateMutableCopy(parsed->denominator);
         siueGroupIdenticalTerms(mutableDen);
@@ -616,7 +606,6 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
         if (parsed->denominator) OCRelease(parsed->denominator);
         parsed->denominator = mutableDen;
     }
-
     // Step 4: Format the result
     OCStringRef formatted = siueFormatExpression(parsed, false);
     siueRelease(parsed);
@@ -652,17 +641,14 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
         if (parsed->numerator) OCRelease(parsed->numerator);
         parsed->numerator = mutableNum;
     }
-
     if (parsed->denominator) {
         OCMutableArrayRef mutableDen = OCArrayCreateMutableCopy(parsed->denominator);
         siueGroupIdenticalTerms(mutableDen);
         if (parsed->denominator) OCRelease(parsed->denominator);
         parsed->denominator = mutableDen;
     }
-
     // Cancel terms between numerator and denominator
     siueCancelTerms(parsed);
-
     // Sort terms alphabetically after cancellation
     if (parsed->numerator) {
         OCMutableArrayRef sortableNum = OCArrayCreateMutableCopy(parsed->numerator);
@@ -676,7 +662,6 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
         OCRelease(parsed->denominator);
         parsed->denominator = sortableDen;
     }
-
     // Step 4: Format the result
     OCStringRef formatted = siueFormatExpression(parsed, true);
     siueRelease(parsed);
