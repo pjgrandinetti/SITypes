@@ -1,6 +1,5 @@
 #ifndef TEST_SCALAR_H
 #define TEST_SCALAR_H
-
 // Prototypes for all tests (skip SIScalarCreateFromExpression)
 bool test_SIScalarGetTypeID(void);
 bool test_SIScalarCreateCopy(void);
@@ -77,7 +76,7 @@ bool test_SIScalarShow(void);
 bool test_SIScalarCreateStringValue(void);
 bool test_SIScalarCreateNumericStringValue(void);
 bool test_SIScalarCreateStringValueForPart(void);
-bool test_SIScalarCreateUnitString(void);
+bool test_SIScalarCopyUnitSymbol(void);
 bool test_SIScalarCreateStringValueWithFormat(void);
 bool test_SIScalarCreateNumericStringValueWithFormat(void);
 bool test_SIScalarAddToArrayAsStringValue(void);
@@ -102,6 +101,4 @@ bool test_SIScalarWriteReadJSON_simple(void);
 bool test_SIScalarWriteReadJSON_negative(void);
 bool test_SIScalarWriteReadJSON_complex_unit(void);
 bool test_SIScalarWriteReadJSON_array_and_dictionary(void);
-
-
 #endif /* TEST_SCALAR_H */

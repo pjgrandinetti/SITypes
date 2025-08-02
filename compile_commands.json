@@ -1,0 +1,62 @@
+[
+  {
+    "directory": "/home/ubuntu/OCTypes-SITypes/SITypes",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SIDimensionality.c",
+    "file": "src/SIDimensionality.c"
+  },
+  {
+    "directory": ".",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SIDimensionalityLib.c",
+    "file": "src/SIDimensionalityLib.c"
+  },
+  {
+    "directory": ".",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SILibrary.c",
+    "file": "src/SILibrary.c"
+  },
+  {
+    "directory": "/home/ubuntu/OCTypes-SITypes/SITypes",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SIDimensionalityLib.c",
+    "file": "src/SIDimensionalityLib.c"
+  },
+  {
+    "directory": "/home/ubuntu/OCTypes-SITypes/SITypes",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SILibrary.c",
+    "file": "src/SILibrary.c"
+  },
+  {
+    "directory": "/home/ubuntu/OCTypes-SITypes/SITypes",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SIScalar.c",
+    "file": "src/SIScalar.c"
+  },
+  {
+    "directory": "/home/ubuntu/OCTypes-SITypes/SITypes",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SIUnit.c",
+    "file": "src/SIUnit.c"
+  },
+  {
+    "directory": "/home/ubuntu/OCTypes-SITypes/SITypes",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SIUnitExpression.c",
+    "file": "src/SIUnitExpression.c"
+  },
+  {
+    "directory": "/home/ubuntu/OCTypes-SITypes/SITypes",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SIUnitLib.c",
+    "file": "src/SIUnitLib.c"
+  },
+  {
+    "directory": ".",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SIUnit.c",
+    "file": "src/SIUnit.c"
+  },
+  {
+    "directory": ".",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SIUnitExpression.c",
+    "file": "src/SIUnitExpression.c"
+  },
+  {
+    "directory": ".",
+    "command": "clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c src/SIUnitLib.c",
+    "file": "src/SIUnitLib.c"
+  }
+]

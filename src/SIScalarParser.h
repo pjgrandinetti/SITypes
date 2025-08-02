@@ -4,23 +4,18 @@
 //  Created by PhySy Ltd on 5/3/13.
 //  Copyright (c) 2008-2014 PhySy Ltd. All rights reserved.
 //
-
 #ifndef SIScalarParser_h
 #define SIScalarParser_h
-
 #include "SILibrary.h"
 #include "SIScalar.h"
 #include "SIUnitParser.h"
-
-typedef const struct impl_scalarNode * ScalarNodeRef;
-typedef const struct impl_scalarValue * NumberRef;
-typedef const struct impl_scalarNodeMathFunction * ScalarNodeMathFunctionRef;
-typedef const struct impl_scalarNodeConstantFunction * ScalarNodeConstantFunctionRef;
-typedef const struct impl_scalarNodeSymbol * ScalarNodeSymbolRef;
-typedef const struct impl_scalarNodeAssignment * ScalarNodeAssignmentRef;
-typedef const struct impl_symbol * SymbolRef;
-
-
+typedef const struct impl_scalarNode *ScalarNodeRef;
+typedef const struct impl_scalarValue *NumberRef;
+typedef const struct impl_scalarNodeMathFunction *ScalarNodeMathFunctionRef;
+typedef const struct impl_scalarNodeConstantFunction *ScalarNodeConstantFunctionRef;
+typedef const struct impl_scalarNodeSymbol *ScalarNodeSymbolRef;
+typedef const struct impl_scalarNodeAssignment *ScalarNodeAssignmentRef;
+typedef const struct impl_symbol *SymbolRef;
 typedef enum builtInMathFunctions {
     BM_reduce = 1,
     BM_sqrt,
@@ -49,7 +44,6 @@ typedef enum builtInMathFunctions {
     BM_carg,
     BM_cabs
 } builtInMathFunctions;
-
 typedef enum builtInConstantFunctions {
     BC_AW = 1,
     BC_FW,
@@ -61,9 +55,7 @@ typedef enum builtInConstantFunctions {
     BC_Isotope_ElectricQuadrupole,
     BC_nmr
 } builtInConstantFunctions;
-
 extern OCStringRef scalarErrorString;
-
 ScalarNodeRef ScalarNodeCreateInnerNode(int nodeType, ScalarNodeRef left, ScalarNodeRef right);
 ScalarNodeRef ScalarNodeCreateNumberLeaf(SIScalarRef number);
 ScalarNodeRef ScalarNodeCreateMathFunction(builtInMathFunctions funcType, ScalarNodeRef left);
@@ -75,7 +67,5 @@ SIScalarRef builtInConstantFunction(ScalarNodeConstantFunctionRef func, OCString
 bool ScalarNodeisLeaf(ScalarNodeRef node);
 char ScalarNodeGetType(ScalarNodeRef node);
 void ScalarNodeFree(ScalarNodeRef node);
-
 SIUnitRef ConversionWithDefinedUnit(OCMutableStringRef mutString, double *unit_multiplier, OCStringRef *errorString);
-
-#endif // SIScalarParser_h
+#endif  // SIScalarParser_h

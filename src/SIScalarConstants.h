@@ -4,7 +4,6 @@
 //  Created by PhySy Ltd on 5/5/13.
 //  Copyright (c) 2008-2014 PhySy Ltd. All rights reserved.
 //
-
 /**
  * @file SIScalarConstants.h
  * @brief Declares constants and utility functions for scalar values and periodic table data in the SI system.
@@ -16,48 +15,50 @@
  *
  * @author Philip Grandinetti
  */
-
 #ifndef SIScalarConstants_h
 #define SIScalarConstants_h
-
 #include <stdbool.h>
 #include <stdint.h>
-
+#ifdef __cplusplus
+extern "C" {
+#endif
+// Forward declarations to avoid circular dependencies
+// These will be properly defined when SILibrary.h is included
+#ifndef SILibrary_h
+typedef const struct impl_OCArray *OCArrayRef;
+typedef const struct impl_OCString *OCStringRef;
+typedef const struct impl_SIScalar *SIScalarRef;
+#endif
 /**
  * @brief Returns an array with the element symbols.
  * @param errorString A pointer to an OCStringRef to store error information.
  * @return An OCArrayRef containing the element symbols.
  */
 OCArrayRef SIPeriodicTableCreateElementSymbols(OCStringRef *errorString);
-
 /**
  * @brief Returns an array with the isotope symbols.
  * @param errorString A pointer to an OCStringRef to store error information.
  * @return An OCArrayRef containing the isotope symbols.
  */
 OCArrayRef SIPeriodicTableCreateIsotopeSymbols(OCStringRef *errorString);
-
 /**
  * @brief Returns an array with the stable isotope symbols.
  * @param errorString A pointer to an OCStringRef to store error information.
  * @return An OCArrayRef containing the stable isotope symbols.
  */
 OCArrayRef SIPeriodicTableCreateStableIsotopeSymbols(OCStringRef *errorString);
-
 /**
  * @brief Returns an array with the NMR active isotope symbols.
  * @param errorString A pointer to an OCStringRef to store error information.
  * @return An OCArrayRef containing the NMR active isotope symbols.
  */
 OCArrayRef SIPeriodicTableCreateNMRActiveIsotopeSymbols(OCStringRef *errorString);
-
 /**
  * @brief Returns an array with the stable NMR active isotope symbols.
  * @param errorString A pointer to an OCStringRef to store error information.
  * @return An OCArrayRef containing the stable NMR active isotope symbols.
  */
 OCArrayRef SIPeriodicTableGetStableNMRActiveIsotopeSymbols(OCStringRef *errorString);
-
 /**
  * @brief Returns the atomic number of an element.
  * @param elementSymbol An OCStringRef containing the element symbol.
@@ -65,7 +66,6 @@ OCArrayRef SIPeriodicTableGetStableNMRActiveIsotopeSymbols(OCStringRef *errorStr
  * @return An integer representing the atomic number.
  */
 int64_t SIPeriodicTableGetAtomicNumber(OCStringRef elementSymbol, OCStringRef *errorString);
-
 /**
  * @brief Creates a scalar with the molar mass of an element.
  * @param elementSymbol An OCStringRef containing the element symbol.
@@ -73,7 +73,6 @@ int64_t SIPeriodicTableGetAtomicNumber(OCStringRef elementSymbol, OCStringRef *e
  * @return A SIScalarRef representing the molar mass.
  */
 SIScalarRef SIPeriodicTableCreateMolarMass(OCStringRef elementSymbol, OCStringRef *errorString);
-
 /**
  * @brief Determines whether an isotope is stable.
  * @param isotopeSymbol An OCStringRef containing the isotope symbol.
@@ -81,7 +80,6 @@ SIScalarRef SIPeriodicTableCreateMolarMass(OCStringRef elementSymbol, OCStringRe
  * @return A boolean indicating stability.
  */
 bool SIPeriodicTableCreateIsotopeStable(OCStringRef isotopeSymbol, OCStringRef *errorString);
-
 /**
  * @brief Creates a scalar with the magnetic dipole moment of an isotope.
  * @param isotopeSymbol An OCStringRef containing the isotope symbol.
@@ -89,7 +87,6 @@ bool SIPeriodicTableCreateIsotopeStable(OCStringRef isotopeSymbol, OCStringRef *
  * @return A SIScalarRef representing the magnetic dipole moment.
  */
 SIScalarRef SIPeriodicTableCreateIsotopeMagneticDipoleMoment(OCStringRef isotopeSymbol, OCStringRef *errorString);
-
 /**
  * @brief Creates a scalar with the electric quadrupole moment of an isotope.
  * @param isotopeSymbol An OCStringRef containing the isotope symbol.
@@ -97,7 +94,6 @@ SIScalarRef SIPeriodicTableCreateIsotopeMagneticDipoleMoment(OCStringRef isotope
  * @return A SIScalarRef representing the electric quadrupole moment.
  */
 SIScalarRef SIPeriodicTableCreateIsotopeElectricQuadrupoleMoment(OCStringRef isotopeSymbol, OCStringRef *errorString);
-
 /**
  * @brief Creates a scalar with the gyromagnetic ratio of an isotope.
  * @param isotopeSymbol An OCStringRef containing the isotope symbol.
@@ -105,7 +101,6 @@ SIScalarRef SIPeriodicTableCreateIsotopeElectricQuadrupoleMoment(OCStringRef iso
  * @return A SIScalarRef representing the gyromagnetic ratio.
  */
 SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSymbol, OCStringRef *errorString);
-
 /**
  * @brief Creates a scalar with the natural abundance of an isotope.
  * @param isotopeSymbol An OCStringRef containing the isotope symbol.
@@ -113,7 +108,6 @@ SIScalarRef SIPeriodicTableCreateIsotopeGyromagneticRatio(OCStringRef isotopeSym
  * @return A SIScalarRef representing the natural abundance.
  */
 SIScalarRef SIPeriodicTableCreateIsotopeAbundance(OCStringRef isotopeSymbol, OCStringRef *errorString);
-
 /**
  * @brief Creates a scalar with the lifetime of an isotope.
  * @param isotopeSymbol An OCStringRef containing the isotope symbol.
@@ -121,7 +115,6 @@ SIScalarRef SIPeriodicTableCreateIsotopeAbundance(OCStringRef isotopeSymbol, OCS
  * @return A SIScalarRef representing the lifetime.
  */
 SIScalarRef SIPeriodicTableCreateIsotopeLifetime(OCStringRef isotopeSymbol, OCStringRef *errorString);
-
 /**
  * @brief Creates a scalar with the half-life of an isotope.
  * @param isotopeSymbol An OCStringRef containing the isotope symbol.
@@ -129,7 +122,6 @@ SIScalarRef SIPeriodicTableCreateIsotopeLifetime(OCStringRef isotopeSymbol, OCSt
  * @return A SIScalarRef representing the half-life.
  */
 SIScalarRef SIPeriodicTableCreateIsotopeHalfLife(OCStringRef isotopeSymbol, OCStringRef *errorString);
-
 /**
  * @brief Creates a scalar with the nuclear spin of an isotope.
  * @param isotopeSymbol An OCStringRef containing the isotope symbol.
@@ -137,7 +129,6 @@ SIScalarRef SIPeriodicTableCreateIsotopeHalfLife(OCStringRef isotopeSymbol, OCSt
  * @return A SIScalarRef representing the nuclear spin.
  */
 SIScalarRef SIPeriodicTableCreateIsotopeSpin(OCStringRef isotopeSymbol, OCStringRef *errorString);
-
 /**
  * @brief Creates a scalar with the NMR frequency/magnetic flux density of an isotope.
  * @param isotopeSymbol An OCStringRef containing the isotope symbol.
@@ -145,7 +136,6 @@ SIScalarRef SIPeriodicTableCreateIsotopeSpin(OCStringRef isotopeSymbol, OCString
  * @return A SIScalarRef representing the NMR frequency/magnetic flux density.
  */
 SIScalarRef SIPeriodicTableCreateNMRFrequency(OCStringRef isotopeSymbol, OCStringRef *errorString);
-
 /**
  * @brief Creates a scalar with the formula mass.
  * @param formula An OCStringRef containing the chemical formula.
@@ -153,11 +143,12 @@ SIScalarRef SIPeriodicTableCreateNMRFrequency(OCStringRef isotopeSymbol, OCStrin
  * @return A SIScalarRef representing the formula mass.
  */
 SIScalarRef SIPeriodicTableCreateFormulaMass(OCStringRef formula, OCStringRef *errorString);
-
 /**
  * @brief Cleanup function for scalar constants libraries.
  * @details Releases global scalar constants libraries to prevent memory leaks.
  */
 void cleanupScalarConstantsLibraries(void);
-
+#ifdef __cplusplus
+}
+#endif
 #endif

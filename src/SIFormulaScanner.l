@@ -47,12 +47,12 @@ SIScalarRef SIPeriodicTableCreateFormulaMass(OCStringRef formula, OCStringRef *e
     sifw_scan_string(cString);
     SIScalarRef result = NULL;
     int tok;
-    
+
     // Initialize total mass to zero
     SIUnitRef massUnit = SIUnitFromExpression(STR("g/mol"), NULL, error);
     SIScalarRef totalMass = SIScalarCreateWithDouble(0.0, massUnit);
     OCRelease(massUnit);
-    
+
     SIScalarRef currentElementMass = NULL;
     int multiplier = 1;
 
@@ -73,7 +73,7 @@ SIScalarRef SIPeriodicTableCreateFormulaMass(OCStringRef formula, OCStringRef *e
                     currentElementMass = NULL;
                     multiplier = 1;
                 }
-                
+
                 // Get atomic weight for this element
                 OCStringRef elementSymbol = OCStringCreateWithCString(yytext);
                 currentElementMass = SIPeriodicTableCreateMolarMass(elementSymbol, error);
@@ -90,16 +90,16 @@ SIScalarRef SIPeriodicTableCreateFormulaMass(OCStringRef formula, OCStringRef *e
             case NUMBER:
                 multiplier = yylval;
                 break;
-                
+
             case MULTIPLIER:
                 multiplier = atoi(yytext+1); // skip the * at beginning
                 break;
-                
+
             case OPENPARENTHESIS:
             case CLOSEPARENTHESIS:
                 // For now, ignore parentheses (could be enhanced later)
                 break;
-                
+
             case ERROR:
                 if (error && !*error) *error = STR("Invalid character in formula");
                 if (currentElementMass) OCRelease(currentElementMass);

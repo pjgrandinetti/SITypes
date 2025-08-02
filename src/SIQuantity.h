@@ -11,7 +11,6 @@
  *
  * @author Philip Grandinetti
  */
-
 //
 //  SIQuantity.h
 //  SITypes
@@ -19,81 +18,69 @@
 //  Created by Philip Grandinetti on 6/13/17.
 //  Copyright © 2017 PhySy Ltd. All rights reserved.
 //
-
 #ifndef SIQuantity_h
 #define SIQuantity_h
-
 #include "SILibrary.h"
-
 /**
  * @enum complexPart
  * @brief Parts of a complex number.
  */
 typedef enum complexPart {
-    kSIRealPart,        /**< Real part of complex number. */
-    kSIImaginaryPart,   /**< Imaginary part of complex number. */
-    kSIMagnitudePart,   /**< Magnitude part of complex number. */
-    kSIArgumentPart,    /**< Argument part of complex number. */
+    kSIRealPart,      /**< Real part of complex number. */
+    kSIImaginaryPart, /**< Imaginary part of complex number. */
+    kSIMagnitudePart, /**< Magnitude part of complex number. */
+    kSIArgumentPart,  /**< Argument part of complex number. */
 } complexPart;
-
 /**
  * @enum SINumberType
  * @brief valid number types for SIQuantity.
  * @ingroup SIQuantities
  */
-typedef enum { // Anonymous enum
+typedef enum {  // Anonymous enum
     kSINumberFloat32Type = kOCNumberUInt32Type,
     kSINumberFloat64Type = kOCNumberUInt64Type,
     kSINumberComplex64Type = kOCNumberComplex64Type,
     kSINumberComplex128Type = kOCNumberComplex128Type
 } SINumberType;
-
 #define kSINumberTypeInvalid 0
-
 /** @cond INTERNAL */
-
 /**
  * @typedef SIMutableQuantityRef
  * @brief Reference to a mutable SIQuantity object.
  */
-typedef struct impl_SIQuantity * SIMutableQuantityRef;
+typedef struct impl_SIQuantity* SIMutableQuantityRef;
 /** @endcond */
-
 /**
  * @brief Returns the quantity's unit.
  * @param quantity The quantity.
  * @return A SIUnit object.
  */
 SIUnitRef SIQuantityGetUnit(SIQuantityRef quantity);
-
 /**
  * @brief Sets the quantity's unit.
  * @param quantity The quantity.
  * @param unit The unit.
  */
 bool SIQuantitySetUnit(SIMutableQuantityRef quantity, SIUnitRef unit);
-
+OCStringRef SIQuantityCopyUnitSymbol(SIQuantityRef quantity);
 /**
  * @brief Returns the quantity's dimensionality.
  * @param quantity The quantity.
  * @return A SIDimensionality object.
  */
 SIDimensionalityRef SIQuantityGetUnitDimensionality(SIQuantityRef quantity);
-
 /**
  * @brief Returns the type used by a quantity to store its values.
  * @param quantity The quantity.
  * @return The numeric type. Possible values are kSINumberFloatType, kSINumberDoubleType, kSINumberFloatComplexType, and kSINumberDoubleComplexType.
  */
 SINumberType SIQuantityGetNumericType(SIQuantityRef quantity);
-
 /**
  * @brief Returns size (in bytes) of a quantity element.
  * @param quantity The quantity.
  * @return The size.
  */
 int SIQuantityElementSize(SIQuantityRef quantity);
-
 /**
  * @brief Tests if quantity has a specific numeric type.
  * @param quantity The quantity.
@@ -101,14 +88,12 @@ int SIQuantityElementSize(SIQuantityRef quantity);
  * @return True or false.
  */
 bool SIQuantityHasNumericType(SIQuantityRef quantity, SINumberType numericType);
-
 /**
  * @brief Tests if quantity has a complex element type.
  * @param theQuantity The quantity.
  * @return True or false.
  */
 bool SIQuantityIsComplexType(SIQuantityRef theQuantity);
-
 /**
  * @brief Tests if quantity has a specific dimensionality.
  * @param quantity The quantity.
@@ -116,7 +101,6 @@ bool SIQuantityIsComplexType(SIQuantityRef theQuantity);
  * @return True or false.
  */
 bool SIQuantityHasDimensionality(SIQuantityRef quantity, SIDimensionalityRef theDimensionality);
-
 /**
  * @brief Determines if two quantities have the same dimensionality exponents.
  * @param input1 The first quantity.
@@ -124,7 +108,6 @@ bool SIQuantityHasDimensionality(SIQuantityRef quantity, SIDimensionalityRef the
  * @return True or false.
  */
 bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2);
-
 /**
  * @brief Determines if two quantities have the same reduced dimensionality exponents.
  * @param input1 The first quantity.
@@ -132,7 +115,6 @@ bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2)
  * @return True or false.
  */
 bool SIQuantityHasSameReducedDimensionality(SIQuantityRef input1, SIQuantityRef input2);
-
 /**
  * @brief Returns larger numeric type for the two input quantities.
  * @param input1 The first SIQuantity.
@@ -140,7 +122,6 @@ bool SIQuantityHasSameReducedDimensionality(SIQuantityRef input1, SIQuantityRef 
  * @return The larger SINumberType of the two quantities.
  */
 SINumberType SIQuantityLargerNumericType(SIQuantityRef input1, SIQuantityRef input2);
-
 /**
  * @brief Returns smaller numeric type for the two input quantities.
  * @param input1 The first SIQuantity.
@@ -148,7 +129,6 @@ SINumberType SIQuantityLargerNumericType(SIQuantityRef input1, SIQuantityRef inp
  * @return The smaller SINumberType of the two quantities.
  */
 SINumberType SIQuantitySmallerNumericType(SIQuantityRef input1, SIQuantityRef input2);
-
 /**
  * @brief Returns the best numeric type for the two input quantities.
  * @param input1 The first SIQuantity.
@@ -179,5 +159,4 @@ SINumberType SIQuantitySmallerNumericType(SIQuantityRef input1, SIQuantityRef in
  * (double complex and double complex) => double complex
  */
 SINumberType SIQuantityBestNumericType(SIQuantityRef input1, SIQuantityRef input2);
-
 #endif /* SIQuantity_h */
