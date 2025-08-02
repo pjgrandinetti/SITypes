@@ -1618,6 +1618,10 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     }
     // Try library lookup first
     OCStringRef key = SIUnitCreateCleanedExpression(expression);
+    if(NULL==key) {
+        *error = OCStringCreateWithFormat(STR("Invalid unit expression: %@"), expression);
+        return NULL;
+    }
     SIUnitRef unit = OCDictionaryGetValue(unitsLibrary, key);
     if (unit) {
         if (unit_multiplier) *unit_multiplier = 1.0;
@@ -1627,7 +1631,11 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     // Parse the expression if not found in library
     double multiplier = 1.0;  // Default multiplier
     unit = SIUnitFromExpressionInternal(expression, &multiplier, error);
-    if (unit && multiplier != 1.0) {
+    if(NULL==unit) {
+        *error = OCStringCreateWithFormat(STR("Invalid unit expression: %@"), expression);
+        return NULL;
+    }
+    if (multiplier != 1.0) {
         SIDimensionalityRef dimensionality = SIUnitGetDimensionality(unit);
         OCStringRef dimensionalitySymbol = SIDimensionalityCopySymbol(dimensionality);
         unit = AddNonExistingToLib(dimensionalitySymbol, NULL, NULL, key, multiplier, error);

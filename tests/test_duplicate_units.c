@@ -20,7 +20,7 @@ bool test_check_for_duplicate_units(void) {
     }
     // Get all keys and values from the dictionary
     uint64_t count = OCDictionaryGetCount(unitsLib);
-    printf("Total units in library: %llu\n", count);
+    printf("Total units in library: %lu\n", count);
     OCStringRef* keys = malloc(count * sizeof(OCStringRef));
     SIUnitRef* units = malloc(count * sizeof(SIUnitRef));
     if (!keys || !units) {
