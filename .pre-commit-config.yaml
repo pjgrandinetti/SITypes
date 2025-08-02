@@ -35,7 +35,7 @@ repos:
           - --header-filter=src/.*\.h
           - --format-style=file
         files: \.(c|h)$
-        exclude: ^(build/|third_party/|tests/|.*\.tab\.(c|h)|.*Scanner\.c)$
+        exclude: ^(build/|third_party/|.*\.tab\.(c|h)|.*Scanner\.c)$
 
       # Static analysis with cppcheck
       - id: cppcheck
