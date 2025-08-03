@@ -98,7 +98,7 @@ ADD_FLEX_BISON_DEPENDENCY(SIUNITEXPR_SCANNER SIUNITEXPR_PARSER)
 # 3) List your “hand‐written” .c/.h files
 # -------------------------------------------------------------------
 set(SITYPE_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/SILibrary.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/SITypes.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIDimensionality.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIDimensionalityLib.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIQuantity.c
@@ -115,7 +115,7 @@ set(SITYPE_HDR
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIDimensionalityPrivate.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIDimensionalityParser.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIQuantity.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/SILibrary.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/SITypes.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIScalar.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIScalarParser.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SIScalarConstants.h

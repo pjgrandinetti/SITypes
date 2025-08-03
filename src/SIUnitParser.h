@@ -6,7 +6,7 @@
 //
 #ifndef SIUnitParser_h
 #define SIUnitParser_h
-#include "SILibrary.h"  // for OCStringRef, SIUnitRef
+#include "SITypes.h"  // for OCStringRef, SIUnitRef
 extern OCStringRef unitError;
 /**
  * @brief Returns the SI unit for a parsed symbol string.

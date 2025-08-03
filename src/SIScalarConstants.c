@@ -6,7 +6,7 @@
 //
 #include "SIScalarConstants.h"
 #include <math.h>  // For INFINITY
-#include "SILibrary.h"
+#include "SITypes.h"
 #include "SIScalarConstantsData.h"
 #include "SIUnitParser.h"
 OCMutableDictionaryRef molarMassLibrary = NULL;

@@ -140,7 +140,7 @@ dirs:
 	$(MKDIR_P) $(BUILD_DIR) $(OBJ_DIR) $(GEN_DIR) $(BIN_DIR)
 
 # Download and extract OCTypes (only if not already present)
-octypes: $(OCT_LIBDIR)/libOCTypes.a $(OCT_INCLUDE)/OCLibrary.h
+octypes: $(OCT_LIBDIR)/libOCTypes.a $(OCT_INCLUDE)/OCTypes.h
 
 third_party:
 	@$(MKDIR_P) third_party
@@ -152,7 +152,7 @@ $(OCT_LIB_ARCHIVE): | $(TP_DIR)
 	fi
 
 $(OCT_HEADERS_ARCHIVE): | $(TP_DIR)
-	@if [ ! -f $(OCT_INCLUDE)/OCLibrary.h ]; then \
+	@if [ ! -f $(OCT_INCLUDE)/OCTypes.h ]; then \
 		echo "Fetching OCTypes headers"; \
 		curl -L https://github.com/pjgrandinetti/OCTypes/releases/download/v0.1.0/libOCTypes-headers.zip -o $@; \
 	fi
@@ -171,7 +171,7 @@ $(TP_LIB_DIR)/libOCTypes.a: | $(TP_DIR)
 		echo "OCTypes library already exists at $@"; \
 	fi
 
-$(OCT_INCLUDE)/OCLibrary.h: | $(TP_DIR)
+$(OCT_INCLUDE)/OCTypes.h: | $(TP_DIR)
 	@if [ ! -f $@ ]; then \
 		if [ ! -f $(OCT_HEADERS_ARCHIVE) ]; then \
 			echo "Fetching OCTypes headers"; \

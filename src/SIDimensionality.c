@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "SIDimensionalityPrivate.h"
-#include "SILibrary.h"
+#include "SITypes.h"
 static OCTypeID kSIDimensionalityID = kOCNotATypeID;
 OCTypeID SIDimensionalityGetTypeID(void) {
     if (kSIDimensionalityID == kOCNotATypeID)

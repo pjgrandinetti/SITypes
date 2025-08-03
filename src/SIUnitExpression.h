@@ -7,7 +7,7 @@
 //
 #ifndef SIUnitExpression_h
 #define SIUnitExpression_h
-#include "SILibrary.h"
+#include "SITypes.h"
 /*!
  * @file SIUnitExpression.h
  * @brief Internal data structures and functions for unit expression parsing and processing.

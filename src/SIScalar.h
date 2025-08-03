@@ -7,7 +7,7 @@
 //
 #ifndef SIScalar_h
 #define SIScalar_h
-#include "SILibrary.h"
+#include "SITypes.h"
 /*!
  * @file SIScalar.h
  * @brief Interface for representing and manipulating scalar quantities in the SI system.

@@ -3,7 +3,7 @@
 %option nounput
 %option noinput
 %{
-#import "SILibrary.h"
+#import "SITypes.h"
 
 enum yytokentype {
     NUMBER = 258,

@@ -9,7 +9,7 @@
 #include <stdio.h>   // Already likely there or in a header, but good to ensure for printf, etc.
 #include <stdlib.h>  // For malloc, free, abs
 #include <string.h>
-#include "SILibrary.h"
+#include "SITypes.h"
 static OCTypeID kSIScalarID = kOCNotATypeID;
 // SIScalar Opaque Type
 struct impl_SIScalar {

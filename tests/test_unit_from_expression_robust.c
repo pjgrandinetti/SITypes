@@ -7,7 +7,7 @@
 #include "test_unit_from_expression_robust.h"
 #include <math.h>
 #include <stdio.h>
-#include "SILibrary.h"
+#include "SITypes.h"
 // Test helper to verify unit behavior
 static bool verify_unit_behavior(OCStringRef expression, double expected_multiplier, OCStringRef expected_symbol, const char* test_name) {
     double multiplier = 1.0;

@@ -12,7 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "SIDimensionalityPrivate.h"
-#include "SILibrary.h"
+#include "SITypes.h"
+
 /**
  * @file SIUnit.c
  * @brief Implementation of the SIUnit type and related functionality.
@@ -405,6 +406,10 @@ static OCMutableArrayRef tokenSymbolLibrary = NULL;
 static bool imperialVolumes = false;
 // Function prototypes
 static bool SIUnitCreateLibraries(void);
+static bool SIUnitAddUSPlainVolumeUnits(OCStringRef *error);
+static bool SIUnitAddUKPlainVolumeUnits(OCStringRef *error);
+static bool SIUnitAddUKLabeledVolumeUnits(OCStringRef *error);
+static bool SIUnitLibraryAddUSLabeledVolumeUnits(OCStringRef *error);
 // Library accessor functions
 OCMutableDictionaryRef SIUnitGetUnitsLib(void) {
     if (NULL == unitsLibrary) SIUnitCreateLibraries();
@@ -785,16 +790,15 @@ static bool SIUnitCreateLibraries(void) {
     IF_NO_OBJECT_EXISTS_RETURN(tokenSymbolLibrary, false);
     // Initialize all units by including the definitions
 #include "SIUnitDefinitions.h"
-    // fprintf(stderr,"\nSIUnitLibrary: %d units loaded.\n", (int)OCDictionaryGetCount(unitsLibrary));
-    // Set to UK or US units.
-    imperialVolumes = true;
-    SIUnitLibrarySetImperialVolumes(false);
+
+    SIUnitAddUSPlainVolumeUnits(&error);        // Define US Volume units as default volume
+    SIUnitAddUKLabeledVolumeUnits(&error);      // Define UK Volume units
     if (currentlocale->currency_symbol) {
         if (strcmp(currentlocale->currency_symbol, "£") == 0) {
-            imperialVolumes = false;
-            SIUnitLibrarySetImperialVolumes(true);
+            SIUnitLibrarySetDefaultVolumeSystem(kSIVolumeSystemUK);
         }
     }
+
     OCArraySortValues(unitNamesLibrary, OCRangeMake(0, OCArrayGetCount(unitNamesLibrary)), unitNameLengthSort, NULL);
     // Add unit to units library dictionary
     OCMutableDictionaryRef unitsLib = SIUnitGetUnitsLib();
@@ -807,6 +811,8 @@ static bool SIUnitCreateLibraries(void) {
         } else
             OCDictionaryAddValue(unitsLib, unit->symbol, unit);
     }
+    
+
     return true;
 }
 // Add a cleanup function for static dictionaries and array
@@ -854,8 +860,10 @@ static bool SIUnitLibraryRemoveUnitWithSymbol(OCStringRef symbol) {
     OCStringRef key = SIUnitCreateCleanedExpression(symbol);
     if (OCDictionaryContainsKey(unitsLibrary, key)) {
         SIUnitRef unit = (SIUnitRef)OCDictionaryGetValue(unitsLibrary, key);
-        OCTypeSetStaticInstance(unit, false);
         OCDictionaryRemoveValue(unitsLibrary, key);
+        OCIndex index = OCArrayGetFirstIndexOfValue(unitNamesLibrary, unit);
+        OCTypeSetStaticInstance(unit, false);
+        OCArrayRemoveValueAtIndex(unitNamesLibrary,index);
         return true;
     }
     return false;
@@ -969,7 +977,7 @@ static bool SIUnitLibraryAddUSLabeledVolumeUnits(OCStringRef *error) {
     if (error && *error) return false;
     return true;
 }
-static bool SIUnitSetUSPlainVolumeUnits(OCStringRef *error) {
+static bool SIUnitAddUSPlainVolumeUnits(OCStringRef *error) {
     AddToLib(kSIQuantityVolume, STR("gallon"), STR("gallons"), STR("gal"), 0.003785411784, error);
     AddToLib(kSIQuantityVolume, STR("quart"), STR("quarts"), STR("qt"), 0.003785411784 / 4, error);
     AddToLib(kSIQuantityVolume, STR("pint"), STR("pints"), STR("pt"), 0.003785411784 / 8, error);
@@ -998,7 +1006,7 @@ static bool SIUnitSetUSPlainVolumeUnits(OCStringRef *error) {
     if (error && *error) return false;
     return true;
 }
-static bool SIUnitSetUKPlainVolumeUnits(OCStringRef *error) {
+static bool SIUnitAddUKPlainVolumeUnits(OCStringRef *error) {
     // Volume
     AddToLib(kSIQuantityVolume, STR("gallon"), STR("gallons"), STR("gal"), 0.00454609, error);
     AddToLib(kSIQuantityVolume, STR("quart"), STR("quarts"), STR("qt"), 0.00454609 / 4, error);
@@ -1057,24 +1065,30 @@ static bool SIUnitAddUKLabeledVolumeUnits(OCStringRef *error) {
     if (error && *error) return false;
     return true;
 }
-void SIUnitLibrarySetImperialVolumes(bool value) {
-    if (imperialVolumes == value) return;
+
+void SIUnitLibrarySetDefaultVolumeSystem(SIVolumeSystem system) {
+    bool useUKAsDefault = (system == kSIVolumeSystemUK);
+    if (imperialVolumes == useUKAsDefault) return;
+    
     OCStringRef error = NULL;
     SIUnitLibraryRemovePlainVolumeUnits();
-    if (value) {
-        SIUnitLibraryRemoveUKLabeledVolumeUnits();     // Remove Imperial Volumes
-        SIUnitLibraryAddUSLabeledVolumeUnits(&error);  // Define US Volume units
-        SIUnitSetUKPlainVolumeUnits(&error);           // Define UK Volume units
-    } else {
-        SIUnitLibraryRemoveUSLabeledVolumeUnits();  // Remove US Volumes
-        SIUnitSetUSPlainVolumeUnits(&error);        // Define US Volume units
-        SIUnitAddUKLabeledVolumeUnits(&error);      // Define UK Volume units
+    
+    if (useUKAsDefault) { // UK volumes get plain symbols (gal, qt, tsp, etc.)
+        SIUnitLibraryRemoveUKLabeledVolumeUnits();     // Remove UK labeled volumes
+        SIUnitLibraryAddUSLabeledVolumeUnits(&error);  // Add US labeled volumes (galUS, qtUS, etc.)
+        SIUnitAddUKPlainVolumeUnits(&error);           // Add UK plain volumes (gal, qt, etc.)
+    } else { // US volumes get plain symbols (gal, qt, tsp, etc.)
+        SIUnitLibraryRemoveUSLabeledVolumeUnits();  // Remove US labeled volumes
+        SIUnitAddUSPlainVolumeUnits(&error);        // Add US plain volumes (gal, qt, etc.)
+        SIUnitAddUKLabeledVolumeUnits(&error);      // Add UK labeled volumes (galUK, qtUK, etc.)
     }
-    imperialVolumes = value;
+    imperialVolumes = useUKAsDefault;
 }
-bool SIUnitLibraryGetImperialVolumes(void) {
-    return imperialVolumes;
+
+SIVolumeSystem SIUnitLibraryGetDefaultVolumeSystem(void) {
+    return imperialVolumes ? kSIVolumeSystemUK : kSIVolumeSystemUS;
 }
+
 SIUnitRef SIUnitFindWithName(OCStringRef input) {
     if (NULL == unitsLibrary) SIUnitCreateLibraries();
     IF_NO_OBJECT_EXISTS_RETURN(unitsLibrary, NULL);

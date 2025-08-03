@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "SILibrary.h"
+#include "SITypes.h"
 #include "test_dimensionality.h"
 #include "test_duplicate_units.h"
 #include "test_octypes.h"

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "SIDimensionality.h"
-#include "SILibrary.h"
+#include "SITypes.h"
 #include "SIScalar.h"
 #include "SIScalarParser.h"
 #include "SIUnitParser.h"
@@ -191,7 +191,8 @@ SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
                            OCRangeMake(0, OCStringGetLength(mutString)), 0);
     result = NULL;
     scalarErrorString = NULL;
-    // check for and get the final conversion unit
+    // check for and get the final conversion unit if user added  "expression .. finalUnit"
+    // extract finalUnit, and delete .. finalUnit.
     double unit_multiplier = 1.0;
     SIUnitRef finalUnit = ConversionWithDefinedUnit(mutString, &unit_multiplier, error);
     OCStringFindAndReplace(mutString, STR("•"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);

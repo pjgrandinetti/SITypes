@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "SILibrary.h"
+#include "SITypes.h"
 bool test_dimensionality_0(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;

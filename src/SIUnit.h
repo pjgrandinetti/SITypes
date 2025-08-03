@@ -7,7 +7,7 @@
 //
 #ifndef SIUnit_H
 #define SIUnit_H
-#include "SILibrary.h"
+#include "SITypes.h"
 /*!
  * @file SIUnit.h
  * @brief Interface for defining, manipulating, and comparing SI and derived units.
@@ -80,6 +80,13 @@ typedef enum {
     kSIPrefixZetta = 21,
     kSIPrefixYotta = 24
 } SIPrefix;
+
+/** @brief Volume system enumeration for specifying default volume units. */
+typedef enum {
+    kSIVolumeSystemUS = 0,  /**< US customary volume units get plain symbols (gal, qt, tsp, etc.) */
+    kSIVolumeSystemUK = 1   /**< UK imperial volume units get plain symbols (gal, qt, tsp, etc.) */
+} SIVolumeSystem;
+
 #define kSIMinute 60.
 #define kSIHour 3600
 #define kSIDay 86400
@@ -156,7 +163,9 @@ bool SIUnitIsDimensionless(SIUnitRef theUnit);
 // Unit conversion
 double SIUnitConversion(SIUnitRef initialUnit, SIUnitRef finalUnit);
 // Unit library management
-void SIUnitLibrarySetImperialVolumes(bool value);
+void SIUnitLibrarySetDefaultVolumeSystem(SIVolumeSystem system);
+SIVolumeSystem SIUnitLibraryGetDefaultVolumeSystem(void);
+void SIUnitLibrarySetImperialVolumes(bool value);  // For backward compatibility
 bool SIUnitLibraryGetImperialVolumes(void);
 void SIUnitLibrariesShutdown(void);  // do not call, called by SITypesShutdown()
 // Array creation functions

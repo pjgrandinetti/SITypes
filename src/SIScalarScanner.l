@@ -3,7 +3,7 @@
 %option nounput
 %option noinput
 %{
-    #include "SILibrary.h"
+    #include "SITypes.h"
     #include "SIScalarParser.h"
     #include "SIScalarParser.tab.h"
     static double complex temp;

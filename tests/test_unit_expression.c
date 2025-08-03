@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-#include "../src/SILibrary.h"
+#include "../src/SITypes.h"
 // Helper function to test cleaned expression creation
 static bool test_unit_expression_cleaner_creation(const char* input, const char* expected, const char* test_name) {
     OCStringRef input_str = OCStringCreateWithCString(input);

@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../src/SILibrary.h"
+#include "../src/SITypes.h"
 extern OCMutableDictionaryRef SIUnitGetUnitsLib(void);
 // Test function to check for duplicate unit pointers in the library
 bool test_check_for_duplicate_units(void) {

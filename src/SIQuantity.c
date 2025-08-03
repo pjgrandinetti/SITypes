@@ -6,7 +6,7 @@
 //  Copyright © 2017 PhySy Ltd. All rights reserved.
 //
 #include <stdio.h>  // For printf used in IF_NO_OBJECT_EXISTS_RETURN macro
-#include "SILibrary.h"
+#include "SITypes.h"
 // SIQuantity Opaque Type
 struct impl_SIQuantity {
     OCBase base;

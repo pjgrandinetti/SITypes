@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "SIDimensionalityPrivate.h"
-#include "SILibrary.h"
+#include "SITypes.h"
 // Local comparator for OCStringRef values (case-insensitive sort)
 static int OCStringSort(const void *val1, const void *val2, void *context) {
     (void)context;
