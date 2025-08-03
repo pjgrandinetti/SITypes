@@ -1199,7 +1199,7 @@ OCArrayRef SIUnitCreateArrayOfUnitsForSameReducedDimensionality(SIDimensionality
     return result;
 }
 SIUnitRef SIUnitDimensionlessAndUnderived(void) {
-    return OCDictionaryGetValue(unitsLibrary, STR(" "));
+    return OCDictionaryGetValue(SIUnitGetUnitsLib(), STR(" "));
 }
 // Equivalent units can be substituted for each other without changing the associated numerical value
 OCArrayRef SIUnitCreateArrayOfEquivalentUnits(SIUnitRef theUnit) {
