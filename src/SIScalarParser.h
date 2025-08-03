@@ -6,7 +6,7 @@
 //
 #ifndef SIScalarParser_h
 #define SIScalarParser_h
-#include "SILibrary.h"
+#include "SITypes.h"
 #include "SIScalar.h"
 #include "SIUnitParser.h"
 typedef const struct impl_scalarNode *ScalarNodeRef;

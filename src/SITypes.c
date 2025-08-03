@@ -1,4 +1,4 @@
-#include "SILibrary.h"
+#include "SITypes.h"
 #include "SIDimensionalityPrivate.h"
 #include "SIScalarConstants.h"
 void SITypesShutdown(void) {

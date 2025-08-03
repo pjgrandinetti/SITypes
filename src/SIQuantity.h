@@ -20,7 +20,7 @@
 //
 #ifndef SIQuantity_h
 #define SIQuantity_h
-#include "SILibrary.h"
+#include "SITypes.h"
 /**
  * @enum complexPart
  * @brief Parts of a complex number.

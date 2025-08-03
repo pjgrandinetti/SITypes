@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 // Forward declarations to avoid circular dependencies
-// These will be properly defined when SILibrary.h is included
+// These will be properly defined when SITypes.h is included
 #ifndef SILibrary_h
 typedef const struct impl_OCArray *OCArrayRef;
 typedef const struct impl_OCString *OCStringRef;

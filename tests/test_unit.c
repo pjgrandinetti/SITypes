@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../src/SILibrary.h"
+#include "../src/SITypes.h"
 #include "test_utils.h"  // Include the test utilities header
 extern OCMutableDictionaryRef SIUnitGetUnitsLib(void);
 bool test_unit_0(void) {

@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#include "SILibrary.h"
+#include "SITypes.h"
 bool test_unit_negative_power_operations(void) {
     printf("Running test_unit_negative_power_operations...\n");
     // Test: Unit raised to negative power should produce inverse

@@ -3,7 +3,7 @@
 %option nounput
 %option noinput
 %{
-    #include "SILibrary.h"
+    #include "SITypes.h"
     #include "SIUnitExpression.h"
     #include "SIUnitExpressionParser.tab.h"
 

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "SILibrary.h"
+#include "SITypes.h"
 #include "test_utils.h"  // Include the new test utils header
 bool test_scalar_parser_1(void) {
     printf("Running %s...\n", __func__);

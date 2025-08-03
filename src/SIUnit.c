@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "SIDimensionalityPrivate.h"
-#include "SILibrary.h"
+#include "SITypes.h"
 
 /**
  * @file SIUnit.c

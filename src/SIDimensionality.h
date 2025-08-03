@@ -7,7 +7,7 @@
 //
 #ifndef SIDIMENSIONALITY_H
 #define SIDIMENSIONALITY_H
-#include "SILibrary.h"
+#include "SITypes.h"
 /*!
  * @file SIDimensionality.h
  * @brief Interface for representing and manipulating SI physical dimensionalities.

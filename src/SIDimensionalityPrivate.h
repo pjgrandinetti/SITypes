@@ -1,6 +1,6 @@
 #ifndef SIDIMENSIONALITY_PRIVATE_H
 #define SIDIMENSIONALITY_PRIVATE_H
-#include "SILibrary.h"
+#include "SITypes.h"
 #define BASE_DIMENSION_COUNT 7
 // SIDimensionality Opaque Type
 struct impl_SIDimensionality {

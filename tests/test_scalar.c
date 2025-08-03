@@ -13,7 +13,7 @@
 #endif
 #include <complex.h>  // For complex numbers and I macro
 #include <math.h>     // For fabs, fabsf, creal, cimag
-#include "SILibrary.h"
+#include "SITypes.h"
 #include "test_utils.h"
 // Cross-platform path length definitions
 #ifdef _WIN32

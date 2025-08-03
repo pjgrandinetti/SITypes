@@ -7,7 +7,7 @@
 //
 #ifndef SIUnit_H
 #define SIUnit_H
-#include "SILibrary.h"
+#include "SITypes.h"
 /*!
  * @file SIUnit.h
  * @brief Interface for defining, manipulating, and comparing SI and derived units.

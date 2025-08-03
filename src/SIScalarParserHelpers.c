@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "SIDimensionality.h"
-#include "SILibrary.h"
+#include "SITypes.h"
 #include "SIScalar.h"
 #include "SIScalarParser.h"
 #include "SIUnitParser.h"

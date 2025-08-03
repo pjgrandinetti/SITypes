@@ -1,5 +1,5 @@
 /**
- * @file SILibrary.h
+ * @file SITypes.h
  * @brief Core definitions, macros, and public interfaces for the SITypes library.
  *
  * This header centralizes the core types, forward declarations, and helper macros
@@ -8,8 +8,8 @@
  *
  * @note This header should be included wherever SITypes functionality is required.
  */
-#ifndef SILibrary_h
-#define SILibrary_h
+#ifndef SITypes_h
+#define SITypes_h
 // C Standard Library Headers
 #include <stdbool.h>
 #include <stddef.h>
@@ -38,4 +38,4 @@ typedef struct impl_SIScalar *SIMutableScalarRef;
 #include "SIUnitParser.h"
 // Library management functions
 void SITypesShutdown(void);
-#endif /* SILibrary_h */
+#endif /* SITypes_h */

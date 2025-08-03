@@ -1,6 +1,6 @@
 %{
     #include <stdio.h>
-    #include "SILibrary.h"
+    #include "SITypes.h"
     #include "SIUnitParser.h"
 
     void yyerror(char *s, ...);

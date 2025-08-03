@@ -1,5 +1,5 @@
 %{
-    #include "SILibrary.h"
+    #include "SITypes.h"
     #include "SIScalarParser.h"
     #include <ctype.h>
     void siserror(char *s, ...);
