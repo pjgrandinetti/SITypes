@@ -267,5 +267,5 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression);
  */
 OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression);
 int SIUnitCountTokenSymbols(OCStringRef cleanedExpression);
-OCMutableDictionaryRef SIUnitGetUnitsLib(void);
+OCMutableDictionaryRef SIUnitGetUnitsDictionaryLib(void);
 #endif  // SIUnit_H

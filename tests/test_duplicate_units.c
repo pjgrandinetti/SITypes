@@ -8,12 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../src/SITypes.h"
-extern OCMutableDictionaryRef SIUnitGetUnitsLib(void);
+extern OCMutableDictionaryRef SIUnitGetUnitsDictionaryLib(void);
 // Test function to check for duplicate unit pointers in the library
 bool test_check_for_duplicate_units(void) {
     printf("=== Testing for duplicate unit pointers in unitsLibrary ===\n");
     // Initialize the units library
-    OCMutableDictionaryRef unitsLib = SIUnitGetUnitsLib();
+    OCMutableDictionaryRef unitsLib = SIUnitGetUnitsDictionaryLib();
     if (!unitsLib) {
         printf("ERROR: Could not initialize units library\n");
         return false;

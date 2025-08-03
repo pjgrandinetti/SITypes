@@ -7,7 +7,7 @@
 #include <string.h>
 #include "../src/SITypes.h"
 #include "test_utils.h"  // Include the test utilities header
-extern OCMutableDictionaryRef SIUnitGetUnitsLib(void);
+extern OCMutableDictionaryRef SIUnitGetUnitsDictionaryLib(void);
 bool test_unit_0(void) {
     printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
@@ -1330,7 +1330,7 @@ bool isUnitInLibrary(const char* expression) {
     OCMutableStringRef mutSymbol = OCStringCreateMutableCopy(expr);
     OCStringTrimWhitespace(mutSymbol);
     OCStringFindAndReplace2(mutSymbol, STR("*"), STR("•"));
-    OCMutableDictionaryRef unitsLib = SIUnitGetUnitsLib();
+    OCMutableDictionaryRef unitsLib = SIUnitGetUnitsDictionaryLib();
     SIUnitRef unit = OCDictionaryGetValue(unitsLib, mutSymbol);
     OCRelease(mutSymbol);
     OCRelease(expr);
