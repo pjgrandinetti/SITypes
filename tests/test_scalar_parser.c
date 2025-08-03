@@ -373,12 +373,26 @@ bool test_scalar_parser_6(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Multiplication test
+    SIScalarRef d0 = SIScalarCreateFromExpression(STR("π*m^2"), &err);
+    if (!d0) {
+        if (err) {
+            printf("Error parsing multiplication: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Multiplication operator failed\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
     SIScalarRef d1 = SIScalarCreateFromExpression(STR("6×2 kg"), &err);
     if (!d1) {
         if (err) {
             printf("Error parsing multiplication: %s\n", OCStringGetCString(err));
             OCRelease(err);
         }
+        OCRelease(d0);
         printf("%s failed: Multiplication operator failed\n", __func__);
         return false;
     }
@@ -392,6 +406,7 @@ bool test_scalar_parser_6(void) {
             printf("Error parsing comparison scalar for multiplication: %s\n", OCStringGetCString(err));
             OCRelease(err);
         }
+        OCRelease(d0);
         OCRelease(d1);
         printf("%s failed: Failed to parse comparison scalar for multiplication\n", __func__);
         return false;
@@ -407,6 +422,7 @@ bool test_scalar_parser_6(void) {
             printf("Error parsing division: %s\n", OCStringGetCString(err));
             OCRelease(err);
         }
+        OCRelease(d0);
         OCRelease(d1);
         OCRelease(d2);
         printf("%s failed: Division operator failed\n", __func__);
@@ -422,6 +438,7 @@ bool test_scalar_parser_6(void) {
             printf("Error parsing comparison scalar for division: %s\n", OCStringGetCString(err));
             OCRelease(err);
         }
+        OCRelease(d0);
         OCRelease(d1);
         OCRelease(d2);
         OCRelease(d3);
@@ -439,6 +456,7 @@ bool test_scalar_parser_6(void) {
             printf("Error parsing minus sign: %s\n", OCStringGetCString(err));
             OCRelease(err);
         }
+        OCRelease(d0);
         OCRelease(d1);
         OCRelease(d2);
         OCRelease(d3);
@@ -456,6 +474,7 @@ bool test_scalar_parser_6(void) {
             printf("Error parsing comparison scalar for minus: %s\n", OCStringGetCString(err));
             OCRelease(err);
         }
+        OCRelease(d0);
         OCRelease(d1);
         OCRelease(d2);
         OCRelease(d3);
@@ -473,6 +492,7 @@ bool test_scalar_parser_6(void) {
         SIScalarCompare(d3, d4) != kOCCompareEqualTo ||
         SIScalarCompare(d5, d6) != kOCCompareEqualTo) {
         printf("%s failed: One or more scalar comparisons did not match\n", __func__);
+        OCRelease(d0);
         OCRelease(d1);
         OCRelease(d2);
         OCRelease(d3);
@@ -482,6 +502,7 @@ bool test_scalar_parser_6(void) {
         return false;
     }
     // Clean up
+    OCRelease(d0);
     OCRelease(d1);
     OCRelease(d2);
     OCRelease(d3);

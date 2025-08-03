@@ -11,7 +11,7 @@ double a_0 = kSIElectricConstant * kSIPlanckConstant * kSIPlanckConstant / (kSIP
 double R_H = kSIElectronMass * kSIElementaryCharge * kSIElementaryCharge * kSIElementaryCharge * kSIElementaryCharge / (8 * kSIElectricConstant * kSIElectricConstant * kSIPlanckConstant * kSIPlanckConstant * kSIPlanckConstant * kSISpeedOfLight);
 // R_H = m_e•q_e^4/(8•ε_0^2•h_P^3•c_0)
 double Ry = kSIPlanckConstant * kSISpeedOfLight * R_H;
-double Λ_0 = E_h / (kSIElementaryCharge * a_0 * a_0);
+double Lambda_0 = E_h / (kSIElementaryCharge * a_0 * a_0);
 double G_0 = 2 * kSIElementaryCharge * kSIElementaryCharge / kSIPlanckConstant;
 double mu_N = kSIElementaryCharge * hbar / (2 * kSIProtonMass);
 double mu_e = kSIElementaryCharge * hbar / (2 * kSIElectronMass);
@@ -499,8 +499,8 @@ OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityVoltage, units);
 //
 #pragma mark kSIQuantityElectricFieldGradient
 AddSIToLibPrefixed(kSIQuantityElectricFieldGradient, STR("volt per square meter"), STR("volts per square meter"), STR("V/m^2"), 1, &error);
-AddAtomicUnitToLib(kSIQuantityElectricFieldGradient, STR("atomic unit of electric field gradient"), STR("atomic unit of electric field gradient"), STR("Λ_0"), Λ_0, &error);
-AddAtomicUnitToLib(kSIQuantityElectricFieldGradient, STR("atomic unit of electric field gradient"), STR("atomic unit of electric field gradient"), STR("E_h/(q_e•a_0^2)"), Λ_0, &error);
+AddAtomicUnitToLib(kSIQuantityElectricFieldGradient, STR("atomic unit of electric field gradient"), STR("atomic unit of electric field gradient"), STR("Λ_0"), Lambda_0, &error);
+AddAtomicUnitToLib(kSIQuantityElectricFieldGradient, STR("atomic unit of electric field gradient"), STR("atomic unit of electric field gradient"), STR("E_h/(q_e•a_0^2)"), Lambda_0, &error);
 //
 #pragma mark kSIQuantityCapacitance
 AddSIToLibPrefixed(kSIQuantityCapacitance, STR("farad"), STR("farads"), STR("F"), 1, &error);
@@ -818,7 +818,7 @@ AddSIToLibPrefixed(kSIQuantityChargePerAmount, STR("coulomb per mole"), STR("cou
 AddConstantToLib(kSIQuantityGravitationalConstant, STR("gravitational constant"), STR("gravitational constant"), STR("&G"), kSIGravitationalConstant, &error);
 //
 #pragma mark kSIQuantityVolumePerLength
-AddSIToLibPrefixed(kSIQuantityVolumePerLength, STR("liter per 100 kilometers"), STR("liters per 100 kilometers"), STR("L/(100 km)"), 1e-3 / 100000., &error);
+AddToLibPrefixed(kSIQuantityVolumePerLength, STR("liter per 100 kilometers"), STR("liters per 100 kilometers"), STR("L/(100 km)"), 1e-3 / 100000., &error);
 //
 #pragma mark kSIQuantityVolumetricFlowRate
 AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic meter per hour"), STR("cubic meters per hour"), STR("m^3/h"), 1. / kSIHour, &error);

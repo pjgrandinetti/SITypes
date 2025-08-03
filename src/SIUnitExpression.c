@@ -550,6 +550,10 @@ OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool
         return OCStringCreateMutableCopy(STR("1"));  // Space → "1" for parser
     }
     OCMutableStringRef mutString = OCStringCreateMutableCopy(expression);
+
+    // Trim leading and trailing whitespace
+    OCStringTrimWhitespace(mutString);
+
     // Unicode operator normalizations per spec
     OCStringFindAndReplace(mutString, STR("×"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("÷"), STR("/"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
@@ -614,6 +618,12 @@ bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2) {
 // Groups and sorts without power cancellation - returns clean formatted expression
 OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
     if (!expression) return NULL;
+
+    // Handle empty string case early
+    if (OCStringGetLength(expression) == 0) {
+        return OCStringCreateCopy(STR(" "));
+    }
+
     // Step 1: Normalize Unicode characters first
     OCMutableStringRef normalized = SIUnitCreateNormalizedExpression(expression, false);
     if (!normalized) return NULL;

@@ -7,7 +7,7 @@ static bool siTypesShutdownCalled = false;
 void SITypesShutdown(void) {
     if (siTypesShutdownCalled) return;
     siTypesShutdownCalled = true;
-    
+
     cleanupScalarConstantsLibraries();
 #if !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
     OCReportLeaksForType(SIScalarGetTypeID());
@@ -20,7 +20,7 @@ void SITypesShutdown(void) {
 #if !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
     OCReportLeaksForType(SIDimensionalityGetTypeID());
 #endif
-    
+
     // Clean up the underlying OCTypes layer that SITypes depends on
     OCTypesShutdown();
 }

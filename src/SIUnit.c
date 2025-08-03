@@ -811,7 +811,7 @@ static bool SIUnitCreateLibraries(void) {
         } else
             OCDictionaryAddValue(unitsLib, unit->symbol, unit);
     }
-    
+
 
     return true;
 }
@@ -1069,10 +1069,10 @@ static bool SIUnitAddUKLabeledVolumeUnits(OCStringRef *error) {
 void SIUnitLibrarySetDefaultVolumeSystem(SIVolumeSystem system) {
     bool useUKAsDefault = (system == kSIVolumeSystemUK);
     if (imperialVolumes == useUKAsDefault) return;
-    
+
     OCStringRef error = NULL;
     SIUnitLibraryRemovePlainVolumeUnits();
-    
+
     if (useUKAsDefault) { // UK volumes get plain symbols (gal, qt, tsp, etc.)
         SIUnitLibraryRemoveUKLabeledVolumeUnits();     // Remove UK labeled volumes
         SIUnitLibraryAddUSLabeledVolumeUnits(&error);  // Add US labeled volumes (galUS, qtUS, etc.)

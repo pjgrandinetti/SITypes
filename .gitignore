@@ -20,6 +20,7 @@ __pycache__/
 runTests
 runTests.debug
 runTests.asan
+runTests.fallback
 
 # === Build Directories ===
 
