@@ -45,8 +45,8 @@ extern "C" {
 /** @cond INTERNAL */
 /** @brief Index constants for the seven SI base dimensions. */
 typedef enum {
-    kSILengthIndex = 0,
-    kSIMassIndex = 1,
+    kSIMassIndex = 0,
+    kSILengthIndex = 1,
     kSITimeIndex = 2,
     kSICurrentIndex = 3,
     kSITemperatureIndex = 4,

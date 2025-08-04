@@ -132,10 +132,10 @@ SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json) {
 #pragma mark Static Utility Functions
 static OCStringRef baseDimensionSymbol(SIBaseDimensionIndex index) {
     switch (index) {
-        case kSILengthIndex:
-            return STR("L");
         case kSIMassIndex:
             return STR("M");
+        case kSILengthIndex:
+            return STR("L");
         case kSITimeIndex:
             return STR("T");
         case kSICurrentIndex:
@@ -205,10 +205,11 @@ SIDimensionalityCreateSymbol(SIDimensionalityRef theDim) {
         OCStringAppendCString(result, OCStringGetCString(num));
     } else if (lenD) {
         // pure denominator form
-        OCStringAppendCString(result, "1/");
+        OCStringAppendCString(result, "(1/");
         if (multiDen) OCStringAppendCString(result, "(");
         OCStringAppendCString(result, OCStringGetCString(den));
         if (multiDen) OCStringAppendCString(result, ")");
+        OCStringAppendCString(result, ")");
     } else {
         // dimensionless
         OCStringAppendCString(result, "1");
@@ -256,10 +257,10 @@ SIDimensionalityRef SIDimensionalityWithBaseDimensionSymbol(OCStringRef theStrin
         return NULL;
     }
     SIBaseDimensionIndex index;
-    if (OCStringCompare(theString, STR("L"), 0) == kOCCompareEqualTo)
-        index = kSILengthIndex;
-    else if (OCStringCompare(theString, STR("M"), 0) == kOCCompareEqualTo)
+    if (OCStringCompare(theString, STR("M"), 0) == kOCCompareEqualTo)
         index = kSIMassIndex;
+    else if (OCStringCompare(theString, STR("L"), 0) == kOCCompareEqualTo)
+        index = kSILengthIndex;
     else if (OCStringCompare(theString, STR("T"), 0) == kOCCompareEqualTo)
         index = kSITimeIndex;
     else if (OCStringCompare(theString, STR("I"), 0) == kOCCompareEqualTo)
@@ -289,8 +290,8 @@ void SIDimensionalityShowFull(SIDimensionalityRef theDim) {
     OCStringShow(STR("                                            m  kg   s   A   K  mol cd"));
     OCStringShow(STR("-------------------------------------------------------------------------------------------------------------"));
     cf_string = OCStringCreateWithFormat(STR("SI base dimension numerator exponents:    %3d %3d %3d %3d %3d %3d %3d"),
-                                         theDim->num_exp[kSILengthIndex],
                                          theDim->num_exp[kSIMassIndex],
+                                         theDim->num_exp[kSILengthIndex],
                                          theDim->num_exp[kSITimeIndex],
                                          theDim->num_exp[kSICurrentIndex],
                                          theDim->num_exp[kSITemperatureIndex],
@@ -299,8 +300,8 @@ void SIDimensionalityShowFull(SIDimensionalityRef theDim) {
     OCStringShow(cf_string);
     OCRelease(cf_string);
     cf_string = OCStringCreateWithFormat(STR("SI base dimension denominator exponents:  %3d %3d %3d %3d %3d %3d %3d"),
-                                         theDim->den_exp[kSILengthIndex],
                                          theDim->den_exp[kSIMassIndex],
+                                         theDim->den_exp[kSILengthIndex],
                                          theDim->den_exp[kSITimeIndex],
                                          theDim->den_exp[kSICurrentIndex],
                                          theDim->den_exp[kSITemperatureIndex],
@@ -408,8 +409,8 @@ bool SIDimensionalityHasSameReducedDimensionality(SIDimensionalityRef theDim1, S
     return true;
 }
 static bool SIDimensionalityHasExponents(SIDimensionalityRef theDim,
-                                         uint8_t length_num_exp, uint8_t length_den_exp,
                                          uint8_t mass_num_exp, uint8_t mass_den_exp,
+                                         uint8_t length_num_exp, uint8_t length_den_exp,
                                          uint8_t time_num_exp, uint8_t time_den_exp,
                                          uint8_t current_num_exp, uint8_t current_den_exp,
                                          uint8_t temperature_num_exp, uint8_t temperature_den_exp,
@@ -421,11 +422,21 @@ static bool SIDimensionalityHasExponents(SIDimensionalityRef theDim,
     }
     // Pack expected exponents into two arrays
     uint8_t expected_num[BASE_DIMENSION_COUNT] = {
-        length_num_exp, mass_num_exp, time_num_exp, current_num_exp,
-        temperature_num_exp, amount_num_exp, luminous_num_exp};
+        mass_num_exp,
+        length_num_exp,
+        time_num_exp,
+        current_num_exp,
+        temperature_num_exp,
+        amount_num_exp,
+        luminous_num_exp};
     uint8_t expected_den[BASE_DIMENSION_COUNT] = {
-        length_den_exp, mass_den_exp, time_den_exp, current_den_exp,
-        temperature_den_exp, amount_den_exp, luminous_den_exp};
+        mass_den_exp,
+        length_den_exp,
+        time_den_exp,
+        current_den_exp,
+        temperature_den_exp,
+        amount_den_exp,
+        luminous_den_exp};
     // Compare in one loop
     for (size_t i = 0; i < BASE_DIMENSION_COUNT; ++i) {
         if (theDim->num_exp[i] != expected_num[i] ||
@@ -436,8 +447,8 @@ static bool SIDimensionalityHasExponents(SIDimensionalityRef theDim,
     return true;
 }
 bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
-                                         int8_t length_exponent,
                                          int8_t mass_exponent,
+                                         int8_t length_exponent,
                                          int8_t time_exponent,
                                          int8_t current_exponent,
                                          int8_t temperature_exponent,
@@ -447,8 +458,8 @@ bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
     IF_NO_OBJECT_EXISTS_RETURN(theDim, false);
     // Pack the expected reduced exponents
     int8_t expected[BASE_DIMENSION_COUNT] = {
-        length_exponent,
         mass_exponent,
+        length_exponent,
         time_exponent,
         current_exponent,
         temperature_exponent,

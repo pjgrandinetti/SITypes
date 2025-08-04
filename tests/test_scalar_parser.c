@@ -1080,3 +1080,82 @@ bool test_nmr_functions(void) {
     printf("%s passed\n", __func__);
     return true;
 }
+bool test_scalar_parser_13(void) {
+    printf("Running %s...\n", __func__);
+    OCStringRef err = NULL;
+    // Test π unit - should return numerical value 1 with unit symbol "π"
+    SIScalarRef pi_scalar = SIScalarCreateFromExpression(STR("π"), &err);
+    if (!pi_scalar) {
+        if (err) {
+            printf("Error parsing π: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse π unit\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+    double pi_value = SIScalarDoubleValue(pi_scalar);
+    printf("    π value: %.15f\n", pi_value);
+    if (fabs(pi_value - 1.0) > 1e-14) {
+        printf("%s failed: π value incorrect. Expected: 1.0, Got: %.15f\n", __func__, pi_value);
+        OCRelease(pi_scalar);
+        return false;
+    }
+    // Check that π has unit symbol "π"
+    SIUnitRef pi_unit = SIQuantityGetUnit((SIQuantityRef)pi_scalar);
+    OCStringRef pi_unit_symbol = SIUnitCopySymbol(pi_unit);
+    const char* pi_symbol_str = OCStringGetCString(pi_unit_symbol);
+    if (strcmp(pi_symbol_str, "π") != 0) {
+        printf("%s failed: π unit symbol is '%s' (expected 'π')\n", __func__, pi_symbol_str);
+        OCRelease(pi_unit_symbol);
+        OCRelease(pi_scalar);
+        return false;
+    }
+    OCRelease(pi_unit_symbol);
+    OCRelease(pi_scalar);
+    // Test π * (5 m)^2 should evaluate to 78.53981633974483 m^3/m
+    // This works because: 1 * π-unit * (5 m)^2 = 1 * π-scaling-factor * π-unit * 25 m^2
+    // where π-scaling-factor = 3.14159... and π-unit converts to m/m for coherent SI
+    SIScalarRef expression = SIScalarCreateFromExpression(STR("π * (5 m)^2"), &err);
+    if (!expression) {
+        if (err) {
+            printf("Error parsing π * (5 m)^2: %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse π * (5 m)^2 expression\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+    double expression_value = SIScalarDoubleValue(expression);
+    printf("    π * (5 m)^2 value: %.15f\n", expression_value);
+    // Expected: π-scaling-factor * 25 = 3.141592653589793 * 25 = 78.53981633974483
+    double expected_value = 78.53981633974483;
+    if (fabs(expression_value - expected_value) > 1e-12) {
+        printf("%s failed: π * (5 m)^2 value incorrect. Expected: %.15f, Got: %.15f\n",
+               __func__, expected_value, expression_value);
+        OCRelease(expression);
+        return false;
+    }
+    // Check that the units are m^3/m (coherent SI for π*m^2)
+    SIUnitRef expr_unit = SIQuantityGetUnit((SIQuantityRef)expression);
+    OCStringRef expr_unit_symbol = SIUnitCopySymbol(expr_unit);
+    const char* expr_symbol_str = OCStringGetCString(expr_unit_symbol);
+    printf("    π * (5 m)^2 units: %s\n", expr_symbol_str);
+    // The units should be m^3/m since π*m^2 is not a named physical quantity
+    if (strcmp(expr_symbol_str, "m³/m") != 0 && strcmp(expr_symbol_str, "m^3/m") != 0) {
+        printf("%s failed: π * (5 m)^2 units are '%s' (expected 'm³/m' or 'm^3/m')\n", __func__, expr_symbol_str);
+        OCRelease(expr_unit_symbol);
+        OCRelease(expression);
+        return false;
+    }
+    OCRelease(expr_unit_symbol);
+    OCRelease(expression);
+    printf("%s passed\n", __func__);
+    return true;
+}

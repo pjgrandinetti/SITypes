@@ -59,23 +59,38 @@ SIDimensionalityRef SIDimensionalityFromDictionary(OCDictionaryRef dict, OCStrin
     }
     // re‐create (and intern) the SIDimensionality
     return SIDimensionalityWithExponents(
-        n[kSILengthIndex], d[kSILengthIndex],
         n[kSIMassIndex], d[kSIMassIndex],
+        n[kSILengthIndex], d[kSILengthIndex],
         n[kSITimeIndex], d[kSITimeIndex],
         n[kSICurrentIndex], d[kSICurrentIndex],
         n[kSITemperatureIndex], d[kSITemperatureIndex],
         n[kSIAmountIndex], d[kSIAmountIndex],
         n[kSILuminousIntensityIndex], d[kSILuminousIntensityIndex]);
 }
-static SIDimensionalityRef AddDimensionalityToLibrary(uint8_t length_num_exp, uint8_t length_den_exp,
-                                                      uint8_t mass_num_exp, uint8_t mass_den_exp,
-                                                      uint8_t time_num_exp, uint8_t time_den_exp,
-                                                      uint8_t current_num_exp, uint8_t current_den_exp,
-                                                      uint8_t temperature_num_exp, uint8_t temperature_den_exp,
-                                                      uint8_t amount_num_exp, uint8_t amount_den_exp,
-                                                      uint8_t luminous_intensity_num_exp, uint8_t luminous_intensity_den_exp) {
-    uint8_t num_exp[BASE_DIMENSION_COUNT] = {length_num_exp, mass_num_exp, time_num_exp, current_num_exp, temperature_num_exp, amount_num_exp, luminous_intensity_num_exp};
-    uint8_t den_exp[BASE_DIMENSION_COUNT] = {length_den_exp, mass_den_exp, time_den_exp, current_den_exp, temperature_den_exp, amount_den_exp, luminous_intensity_den_exp};
+static SIDimensionalityRef AddDimensionalityToLibrary(
+    uint8_t mass_num_exp, uint8_t mass_den_exp,
+    uint8_t length_num_exp, uint8_t length_den_exp,
+    uint8_t time_num_exp, uint8_t time_den_exp,
+    uint8_t current_num_exp, uint8_t current_den_exp,
+    uint8_t temperature_num_exp, uint8_t temperature_den_exp,
+    uint8_t amount_num_exp, uint8_t amount_den_exp,
+    uint8_t luminous_intensity_num_exp, uint8_t luminous_intensity_den_exp) {
+    uint8_t num_exp[BASE_DIMENSION_COUNT] = {
+        mass_num_exp,
+        length_num_exp,
+        time_num_exp,
+        current_num_exp,
+        temperature_num_exp,
+        amount_num_exp,
+        luminous_intensity_num_exp};
+    uint8_t den_exp[BASE_DIMENSION_COUNT] = {
+        mass_den_exp,
+        length_den_exp,
+        time_den_exp,
+        current_den_exp,
+        temperature_den_exp,
+        amount_den_exp,
+        luminous_intensity_den_exp};
     SIDimensionalityRef dim = SIDimensionalityCreate(num_exp, den_exp);
     // Set dim to a static instance.
     // This sets the reference count to 1 and prevents it from being released or retained
@@ -417,19 +432,30 @@ SIDimensionalityRef SIDimensionalityWithExponentArrays(const uint8_t *num_exp, c
     // Intern (or reuse) and return
     return InternDim(dim);
 }
-static SIDimensionalityRef SIDimensionalityWithExponents(uint8_t length_num_exp, uint8_t length_den_exp,
-                                                         uint8_t mass_num_exp, uint8_t mass_den_exp,
-                                                         uint8_t time_num_exp, uint8_t time_den_exp,
-                                                         uint8_t current_num_exp, uint8_t current_den_exp,
-                                                         uint8_t temperature_num_exp, uint8_t temperature_den_exp,
-                                                         uint8_t amount_num_exp, uint8_t amount_den_exp,
-                                                         uint8_t luminous_num_exp, uint8_t luminous_den_exp) {
+static SIDimensionalityRef SIDimensionalityWithExponents(
+    uint8_t mass_num_exp, uint8_t mass_den_exp,
+    uint8_t length_num_exp, uint8_t length_den_exp,
+    uint8_t time_num_exp, uint8_t time_den_exp,
+    uint8_t current_num_exp, uint8_t current_den_exp,
+    uint8_t temperature_num_exp, uint8_t temperature_den_exp,
+    uint8_t amount_num_exp, uint8_t amount_den_exp,
+    uint8_t luminous_num_exp, uint8_t luminous_den_exp) {
     const uint8_t num_exp[BASE_DIMENSION_COUNT] = {
-        length_num_exp, mass_num_exp, time_num_exp, current_num_exp,
-        temperature_num_exp, amount_num_exp, luminous_num_exp};
+        mass_num_exp,
+        length_num_exp,
+        time_num_exp,
+        current_num_exp,
+        temperature_num_exp,
+        amount_num_exp,
+        luminous_num_exp};
     const uint8_t den_exp[BASE_DIMENSION_COUNT] = {
-        length_den_exp, mass_den_exp, time_den_exp, current_den_exp,
-        temperature_den_exp, amount_den_exp, luminous_den_exp};
+        mass_den_exp,
+        length_den_exp,
+        time_den_exp,
+        current_den_exp,
+        temperature_den_exp,
+        amount_den_exp,
+        luminous_den_exp};
     return SIDimensionalityWithExponentArrays(num_exp, den_exp);
 }
 SIDimensionalityRef SIDimensionalityDimensionless() {
@@ -437,9 +463,9 @@ SIDimensionalityRef SIDimensionalityDimensionless() {
 }
 SIDimensionalityRef SIDimensionalityForBaseDimensionIndex(SIBaseDimensionIndex index) {
     switch (index) {
-        case kSILengthIndex:
-            return SIDimensionalityWithExponents(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         case kSIMassIndex:
+            return SIDimensionalityWithExponents(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        case kSILengthIndex:
             return SIDimensionalityWithExponents(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         case kSITimeIndex:
             return SIDimensionalityWithExponents(0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -498,25 +524,25 @@ void DimensionalityLibraryBuild() {
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityDimensionless, dim);
 #pragma mark kSIQuantityLength
     // Length
-    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityLength, dim);
     // Wavenumber, Inverse Length
-    dim = AddDimensionalityToLibrary(0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityWavenumber, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityInverseLength, dim);
     // Plane Angle, Length Ratio
-    dim = AddDimensionalityToLibrary(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityPlaneAngle, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityLengthRatio, dim);
 #pragma mark kSIQuantityMass
     // Mass
-    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMass, dim);
     // Inverse Mass
-    dim = AddDimensionalityToLibrary(0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityInverseMass, dim);
     // Mass Ratio
-    dim = AddDimensionalityToLibrary(0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMassRatio, dim);
 #pragma mark kSIQuantityTime
     // Time
@@ -574,123 +600,123 @@ void DimensionalityLibraryBuild() {
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityLuminousIntensityRatio, dim);
 #pragma mark kSIQuantityArea
     // Area
-    dim = AddDimensionalityToLibrary(2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityArea, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityRockPermeability, dim);
     // Inverse Area
-    dim = AddDimensionalityToLibrary(0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityInverseArea, dim);
     // Area Ratio, Solid Angle
-    dim = AddDimensionalityToLibrary(2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAreaRatio, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySolidAngle, dim);
 #pragma mark kSIQuantityVolume
     // Volume
-    dim = AddDimensionalityToLibrary(3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityVolume, dim);
     // Inverse Volume
-    dim = AddDimensionalityToLibrary(0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityInverseVolume, dim);
     // Volume Ratio
-    dim = AddDimensionalityToLibrary(3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityVolumeRatio, dim);
     // Temperature Gradient
-    dim = AddDimensionalityToLibrary(0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityTemperatureGradient, dim);
     // Coherent Units with no Unit name - Table 2
     // Speed, Velocity
-    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpeed, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityVelocity, dim);
     // Linear Momentum
     dim = AddDimensionalityToLibrary(1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityLinearMomentum, dim);
     // Acceleration
-    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAcceleration, dim);
     // Moment of Inertia
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMomentOfInertia, dim);
     // Mass Flow Rate
-    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMassFlowRate, dim);
     // Mass Flux
-    dim = AddDimensionalityToLibrary(0, 2, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMassFlux, dim);
     // Diffusion Flux
-    dim = AddDimensionalityToLibrary(0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityDiffusionFlux, dim);
     // Density
-    dim = AddDimensionalityToLibrary(0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityDensity, dim);
     // Specific Gravity
-    dim = AddDimensionalityToLibrary(3, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 1, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpecificGravity, dim);
     // Surface Density
-    dim = AddDimensionalityToLibrary(0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySurfaceDensity, dim);
     // Specific Surface Area
-    dim = AddDimensionalityToLibrary(2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpecificSurfaceArea, dim);
     // Surface Area to Volume Ratio
-    dim = AddDimensionalityToLibrary(2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySurfaceAreaToVolumeRatio, dim);
     // Specific Volume
-    dim = AddDimensionalityToLibrary(3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpecificVolume, dim);
     // Current Density
-    dim = AddDimensionalityToLibrary(0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityCurrentDensity, dim);
     // Magnetic Field Strength
-    dim = AddDimensionalityToLibrary(0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMagneticFieldStrength, dim);
     // Luminance
-    dim = AddDimensionalityToLibrary(0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityLuminance, dim);
     // Refractive Index
-    dim = AddDimensionalityToLibrary(1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityRefractiveIndex, dim);
     // More Coherent Units with no Symbols - Table 4
     // Dynamic Viscosity
-    dim = AddDimensionalityToLibrary(0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityDynamicViscosity, dim);
     // Fluidity (inverse dynamic viscosity)
-    dim = AddDimensionalityToLibrary(1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityFluidity, dim);
     // Surface Tension
-    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySurfaceTension, dim);
     // Surface Energy
-    dim = AddDimensionalityToLibrary(2, 2, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySurfaceEnergy, dim);
     // Angular Velocity
-    dim = AddDimensionalityToLibrary(1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAngularVelocity, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAngularSpeed, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAngularFrequency, dim);
     // Angular Acceleration
-    dim = AddDimensionalityToLibrary(1, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAngularAcceleration, dim);
     // Heat Flux Density, Irradiance
-    dim = AddDimensionalityToLibrary(2, 2, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityHeatFluxDensity, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityIrradiance, dim);
     // Spectral Radiant Flux Density
-    dim = AddDimensionalityToLibrary(0, 1, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpectralRadiantFluxDensity, dim);
     // Heat Capacity, Entropy
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityHeatCapacity, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityEntropy, dim);
     // Specific Heat Capacity, Specific Entropy
-    dim = AddDimensionalityToLibrary(2, 0, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpecificHeatCapacity, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpecificEntropy, dim);
     // Specific Energy
-    dim = AddDimensionalityToLibrary(2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpecificEnergy, dim);
     // Thermal Conductance
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityThermalConductance, dim);
     // Thermal Conductivity
     dim = AddDimensionalityToLibrary(1, 0, 1, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0);
@@ -699,269 +725,269 @@ void DimensionalityLibraryBuild() {
     dim = AddDimensionalityToLibrary(1, 0, 1, 0, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricFieldStrength, dim);
     // Electric Charge Density
-    dim = AddDimensionalityToLibrary(0, 3, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 3, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricChargeDensity, dim);
     //  Electric Flux
-    dim = AddDimensionalityToLibrary(3, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 3, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricFlux, dim);
     // Surface Charge Density, Electric Flux Density, Electric Displacement
-    dim = AddDimensionalityToLibrary(0, 2, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 2, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySurfaceChargeDensity, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricFluxDensity, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricDisplacement, dim);
     // Electric Polarizability
-    dim = AddDimensionalityToLibrary(2, 2, 0, 1, 4, 0, 2, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 2, 2, 4, 0, 2, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricPolarizability, dim);
     // Electric Quadrupole Moment
-    dim = AddDimensionalityToLibrary(2, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricQuadrupoleMoment, dim);
     //  Magnetizability
-    dim = AddDimensionalityToLibrary(2, 0, 1, 2, 4, 2, 2, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 2, 2, 0, 4, 2, 2, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMagnetizability, dim);
     // Permittivity
-    dim = AddDimensionalityToLibrary(0, 3, 0, 1, 4, 0, 2, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 0, 3, 4, 0, 2, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityPermittivity, dim);
     //  Permeability
     dim = AddDimensionalityToLibrary(1, 0, 1, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityPermeability, dim);
     // Molar Energy
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMolarEnergy, dim);
     // Molar Entropy, Molar Heat Capacity
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 1, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 2, 0, 0, 0, 1, 0, 1, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMolarEntropy, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMolarHeatCapacity, dim);
     // Absorbed Dose Rate
-    dim = AddDimensionalityToLibrary(2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAbsorbedDoseRate, dim);
     // Radiant Intensity
-    dim = AddDimensionalityToLibrary(4, 2, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 4, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityRadiantIntensity, dim);
     // Spectral Radiant Intensity
-    dim = AddDimensionalityToLibrary(4, 3, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 4, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpectralRadiantIntensity, dim);
     // Radiance
-    dim = AddDimensionalityToLibrary(4, 4, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 4, 4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityRadiance, dim);
     // Spectral Radiance
-    dim = AddDimensionalityToLibrary(4, 5, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 4, 5, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpectralRadiance, dim);
     // Special Names and Symbols for Coherent Derived Units - Table 3
     // Porosity
-    dim = AddDimensionalityToLibrary(3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityPorosity, dim);
     // Force
     dim = AddDimensionalityToLibrary(1, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityForce, dim);
     // Pressure, Stress, Energy Density
-    dim = AddDimensionalityToLibrary(0, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityPressure, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityStress, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityEnergyDensity, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElasticModulus, dim);
     // Compressibility : Inverse Pressure
-    dim = AddDimensionalityToLibrary(1, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityCompressibility, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityStressOpticCoefficient, dim);
     // Pressure Gradient
-    dim = AddDimensionalityToLibrary(0, 2, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityPressureGradient, dim);
     // Energy, Work, Heat
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityEnergy, dim);
     // Spectral radiant energy
-    dim = AddDimensionalityToLibrary(2, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpectralRadiantEnergy, dim);
     // Torque
-    dim = AddDimensionalityToLibrary(3, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 3, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityTorque, dim);
     // Moment of Force
-    dim = AddDimensionalityToLibrary(2, 0, 2, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(2, 1, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMomentOfForce, dim);
     // Power, Radiant Flux
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityPower, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityRadiantFlux, dim);
     // Spectral Power
-    dim = AddDimensionalityToLibrary(2, 1, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpectralPower, dim);
     // Volume Power Density
-    dim = AddDimensionalityToLibrary(2, 3, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityVolumePowerDensity, dim);
     // Specific Power
-    dim = AddDimensionalityToLibrary(2, 0, 1, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 1, 2, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySpecificPower, dim);
     // Electric Charge, Amount of Electricity
     dim = AddDimensionalityToLibrary(0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricCharge, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAmountOfElectricity, dim);
     //  Electric Dipole Moment
-    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricDipoleMoment, dim);
     //  Gyromagnetic Ratio
-    dim = AddDimensionalityToLibrary(1, 1, 0, 1, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 1, 1, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityGyromagneticRatio, dim);
     // Electric Potential Difference, Electromotive Force
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricPotentialDifference, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectromotiveForce, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityVoltage, dim);
     // Electrical Mobility
-    dim = AddDimensionalityToLibrary(2, 2, 0, 1, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 2, 2, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricalMobility, dim);
     // Electric Field Gradient
-    dim = AddDimensionalityToLibrary(2, 2, 1, 0, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 2, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricFieldGradient, dim);
     // Capacitance
-    dim = AddDimensionalityToLibrary(0, 2, 0, 1, 4, 0, 2, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 0, 2, 4, 0, 2, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityCapacitance, dim);
     // Electric Resistance
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 3, 0, 2, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 3, 0, 2, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricResistance, dim);
     // Electric Resistance per length
-    dim = AddDimensionalityToLibrary(2, 1, 1, 0, 0, 3, 0, 2, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 1, 0, 3, 0, 2, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricResistancePerLength, dim);
     // Electric Resistivity
-    dim = AddDimensionalityToLibrary(3, 0, 1, 0, 0, 3, 0, 2, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 3, 0, 0, 3, 0, 2, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricResistivity, dim);
     // Electric Conductance
-    dim = AddDimensionalityToLibrary(0, 2, 0, 1, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 0, 2, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricConductance, dim);
     // Electric Conductivity
-    dim = AddDimensionalityToLibrary(0, 3, 0, 1, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 0, 3, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityElectricConductivity, dim);
     // Molar Conductivity
-    dim = AddDimensionalityToLibrary(2, 2, 0, 1, 3, 0, 2, 0, 0, 0, 0, 1, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 2, 2, 3, 0, 2, 0, 0, 0, 0, 1, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMolarConductivity, dim);
     //  Magnetic Dipole Moment
-    dim = AddDimensionalityToLibrary(2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMagneticDipoleMoment, dim);
     //  Magnetic Dipole Moment Ratio
-    dim = AddDimensionalityToLibrary(2, 2, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 2, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMagneticDipoleMomentRatio, dim);
     // Magnetic Flux
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMagneticFlux, dim);
     // Magnetic Flux Density
-    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMagneticFluxDensity, dim);
     // Inverse Magnetic Flux Density
-    dim = AddDimensionalityToLibrary(0, 0, 0, 1, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityInverseMagneticFluxDensity, dim);
     // Frequency per Magnetic Flux Density, Charge to Mass Ratio, Radiation Exposure (x- and gamma-rays)
-    dim = AddDimensionalityToLibrary(0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityRadiationExposure, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityChargeToMassRatio, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityFrequencyPerMagneticFluxDensity, dim);
     // Mass to Charge Ratio
-    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMassToChargeRatio, dim);
     // Magnetic Field Gradient
-    dim = AddDimensionalityToLibrary(0, 1, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMagneticFieldGradient, dim);
     // Inductance
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityInductance, dim);
     // Luminous Flux
-    dim = AddDimensionalityToLibrary(2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityLuminousFlux, dim);
     // Luminous Flux Density
-    dim = AddDimensionalityToLibrary(2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityLuminousFluxDensity, dim);
     // Luminous Energy
-    dim = AddDimensionalityToLibrary(2, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityLuminousEnergy, dim);
     // Illuminance
-    dim = AddDimensionalityToLibrary(2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityIlluminance, dim);
     // Absorbed dose, Dose equivalent
-    dim = AddDimensionalityToLibrary(2, 0, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 1, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAbsorbedDose, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityDoseEquivalent, dim);
     // Catalytic Activity
     dim = AddDimensionalityToLibrary(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityCatalyticActivity, dim);
     // Catalytic Activity Concentration
-    dim = AddDimensionalityToLibrary(0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 3, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityCatalyticActivityConcentration, dim);
     // Catalytic Activity Content
-    dim = AddDimensionalityToLibrary(0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityCatalyticActivityContent, dim);
     // Table 6 - Non-SI units but SI accepted
     // Reduced Action
-    dim = AddDimensionalityToLibrary(3, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 3, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityReducedAction, dim);
     // Action, Angular Momentum
-    dim = AddDimensionalityToLibrary(2, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAction, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAngularMomentum, dim);
     // Kinematic Viscosity
-    dim = AddDimensionalityToLibrary(2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityKinematicViscosity, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityDiffusionCoefficient, dim);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityCirculation, dim);
     // amount concentration
-    dim = AddDimensionalityToLibrary(0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityAmountConcentration, dim);
     // mass concentration
-    dim = AddDimensionalityToLibrary(0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMassConcentration, dim);
     // molar mass
-    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMolarMass, dim);
     // molality
-    dim = AddDimensionalityToLibrary(0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMolality, dim);
     // molar magnetic susceptibility
-    dim = AddDimensionalityToLibrary(3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityMolarMagneticSusceptibility, dim);
     // coulomb per mole
     dim = AddDimensionalityToLibrary(0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityChargePerAmount, dim);
     // cubic meters per kilogram second (Gravitational Constant)
-    dim = AddDimensionalityToLibrary(3, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityGravitationalConstant, dim);
     // distance per volume
-    dim = AddDimensionalityToLibrary(1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityLengthPerVolume, dim);
     // volume per distance
-    dim = AddDimensionalityToLibrary(3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityVolumePerLength, dim);
     // volume per time
-    dim = AddDimensionalityToLibrary(3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityVolumetricFlowRate, dim);
     // power per luminous flux
-    dim = AddDimensionalityToLibrary(3, 1, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 1);
+    dim = AddDimensionalityToLibrary(1, 0, 3, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 1);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityPowerPerLuminousFlux, dim);
     // luminous efficacy
-    dim = AddDimensionalityToLibrary(0, 2, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 1, 0);
+    dim = AddDimensionalityToLibrary(0, 1, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 1, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityLuminousEfficacy, dim);
     // Heat Transfer Coefficient
-    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityHeatTransferCoefficient, dim);
     // Stefan Boltzman constant dimensionality
-    dim = AddDimensionalityToLibrary(2, 2, 1, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 0, 2, 2, 0, 3, 0, 0, 0, 4, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityPowerPerAreaPerTemperatureToFourthPower, dim);
     // kSIQuantityGasPermeance
     dim = AddDimensionalityToLibrary(0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityGasPermeance, dim);
     // kSIQuantityFirstHyperPolarizability
-    dim = AddDimensionalityToLibrary(3, 4, 0, 2, 7, 0, 3, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 2, 3, 4, 7, 0, 3, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityFirstHyperPolarizability, dim);
     // kSIQuantitySecondHyperPolarizability
-    dim = AddDimensionalityToLibrary(4, 6, 0, 3, 10, 0, 4, 0, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 3, 4, 6, 10, 0, 4, 0, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySecondHyperPolarizability, dim);
     // Second Radiation Constant
-    dim = AddDimensionalityToLibrary(3, 2, 1, 1, 2, 2, 0, 0, 1, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 1, 3, 2, 2, 2, 0, 0, 1, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantitySecondRadiationConstant, dim);
     // Wien Wavelength Displacement Constant
-    dim = AddDimensionalityToLibrary(1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityWavelengthDisplacementConstant, dim);
     // Fine Structure Constant
-    dim = AddDimensionalityToLibrary(5, 5, 1, 1, 4, 4, 2, 2, 0, 0, 0, 0, 0, 0);
+    dim = AddDimensionalityToLibrary(1, 1, 5, 5, 4, 4, 2, 2, 0, 0, 0, 0, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityFineStructureConstant, dim);
     // 1/(N•T)  kSIQuantityRatePerAmountConcentrationPerTime
-    dim = AddDimensionalityToLibrary(3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0);
+    dim = AddDimensionalityToLibrary(0, 0, 3, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0);
     OCDictionaryAddValue(dimQuantitiesLibrary, kSIQuantityRatePerAmountConcentrationPerTime, dim);
 }
 bool DimensionalityLibraryDumpCSV(const char *csvPath) {
@@ -994,16 +1020,16 @@ bool DimensionalityLibraryDumpCSV(const char *csvPath) {
         // 3) write one CSV row
         fprintf(fp,
                 "\"%s\","     // quantity (quoted in case the string contains commas)
-                "{%u,%u},"    // Length
                 "{%u,%u},"    // Mass
+                "{%u,%u},"    // Length
                 "{%u,%u},"    // Time
                 "{%u,%u},"    // Current
                 "{%u,%u},"    // Temperature
                 "{%u,%u},"    // Amount
                 "{%u,%u}\n",  // LuminousIntensity
                 quantity,
-                impl->num_exp[kSILengthIndex], impl->den_exp[kSILengthIndex],
                 impl->num_exp[kSIMassIndex], impl->den_exp[kSIMassIndex],
+                impl->num_exp[kSILengthIndex], impl->den_exp[kSILengthIndex],
                 impl->num_exp[kSITimeIndex], impl->den_exp[kSITimeIndex],
                 impl->num_exp[kSICurrentIndex], impl->den_exp[kSICurrentIndex],
                 impl->num_exp[kSITemperatureIndex], impl->den_exp[kSITemperatureIndex],

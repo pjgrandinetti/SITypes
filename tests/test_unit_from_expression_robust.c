@@ -94,8 +94,8 @@ bool test_unit_from_expression_robust(void) {
     // Test 4: Compound expressions that should be in library
     allPassed &= verify_unit_behavior(STR("m/s"), 1.0, STR("m/s"), "velocity");
     allPassed &= verify_unit_behavior(STR("m/s^2"), 1.0, STR("m/s^2"), "acceleration");
-    allPassed &= verify_unit_behavior(STR("kg*m/s^2"), 1.0, STR("N"), "force compound");
-    allPassed &= verify_unit_behavior(STR("kg*m^2/s^2"), 1.0, STR("J"), "energy compound");
+    allPassed &= verify_unit_behavior(STR("kg*m/s^2"), 1.0, STR("kg•m/s^2"), "force compound");
+    allPassed &= verify_unit_behavior(STR("kg*m^2/s^2"), 1.0, STR("kg•m^2/s^2"), "energy compound");
     // Test 5: Expression consistency (multiple calls should return same results)
     allPassed &= test_expression_consistency(STR("m"));
     allPassed &= test_expression_consistency(STR("N"));

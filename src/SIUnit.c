@@ -440,6 +440,9 @@ static bool SIUnitSymbolIsUnderived(OCStringRef symbol) {
     return true;
 }
 static void AddToUnitsDictionaryLibrary(SIUnitRef unit) {
+    if (!OCTypeGetStaticInstance(unit)) {
+        printf("trying to add non-static %s\n", OCStringGetCString(unit->symbol));
+    }
     if (!SIUnitSymbolIsUnderived(unit->symbol)) {
         OCStringRef key = SIUnitCreateCleanedExpression(unit->symbol);
         OCDictionaryAddValue(unitsDictionaryLibrary, key, unit);
@@ -451,10 +454,12 @@ static void AddToUnitsDictionaryLibrary(SIUnitRef unit) {
 // After calling this function you must add the unit into
 // the unitsDictionaryLibrary dictionary using AddToUnitsDictionaryLibrary
 static SIUnitRef RegisterUnitInLibraries(SIUnitRef theUnit,
-    OCStringRef quantity,
-    SIDimensionalityRef dimensionality) {
+                                         OCStringRef quantity,
+                                         SIDimensionalityRef dimensionality) {
     // First check if unit is already registered.
-    if (OCArrayContainsValue(unitsArrayLibrary, theUnit)) return theUnit;
+    if (OCArrayContainsValue(unitsArrayLibrary, theUnit)) {
+        return theUnit;
+    }
     OCTypeSetStaticInstance(theUnit, true);
     OCArrayAppendValue(unitsArrayLibrary, theUnit);
     // If unit symbol is underived, i.e., one of the token unit symbols, add to tokenSymbolLibrary
@@ -470,7 +475,8 @@ static SIUnitRef RegisterUnitInLibraries(SIUnitRef theUnit,
     {
         OCMutableDictionaryRef unitsDimensionalitiesLib = SIUnitGetDimensionalitiesLib();
         OCMutableArrayRef units = (OCMutableArrayRef)OCDictionaryGetValue(unitsDimensionalitiesLib, dimensionalitySymbol);
-        if (units) OCArrayAppendValue(units, theUnit);
+        if (units)
+            OCArrayAppendValue(units, theUnit);
         else {
             units = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
             OCArrayAppendValue(units, theUnit);
@@ -487,8 +493,10 @@ static SIUnitRef RegisterUnitInLibraries(SIUnitRef theUnit,
         else {
             units = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
             OCArrayAppendValue(units, theUnit);
-            if(quantity) OCDictionaryAddValue(unitsQuantitiesLib, quantity, units);
-            else OCDictionaryAddValue(unitsQuantitiesLib, dimensionalitySymbol, units);
+            if (quantity)
+                OCDictionaryAddValue(unitsQuantitiesLib, quantity, units);
+            else
+                OCDictionaryAddValue(unitsQuantitiesLib, dimensionalitySymbol, units);
             OCRelease(units);
         }
     }
@@ -522,7 +530,9 @@ static SIUnitRef AddToLib(
         return NULL;
     }
     // Check and Register the unit in all appropriate libraries
-    return RegisterUnitInLibraries(theUnit, quantity, dimensionality);
+    RegisterUnitInLibraries(theUnit, quantity, dimensionality);
+    OCRelease(theUnit);
+    return theUnit;
 }
 SIUnitRef AddNonExistingToLib(
     OCStringRef quantity,
@@ -532,7 +542,7 @@ SIUnitRef AddNonExistingToLib(
     double scale_to_coherent_si,
     OCStringRef *error) {
     SIUnitRef unit = AddToLib(quantity, name, plural_name, symbol, scale_to_coherent_si, error);
-    OCDictionaryAddValue(SIUnitGetUnitsDictionaryLib(), unit->symbol, unit);
+    AddToUnitsDictionaryLibrary(unit);
     return unit;
 }
 static SIUnitRef AddSIToLib(
@@ -802,7 +812,9 @@ static bool SIUnitCreateLibraries(void) {
     IF_NO_OBJECT_EXISTS_RETURN(unitsDimensionalitiesLibrary, false);
     IF_NO_OBJECT_EXISTS_RETURN(tokenSymbolLibrary, false);
     // Initialize all units by including the definitions
+//************************************* */
 #include "SIUnitDefinitions.h"
+    //************************************* */
     SIUnitAddUSPlainVolumeUnits(&error);    // Define US Volume units as default volume
     SIUnitAddUKLabeledVolumeUnits(&error);  // Define UK Volume units
     if (currentlocale->currency_symbol) {
@@ -815,6 +827,30 @@ static bool SIUnitCreateLibraries(void) {
     for (OCIndex index = 0; index < OCArrayGetCount(unitsArrayLibrary); index++) {
         SIUnitRef unit = OCArrayGetValueAtIndex(unitsArrayLibrary, index);
         AddToUnitsDictionaryLibrary(unit);
+    }
+    // Now that the units have been created, let's add all the coherent derived units
+    OCArrayRef quantities = OCDictionaryCreateArrayWithAllKeys(unitsQuantitiesLibrary);
+    OCDictionaryRef unitsDictionaryLib = SIUnitGetUnitsDictionaryLib();
+    for (OCIndex index = 0; index < OCArrayGetCount(quantities); index++) {
+        OCStringRef quantity = OCArrayGetValueAtIndex(quantities, index);
+        SIDimensionalityRef quantityDim = SIDimensionalityForQuantity(quantity, &error);
+        OCMutableStringRef symbol = (OCMutableStringRef)SIDimensionalityCopySymbol(quantityDim);
+        // Create Coherent Unit symbol by simply replacing base dimensionality symbols with base SI symbols
+        OCStringFindAndReplace2(symbol, STR("L"), STR("m"));
+        OCStringFindAndReplace2(symbol, STR("M"), STR("kg"));
+        OCStringFindAndReplace2(symbol, STR("ϴ"), STR("K"));
+        OCStringFindAndReplace2(symbol, STR("T"), STR("s"));
+        OCStringFindAndReplace2(symbol, STR("I"), STR("A"));
+        OCStringFindAndReplace2(symbol, STR("N"), STR("mol"));
+        OCStringFindAndReplace2(symbol, STR("J"), STR("cd"));
+        OCStringRef key = SIUnitCreateCleanedExpression(symbol);
+        if (!OCDictionaryContainsKey(unitsDictionaryLib, key)) {
+            SIUnitRef coherent_unit = AddToLib(quantity, NULL, NULL, symbol, 1.0, &error);
+            SIUnitSetIsSIUnit(coherent_unit, true);
+            AddToUnitsDictionaryLibrary(coherent_unit);
+        }
+        OCRelease(symbol);
+        OCRelease(key);
     }
     return true;
 }
@@ -1140,6 +1176,7 @@ SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef dimensionalit
     OCStringFindAndReplace2(symbol, STR("L"), STR("m"));
     OCStringFindAndReplace2(symbol, STR("M"), STR("kg"));
     OCStringFindAndReplace2(symbol, STR("T"), STR("s"));
+    OCStringFindAndReplace2(symbol, STR("ϴ"), STR("K"));
     OCStringFindAndReplace2(symbol, STR("I"), STR("A"));
     OCStringFindAndReplace2(symbol, STR("N"), STR("mol"));
     OCStringFindAndReplace2(symbol, STR("J"), STR("cd"));
@@ -1152,7 +1189,6 @@ SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef dimensionalit
         return existingUnit;
     }
     OCRelease(key);
-
     // Unit not in library so create new unit
     SIUnitRef tempUnit = SIUnitCreate(dimensionality, NULL, NULL, symbol, 1.0);
     SIUnitSetIsSIUnit(tempUnit, true);
@@ -1298,44 +1334,58 @@ static bool is_si_scale(double scale) {
 //
 // Common helper function for finding best matching unit with SI preference
 static SIUnitRef SIUnitFindBestMatchingUnit(SIDimensionalityRef dimensionality, double target_scale) {
+    // Always ensure the library has a coherent SI unit with this dimensionality
+    SIUnitCoherentUnitFromDimensionality(dimensionality);
     OCArrayRef candidates = SIUnitCreateArrayOfUnitsForDimensionality(dimensionality);
     if (!candidates || OCArrayGetCount(candidates) == 0) {
         if (candidates) OCRelease(candidates);
         return NULL;
     }
     SIUnitRef best_match = NULL;
-    int best_token_count = INT_MAX;
     double best_scale_diff = 1e100;
+    int best_token_count = INT_MAX;
     for (OCIndex i = 0; i < OCArrayGetCount(candidates); i++) {
         SIUnitRef candidate = (SIUnitRef)OCArrayGetValueAtIndex(candidates, i);
-        int symbol_token_count = SIUnitCountTokenSymbols(candidate->symbol);
-        double scale_diff = fabs(candidate->scale_to_coherent_si - target_scale);
-        bool is_si = SIUnitIsSIUnit(candidate);
         // Only consider SI units as candidates
-        if (!is_si) {
+        if (!SIUnitIsSIUnit(candidate)) {
             continue;
         }
-        // Determine if this candidate is better than the current best
+        OCStringRef symbol = SIUnitCopySymbol(candidate);
+        int symbol_token_count = SIUnitCountTokenSymbols(symbol);
+        double scale_diff = fabs(candidate->scale_to_coherent_si - target_scale);
         bool is_better = false;
         if (best_match == NULL) {
             // First SI candidate is automatically the best so far
             is_better = true;
         } else {
-            // Priority 1: Prefer smaller scale difference (closest to target scale)
-            if (scale_diff < best_scale_diff) {
+            // Priority 0: Strongly prefer named units (single token) over derived units
+            bool candidate_is_named = (symbol_token_count == 1);
+            bool best_is_named = (best_token_count == 1);
+            if (candidate_is_named && !best_is_named) {
+                // Named unit beats derived unit regardless of scale
                 is_better = true;
-            } else if (fabs(scale_diff - best_scale_diff) < 1e-15) {
-                // Priority 2: Among units with same scale difference, prefer fewer token symbols
-                if (symbol_token_count < best_token_count) {
+            } else if (!candidate_is_named && best_is_named) {
+                // Don't replace named unit with derived unit
+                is_better = false;
+            } else {
+                // Both are named or both are derived, use normal comparison
+                // Priority 1: Significantly better scale difference (more than 1% difference)
+                if (scale_diff < best_scale_diff * 0.99) {
                     is_better = true;
+                } else if (scale_diff <= best_scale_diff * 1.01) {
+                    // Priority 2: Among units with similar scale, prefer fewer token symbols
+                    if (symbol_token_count < best_token_count) {
+                        is_better = true;
+                    }
                 }
             }
         }
         if (is_better) {
             best_match = candidate;
-            best_token_count = symbol_token_count;
             best_scale_diff = scale_diff;
+            best_token_count = symbol_token_count;
         }
+        OCRelease(symbol);
     }
     OCRelease(candidates);
     return best_match;
@@ -1626,6 +1676,7 @@ OCStringRef SIUnitCreateQuantityNameGuess(SIUnitRef theUnit) {
 SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, OCStringRef *error) {
     if (error && *error) return NULL;
     OCMutableDictionaryRef unitsLib = SIUnitGetUnitsDictionaryLib();
+    IF_NO_OBJECT_EXISTS_RETURN(unitsLib, NULL);
     if (!unitsLib) {
         fprintf(stderr, "ERROR: couldn't initialize units library - out of memory?\n");
         return NULL;
@@ -1636,7 +1687,6 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
         }
         return NULL;
     }
-    IF_NO_OBJECT_EXISTS_RETURN(unitsDictionaryLibrary, NULL);
     if (OCStringCompare(expression, STR(" "), 0) == kOCCompareEqualTo) {
         if (unit_multiplier) *unit_multiplier = 1.0;
         return SIUnitDimensionlessAndUnderived();

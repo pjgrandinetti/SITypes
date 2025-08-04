@@ -14,8 +14,8 @@ SIDimensionalityRef SIDimensionalityCreate(const uint8_t *num_exp, const uint8_t
 OCDictionaryRef SIDimensionalityCopyDictionary(SIDimensionalityRef dim);
 SIDimensionalityRef SIDimensionalityFromDictionary(OCDictionaryRef dict, OCStringRef *error);
 SIDimensionalityRef SIDimensionalityWithExponentArrays(const uint8_t *num_exp, const uint8_t *den_exp);
-static SIDimensionalityRef SIDimensionalityWithExponents(uint8_t length_num_exp, uint8_t length_den_exp,
-                                                         uint8_t mass_num_exp, uint8_t mass_den_exp,
+static SIDimensionalityRef SIDimensionalityWithExponents(uint8_t mass_num_exp, uint8_t mass_den_exp,
+                                                         uint8_t length_num_exp, uint8_t length_den_exp,
                                                          uint8_t time_num_exp, uint8_t time_den_exp,
                                                          uint8_t current_num_exp, uint8_t current_den_exp,
                                                          uint8_t temperature_num_exp, uint8_t temperature_den_exp,
