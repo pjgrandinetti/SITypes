@@ -364,6 +364,7 @@ static OCStringRef SIUnitCreateSimplifiedSymbol(OCStringRef raw_symbol, bool red
     }
     return simplified_symbol;
 }
+
 cJSON *SIUnitCreateJSON(SIUnitRef unit) {
     if (!unit) return cJSON_CreateNull();
     cJSON *json = cJSON_CreateObject();
@@ -531,7 +532,8 @@ static SIUnitRef AddToLib(
     }
     // Check and Register the unit in all appropriate libraries
     RegisterUnitInLibraries(theUnit, quantity, dimensionality);
-    OCRelease(theUnit);
+    // Note: Do not release theUnit here - RegisterUnitInLibraries makes it a static instance
+    // Static instances should not be manually released as they are managed by the system
     return theUnit;
 }
 SIUnitRef AddNonExistingToLib(
@@ -1166,7 +1168,8 @@ static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
     // No existing unit found, so add this fresh unit to library
     RegisterUnitInLibraries(tempUnit, NULL, dimensionality);
     AddToUnitsDictionaryLibrary(tempUnit);
-    OCRelease(tempUnit);  // will be no-op since should be static instance now
+    // Note: Do not release tempUnit here - RegisterUnitInLibraries makes it a static instance
+    // Static instances should not be manually released as they are managed by the system
     OCRelease(key);
     return tempUnit;
 }
@@ -1195,7 +1198,8 @@ SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef dimensionalit
     // No existing unit found, so add this fresh unit to library
     RegisterUnitInLibraries(tempUnit, NULL, dimensionality);
     AddToUnitsDictionaryLibrary(tempUnit);
-    OCRelease(tempUnit);  // will be no-op since should be static instance now
+    // Note: Do not release tempUnit here - RegisterUnitInLibraries makes it a static instance
+    // Static instances should not be manually released as they are managed by the system
     return tempUnit;
 }
 bool SIUnitIsCoherentUnit(SIUnitRef theUnit) {
