@@ -77,6 +77,12 @@ jobs:
         shell: msys2 {0}
         run: |
           make clean
+          # Ensure OCTypes dependencies are available
+          make octypes CC=gcc \
+               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra \
+                       -Wno-sign-compare -Wno-unused-parameter \
+                       -Wno-missing-field-initializers" \
+               LEX=flex YACC=bison
           make test CC=gcc \
                CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra \
                        -Wno-sign-compare -Wno-unused-parameter \
