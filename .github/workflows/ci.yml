@@ -58,6 +58,15 @@ jobs:
           make octypes
           make test-asan
           make install-shared
+          # Verify libraries were created
+          ls -la install/lib/
+          test -f install/lib/libSITypes.a || (echo "Static library not found!" && exit 1)
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            test -f install/lib/libSITypes.dylib || (echo "macOS shared library not found!" && exit 1)
+          else
+            test -f install/lib/libSITypes.so || (echo "Linux shared library not found!" && exit 1)
+          fi
+          echo "All required libraries found!"
           # Both libSITypes.a and libSITypes.so/.dylib are in install/lib/
 
       - name: Set up MSYS2 & MinGW (Windows)
