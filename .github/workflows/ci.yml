@@ -49,14 +49,15 @@ jobs:
           docker run --rm --platform=linux/arm64 \
             -v ${{ github.workspace }}:/src -w /src ubuntu:22.04 bash -lc "\
               apt-get update && apt-get install -y curl clang make flex bison unzip && \
-              make clean && make"
+              make clean && make install-shared"
 
       - name: Build & test on Linux/macOS
         if: runner.os != 'Windows' && matrix.arch == 'x86_64'
         run: |
           make clean
           make test-asan
-          # libSITypes.a is generated at project root
+          make install-shared
+          # Both libSITypes.a and libSITypes.so/.dylib are in install/lib/
 
       - name: Set up MSYS2 & MinGW (Windows)
         if: runner.os == 'Windows'
@@ -81,13 +82,30 @@ jobs:
                        -Wno-sign-compare -Wno-unused-parameter \
                        -Wno-missing-field-initializers" \
                LEX=flex YACC=bison
-          # libSITypes.a is generated at project root
+          make install-shared CC=gcc \
+               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra \
+                       -Wno-sign-compare -Wno-unused-parameter \
+                       -Wno-missing-field-initializers" \
+               LEX=flex YACC=bison
+          # Both libSITypes.a and libSITypes.dll are in install/lib/
 
-      - name: Upload library artifact
+      - name: Upload library artifacts (ARM64)
+        if: matrix.arch == 'arm64'
         uses: actions/upload-artifact@v4
         with:
           name: libSITypes-${{ matrix.label }}
-          path: libSITypes.a
+          path: |
+            install/lib/libSITypes.a
+            install/lib/libSITypes.*
+
+      - name: Upload library artifacts (x86_64)
+        if: matrix.arch == 'x86_64'
+        uses: actions/upload-artifact@v4
+        with:
+          name: libSITypes-${{ matrix.label }}
+          path: |
+            install/lib/libSITypes.a
+            install/lib/libSITypes.*
 
       # Package & upload public headers on Ubuntu only
       - name: Package public headers
@@ -124,20 +142,27 @@ jobs:
         run: |
           mkdir -p packages
           for osdir in artifacts/*; do
-            lib="${osdir}/libSITypes.a"
-            if [ ! -f "$lib" ]; then
-              echo "Skipping $osdir (no library to package)"
+            if [ ! -d "$osdir" ] || [[ "$osdir" == *"-headers" ]]; then
               continue
             fi
+            
             os=$(basename "$osdir")
             # Strip the libSITypes- prefix to get clean platform name
             platform=${os#libSITypes-}
             zipfile="packages/libSITypes-${platform}.zip"
 
+            # Check for libraries in the install/lib directory
+            libdir="${osdir}/install/lib"
+            if [ ! -d "$libdir" ]; then
+              echo "Skipping $osdir (no install/lib directory)"
+              continue
+            fi
+
+            # Package all library files (static and shared)
             if [[ "$platform" == windows-latest ]]; then
-              pwsh -Command "Compress-Archive -Path '${lib}' -DestinationPath '${zipfile}'"
+              pwsh -Command "Compress-Archive -Path '${libdir}/*' -DestinationPath '${zipfile}'"
             else
-              zip -j "${zipfile}" "${lib}"
+              cd "${libdir}" && zip -r "../../${zipfile}" libSITypes.*
             fi
           done
 

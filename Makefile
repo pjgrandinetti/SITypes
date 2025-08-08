@@ -60,13 +60,17 @@ DEP            := $(OBJ:.o=.d)
 TEST_C_FILES   := $(wildcard $(TEST_SRC_DIR)/*.c)
 TEST_OBJ       := $(patsubst $(TEST_SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(TEST_C_FILES))
 
-# OS-specific linking
+# OS-specific linking and shared library configuration
 UNAME_S := $(shell uname -s)
 ARCH := $(shell uname -m)
 ifeq ($(UNAME_S),Darwin)
   OCT_LIB_BIN := libOCTypes-macos-latest.zip
 	# Prefer static link on macOS to avoid @rpath runtime issues
 	OCTYPES_LINKLIB := $(OCT_LIBDIR)/libOCTypes.a
+  # Shared library configuration for macOS
+  SHLIB_EXT      = .dylib
+  SHLIB_FLAGS    = -dynamiclib -fPIC
+  SHLIB_LDFLAGS  = -install_name @rpath/libSITypes.dylib
 else ifeq ($(UNAME_S),Linux)
   ifeq ($(ARCH),aarch64)
     OCT_LIB_BIN := libOCTypes-ubuntu-latest.arm64.zip
@@ -75,13 +79,25 @@ else ifeq ($(UNAME_S),Linux)
   endif
 	# Prefer static link on Linux to avoid runtime loader issues with .so resolution
 	OCTYPES_LINKLIB := $(OCT_LIBDIR)/libOCTypes.a
+  # Shared library configuration for Linux
+  SHLIB_EXT      = .so
+  SHLIB_FLAGS    = -shared -fPIC
+  SHLIB_LDFLAGS  =
 else ifneq ($(findstring MINGW,$(UNAME_S)),)
   OCT_LIB_BIN := libOCTypes-windows-latest.zip
 	# Prefer static link on Windows to avoid DLL deployment issues
 	OCTYPES_LINKLIB := $(OCT_LIBDIR)/libOCTypes.a
+  # Shared library configuration for Windows
+  SHLIB_EXT      = .dll
+  SHLIB_FLAGS    = -shared
+  SHLIB_LDFLAGS  = -Wl,--out-implib=libSITypes.dll.a
 else
 	OCTYPES_LINKLIB := -lOCTypes
+  SHLIB_EXT      = .so
+  SHLIB_FLAGS    = -shared -fPIC
+  SHLIB_LDFLAGS  =
 endif
+SHLIB = libSITypes$(SHLIB_EXT)
 OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_ARCHIVE := third_party/libOCTypes-headers.zip
 
@@ -94,8 +110,8 @@ else
 endif
 
 .PHONY: all dirs prepare test test-debug test-asan \
-        test-werror install clean clean-objects clean-docs synclib docs doxygen html xcode xcode-open xcode-run octypes help \
-        format format-check lint pre-commit-install
+        test-werror install install-shared clean clean-objects clean-docs synclib docs doxygen html xcode xcode-open xcode-run octypes help \
+        format format-check lint pre-commit-install shared
 
 help:
 	@echo "SITypes Makefile - Available targets:"
@@ -103,6 +119,7 @@ help:
 	@echo "Building:"
 	@echo "  all            Build the complete SITypes library (default)"
 	@echo "  libSITypes.a   Build only the static library"
+	@echo "  shared         Build only the shared library"
 	@echo "  dirs           Create build directories"
 	@echo "  prepare        Generate parser/scanner files"
 	@echo "  octypes        Download and extract OCTypes dependencies"
@@ -115,6 +132,7 @@ help:
 	@echo ""
 	@echo "Development:"
 	@echo "  install        Install library and headers to install/"
+	@echo "  install-shared Install both static and shared libraries to install/"
 	@echo "  synclib        Copy OCTypes from ../OCTypes/install/"
 	@echo "  xcode          Generate Xcode project"
 	@echo "  xcode-open     Generate and open Xcode project"
@@ -195,9 +213,16 @@ $(OCT_INCLUDE)/OCTypes.h: | $(TP_DIR)
 
 prepare: $(GEN_H)
 
-# Library
+# Library targets
 libSITypes.a: prepare $(OBJ)
 	$(AR) rcs $@ $(filter %.o,$^)
+
+# Build shared library
+$(SHLIB): prepare $(OBJ)
+	$(CC) $(CFLAGS) $(SHLIB_FLAGS) $(SHLIB_LDFLAGS) -o $@ $(filter %.o,$^) -L$(OCT_LIBDIR) -lOCTypes -lm
+
+# Convenience target for shared library
+shared: $(SHLIB)
 
 # Pattern rules
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | dirs
@@ -266,12 +291,19 @@ install: libSITypes.a
 	cp libSITypes.a $(INSTALL_LIB_DIR)/
 	cp src/*.h $(INSTALL_INC_DIR)/
 
+# Install both static and shared libraries
+install-shared: libSITypes.a $(SHLIB)
+	$(MKDIR_P) $(INSTALL_LIB_DIR) $(INSTALL_INC_DIR)
+	cp libSITypes.a $(INSTALL_LIB_DIR)/
+	cp $(SHLIB) $(INSTALL_LIB_DIR)/
+	cp src/*.h $(INSTALL_INC_DIR)/
+
 # Clean
 clean-objects:
 	$(RM) $(OBJ) $(TEST_OBJ)
 
 clean:
-	$(RM) -r $(BUILD_DIR) libSITypes.a runTests runTests.asan runTests.debug *.dSYM
+	$(RM) -r $(BUILD_DIR) libSITypes.a $(SHLIB) libSITypes.dll.a runTests runTests.asan runTests.debug *.dSYM
 	$(RM) *.tab.* *Scanner.c *.d core.*
 	$(RM) -rf docs/doxygen docs/_build docs/html build-xcode install
 	$(RM) rebuild.log
@@ -287,6 +319,10 @@ synclib:
 	@$(RM) -r third_party/lib third_party/include
 	@$(MKDIR_P) third_party/lib third_party/include/OCTypes
 	@cp ../OCTypes/install/lib/libOCTypes.a third_party/lib/
+	@if [ -f ../OCTypes/install/lib/libOCTypes.dylib ]; then cp ../OCTypes/install/lib/libOCTypes.dylib third_party/lib/; fi
+	@if [ -f ../OCTypes/install/lib/libOCTypes.so ]; then cp ../OCTypes/install/lib/libOCTypes.so third_party/lib/; fi
+	@if [ -f ../OCTypes/install/lib/libOCTypes.dll ]; then cp ../OCTypes/install/lib/libOCTypes.dll third_party/lib/; fi
+	@if [ -f ../OCTypes/install/lib/libOCTypes.dll.a ]; then cp ../OCTypes/install/lib/libOCTypes.dll.a third_party/lib/; fi
 	@cp ../OCTypes/install/include/OCTypes/*.h third_party/include/OCTypes/
 
 # Docs
