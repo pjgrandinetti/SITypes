@@ -65,14 +65,20 @@ UNAME_S := $(shell uname -s)
 ARCH := $(shell uname -m)
 ifeq ($(UNAME_S),Darwin)
   OCT_LIB_BIN := libOCTypes-macos-latest.zip
+	# Prefer static link on macOS to avoid @rpath runtime issues
+	OCTYPES_LINKLIB := $(OCT_LIBDIR)/libOCTypes.a
 else ifeq ($(UNAME_S),Linux)
   ifeq ($(ARCH),aarch64)
     OCT_LIB_BIN := libOCTypes-ubuntu-latest.arm64.zip
   else
     OCT_LIB_BIN := libOCTypes-ubuntu-latest.x64.zip
   endif
+	OCTYPES_LINKLIB := -lOCTypes
 else ifneq ($(findstring MINGW,$(UNAME_S)),)
   OCT_LIB_BIN := libOCTypes-windows-latest.zip
+	OCTYPES_LINKLIB := -lOCTypes
+else
+	OCTYPES_LINKLIB := -lOCTypes
 endif
 OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_ARCHIVE := third_party/libOCTypes-headers.zip
@@ -220,22 +226,22 @@ $(GEN_DIR)/%.c: $(SRC_DIR)/%.l | dirs
 # Tests
 $(BIN_DIR)/runTests: libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-		-L. -L$(OCT_LIBDIR) $(GROUP_START) -lOCTypes -lSITypes $(GROUP_END) -lm -o $@
+		-L. -L$(OCT_LIBDIR) $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o $@
 
 # Run tests
 test: octypes prepare libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests
+	  -L. -L$(OCT_LIBDIR) -lSITypes $(OCTYPES_LINKLIB) -lm -o runTests
 	./runTests
 
 test-debug: octypes prepare libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O0 -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) -lSITypes -lOCTypes -lm -o runTests.debug
+	  -L. -L$(OCT_LIBDIR) -lSITypes $(OCTYPES_LINKLIB) -lm -o runTests.debug
 
 test-asan: octypes prepare libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
 	  -I$(TEST_SRC_DIR) $(TEST_OBJ) -L. -L$(OCT_LIBDIR) \
-	  -lSITypes -lOCTypes -lm -o runTests.asan
+	  -lSITypes $(OCTYPES_LINKLIB) -lm -o runTests.asan
 	@echo "Running AddressSanitizer tests (may have minor leaks in test code)..."
 	@./runTests.asan || (echo "AddressSanitizer detected issues. Checking if tests pass without sanitizer..."; \
 	  echo "Building regular test binary..."; \
