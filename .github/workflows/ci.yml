@@ -148,6 +148,18 @@ jobs:
       - name: Package libraries into ZIPs
         run: |
           mkdir -p packages
+          
+          # Debug: show what artifacts we downloaded
+          echo "=== Downloaded artifacts ==="
+          ls -la artifacts/
+          for osdir in artifacts/*; do
+            if [ -d "$osdir" ]; then
+              echo "Contents of $osdir:"
+              find "$osdir" -name "libSITypes.*" -o -name "*.a" -o -name "*.so" -o -name "*.dylib" -o -name "*.dll"
+            fi
+          done
+          echo "========================="
+          
           for osdir in artifacts/*; do
             if [ ! -d "$osdir" ] || [[ "$osdir" == *"-headers" ]]; then
               continue
@@ -168,20 +180,40 @@ jobs:
             
             zipfile="packages/libSITypes-${zipname}.zip"
 
-            # Check for libraries in the install/lib directory
-            libdir="${osdir}/install/lib"
-            if [ ! -d "$libdir" ]; then
-              echo "Skipping $osdir (no install/lib directory)"
+            # Find all library files and package them
+            files_to_zip=()
+            
+            # Try different possible locations for library files
+            for pattern in "${osdir}/libSITypes.*" "${osdir}/install/lib/libSITypes.*"; do
+              for lib in $pattern; do
+                if [ -f "$lib" ]; then
+                  files_to_zip+=("$lib")
+                fi
+              done
+            done
+
+            if [ ${#files_to_zip[@]} -eq 0 ]; then
+              echo "Skipping $osdir (no library files to package)"
               continue
             fi
+            
+            echo "Creating $zipfile with files: ${files_to_zip[@]}"
 
-            # Package all library files (static and shared)
             if [[ "$zipname" == "windows-latest" ]]; then
-              pwsh -Command "Compress-Archive -Path '${libdir}/*' -DestinationPath '${zipfile}'"
+              # Use PowerShell for Windows
+              file_list=$(printf "'%s'," "${files_to_zip[@]}")
+              file_list=${file_list%,}  # Remove trailing comma
+              pwsh -Command "Compress-Archive -Path ${file_list} -DestinationPath '${zipfile}'"
             else
-              cd "${libdir}" && zip -r "../../${zipfile}" libSITypes.*
+              # Use zip for Unix-like systems
+              zip -j "${zipfile}" "${files_to_zip[@]}"
             fi
           done
+          
+          # Debug: show what packages were created
+          echo "=== Created packages ==="
+          ls -la packages/
+          echo "========================="
 
       - name: Create or update GitHub Release and upload assets
         uses: softprops/action-gh-release@v1
