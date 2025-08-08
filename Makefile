@@ -77,7 +77,8 @@ else ifeq ($(UNAME_S),Linux)
 	OCTYPES_LINKLIB := $(OCT_LIBDIR)/libOCTypes.a
 else ifneq ($(findstring MINGW,$(UNAME_S)),)
   OCT_LIB_BIN := libOCTypes-windows-latest.zip
-	OCTYPES_LINKLIB := -lOCTypes
+	# Prefer static link on Windows to avoid DLL deployment issues
+	OCTYPES_LINKLIB := $(OCT_LIBDIR)/libOCTypes.a
 else
 	OCTYPES_LINKLIB := -lOCTypes
 endif
