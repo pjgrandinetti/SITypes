@@ -2,8 +2,24 @@ name: CI & Release
 
 on:
   push:
-    branches:
-      - master
+    branches:      - name: Build in ARM64 container
+        if: matrix.arch == 'arm64'
+        run: |
+          docker run --rm --platform=linux/arm64 \
+            -v ${{ github.workspace }}:/src -w /src ubuntu:22.04 bash -lc "\
+              apt-get update && apt-get install -y curl clang make flex bison unzip git && \
+              make clean && \
+              echo 'Building OCTypes from source for ARM64...' && \
+              cd /tmp && \
+              git clone --depth 1 --branch v0.1.0 https://github.com/pjgrandinetti/OCTypes.git && \
+              cd OCTypes && \
+              make clean && make install-shared CC=clang && \
+              cd /src && \
+              mkdir -p third_party/lib third_party/include/OCTypes && \
+              cp /tmp/OCTypes/install/lib/libOCTypes.a third_party/lib/ && \
+              cp /tmp/OCTypes/install/lib/libOCTypes.so third_party/lib/ && \
+              cp /tmp/OCTypes/install/include/OCTypes/*.h third_party/include/OCTypes/ && \
+              make install-shared"- master
     tags:
       - 'v*.*.*'
   pull_request:
@@ -49,12 +65,13 @@ jobs:
           docker run --rm --platform=linux/arm64 \
             -v ${{ github.workspace }}:/src -w /src ubuntu:22.04 bash -lc "\
               apt-get update && apt-get install -y curl clang make flex bison unzip && \
-              make clean && make install-shared"
+              make clean && make octypes && make install-shared"
 
       - name: Build & test on Linux/macOS
         if: runner.os != 'Windows' && matrix.arch == 'x86_64'
         run: |
           make clean
+          make octypes
           make test-asan
           make install-shared
           # Both libSITypes.a and libSITypes.so/.dylib are in install/lib/
