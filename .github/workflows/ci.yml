@@ -54,11 +54,28 @@ jobs:
       - name: Build & test on Linux/macOS
         if: runner.os != 'Windows' && matrix.arch == 'x86_64'
         run: |
+          echo "=== Build Environment Info ==="
+          echo "Runner OS: $RUNNER_OS"
+          echo "PATH: $PATH"
+          which clang || echo "clang not found"
+          which bison || echo "bison not found" 
+          which flex || echo "flex not found"
+          echo "=============================="
+          
           make clean
+          echo "=== Starting octypes step ==="
           make octypes
+          echo "=== octypes completed, checking dependencies ==="
+          ls -la third_party/ || echo "third_party directory not found"
+          ls -la third_party/lib/ || echo "third_party/lib directory not found"
+          ls -la third_party/include/ || echo "third_party/include directory not found"
+          echo "=== Starting test-asan step ==="
           make test-asan
+          echo "=== Starting install-shared step ==="
           make install-shared
+          
           # Verify libraries were created
+          echo "=== Verifying build results ==="
           ls -la install/lib/
           test -f install/lib/libSITypes.a || (echo "Static library not found!" && exit 1)
           if [[ "$RUNNER_OS" == "macOS" ]]; then
