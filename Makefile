@@ -219,7 +219,11 @@ libSITypes.a: prepare $(OBJ)
 
 # Build shared library
 $(SHLIB): prepare $(OBJ)
+ifneq ($(findstring MINGW,$(UNAME_S)),)
+	$(CC) $(CFLAGS) $(SHLIB_FLAGS) $(SHLIB_LDFLAGS) -o $@ $(filter %.o,$^) $(OCTYPES_LINKLIB) -lm
+else
 	$(CC) $(CFLAGS) $(SHLIB_FLAGS) $(SHLIB_LDFLAGS) -o $@ $(filter %.o,$^) -L$(OCT_LIBDIR) -lOCTypes -lm
+endif
 
 # Convenience target for shared library
 shared: $(SHLIB)
