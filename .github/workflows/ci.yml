@@ -69,8 +69,14 @@ jobs:
           ls -la third_party/ || echo "third_party directory not found"
           ls -la third_party/lib/ || echo "third_party/lib directory not found"
           ls -la third_party/include/ || echo "third_party/include directory not found"
-          echo "=== Starting test-asan step ==="
-          make test-asan
+          echo "=== Starting test step ==="
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            echo "Running regular tests on macOS (skipping AddressSanitizer due to CI limitations)"
+            make test
+          else  
+            echo "Running AddressSanitizer tests on Linux"
+            make test-asan
+          fi
           echo "=== Starting install-shared step ==="
           make install-shared
           
@@ -197,8 +203,8 @@ jobs:
             
             # Map platform labels to clean names for zip files
             case "$platform" in
-              "ubuntu-latest.x64") zipname="ubuntu-latest" ;;
-              "ubuntu-latest.arm64") zipname="ubuntu-latest-arm64" ;;
+              "ubuntu-latest.x64") zipname="ubuntu-latest.x64" ;;
+              "ubuntu-latest.arm64") zipname="ubuntu-latest.arm64" ;;
               "macos-latest") zipname="macos-latest" ;;
               "windows-latest") zipname="windows-latest" ;;
               *) zipname="$platform" ;;
