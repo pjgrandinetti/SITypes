@@ -22,6 +22,22 @@ runTests.debug
 runTests.asan
 runTests.fallback
 
+# Debug test files (keep for debugging but don't commit)
+test_minimal
+test_minimal.c
+test_direct
+test_direct.c
+test_double_clean
+test_double_clean.c
+test_leak_trace
+test_leak_trace.c
+test_step_by_step
+test_step_by_step.c
+test_unit_0_isolated
+test_unit_0_isolated.c
+test_with_params.c
+test_cleaned_expression.c
+
 # === Build Directories ===
 
 /build/

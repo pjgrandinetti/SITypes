@@ -13,6 +13,7 @@
 #include <string.h>
 #include "SIDimensionalityPrivate.h"
 #include "SITypes.h"
+#include "SIUnitExpression.h"
 /**
  * @file SIUnit.c
  * @brief Implementation of the SIUnit type and related functionality.
@@ -446,8 +447,23 @@ static void AddToUnitsDictionaryLibrary(SIUnitRef unit) {
     }
     if (!SIUnitSymbolIsUnderived(unit->symbol)) {
         OCStringRef key = SIUnitCreateCleanedExpression(unit->symbol);
-        OCDictionaryAddValue(unitsDictionaryLibrary, key, unit);
-        OCRelease(key);
+        if (key) {
+            OCDictionaryAddValue(unitsDictionaryLibrary, key, unit);
+            OCRelease(key);
+        }
+    } else
+        OCDictionaryAddValue(unitsDictionaryLibrary, unit->symbol, unit);
+}
+// Enhanced version that accepts pre-computed key to avoid redundant expression cleaning
+static void AddToUnitsDictionaryLibraryWithKey(SIUnitRef unit, OCStringRef key) {
+    if (!unit) return;  // Guard against NULL pointer
+    if (!OCTypeGetStaticInstance(unit)) {
+        printf("trying to add non-static %s\n", OCStringGetCString(unit->symbol));
+    }
+    if (!SIUnitSymbolIsUnderived(unit->symbol)) {
+        if (key) {
+            OCDictionaryAddValue(unitsDictionaryLibrary, key, unit);
+        }
     } else
         OCDictionaryAddValue(unitsDictionaryLibrary, unit->symbol, unit);
 }
@@ -1187,7 +1203,7 @@ static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
         OCRelease(key);
         return registeredUnit;
     }
-    AddToUnitsDictionaryLibrary(registeredUnit);
+    AddToUnitsDictionaryLibraryWithKey(registeredUnit, key);
     OCRelease(key);
     return registeredUnit;
 }
@@ -1535,10 +1551,16 @@ static SIUnitRef SIUnitByMultiplyingInternal(SIUnitRef theUnit1,
     OCStringAppend(new_symbol, STR(")"));
     // Simplify the symbol
     OCStringRef simplified_symbol = SIUnitCreateSimplifiedSymbol(new_symbol, reduce, error);
+    if (!simplified_symbol) {
+        OCRelease(new_symbol);
+        return NULL;
+    }
     // Create new unit with the simplified symbol and calculated scale
     SIUnitRef result = SIUnitWithParameters(dimensionality, NULL, NULL, simplified_symbol, scale);
     OCRelease(new_symbol);
     OCRelease(simplified_symbol);
+    // Ensure any parser state is cleared after arithmetic operations
+    siueClearParsedExpression();
     return result;
 }
 // Public API functions - now more intuitive with 'reduce' parameter

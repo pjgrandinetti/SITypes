@@ -512,6 +512,11 @@ void siueClearParsedExpression(void) {
         siueRelease(g_parsed_expression);
         g_parsed_expression = NULL;
     }
+    // Also clear any remaining parser state that might hold string references
+    if (siueError) {
+        OCRelease(siueError);
+        siueError = NULL;
+    }
 }
 void siueSetParsedExpression(SIUnitExpression* expr) {
     siueClearParsedExpression();
@@ -663,7 +668,6 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
     if (!expression) return NULL;
     // Handle empty string case early
     if (OCStringGetLength(expression) == 0) return STR(" ");
-    
     // Special case: Handle specific expressions that cause parser failures and memory leaks
     // These exact strings cause the parser to hang and leak objects, so we bypass parsing for them
     if (OCStringEqual(expression, STR("L/(100 km)")) ||
@@ -672,7 +676,6 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
         // For these problematic expressions, just return a copy without parsing
         return OCStringCreateCopy(expression);
     }
-    
     // Step 1: Normalize Unicode characters first
     OCMutableStringRef normalized = SIUnitCreateNormalizedExpression(expression, false);
     if (!normalized) return NULL;
@@ -714,6 +717,13 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
     // Step 6: Convert "1" to space character for dimensionless output
     OCStringRef result = siueCreateByConvertingDimensionlessOutput(bullets);
     OCRelease(bullets);
+    // Ensure all parser state is completely cleared after each expression processing
+    siueClearParsedExpression();
+    // Explicitly clear any remaining error state
+    if (siueError) {
+        OCRelease(siueError);
+        siueError = NULL;
+    }
     return result;
 }
 // Creates cleaned and reduced expression: full algebraic reduction with power cancellation
