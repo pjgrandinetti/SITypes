@@ -2,6 +2,9 @@
 #include "SIDimensionalityPrivate.h"
 #include "SIScalarConstants.h"
 #include "SIUnitExpression.h"
+#include "SIScalarParser.h"
+#include "SIDimensionalityParser.h"
+#include "SIUnitParser.h"
 static bool siTypesShutdownCalled = false;
 void SITypesShutdown(void) {
     if (siTypesShutdownCalled) return;
@@ -14,6 +17,24 @@ void SITypesShutdown(void) {
     if (siueError) {
         OCRelease(siueError);
         siueError = NULL;
+    }
+    
+    // Clean up scalar parser error state  
+    if (scalarErrorString) {
+        OCRelease(scalarErrorString);
+        scalarErrorString = NULL;
+    }
+    
+    // Clean up dimensionality parser error state
+    if (dimensionalityError) {
+        OCRelease(dimensionalityError);
+        dimensionalityError = NULL;
+    }
+    
+    // Clean up unit parser error state
+    if (unitError) {
+        OCRelease(unitError);
+        unitError = NULL;
     }
 
     // Clean up global parsed expression state
