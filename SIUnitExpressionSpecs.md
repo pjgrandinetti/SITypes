@@ -394,7 +394,7 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression);
 static SIUnitExpression* siueParseExpression(OCStringRef normalized);
 static void siueGroupIdenticalTerms(OCMutableArrayRef terms);
 static void siueSortTermsAlphabetically(OCMutableArrayRef terms);
-static OCStringRef siueFormatExpression(SIUnitExpression* expr, bool reduced);
+static OCStringRef siueCreateFormattedExpression(SIUnitExpression* expr, bool reduced);
 static bool siueValidateSymbol(OCStringRef symbol); // Check against SIUnitGetTokenSymbolsLib()
 ```
 

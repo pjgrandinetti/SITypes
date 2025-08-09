@@ -440,6 +440,7 @@ static bool SIUnitSymbolIsUnderived(OCStringRef symbol) {
     return true;
 }
 static void AddToUnitsDictionaryLibrary(SIUnitRef unit) {
+    if (!unit) return;  // Guard against NULL pointer
     if (!OCTypeGetStaticInstance(unit)) {
         printf("trying to add non-static %s\n", OCStringGetCString(unit->symbol));
     }
@@ -488,7 +489,9 @@ static SIUnitRef RegisterUnitInLibraries(SIUnitRef theUnit,
     // Append unit to mutable array value associated with quantity key inside quantity library dictionary
     {
         OCMutableDictionaryRef unitsQuantitiesLib = SIUnitGetQuantitiesLib();
-        OCMutableArrayRef units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLib, quantity);
+        OCMutableArrayRef units = NULL;
+        if(quantity) units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLib, quantity);
+        else units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLib, dimensionalitySymbol);
         if (units)
             OCArrayAppendValue(units, theUnit);
         else {
@@ -1708,7 +1711,9 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     // Try library lookup first
     OCStringRef key = SIUnitCreateCleanedExpression(expression);
     if (NULL == key) {
-        *error = OCStringCreateWithFormat(STR("Invalid unit expression: %@"), expression);
+        if (error) {
+            *error = OCStringCreateWithFormat(STR("Invalid unit expression: %@"), expression);
+        }
         return NULL;
     }
     SIUnitRef unit = OCDictionaryGetValue(unitsDictionaryLibrary, key);
@@ -1721,7 +1726,9 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     double multiplier = 1.0;  // Default multiplier
     unit = SIUnitFromExpressionInternal(expression, &multiplier, error);
     if (NULL == unit) {
-        *error = OCStringCreateWithFormat(STR("Invalid unit expression: %@"), expression);
+        if (error) {
+            *error = OCStringCreateWithFormat(STR("Invalid unit expression: %@"), expression);
+        }
         return NULL;
     }
     if (multiplier != 1.0) {

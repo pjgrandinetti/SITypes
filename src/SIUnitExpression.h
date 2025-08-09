@@ -179,7 +179,7 @@ void siueCancelTerms(SIUnitExpression* expr);
  *
  * @note The caller is responsible for releasing the returned string
  */
-OCStringRef siueFormatExpression(const SIUnitExpression* expr, bool reduced);
+OCStringRef siueCreateFormattedExpression(const SIUnitExpression* expr, bool reduced);
 #pragma mark - Validation Functions
 /*!
  * @brief Validates that a symbol is in the allowed token symbols array.

@@ -70,11 +70,23 @@ SIUnitExpression* siueCreateExpression(OCArrayRef numerator, OCArrayRef denomina
     // Deep copy numerator terms
     OCIndex count = OCArrayGetCount(numerator);
     OCMutableArrayRef numCopy = OCArrayCreateMutable(count, NULL);
+    if (!numCopy) {
+        free(expr);
+        return NULL;
+    }
     for (OCIndex i = 0; i < count; i++) {
         SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(numerator, i);
         SIUnitTerm* termCopy = siueCopyTerm(term);
         if (termCopy) {
-            OCArrayAppendValue(numCopy, termCopy);
+            if (!OCArrayAppendValue(numCopy, termCopy)) {
+                // Append failed - clean up termCopy and abort
+                siueReleaseTerm(termCopy);
+                // Clean up any terms already in numCopy
+                siueReleaseTermArray(numCopy);
+                OCRelease(numCopy);
+                free(expr);
+                return NULL;
+            }
         }
     }
     expr->numerator = numCopy;
@@ -82,11 +94,29 @@ SIUnitExpression* siueCreateExpression(OCArrayRef numerator, OCArrayRef denomina
     if (denominator) {
         count = OCArrayGetCount(denominator);
         OCMutableArrayRef denCopy = OCArrayCreateMutable(count, NULL);
+        if (!denCopy) {
+            // Clean up numerator array and expression
+            siueReleaseTermArray(numCopy);
+            OCRelease(numCopy);
+            free(expr);
+            return NULL;
+        }
         for (OCIndex i = 0; i < count; i++) {
             SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(denominator, i);
             SIUnitTerm* termCopy = siueCopyTerm(term);
             if (termCopy) {
-                OCArrayAppendValue(denCopy, termCopy);
+                if (!OCArrayAppendValue(denCopy, termCopy)) {
+                    // Append failed - clean up termCopy and abort
+                    siueReleaseTerm(termCopy);
+                    // Clean up denominator terms already added
+                    siueReleaseTermArray(denCopy);
+                    OCRelease(denCopy);
+                    // Clean up numerator array
+                    siueReleaseTermArray(numCopy);
+                    OCRelease(numCopy);
+                    free(expr);
+                    return NULL;
+                }
             }
         }
         expr->denominator = denCopy;
@@ -367,10 +397,15 @@ void siueMoveNegativePowersToDenominator(OCMutableArrayRef numerator, OCMutableA
             // Create positive power term for denominator
             SIUnitTerm* newTerm = siueCreateTerm(term->symbol, -term->power);
             if (newTerm) {
-                OCArrayAppendValue(*denominator, newTerm);
+                if (OCArrayAppendValue(*denominator, newTerm)) {
+                    // Successfully added to denominator, now remove from numerator
+                    siueReleaseTerm(term);
+                    OCArrayRemoveValueAtIndex(numerator, i);
+                } else {
+                    // Failed to add to denominator, clean up newTerm
+                    siueReleaseTerm(newTerm);
+                }
             }
-            siueReleaseTerm(term);
-            OCArrayRemoveValueAtIndex(numerator, i);
         }
     }
 }
@@ -380,7 +415,7 @@ void siueMoveNegativePowersToDenominator(OCMutableArrayRef numerator, OCMutableA
  * Uses • for multiplication, / for division, ^ for powers (omitted when power=1).
  * Handles special cases: empty numerator (1/m), dimensionless (space character).
  */
-OCStringRef siueFormatExpression(const SIUnitExpression* expr, bool reduced) {
+OCStringRef siueCreateFormattedExpression(const SIUnitExpression* expr, bool reduced) {
     if (!expr) return NULL;
     OCMutableStringRef result = OCStringCreateMutable(256);
     // Check for special formatting cases
@@ -443,18 +478,18 @@ OCStringRef siueFormatExpression(const SIUnitExpression* expr, bool reduced) {
     if (needsOuterParens) {
         OCStringAppendCString(result, ")");
     }
-    return OCStringCreateCopy(result);
+    return result;  // Return the mutable string directly - it's already an OCStringRef
 }
 /**
  * Converts internal "1" result to space character for dimensionless output.
  * Per spec: dimensionless results should be space character, not "1".
  */
-static OCStringRef siueConvertDimensionlessOutput(OCStringRef formatted) {
+static OCStringRef siueCreateByConvertingDimensionlessOutput(OCStringRef formatted) {
     if (!formatted) return NULL;
     if (OCStringEqual(formatted, STR("1"))) {
         return OCStringCreateCopy(STR(" "));  // Dimensionless → space
     }
-    return OCStringCreateCopy(formatted);
+    return OCStringCreateCopy(formatted);  // Always return a copy to maintain "Create" semantics
 }
 #pragma mark - Global Variables for Parser
 // Parser state management for lex/yacc communication
@@ -492,7 +527,7 @@ bool siueValidateSymbol(OCStringRef symbol) {
 }
 // Parses normalized expressions using lex/yacc parser with siue prefix
 // Returns parsed SIUnitExpression or NULL on failure/invalid symbols
-SIUnitExpression* siueParseExpression(OCStringRef normalized_expr) {
+SIUnitExpression* siueCreateParsedExpression(OCStringRef normalized_expr) {
     if (!normalized_expr) return NULL;
     // Clear previous state
     if (siueError) {
@@ -521,7 +556,7 @@ SIUnitExpression* siueParseExpression(OCStringRef normalized_expr) {
 }
 #pragma mark - Unicode Conversion Helpers
 // Converts bullet characters (•) to asterisks (*) for internal parser compatibility
-static OCStringRef siueConvertBulletsToAsterisks(OCStringRef expression) {
+static OCStringRef siueCreateByConvertingBulletsToAsterisks(OCStringRef expression) {
     if (!expression) return NULL;
     OCMutableStringRef mutable = OCStringCreateMutableCopy(expression);
     if (!mutable) return NULL;
@@ -529,12 +564,12 @@ static OCStringRef siueConvertBulletsToAsterisks(OCStringRef expression) {
     return mutable;
 }
 // Converts asterisks (*) back to bullet characters (•) for output formatting
-static OCStringRef siueConvertAsterisksToBuilets(OCStringRef expression) {
+static OCStringRef siueCreateByConvertingAsterisksToBullets(OCStringRef expression) {
     if (!expression) return NULL;
     OCMutableStringRef mutable = OCStringCreateMutableCopy(expression);
     if (!mutable) return NULL;
     OCStringFindAndReplace2(mutable, STR("*"), STR("•"));
-    return mutable;
+    return mutable;  // Return mutable string directly - it's already an OCStringRef
 }
 #pragma mark - Main Public Functions
 // Unicode normalization: converts operators to standard forms (×→*, ÷→/, μ→µ, superscripts→^n)
@@ -620,19 +655,17 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
     if (!expression) return NULL;
 
     // Handle empty string case early
-    if (OCStringGetLength(expression) == 0) {
-        return OCStringCreateCopy(STR(" "));
-    }
+    if (OCStringGetLength(expression) == 0) return STR(" ");
 
     // Step 1: Normalize Unicode characters first
     OCMutableStringRef normalized = SIUnitCreateNormalizedExpression(expression, false);
     if (!normalized) return NULL;
     // Step 2: Convert bullet characters to asterisks for parsing
-    OCStringRef preprocessed = siueConvertBulletsToAsterisks(normalized);
+    OCStringRef preprocessed = siueCreateByConvertingBulletsToAsterisks(normalized);
     OCRelease(normalized);
     if (!preprocessed) return NULL;
     // Step 3: Parse the preprocessed expression
-    SIUnitExpression* parsed = siueParseExpression(preprocessed);
+    SIUnitExpression* parsed = siueCreateParsedExpression(preprocessed);
     OCRelease(preprocessed);
     if (!parsed) return NULL;
     // Step 3: Process the expression (group and sort)
@@ -653,15 +686,15 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
         parsed->denominator = mutableDen;
     }
     // Step 4: Format the result
-    OCStringRef formatted = siueFormatExpression(parsed, false);
+    OCStringRef formatted = siueCreateFormattedExpression(parsed, false);
     siueRelease(parsed);
     if (!formatted) return NULL;
     // Step 5: Convert asterisks back to bullet characters
-    OCStringRef bullets = siueConvertAsterisksToBuilets(formatted);
+    OCStringRef bullets = siueCreateByConvertingAsterisksToBullets(formatted);
     OCRelease(formatted);
     if (!bullets) return NULL;
     // Step 6: Convert "1" to space character for dimensionless output
-    OCStringRef result = siueConvertDimensionlessOutput(bullets);
+    OCStringRef result = siueCreateByConvertingDimensionlessOutput(bullets);
     OCRelease(bullets);
     return result;
 }
@@ -673,11 +706,11 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
     OCMutableStringRef normalized = SIUnitCreateNormalizedExpression(expression, false);
     if (!normalized) return NULL;
     // Step 2: Convert bullet characters to asterisks for parsing
-    OCStringRef preprocessed = siueConvertBulletsToAsterisks(normalized);
+    OCStringRef preprocessed = siueCreateByConvertingBulletsToAsterisks(normalized);
     OCRelease(normalized);
     if (!preprocessed) return NULL;
     // Step 2: Parse the preprocessed expression
-    SIUnitExpression* parsed = siueParseExpression(preprocessed);
+    SIUnitExpression* parsed = siueCreateParsedExpression(preprocessed);
     OCRelease(preprocessed);
     if (!parsed) return NULL;
     // Step 3: Process the expression (group, sort, and cancel)
@@ -711,15 +744,15 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
         parsed->denominator = sortableDen;
     }
     // Step 4: Format the result
-    OCStringRef formatted = siueFormatExpression(parsed, true);
+    OCStringRef formatted = siueCreateFormattedExpression(parsed, true);
     siueRelease(parsed);
     if (!formatted) return NULL;
     // Step 5: Convert asterisks back to bullet characters
-    OCStringRef bullets = siueConvertAsterisksToBuilets(formatted);
+    OCStringRef bullets = siueCreateByConvertingAsterisksToBullets(formatted);
     OCRelease(formatted);
     if (!bullets) return NULL;
     // Step 6: Convert "1" to space character for dimensionless output
-    OCStringRef result = siueConvertDimensionlessOutput(bullets);
+    OCStringRef result = siueCreateByConvertingDimensionlessOutput(bullets);
     OCRelease(bullets);
     return result;
 }
@@ -765,11 +798,13 @@ int SIUnitCountTokenSymbols(OCStringRef cleanedExpression) {
                 }
             }
             // Replace the power notation with a space
+            OCStringRef powerSubstring = OCStringCreateWithSubstring(workingCopy, OCRangeMake(powerStart, powerEnd - powerStart));
             OCStringFindAndReplace(workingCopy,
-                                   OCStringCreateWithSubstring(workingCopy, OCRangeMake(powerStart, powerEnd - powerStart)),
+                                   powerSubstring,
                                    STR(" "),
                                    OCRangeMake(0, OCStringGetLength(workingCopy)),
                                    0);
+            OCRelease(powerSubstring);  // Release the substring to prevent leak
         }
     } while (powerRange.location != kOCNotFound);
     // Now split by whitespace and collect unique symbols

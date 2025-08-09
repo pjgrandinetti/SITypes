@@ -70,6 +70,7 @@ expression: term_list {
         siueReleaseTermArray($3);  // Release the term_list and its terms since siueCreateExpression copied them
     } else {
         siueError = STR("Only '1' is allowed as a numeric coefficient");
+        siueReleaseTermArray($3);  // Clean up the term_list before error
         YYERROR;
     }
 }
@@ -83,6 +84,7 @@ expression: term_list {
         siueReleaseTermArray($4);  // Release the term_list and its terms since siueCreateExpression copied them
     } else {
         siueError = STR("Only '1' is allowed as a numeric coefficient");
+        siueReleaseTermArray($4);  // Clean up the term_list before error
         YYERROR;
     }
 }
@@ -167,9 +169,9 @@ term_list: unit_term {
         // Extract the numerator from the modified expression
         $$ = temp_expr->numerator;
         OCRetain($$);  // Keep the numerator
-        // Clean up the expression wrapper without freeing the numerator
-        if (temp_expr->denominator) OCRelease(temp_expr->denominator);
-        free(temp_expr);
+        // Properly clean up the expression - set numerator to NULL first to avoid double-free
+        temp_expr->numerator = NULL;
+        siueRelease(temp_expr);
     } else {
         $$ = NULL;
         if (temp_expr) siueRelease(temp_expr);

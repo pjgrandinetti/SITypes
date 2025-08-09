@@ -30,6 +30,7 @@ BUILD_DIR      := build
 OBJ_DIR        := $(BUILD_DIR)/obj
 GEN_DIR        := $(BUILD_DIR)/gen
 BIN_DIR        := $(BUILD_DIR)/bin
+LIBDIR         := lib
 
 CPPFLAGS := -I. -I$(SRC_DIR) -I$(GEN_DIR) -I$(TP_INCLUDE_DIR) -I$(OCT_INCLUDE)
 CFLAGS   := -fPIC -O3 -Wall -Wextra \
@@ -90,14 +91,14 @@ else ifneq ($(findstring MINGW,$(UNAME_S)),)
   # Shared library configuration for Windows
   SHLIB_EXT      = .dll
   SHLIB_FLAGS    = -shared
-  SHLIB_LDFLAGS  = -Wl,--out-implib=libSITypes.dll.a
+  SHLIB_LDFLAGS  = -Wl,--out-implib=$(LIBDIR)/libSITypes.dll.a
 else
 	OCTYPES_LINKLIB := -lOCTypes
   SHLIB_EXT      = .so
   SHLIB_FLAGS    = -shared -fPIC
   SHLIB_LDFLAGS  =
 endif
-SHLIB = libSITypes$(SHLIB_EXT)
+SHLIB = $(LIBDIR)/libSITypes$(SHLIB_EXT)
 OCT_LIB_ARCHIVE     := third_party/$(OCT_LIB_BIN)
 OCT_HEADERS_ARCHIVE := third_party/libOCTypes-headers.zip
 
@@ -118,7 +119,7 @@ help:
 	@echo ""
 	@echo "Building:"
 	@echo "  all            Build the complete SITypes library (default)"
-	@echo "  libSITypes.a   Build only the static library"
+	@echo "  $(LIBDIR)/libSITypes.a   Build only the static library"
 	@echo "  shared         Build only the shared library"
 	@echo "  dirs           Create build directories"
 	@echo "  prepare        Generate parser/scanner files"
@@ -160,10 +161,10 @@ help:
 	@echo "  make clean all # Clean rebuild"
 	@echo "  make help      # Show this help"
 
-all: dirs octypes prepare libSITypes.a
+all: dirs octypes prepare $(LIBDIR)/libSITypes.a $(SHLIB)
 
 dirs:
-	$(MKDIR_P) $(BUILD_DIR) $(OBJ_DIR) $(GEN_DIR) $(BIN_DIR)
+	$(MKDIR_P) $(BUILD_DIR) $(OBJ_DIR) $(GEN_DIR) $(BIN_DIR) $(LIBDIR)
 
 # Download and extract OCTypes (only if not already present)
 octypes: $(OCT_LIBDIR)/libOCTypes.a $(OCT_INCLUDE)/OCTypes.h
@@ -214,7 +215,7 @@ $(OCT_INCLUDE)/OCTypes.h: | $(TP_DIR)
 prepare: $(GEN_H)
 
 # Library targets
-libSITypes.a: prepare $(OBJ)
+$(LIBDIR)/libSITypes.a: prepare $(OBJ)
 	$(AR) rcs $@ $(filter %.o,$^)
 
 # Build shared library
@@ -255,28 +256,29 @@ $(GEN_DIR)/%.c: $(SRC_DIR)/%.l | dirs
 	$(LEX) -o $@ $<
 
 # Tests
-$(BIN_DIR)/runTests: libSITypes.a $(TEST_OBJ)
+$(BIN_DIR)/runTests: $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-		-L. -L$(OCT_LIBDIR) $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o $@
+		$(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) -lm -o $@
 
 # Run tests
-test: octypes prepare libSITypes.a $(TEST_OBJ)
+test: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests
+	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests
 	./runTests
 
-test-debug: octypes prepare libSITypes.a $(TEST_OBJ)
+test-debug: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O0 -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  -L. -L$(OCT_LIBDIR) $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.debug
+	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.debug
 
-test-asan: octypes prepare libSITypes.a $(TEST_OBJ)
+test-asan: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
-	  -I$(TEST_SRC_DIR) $(TEST_OBJ) -L. -L$(OCT_LIBDIR) \
+	  -I$(TEST_SRC_DIR) $(TEST_OBJ) \
+	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.asan \
 	  $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.asan
 	@echo "Running AddressSanitizer tests (may have minor leaks in test code)..."
 	@./runTests.asan || (echo "AddressSanitizer detected issues. Checking if tests pass without sanitizer..."; \
 	  echo "Building regular test binary..."; \
-	  $(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) -L. -L$(OCT_LIBDIR) \
+	  $(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) -L$(LIBDIR) -L$(OCT_LIBDIR) \
 	    $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.fallback; \
 	  echo "Running functional verification..."; \
 	  ./runTests.fallback && echo "✓ All functionality tests pass - AddressSanitizer issues are minor" || \
@@ -290,15 +292,15 @@ INSTALL_DIR := install
 INSTALL_LIB_DIR := $(INSTALL_DIR)/lib
 INSTALL_INC_DIR := $(INSTALL_DIR)/include/SITypes
 
-install: libSITypes.a
+install: $(LIBDIR)/libSITypes.a
 	$(MKDIR_P) $(INSTALL_LIB_DIR) $(INSTALL_INC_DIR)
-	cp libSITypes.a $(INSTALL_LIB_DIR)/
+	cp $(LIBDIR)/libSITypes.a $(INSTALL_LIB_DIR)/
 	cp src/*.h $(INSTALL_INC_DIR)/
 
 # Install both static and shared libraries
-install-shared: libSITypes.a $(SHLIB)
+install-shared: $(LIBDIR)/libSITypes.a $(SHLIB)
 	$(MKDIR_P) $(INSTALL_LIB_DIR) $(INSTALL_INC_DIR)
-	cp libSITypes.a $(INSTALL_LIB_DIR)/
+	cp $(LIBDIR)/libSITypes.a $(INSTALL_LIB_DIR)/
 	cp $(SHLIB) $(INSTALL_LIB_DIR)/
 	cp src/*.h $(INSTALL_INC_DIR)/
 
@@ -307,7 +309,7 @@ clean-objects:
 	$(RM) $(OBJ) $(TEST_OBJ)
 
 clean:
-	$(RM) -r $(BUILD_DIR) libSITypes.a $(SHLIB) libSITypes.dll.a runTests runTests.asan runTests.debug *.dSYM
+	$(RM) -r $(BUILD_DIR) $(LIBDIR) runTests runTests.asan runTests.debug *.dSYM
 	$(RM) *.tab.* *Scanner.c *.d core.*
 	$(RM) -rf docs/doxygen docs/_build docs/html build-xcode install
 	$(RM) rebuild.log
