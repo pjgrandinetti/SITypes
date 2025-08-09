@@ -15,6 +15,9 @@ void SITypesShutdown(void) {
         OCRelease(siueError);
         siueError = NULL;
     }
+
+    // Clean up global parsed expression state
+    siueClearParsedExpression();
     SIUnitLibrariesShutdown();
 #if !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
     OCReportLeaksForType(SIUnitGetTypeID());
