@@ -380,15 +380,24 @@ void siueCancelTerms(SIUnitExpression* expr) {
     }
 }
 /**
- * Moves terms with negative powers from numerator to denominator.
+ * Moves terms with negative powers from numerator to denominator and returns the denominator.
  * Converts m^-2 → 1/m^2 for proper formatting.
+ *
+ * @param numerator The numerator array to process (modified in-place)
+ * @param denominator The existing denominator array (may be NULL)
+ * @return The denominator array with negative power terms added. If denominator was NULL,
+ *         returns a new array that caller owns. If denominator was non-NULL, returns it
+ *         with retain count increased (caller must OCRelease).
  */
-void siueMoveNegativePowersToDenominator(OCMutableArrayRef numerator, OCMutableArrayRef* denominator) {
-    if (!numerator) return;
-    // Create denominator if needed
-    if (!*denominator) {
-        *denominator = OCArrayCreateMutable(10, NULL);
+OCMutableArrayRef siueCreateDenominatorWithNegativePowers(OCMutableArrayRef numerator, OCArrayRef denominator) {
+    if (!numerator) return denominator ? (OCMutableArrayRef)OCRetain(denominator) : NULL;
+    OCMutableArrayRef workingDenominator;
+    if (denominator) {
+        workingDenominator = (OCMutableArrayRef)OCRetain(denominator);  // Increase retain count
+    } else {
+        workingDenominator = OCArrayCreateMutable(10, NULL);  // Create new array
     }
+    if (!workingDenominator) return NULL;
     // Move negative power terms to denominator
     OCIndex count = OCArrayGetCount(numerator);
     for (OCIndex i = count - 1; i >= 0; i--) {
@@ -397,7 +406,7 @@ void siueMoveNegativePowersToDenominator(OCMutableArrayRef numerator, OCMutableA
             // Create positive power term for denominator
             SIUnitTerm* newTerm = siueCreateTerm(term->symbol, -term->power);
             if (newTerm) {
-                if (OCArrayAppendValue(*denominator, newTerm)) {
+                if (OCArrayAppendValue(workingDenominator, newTerm)) {
                     // Successfully added to denominator, now remove from numerator
                     siueReleaseTerm(term);
                     OCArrayRemoveValueAtIndex(numerator, i);
@@ -408,6 +417,7 @@ void siueMoveNegativePowersToDenominator(OCMutableArrayRef numerator, OCMutableA
             }
         }
     }
+    return workingDenominator;
 }
 #pragma mark - Formatting Functions
 /**
@@ -585,10 +595,8 @@ OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool
         return OCStringCreateMutableCopy(STR("1"));  // Space → "1" for parser
     }
     OCMutableStringRef mutString = OCStringCreateMutableCopy(expression);
-
     // Trim leading and trailing whitespace
     OCStringTrimWhitespace(mutString);
-
     // Unicode operator normalizations per spec
     OCStringFindAndReplace(mutString, STR("×"), STR("*"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
     OCStringFindAndReplace(mutString, STR("÷"), STR("/"), OCRangeMake(0, OCStringGetLength(mutString)), 0);
@@ -653,10 +661,8 @@ bool SIUnitAreExpressionsEquivalent(OCStringRef expr1, OCStringRef expr2) {
 // Groups and sorts without power cancellation - returns clean formatted expression
 OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
     if (!expression) return NULL;
-
     // Handle empty string case early
     if (OCStringGetLength(expression) == 0) return STR(" ");
-
     // Step 1: Normalize Unicode characters first
     OCMutableStringRef normalized = SIUnitCreateNormalizedExpression(expression, false);
     if (!normalized) return NULL;
@@ -674,9 +680,11 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
         OCMutableArrayRef mutableNum = OCArrayCreateMutableCopy(parsed->numerator);
         siueGroupIdenticalTerms(mutableNum);
         siueSortTermsAlphabetically(mutableNum);
-        siueMoveNegativePowersToDenominator(mutableNum, (OCMutableArrayRef*)&parsed->denominator);
+        OCMutableArrayRef newDenominator = siueCreateDenominatorWithNegativePowers(mutableNum, parsed->denominator);
         if (parsed->numerator) OCRelease(parsed->numerator);
+        if (parsed->denominator) OCRelease(parsed->denominator);
         parsed->numerator = mutableNum;
+        parsed->denominator = newDenominator;
     }
     if (parsed->denominator) {
         OCMutableArrayRef mutableDen = OCArrayCreateMutableCopy(parsed->denominator);
@@ -718,9 +726,11 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
     if (parsed->numerator) {
         OCMutableArrayRef mutableNum = OCArrayCreateMutableCopy(parsed->numerator);
         siueGroupIdenticalTerms(mutableNum);
-        siueMoveNegativePowersToDenominator(mutableNum, (OCMutableArrayRef*)&parsed->denominator);
+        OCMutableArrayRef newDenominator = siueCreateDenominatorWithNegativePowers(mutableNum, parsed->denominator);
         if (parsed->numerator) OCRelease(parsed->numerator);
+        if (parsed->denominator) OCRelease(parsed->denominator);
         parsed->numerator = mutableNum;
+        parsed->denominator = newDenominator;
     }
     if (parsed->denominator) {
         OCMutableArrayRef mutableDen = OCArrayCreateMutableCopy(parsed->denominator);

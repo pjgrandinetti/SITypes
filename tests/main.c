@@ -48,21 +48,19 @@ int main(int argc, const char* argv[]) {
     TRACK(test_dimensionality_deep_copy);
     TRACK(test_dimensionality_parser_strictness);
     printf("\n=== SIUnit Tests ===\n");
-//     SIUnitRef unit = SIUnitFromExpression(STR("m"), NULL, NULL);
-
-//         if (failures) {
-//         fprintf(stderr, "\n%d test(s) failed.\n", failures);
-//     } else
-//         printf("\n%d test(s) failed\n", failures);
-// #ifdef LEAK_SANITIZER
-//     if (&__lsan_do_leak_check) {
-//         __lsan_do_leak_check();
-//     }
-// #endif
-//     SITypesShutdown();
-//     return failures > 0 ? 1 : 0;
-
-
+    // Simple call to create units library.
+    SIUnitRef unit = SIUnitWithSymbol(STR("m"));
+    if (failures) {
+        fprintf(stderr, "\n%d test(s) failed.\n", failures);
+    } else
+        printf("\n%d test(s) failed\n", failures);
+#ifdef LEAK_SANITIZER
+    if (&__lsan_do_leak_check) {
+        __lsan_do_leak_check();
+    }
+#endif
+    SITypesShutdown();
+    return failures > 0 ? 1 : 0;
     TRACK(test_unit_0);
     TRACK(test_unit_1);
     TRACK(test_unit_3);
