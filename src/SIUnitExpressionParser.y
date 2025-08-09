@@ -194,7 +194,9 @@ unit_term: UNIT_SYMBOL {
     OCRelease($1);  // Release the string from lexer since siueCreateTerm copied it
 }
 | UNKNOWN_SYMBOL {
-    siueError = STR("Unknown unit symbol");
+    if (!siueError) {
+        siueError = STR("Unknown unit symbol");
+    }
     YYERROR;
 }
 ;

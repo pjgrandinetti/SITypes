@@ -255,7 +255,6 @@ static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
     memset(&theUnit->flags, 0, sizeof(theUnit->flags));
     return (SIUnitRef)theUnit;
 }
-
 // Accessor functions for SIUnit
 SIDimensionalityRef SIUnitGetDimensionality(SIUnitRef theUnit) {
     IF_NO_OBJECT_EXISTS_RETURN(theUnit, NULL);
@@ -1736,9 +1735,10 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     double multiplier = 1.0;  // Default multiplier
     unit = SIUnitFromExpressionInternal(expression, &multiplier, error);
     if (NULL == unit) {
-        if (error) {
+        if (error && !(*error)) {
             *error = OCStringCreateWithFormat(STR("Invalid unit expression: %@"), expression);
         }
+        OCRelease(key);
         return NULL;
     }
     if (multiplier != 1.0) {
