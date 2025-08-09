@@ -175,7 +175,7 @@ AddToLib(kSIQuantityInverseTime, STR("inverse minute"), STR("inverse minutes"), 
 AddToLib(kSIQuantityInverseTime, STR("inverse hour"), STR("inverse hours"), STR("(1/h)"), 1. / kSIHour, &error);
 AddToLib(kSIQuantityInverseTime, STR("inverse day"), STR("inverse days"), STR("(1/d)"), 1. / kSIDay, &error);
 AddToLib(kSIQuantityInverseTime, STR("inverse week"), STR("inverse weeks"), STR("(1/wk)"), 1. / (kSIWeek), &error);
-AddToLib(kSIQuantityInverseTime, STR("inverse month"), STR("inverse months"), STR("(1/month)"), 1. / kSIMonth, &error);
+AddToLib(kSIQuantityInverseTime, STR("inverse month"), STR("inverse months"), STR("(1/mo)"), 1. / kSIMonth, &error);
 AddToLib(kSIQuantityInverseTime, STR("inverse year"), STR("inverse years"), STR("(1/yr)"), 1. / kSIYear, &error);
 //
 #pragma mark kSIQuantityFrequency
@@ -818,7 +818,7 @@ AddSIToLibPrefixed(kSIQuantityChargePerAmount, STR("coulomb per mole"), STR("cou
 AddConstantToLib(kSIQuantityGravitationalConstant, STR("gravitational constant"), STR("gravitational constant"), STR("&G"), kSIGravitationalConstant, &error);
 //
 #pragma mark kSIQuantityVolumePerLength
-AddToLibPrefixed(kSIQuantityVolumePerLength, STR("liter per 100 kilometers"), STR("liters per 100 kilometers"), STR("L/(100 km)"), 1e-3 / 100000., &error);
+AddToLib(kSIQuantityVolumePerLength, STR("liter per 100 kilometers"), STR("liters per 100 kilometers"), STR("L/(100 km)"), 1e-3 / 100000., &error);
 //
 #pragma mark kSIQuantityVolumetricFlowRate
 AddToLib(kSIQuantityVolumetricFlowRate, STR("cubic meter per hour"), STR("cubic meters per hour"), STR("m^3/h"), 1. / kSIHour, &error);

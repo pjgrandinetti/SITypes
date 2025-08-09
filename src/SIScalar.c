@@ -1755,7 +1755,7 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
         }
         if (SIDimensionalityHasSameReducedDimensionality(SIDimensionalityForQuantity(kSIQuantityTime, NULL), SIQuantityGetUnitDimensionality((SIQuantityRef)theScalar)) && SIScalarIsReal(theScalar)) {
             SIUnitRef unit1 = SIUnitWithSymbol(STR("yr"));
-            SIUnitRef unit2 = SIUnitWithSymbol(STR("month"));
+            SIUnitRef unit2 = SIUnitWithSymbol(STR("mo"));
             SIUnitRef unit3 = SIUnitWithSymbol(STR("wk"));
             SIUnitRef unit4 = SIUnitWithSymbol(STR("d"));
             SIUnitRef unit5 = SIUnitWithSymbol(STR("h"));
