@@ -22,6 +22,7 @@ extern int siueparse(void);
 typedef struct yy_buffer_state* YY_BUFFER_STATE;
 extern YY_BUFFER_STATE siue_scan_string(const char* str);
 extern void siue_delete_buffer(YY_BUFFER_STATE buffer);
+extern int siuelex_destroy(void);  // Complete lexer state cleanup
 // Forward declarations for power operations and expression processing
 OCArrayRef siueApplyPowerToTermList(OCArrayRef term_list, int power);
 SIUnitExpression* siueApplyPowerToExpression(SIUnitExpression* expression, int power);
@@ -517,11 +518,38 @@ void siueClearParsedExpression(void) {
         OCRelease(siueError);
         siueError = NULL;
     }
+    // Note: We don't call siuelex_destroy() here because this function gets called
+    // frequently during parsing operations and would cause double-free errors
 }
 void siueSetParsedExpression(SIUnitExpression* expr) {
     siueClearParsedExpression();
     g_parsed_expression = expr;
 }
+
+#pragma mark - Parser State Management
+
+/**
+ * Comprehensive cleanup of all parser state and internal buffers.
+ * This function performs a complete reset of the parser system, including:
+ * - Clearing parsed expression state
+ * - Destroying lexer internal buffers
+ * - Resetting global error state
+ *
+ * Call this function at the end of intensive parsing operations or test suites
+ * to ensure no parser state accumulates and causes memory leaks.
+ */
+void siueCleanupParserState(void) {
+    // Clear parsed expression and error state
+    siueClearParsedExpression();
+
+    // Complete lexer state cleanup - only call this at the end of all parsing
+    // operations to avoid double-free errors
+    siuelex_destroy();
+
+    // Additional cleanup could be added here for other parsers if needed
+    // This function serves as a comprehensive cleanup point for the entire parser system
+}
+
 #pragma mark - Validation Functions
 /**
  * Validates symbol against ~951 allowed token unit symbols.
@@ -687,7 +715,7 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
     SIUnitExpression* parsed = siueCreateParsedExpression(preprocessed);
     OCRelease(preprocessed);
     if (!parsed) return NULL;
-    // Step 3: Process the expression (group and sort)
+    // Step 4: Process the expression (group and sort)
     // Work directly with the parsed expression arrays
     if (parsed->numerator) {
         OCMutableArrayRef mutableNum = OCArrayCreateMutableCopy(parsed->numerator);
@@ -706,15 +734,15 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
         if (parsed->denominator) OCRelease(parsed->denominator);
         parsed->denominator = mutableDen;
     }
-    // Step 4: Format the result
+    // Step 5: Format the result
     OCStringRef formatted = siueCreateFormattedExpression(parsed, false);
     siueRelease(parsed);
     if (!formatted) return NULL;
-    // Step 5: Convert asterisks back to bullet characters
+    // Step 6: Convert asterisks back to bullet characters
     OCStringRef bullets = siueCreateByConvertingAsterisksToBullets(formatted);
     OCRelease(formatted);
     if (!bullets) return NULL;
-    // Step 6: Convert "1" to space character for dimensionless output
+    // Step 7: Convert "1" to space character for dimensionless output
     OCStringRef result = siueCreateByConvertingDimensionlessOutput(bullets);
     OCRelease(bullets);
     // Ensure all parser state is completely cleared after each expression processing
@@ -737,11 +765,11 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
     OCStringRef preprocessed = siueCreateByConvertingBulletsToAsterisks(normalized);
     OCRelease(normalized);
     if (!preprocessed) return NULL;
-    // Step 2: Parse the preprocessed expression
+    // Step 3: Parse the preprocessed expression
     SIUnitExpression* parsed = siueCreateParsedExpression(preprocessed);
     OCRelease(preprocessed);
     if (!parsed) return NULL;
-    // Step 3: Process the expression (group, sort, and cancel)
+    // Step 4: Process the expression (group, sort, and cancel)
     // Work directly with the parsed expression arrays
     if (parsed->numerator) {
         OCMutableArrayRef mutableNum = OCArrayCreateMutableCopy(parsed->numerator);
@@ -773,17 +801,26 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
         OCRelease(parsed->denominator);
         parsed->denominator = sortableDen;
     }
-    // Step 4: Format the result
+    // Step 5: Format the result
     OCStringRef formatted = siueCreateFormattedExpression(parsed, true);
     siueRelease(parsed);
     if (!formatted) return NULL;
-    // Step 5: Convert asterisks back to bullet characters
+    // Step 6: Convert asterisks back to bullet characters
     OCStringRef bullets = siueCreateByConvertingAsterisksToBullets(formatted);
     OCRelease(formatted);
     if (!bullets) return NULL;
-    // Step 6: Convert "1" to space character for dimensionless output
+    // Step 7: Convert "1" to space character for dimensionless output
     OCStringRef result = siueCreateByConvertingDimensionlessOutput(bullets);
     OCRelease(bullets);
+
+    // Ensure all parser state is completely cleared after each expression processing
+    siueClearParsedExpression();
+    // Explicitly clear any remaining error state
+    if (siueError) {
+        OCRelease(siueError);
+        siueError = NULL;
+    }
+
     return result;
 }
 int SIUnitCountTokenSymbols(OCStringRef cleanedExpression) {

@@ -37,7 +37,9 @@ SYMBOL {IDENTIFIER}|{UNICODE_IDENTIFIER}
         OCRelease(string);
         char error_msg[256];
         snprintf(error_msg, sizeof(error_msg), "Unknown unit symbol: %s", yytext);
-        siueError = OCStringCreateWithCString(error_msg);
+        if (!siueError) {
+            siueError = OCStringCreateWithCString(error_msg);
+        }
         return UNKNOWN_SYMBOL;
     }
 }

@@ -463,6 +463,7 @@ static void AddToUnitsDictionaryLibraryWithKey(SIUnitRef unit, OCStringRef key) 
     if (!SIUnitSymbolIsUnderived(unit->symbol)) {
         if (key) {
             OCDictionaryAddValue(unitsDictionaryLibrary, key, unit);
+            OCRelease(key);  // Release the key after dictionary retains it
         }
     } else
         OCDictionaryAddValue(unitsDictionaryLibrary, unit->symbol, unit);
@@ -883,6 +884,10 @@ static bool SIUnitCreateLibraries(void) {
         OCRelease(key);
     }
     OCRelease(quantities);  // Fix memory leak - release the array created by OCDictionaryCreateArrayWithAllKeys
+    // Release error string if it was set during library initialization
+    if (error) {
+        OCRelease(error);
+    }
     return true;
 }
 // Add a cleanup function for static dictionaries and array
@@ -1152,6 +1157,10 @@ void SIUnitLibrarySetDefaultVolumeSystem(SIVolumeSystem system) {
         SIUnitAddUKLabeledVolumeUnits(&error);         // Add UK labeled volumes (galUK, qtUK, etc.)
     }
     imperialVolumes = useUKAsDefault;
+    // Release error string if it was set
+    if (error) {
+        OCRelease(error);
+    }
 }
 SIVolumeSystem SIUnitLibraryGetDefaultVolumeSystem(void) {
     return imperialVolumes ? kSIVolumeSystemUK : kSIVolumeSystemUS;
@@ -1187,24 +1196,33 @@ static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
     // Create a temporary unit to get its symbol, then check if equivalent exists
     SIUnitRef tempUnit = SIUnitCreate(dimensionality, name, plural_name, symbol, scale_to_coherent_si);
     if (NULL == tempUnit) return NULL;
+
     // Check if another unit with this symbol already exists
-    OCStringRef key = SIUnitCreateCleanedExpression(tempUnit->symbol);
     OCDictionaryRef unitsLib = SIUnitGetUnitsDictionaryLib();
+    OCStringRef key = SIUnitCreateCleanedExpression(tempUnit->symbol);
     if (OCDictionaryContainsKey(unitsLib, key)) {
         SIUnitRef existingUnit = OCDictionaryGetValue(unitsLib, key);
         OCRelease(tempUnit);  // Discard the temporary unit
         OCRelease(key);
         return existingUnit;
     }
+
     // No existing unit found, so add this fresh unit to library
     SIUnitRef registeredUnit = RegisterUnitInLibraries(tempUnit, NULL, dimensionality);
     if (registeredUnit != tempUnit) {  // Unit already exists in libraries
         OCRelease(tempUnit);
-        OCRelease(key);
+        OCRelease(key);  // Release the key we created
         return registeredUnit;
     }
-    AddToUnitsDictionaryLibraryWithKey(registeredUnit, key);
-    OCRelease(key);
+    // Reuse the key we already created
+    if (!SIUnitSymbolIsUnderived(registeredUnit->symbol)) {
+        if (key) {
+            OCDictionaryAddValue(unitsDictionaryLibrary, key, registeredUnit);
+        }
+    } else {
+        OCDictionaryAddValue(unitsDictionaryLibrary, registeredUnit->symbol, registeredUnit);
+    }
+    OCRelease(key);  // Release the key after dictionary retains it
     return registeredUnit;
 }
 SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef dimensionality) {
@@ -1450,6 +1468,10 @@ SIUnitRef SIUnitByReducing(SIUnitRef theUnit, double *unit_multiplier) {
     // Create new unit with the reduced symbol and scale_to_coherent_si
     SIUnitRef result = SIUnitWithParameters(dimensionality, NULL, NULL, simplified_symbol, theUnit->scale_to_coherent_si);
     OCRelease(simplified_symbol);
+    // Release error string if it was set
+    if (error) {
+        OCRelease(error);
+    }
     return result;
 }
 // Power operation

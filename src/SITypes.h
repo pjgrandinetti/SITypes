@@ -38,4 +38,5 @@ typedef struct impl_SIScalar *SIMutableScalarRef;
 #include "SIUnitParser.h"
 // Library management functions
 void SITypesShutdown(void);
+
 #endif /* SITypes_h */

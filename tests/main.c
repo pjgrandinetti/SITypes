@@ -191,6 +191,7 @@ int main(int argc, const char* argv[]) {
         fprintf(stderr, "\n%d test(s) failed.\n", failures);
     } else
         printf("\n%d test(s) failed\n", failures);
+
 #ifdef LEAK_SANITIZER
     if (&__lsan_do_leak_check) {
         __lsan_do_leak_check();

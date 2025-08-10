@@ -18,27 +18,29 @@ void SITypesShutdown(void) {
         OCRelease(siueError);
         siueError = NULL;
     }
-    
-    // Clean up scalar parser error state  
+
+    // Clean up scalar parser error state
     if (scalarErrorString) {
         OCRelease(scalarErrorString);
         scalarErrorString = NULL;
     }
-    
+
     // Clean up dimensionality parser error state
     if (dimensionalityError) {
         OCRelease(dimensionalityError);
         dimensionalityError = NULL;
     }
-    
+
     // Clean up unit parser error state
     if (unitError) {
         OCRelease(unitError);
         unitError = NULL;
     }
 
-    // Clean up global parsed expression state
-    siueClearParsedExpression();
+    // Comprehensive cleanup of parser states and internal buffers
+    // (this includes clearing parsed expressions and error states)
+    siueCleanupParserState();
+
     SIUnitLibrariesShutdown();
 #if !defined(__SANITIZE_ADDRESS__) && !__has_feature(address_sanitizer)
     OCReportLeaksForType(SIUnitGetTypeID());
@@ -50,6 +52,7 @@ void SITypesShutdown(void) {
     // Clean up the underlying OCTypes layer that SITypes depends on
     OCTypesShutdown();
 }
+
 // // Automatically run at program exit or library unload
 // __attribute__((destructor(500)))
 // static void SITypes_AutoCleanup(void) {

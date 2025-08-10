@@ -197,6 +197,16 @@ bool siueValidateSymbol(OCStringRef symbol);
  * @note The caller is responsible for releasing the returned expression
  */
 SIUnitExpression* siueParseExpression(OCStringRef normalized_expr);
+
+/*!
+ * @brief Comprehensive cleanup of all parser state and internal buffers.
+ *
+ * Call this function to completely reset parser state, including lexer buffers,
+ * global variables, and any accumulated internal state. Recommended for use
+ * at the end of test suites or intensive parsing operations.
+ */
+void siueCleanupParserState(void);
+
 #pragma mark - External Variables
 /*!
  * @brief Global error string for parser errors.
