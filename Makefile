@@ -273,8 +273,7 @@ test-debug: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 test-asan: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
 	  -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.asan \
-	  $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.asan
+	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.asan
 	@echo "Running AddressSanitizer tests (may have minor leaks in test code)..."
 	@./runTests.asan || (echo "AddressSanitizer detected issues. Checking if tests pass without sanitizer..."; \
 	  echo "Building regular test binary..."; \
