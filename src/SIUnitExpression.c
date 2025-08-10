@@ -585,6 +585,8 @@ SIUnitExpression* siueCreateParsedExpression(OCStringRef normalized_expr) {
     YY_BUFFER_STATE buffer = siue_scan_string(exprStr);
     int parseResult = siueparse();
     siue_delete_buffer(buffer);
+    // Clean up lexer state after parsing to prevent string leaks
+    siuelex_destroy();
     if (parseResult != 0 || siueError) {
         siueClearParsedExpression();
         return NULL;

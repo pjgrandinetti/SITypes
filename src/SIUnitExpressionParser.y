@@ -28,6 +28,12 @@
 %token <dVal> DECIMAL
 %token UNKNOWN_SYMBOL
 
+/* Destructors for proper cleanup on error */
+%destructor { if ($$) OCRelease($$); } UNIT_SYMBOL
+%destructor { if ($$) siueReleaseTerm($$); } unit_term
+%destructor { if ($$) siueReleaseTermArray($$); } term_list
+%destructor { if ($$) siueRelease($$); } expression
+
 %type <term> unit_term
 %type <term_list> term_list
 %type <expression> expression
@@ -168,7 +174,7 @@ term_list: unit_term {
     if (temp_expr && siueApplyFractionalPowerToExpression(temp_expr, $5)) {
         // Extract the numerator from the modified expression
         $$ = temp_expr->numerator;
-        OCRetain($$);  // Keep the numerator
+        // Don't retain - the array already has refcount=1 from creation
         // Properly clean up the expression - set numerator to NULL first to avoid double-free
         temp_expr->numerator = NULL;
         siueRelease(temp_expr);

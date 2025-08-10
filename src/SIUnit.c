@@ -14,6 +14,18 @@
 #include "SIDimensionalityPrivate.h"
 #include "SITypes.h"
 #include "SIUnitExpression.h"
+#include "OCLeakTracker.h"
+
+// Helper function to upgrade basic OCType tracking to enhanced tracking with context
+static void enhance_unit_tracking(SIUnitRef unit, const char* context) {
+    if (!unit) return;
+    
+    // Remove the basic tracking that OCTypeAlloc added
+    impl_OCUntrack(unit);
+    
+    // Add enhanced tracking with context
+    impl_OCTrackWithHint(unit, context);
+}
 /**
  * @file SIUnit.c
  * @brief Implementation of the SIUnit type and related functionality.
@@ -1241,6 +1253,7 @@ SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef dimensionalit
     if (OCDictionaryContainsKey(unitsLib, key)) {
         SIUnitRef existingUnit = OCDictionaryGetValue(unitsLib, key);
         OCRelease(key);
+        OCRelease(symbol);  // Fix: Release symbol before returning
         return existingUnit;
     }
     OCRelease(key);
@@ -1251,11 +1264,13 @@ SIUnitRef SIUnitCoherentUnitFromDimensionality(SIDimensionalityRef dimensionalit
     SIUnitRef registeredUnit = RegisterUnitInLibraries(tempUnit, NULL, dimensionality);
     if (tempUnit != registeredUnit) {  // Unit already exists in libraries
         OCRelease(tempUnit);
+        OCRelease(symbol);  // Fix: Release symbol before returning
         return registeredUnit;
     }
     AddToUnitsDictionaryLibrary(registeredUnit);
     // Note: Do not release tempUnit here - RegisterUnitInLibraries makes it a static instance
     // Static instances should not be manually released as they are managed by the system
+    OCRelease(symbol);  // Fix: Release symbol before returning
     return registeredUnit;
 }
 bool SIUnitIsCoherentUnit(SIUnitRef theUnit) {
@@ -1590,25 +1605,47 @@ SIUnitRef SIUnitByRaisingToPowerWithoutReducing(SIUnitRef input,
                                                 int power,
                                                 double *unit_multiplier,
                                                 OCStringRef *error) {
-    return SIUnitByRaisingToPowerInternal(input, power, unit_multiplier, false, error);  // reduce = false
+    SIUnitRef result = SIUnitByRaisingToPowerInternal(input, power, unit_multiplier, false, error);  // reduce = false
+    if (result) {
+        char context_buffer[256];
+        snprintf(context_buffer, sizeof(context_buffer), 
+                 "SIUnitByRaisingToPowerWithoutReducing: ^%d", power);
+        enhance_unit_tracking(result, context_buffer);
+    }
+    return result;
 }
 SIUnitRef SIUnitByRaisingToPower(SIUnitRef input,
                                  int power,
                                  double *unit_multiplier,
                                  OCStringRef *error) {
-    return SIUnitByRaisingToPowerInternal(input, power, unit_multiplier, true, error);  // reduce = true
+    SIUnitRef result = SIUnitByRaisingToPowerInternal(input, power, unit_multiplier, true, error);  // reduce = true
+    if (result) {
+        char context_buffer[256];
+        snprintf(context_buffer, sizeof(context_buffer), 
+                 "SIUnitByRaisingToPower: ^%d", power);
+        enhance_unit_tracking(result, context_buffer);
+    }
+    return result;
 }
 SIUnitRef SIUnitByMultiplyingWithoutReducing(SIUnitRef theUnit1,
                                              SIUnitRef theUnit2,
                                              double *unit_multiplier,
                                              OCStringRef *error) {
-    return SIUnitByMultiplyingInternal(theUnit1, theUnit2, unit_multiplier, false, error);  // reduce = false
+    SIUnitRef result = SIUnitByMultiplyingInternal(theUnit1, theUnit2, unit_multiplier, false, error);  // reduce = false
+    if (result) {
+        enhance_unit_tracking(result, "SIUnitByMultiplyingWithoutReducing");
+    }
+    return result;
 }
 SIUnitRef SIUnitByMultiplying(SIUnitRef theUnit1,
                               SIUnitRef theUnit2,
                               double *unit_multiplier,
                               OCStringRef *error) {
-    return SIUnitByMultiplyingInternal(theUnit1, theUnit2, unit_multiplier, true, error);  // reduce = true
+    SIUnitRef result = SIUnitByMultiplyingInternal(theUnit1, theUnit2, unit_multiplier, true, error);  // reduce = true
+    if (result) {
+        enhance_unit_tracking(result, "SIUnitByMultiplying");
+    }
+    return result;
 }
 // Division operation
 static SIUnitRef SIUnitByDividingInternal(SIUnitRef theUnit1,
@@ -1667,13 +1704,21 @@ SIUnitRef SIUnitByDividingWithoutReducing(SIUnitRef theUnit1,
                                           SIUnitRef theUnit2,
                                           double *unit_multiplier,
                                           OCStringRef *error) {
-    return SIUnitByDividingInternal(theUnit1, theUnit2, unit_multiplier, false, error);  // reduce = false
+    SIUnitRef result = SIUnitByDividingInternal(theUnit1, theUnit2, unit_multiplier, false, error);  // reduce = false
+    if (result) {
+        enhance_unit_tracking(result, "SIUnitByDividingWithoutReducing");
+    }
+    return result;
 }
 SIUnitRef SIUnitByDividing(SIUnitRef theUnit1,
                            SIUnitRef theUnit2,
                            double *unit_multiplier,
                            OCStringRef *error) {
-    return SIUnitByDividingInternal(theUnit1, theUnit2, unit_multiplier, true, error);  // reduce = true
+    SIUnitRef result = SIUnitByDividingInternal(theUnit1, theUnit2, unit_multiplier, true, error);  // reduce = true
+    if (result) {
+        enhance_unit_tracking(result, "SIUnitByDividing");
+    }
+    return result;
 }
 // Nth root operation
 SIUnitRef SIUnitByTakingNthRoot(SIUnitRef theUnit,
@@ -1777,6 +1822,8 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
     }
     // Parse the expression if not found in library
     double multiplier = 1.0;  // Default multiplier
+    const char* expr_cstr = OCStringGetCString(expression);  // Get C string once for reuse
+    
     unit = SIUnitFromExpressionInternal(expression, &multiplier, error);
     if (NULL == unit) {
         if (error && !(*error)) {
@@ -1785,14 +1832,32 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
         OCRelease(key);
         return NULL;
     }
+    
+    // Enhance tracking for newly parsed units
+    if (unit) {
+        char context_buffer[512];
+        snprintf(context_buffer, sizeof(context_buffer), 
+                 "SIUnitFromExpression: %.400s", expr_cstr ? expr_cstr : "(null)");
+        enhance_unit_tracking(unit, context_buffer);
+    }
+    
     if (multiplier != 1.0) {
         SIDimensionalityRef dimensionality = SIUnitGetDimensionality(unit);
         OCStringRef dimensionalitySymbol = SIDimensionalityCopySymbol(dimensionality);
-        unit = AddNonExistingToLib(dimensionalitySymbol, NULL, NULL, key, multiplier, error);
+        SIUnitRef scaled_unit = AddNonExistingToLib(dimensionalitySymbol, NULL, NULL, key, multiplier, error);
         OCRelease(dimensionalitySymbol);
+        
+        // Enhance tracking for scaled units
+        if (scaled_unit && scaled_unit != unit) {
+            char scale_context_buffer[512];
+            snprintf(scale_context_buffer, sizeof(scale_context_buffer), 
+                     "SIUnitFromExpression (scaled): %.400s", expr_cstr ? expr_cstr : "(null)");
+            enhance_unit_tracking(scaled_unit, scale_context_buffer);
+        }
+        
         if (unit_multiplier) *unit_multiplier = 1.0;
         OCRelease(key);
-        return unit;
+        return scaled_unit;
     }
     if (unit_multiplier) *unit_multiplier = multiplier;
     OCRelease(key);

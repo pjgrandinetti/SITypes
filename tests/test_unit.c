@@ -146,9 +146,11 @@ bool test_unit_4(void) {
     }
     if (OCStringCompare(name, STR("kilometer"), 0) != kOCCompareEqualTo) {
         printf("test_unit_4 failed: Expected name 'kilometer', got '%s'\n", OCStringGetCString(name));
+        OCRelease(name);
         OCRelease(unit);
         return false;
     }
+    OCRelease(name);
     OCRelease(unit);
     if (errorString) OCRelease(errorString);
     printf("%s passed\n", __func__);

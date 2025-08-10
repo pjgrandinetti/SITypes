@@ -231,6 +231,11 @@ SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
         if (!sis_syntax_error && result) {
             out = SIScalarCreateCopy(result);
         }
+        // Clean up any error strings set during parsing
+        if (scalarError) {
+            OCRelease(scalarError);
+            scalarError = NULL;
+        }
         OCAutoreleasePoolRelease(pool);
         /* whether parse succeeded or not, free the tree once here */
         if (sis_root) {
