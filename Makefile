@@ -292,17 +292,14 @@ INSTALL_DIR := install
 INSTALL_LIB_DIR := $(INSTALL_DIR)/lib
 INSTALL_INC_DIR := $(INSTALL_DIR)/include/SITypes
 
-install: $(LIBDIR)/libSITypes.a
-	$(MKDIR_P) $(INSTALL_LIB_DIR) $(INSTALL_INC_DIR)
-	cp $(LIBDIR)/libSITypes.a $(INSTALL_LIB_DIR)/
-	cp src/*.h $(INSTALL_INC_DIR)/
-
-# Install both static and shared libraries
-install-shared: $(LIBDIR)/libSITypes.a $(SHLIB)
+install: $(LIBDIR)/libSITypes.a $(SHLIB)
 	$(MKDIR_P) $(INSTALL_LIB_DIR) $(INSTALL_INC_DIR)
 	cp $(LIBDIR)/libSITypes.a $(INSTALL_LIB_DIR)/
 	cp $(SHLIB) $(INSTALL_LIB_DIR)/
 	cp src/*.h $(INSTALL_INC_DIR)/
+
+# Install both static and shared libraries (alias for install)
+install-shared: install
 
 # Clean
 clean-objects:
