@@ -158,6 +158,7 @@ help:
 	@echo "Examples:"
 	@echo "  make           # Build everything"
 	@echo "  make test      # Build and run tests"
+	@echo "  OC_LEAK_TRACKING=1 make test  # Run tests with OCTypes leak tracking"
 	@echo "  make clean all # Clean rebuild"
 	@echo "  make help      # Show this help"
 
