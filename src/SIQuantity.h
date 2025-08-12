@@ -37,8 +37,8 @@ typedef enum complexPart {
  * @ingroup SIQuantities
  */
 typedef enum {  // Anonymous enum
-    kSINumberFloat32Type = kOCNumberUInt32Type,
-    kSINumberFloat64Type = kOCNumberUInt64Type,
+    kSINumberFloat32Type = kOCNumberFloat32Type,
+    kSINumberFloat64Type = kOCNumberFloat64Type,
     kSINumberComplex64Type = kOCNumberComplex64Type,
     kSINumberComplex128Type = kOCNumberComplex128Type
 } SINumberType;
