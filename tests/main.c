@@ -95,6 +95,8 @@ int main(int argc, const char* argv[]) {
     TRACK(test_scalar_parser_10);
     TRACK(test_scalar_parser_11);
     TRACK(test_scalar_parser_12);
+    TRACK(test_scalar_parser_13);
+    TRACK(test_scalar_parser_infinity);
     printf("\n=== NMR Function Tests ===\n");
     TRACK(test_nmr_functions);
     printf("\n=== SIScalar Tests ===\n");

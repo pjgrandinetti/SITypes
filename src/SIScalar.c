@@ -1057,6 +1057,70 @@ bool SIScalarMultiplyWithoutReducingUnit(SIMutableScalarRef target, SIScalarRef 
             return false;
     }
     multiplier *= unit_multiplier;
+
+    // Check for infinity cases before normal multiplication
+    double complex target_value;
+    switch (target->type) {
+        case kSINumberFloat32Type:
+            target_value = target->value.floatValue;
+            break;
+        case kSINumberFloat64Type:
+            target_value = target->value.doubleValue;
+            break;
+        case kSINumberComplex64Type:
+            target_value = target->value.floatComplexValue;
+            break;
+        case kSINumberComplex128Type:
+            target_value = target->value.doubleComplexValue;
+            break;
+        default:
+            return false;
+    }
+
+    // Handle infinity multiplication cases
+    bool target_is_inf = isinf(cabs(target_value));
+    bool multiplier_is_inf = isinf(cabs(multiplier));
+    bool target_is_zero = (cabs(target_value) == 0.0);
+    bool multiplier_is_zero = (cabs(multiplier) == 0.0);
+
+    if ((target_is_inf && multiplier_is_zero) || (target_is_zero && multiplier_is_inf)) {
+        // 0 × ∞ = ∞ (practical for physics calculations)
+        switch (target->type) {
+            case kSINumberFloat32Type:
+                target->value.floatValue = INFINITY;
+                return true;
+            case kSINumberFloat64Type:
+                target->value.doubleValue = INFINITY;
+                return true;
+            case kSINumberComplex64Type:
+                target->value.floatComplexValue = (float complex)INFINITY;
+                return true;
+            case kSINumberComplex128Type:
+                target->value.doubleComplexValue = INFINITY;
+                return true;
+            default:
+                return false;
+        }
+    } else if (target_is_inf || multiplier_is_inf) {
+        // If either is infinite (and the other is non-zero), result is infinite
+        switch (target->type) {
+            case kSINumberFloat32Type:
+                target->value.floatValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberFloat64Type:
+                target->value.doubleValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberComplex64Type:
+                target->value.floatComplexValue = (float complex)(INFINITY * unit_multiplier);
+                return true;
+            case kSINumberComplex128Type:
+                target->value.doubleComplexValue = INFINITY * unit_multiplier;
+                return true;
+            default:
+                return false;
+        }
+    }
+
     // Multiply into target
     switch (target->type) {
         case kSINumberFloat32Type:
@@ -1111,7 +1175,71 @@ bool SIScalarMultiply(SIMutableScalarRef target, SIScalarRef input2, OCStringRef
             return false;
     }
     multiplier *= unit_multiplier;
-    // Apply multiplication to target
+
+    // Check for infinity cases before normal multiplication
+    double complex target_value;
+    switch (target->type) {
+        case kSINumberFloat32Type:
+            target_value = target->value.floatValue;
+            break;
+        case kSINumberFloat64Type:
+            target_value = target->value.doubleValue;
+            break;
+        case kSINumberComplex64Type:
+            target_value = target->value.floatComplexValue;
+            break;
+        case kSINumberComplex128Type:
+            target_value = target->value.doubleComplexValue;
+            break;
+        default:
+            return false;
+    }
+
+    // Handle infinity multiplication cases
+    bool target_is_inf = isinf(cabs(target_value));
+    bool multiplier_is_inf = isinf(cabs(multiplier));
+    bool target_is_zero = (cabs(target_value) == 0.0);
+    bool multiplier_is_zero = (cabs(multiplier) == 0.0);
+
+    if ((target_is_inf && multiplier_is_zero) || (target_is_zero && multiplier_is_inf)) {
+        // 0 × ∞ = ∞ (practical for physics calculations)
+        switch (target->type) {
+            case kSINumberFloat32Type:
+                target->value.floatValue = INFINITY;
+                return true;
+            case kSINumberFloat64Type:
+                target->value.doubleValue = INFINITY;
+                return true;
+            case kSINumberComplex64Type:
+                target->value.floatComplexValue = (float complex)INFINITY;
+                return true;
+            case kSINumberComplex128Type:
+                target->value.doubleComplexValue = INFINITY;
+                return true;
+            default:
+                return false;
+        }
+    } else if (target_is_inf || multiplier_is_inf) {
+        // If either is infinite (and the other is non-zero), result is infinite
+        switch (target->type) {
+            case kSINumberFloat32Type:
+                target->value.floatValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberFloat64Type:
+                target->value.doubleValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberComplex64Type:
+                target->value.floatComplexValue = (float complex)(INFINITY * unit_multiplier);
+                return true;
+            case kSINumberComplex128Type:
+                target->value.doubleComplexValue = INFINITY * unit_multiplier;
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    // Apply normal multiplication to target
     switch (target->type) {
         case kSINumberFloat32Type:
             target->value.floatValue *= crealf(multiplier);
@@ -1164,10 +1292,45 @@ bool SIScalarDivideWithoutReducingUnit(SIMutableScalarRef target, SIScalarRef in
         default:
             return false;
     }
-    // Check division by zero
+    // Check division by zero - set to infinity instead of error
     if (cabs(divisor) == 0.0) {
-        if (error) *error = STR("Division by zero.");
-        return false;
+        // Set the target value to infinity based on its type
+        switch (target->type) {
+            case kSINumberFloat32Type:
+                target->value.floatValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberFloat64Type:
+                target->value.doubleValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberComplex64Type:
+                target->value.floatComplexValue = (float complex)(INFINITY * unit_multiplier);
+                return true;
+            case kSINumberComplex128Type:
+                target->value.doubleComplexValue = INFINITY * unit_multiplier;
+                return true;
+            default:
+                return false;
+        }
+    }
+    // Check division by infinity - set result to zero
+    if (isinf(cabs(divisor))) {
+        // Set the target value to zero based on its type
+        switch (target->type) {
+            case kSINumberFloat32Type:
+                target->value.floatValue = 0.0f;
+                return true;
+            case kSINumberFloat64Type:
+                target->value.doubleValue = 0.0;
+                return true;
+            case kSINumberComplex64Type:
+                target->value.floatComplexValue = 0.0f + 0.0f * I;
+                return true;
+            case kSINumberComplex128Type:
+                target->value.doubleComplexValue = 0.0 + 0.0 * I;
+                return true;
+            default:
+                return false;
+        }
     }
     double complex factor = unit_multiplier / divisor;
     // Apply division
@@ -1214,11 +1377,48 @@ bool SIScalarDivide(SIMutableScalarRef target, SIScalarRef input2, OCStringRef *
         default:
             return false;
     }
-    // Division by zero check
+    // Division by zero check - set to infinity instead of error
     if (cabs(divisor) == 0.0) {
-        if (error) *error = STR("Division by zero.");
-        return false;
+        // Set the target value to infinity based on its type
+        switch (target->type) {
+            case kSINumberFloat32Type:
+                target->value.floatValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberFloat64Type:
+                target->value.doubleValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberComplex64Type:
+                target->value.floatComplexValue = (float complex)(INFINITY * unit_multiplier);
+                return true;
+            case kSINumberComplex128Type:
+                target->value.doubleComplexValue = INFINITY * unit_multiplier;
+                return true;
+            default:
+                return false;
+        }
     }
+
+    // Division by infinity check - set to zero
+    if (isinf(cabs(divisor))) {
+        // Set the target value to zero based on its type
+        switch (target->type) {
+            case kSINumberFloat32Type:
+                target->value.floatValue = 0.0f;
+                return true;
+            case kSINumberFloat64Type:
+                target->value.doubleValue = 0.0;
+                return true;
+            case kSINumberComplex64Type:
+                target->value.floatComplexValue = 0.0f;
+                return true;
+            case kSINumberComplex128Type:
+                target->value.doubleComplexValue = 0.0;
+                return true;
+            default:
+                return false;
+        }
+    }
+
     // Compute scaling factor
     double complex factor = unit_multiplier / divisor;
     // Apply division (multiply by reciprocal)
@@ -1271,6 +1471,61 @@ bool SIScalarRaiseToAPowerWithoutReducingUnit(SIMutableScalarRef theScalar, int 
     }
     IF_NO_OBJECT_EXISTS_RETURN(unit, false);
     theScalar->unit = unit;
+
+    // Special case: anything to the power of 0 equals 1
+    if (power == 0) {
+        switch (theScalar->type) {
+            case kSINumberFloat32Type:
+                theScalar->value.floatValue = 1.0f * unit_multiplier;
+                return true;
+            case kSINumberFloat64Type:
+                theScalar->value.doubleValue = 1.0 * unit_multiplier;
+                return true;
+            case kSINumberComplex64Type:
+                theScalar->value.floatComplexValue = (float complex)(1.0f * unit_multiplier);
+                return true;
+            case kSINumberComplex128Type:
+                theScalar->value.doubleComplexValue = 1.0 * unit_multiplier;
+                return true;
+        }
+    }
+
+    // Check if the scalar value is already infinity
+    bool is_infinite = false;
+    switch (theScalar->type) {
+        case kSINumberFloat32Type:
+            is_infinite = isinf(theScalar->value.floatValue);
+            break;
+        case kSINumberFloat64Type:
+            is_infinite = isinf(theScalar->value.doubleValue);
+            break;
+        case kSINumberComplex64Type:
+            is_infinite = isinf(cabs(theScalar->value.floatComplexValue));
+            break;
+        case kSINumberComplex128Type:
+            is_infinite = isinf(cabs(theScalar->value.doubleComplexValue));
+            break;
+    }
+
+    // If already infinite, keep it infinite
+    if (is_infinite) {
+        switch (theScalar->type) {
+            case kSINumberFloat32Type:
+                theScalar->value.floatValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberFloat64Type:
+                theScalar->value.doubleValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberComplex64Type:
+                theScalar->value.floatComplexValue = (float complex)(INFINITY * unit_multiplier);
+                return true;
+            case kSINumberComplex128Type:
+                theScalar->value.doubleComplexValue = INFINITY * unit_multiplier;
+                return true;
+        }
+    }
+
+    // Normal power operation for finite values
     switch (theScalar->type) {
         case kSINumberFloat32Type:
             theScalar->value.floatValue = pow(theScalar->value.floatValue, power_double) * unit_multiplier;
@@ -1310,6 +1565,61 @@ bool SIScalarRaiseToAPower(SIMutableScalarRef theScalar, int power, OCStringRef 
         if (*error) return false;
     }
     theScalar->unit = unit;
+
+    // Special case: anything to the power of 0 equals 1
+    if (power == 0) {
+        switch (theScalar->type) {
+            case kSINumberFloat32Type:
+                theScalar->value.floatValue = 1.0f * unit_multiplier;
+                return true;
+            case kSINumberFloat64Type:
+                theScalar->value.doubleValue = 1.0 * unit_multiplier;
+                return true;
+            case kSINumberComplex64Type:
+                theScalar->value.floatComplexValue = (float complex)(1.0f * unit_multiplier);
+                return true;
+            case kSINumberComplex128Type:
+                theScalar->value.doubleComplexValue = 1.0 * unit_multiplier;
+                return true;
+        }
+    }
+
+    // Check if the scalar value is already infinity
+    bool is_infinite = false;
+    switch (theScalar->type) {
+        case kSINumberFloat32Type:
+            is_infinite = isinf(theScalar->value.floatValue);
+            break;
+        case kSINumberFloat64Type:
+            is_infinite = isinf(theScalar->value.doubleValue);
+            break;
+        case kSINumberComplex64Type:
+            is_infinite = isinf(cabs(theScalar->value.floatComplexValue));
+            break;
+        case kSINumberComplex128Type:
+            is_infinite = isinf(cabs(theScalar->value.doubleComplexValue));
+            break;
+    }
+
+    // If already infinite, keep it infinite
+    if (is_infinite) {
+        switch (theScalar->type) {
+            case kSINumberFloat32Type:
+                theScalar->value.floatValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberFloat64Type:
+                theScalar->value.doubleValue = INFINITY * unit_multiplier;
+                return true;
+            case kSINumberComplex64Type:
+                theScalar->value.floatComplexValue = (float complex)(INFINITY * unit_multiplier);
+                return true;
+            case kSINumberComplex128Type:
+                theScalar->value.doubleComplexValue = INFINITY * unit_multiplier;
+                return true;
+        }
+    }
+
+    // Normal power operation for finite values
     switch (theScalar->type) {
         case kSINumberFloat32Type:
             theScalar->value.floatValue = pow(theScalar->value.floatValue, power_double) * unit_multiplier;
@@ -1392,6 +1702,72 @@ SIScalarRef SIScalarCreateByGammaFunctionWithoutReducingUnit(SIScalarRef theScal
 }
 bool SIScalarMultiplyByDimensionlessRealConstant(SIMutableScalarRef theScalar, double constant) {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
+
+    // Get current scalar value as complex for infinity checking
+    double complex scalar_value;
+    switch (theScalar->type) {
+        case kSINumberFloat32Type:
+            scalar_value = theScalar->value.floatValue;
+            break;
+        case kSINumberFloat64Type:
+            scalar_value = theScalar->value.doubleValue;
+            break;
+        case kSINumberComplex64Type:
+            scalar_value = theScalar->value.floatComplexValue;
+            break;
+        case kSINumberComplex128Type:
+            scalar_value = theScalar->value.doubleComplexValue;
+            break;
+        default:
+            return false;
+    }
+
+    // Handle infinity multiplication cases
+    bool scalar_is_inf = isinf(cabs(scalar_value));
+    bool constant_is_inf = isinf(constant);
+    bool scalar_is_zero = (cabs(scalar_value) == 0.0);
+    bool constant_is_zero = (constant == 0.0);
+
+    if ((scalar_is_inf && constant_is_zero) || (scalar_is_zero && constant_is_inf)) {
+        // 0 × ∞ = ∞ (practical for physics calculations)
+        switch (theScalar->type) {
+            case kSINumberFloat32Type:
+                theScalar->value.floatValue = INFINITY;
+                return true;
+            case kSINumberFloat64Type:
+                theScalar->value.doubleValue = INFINITY;
+                return true;
+            case kSINumberComplex64Type:
+                theScalar->value.floatComplexValue = (float complex)INFINITY;
+                return true;
+            case kSINumberComplex128Type:
+                theScalar->value.doubleComplexValue = INFINITY;
+                return true;
+        }
+    } else if (scalar_is_inf || constant_is_inf) {
+        // If either is infinite (and the other is non-zero), result is infinite
+        // Preserve the sign by determining the sign of the result
+        double result_sign = (scalar_is_inf ? (creal(scalar_value) < 0 ? -1.0 : 1.0) : 1.0) *
+                            (constant < 0 ? -1.0 : 1.0);
+        double signed_infinity = result_sign * INFINITY;
+
+        switch (theScalar->type) {
+            case kSINumberFloat32Type:
+                theScalar->value.floatValue = signed_infinity;
+                return true;
+            case kSINumberFloat64Type:
+                theScalar->value.doubleValue = signed_infinity;
+                return true;
+            case kSINumberComplex64Type:
+                theScalar->value.floatComplexValue = (float complex)signed_infinity;
+                return true;
+            case kSINumberComplex128Type:
+                theScalar->value.doubleComplexValue = signed_infinity;
+                return true;
+        }
+    }
+
+    // Normal multiplication for finite values
     switch (theScalar->type) {
         case kSINumberFloat32Type:
             theScalar->value.floatValue *= constant;
@@ -1419,6 +1795,67 @@ SIScalarRef SIScalarCreateByMultiplyingByDimensionlessRealConstant(SIScalarRef t
 }
 bool SIScalarMultiplyByDimensionlessComplexConstant(SIMutableScalarRef theScalar, double complex constant) {
     IF_NO_OBJECT_EXISTS_RETURN(theScalar, false);
+
+    // Get current scalar value as complex for infinity checking
+    double complex scalar_value;
+    switch (theScalar->type) {
+        case kSINumberFloat32Type:
+            scalar_value = theScalar->value.floatValue;
+            break;
+        case kSINumberFloat64Type:
+            scalar_value = theScalar->value.doubleValue;
+            break;
+        case kSINumberComplex64Type:
+            scalar_value = theScalar->value.floatComplexValue;
+            break;
+        case kSINumberComplex128Type:
+            scalar_value = theScalar->value.doubleComplexValue;
+            break;
+        default:
+            return false;
+    }
+
+    // Handle infinity multiplication cases
+    bool scalar_is_inf = isinf(cabs(scalar_value));
+    bool constant_is_inf = isinf(cabs(constant));
+    bool scalar_is_zero = (cabs(scalar_value) == 0.0);
+    bool constant_is_zero = (cabs(constant) == 0.0);
+
+    if ((scalar_is_inf && constant_is_zero) || (scalar_is_zero && constant_is_inf)) {
+        // 0 × ∞ = ∞ (practical for physics calculations)
+        switch (theScalar->type) {
+            case kSINumberFloat32Type:
+                theScalar->value.floatValue = INFINITY;
+                return true;
+            case kSINumberFloat64Type:
+                theScalar->value.doubleValue = INFINITY;
+                return true;
+            case kSINumberComplex64Type:
+                theScalar->value.floatComplexValue = (float complex)INFINITY;
+                return true;
+            case kSINumberComplex128Type:
+                theScalar->value.doubleComplexValue = INFINITY;
+                return true;
+        }
+    } else if (scalar_is_inf || constant_is_inf) {
+        // If either is infinite (and the other is non-zero), result is infinite
+        switch (theScalar->type) {
+            case kSINumberFloat32Type:
+                theScalar->value.floatValue = INFINITY;
+                return true;
+            case kSINumberFloat64Type:
+                theScalar->value.doubleValue = INFINITY;
+                return true;
+            case kSINumberComplex64Type:
+                theScalar->value.floatComplexValue = (float complex)INFINITY;
+                return true;
+            case kSINumberComplex128Type:
+                theScalar->value.doubleComplexValue = INFINITY;
+                return true;
+        }
+    }
+
+    // Normal multiplication for finite values
     bool isComplex = (cimag(constant) != 0.0);
     double realPart = creal(constant);
     switch (theScalar->type) {
@@ -1488,6 +1925,43 @@ bool SIScalarTakeNthRoot(SIMutableScalarRef theScalar, uint8_t root, OCStringRef
     if (!newUnit || (error && *error)) return false;
     theScalar->unit = newUnit;
     double reciprocal = 1.0 / root;
+
+    // Check if the scalar value is already infinity
+    bool is_infinite = false;
+    switch (theScalar->type) {
+        case kSINumberFloat32Type:
+            is_infinite = isinf(theScalar->value.floatValue);
+            break;
+        case kSINumberFloat64Type:
+            is_infinite = isinf(theScalar->value.doubleValue);
+            break;
+        case kSINumberComplex64Type:
+            is_infinite = isinf(cabs(theScalar->value.floatComplexValue));
+            break;
+        case kSINumberComplex128Type:
+            is_infinite = isinf(cabs(theScalar->value.doubleComplexValue));
+            break;
+    }
+
+    // If already infinite, keep it infinite (nth root of infinity is infinity)
+    if (is_infinite) {
+        switch (theScalar->type) {
+            case kSINumberFloat32Type:
+                theScalar->value.floatValue = INFINITY * multiplier;
+                return true;
+            case kSINumberFloat64Type:
+                theScalar->value.doubleValue = INFINITY * multiplier;
+                return true;
+            case kSINumberComplex64Type:
+                theScalar->value.floatComplexValue = (float complex)(INFINITY * multiplier);
+                return true;
+            case kSINumberComplex128Type:
+                theScalar->value.doubleComplexValue = INFINITY * multiplier;
+                return true;
+        }
+    }
+
+    // Normal nth root operation for finite values
     switch (theScalar->type) {
         case kSINumberFloat32Type:
             theScalar->value.floatValue = powf(theScalar->value.floatValue, reciprocal) * multiplier;
@@ -2023,6 +2497,21 @@ OCStringRef SIScalarCopyUnitSymbol(SIScalarRef theScalar) {
 }
 OCStringRef SIScalarCreateStringValueWithFormat(SIScalarRef theScalar, OCStringRef format) {
     if (theScalar == NULL) return STR("");
+
+    // Check if the scalar is infinite and return infinity symbol with unit
+    if (SIScalarIsInfinite(theScalar)) {
+        OCStringRef unit_symbol = SIScalarCopyUnitSymbol(theScalar);
+        OCMutableStringRef cf_string = OCStringCreateMutable(0);
+        OCStringAppend(cf_string, STR("∞"));
+        if (theScalar->unit) {
+            OCStringAppend(cf_string, STR(" "));
+            OCStringAppend(cf_string, unit_symbol);
+        }
+        OCStringTrimWhitespace(cf_string);
+        OCRelease(unit_symbol);
+        return cf_string;
+    }
+
     OCStringRef unit_symbol = SIScalarCopyUnitSymbol(theScalar);
     switch (theScalar->type) {
         case kSINumberFloat32Type: {

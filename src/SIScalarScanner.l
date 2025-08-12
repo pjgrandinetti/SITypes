@@ -3,6 +3,7 @@
 %option nounput
 %option noinput
 %{
+    #include <math.h>
     #include "SITypes.h"
     #include "SIScalarParser.h"
     #include "SIScalarParser.tab.h"
@@ -86,6 +87,18 @@ STRING \[[()a-zA-Z][()a-zA-Z0-9]*\*?[()a-zA-Z0-9]*\]
 "nmr"           {sislval.const_fn = BC_nmr; return CONST_FUNC;}
 "spin"         {sislval.const_fn = BC_Isotope_Spin; return CONST_FUNC;}
 "t_½"         {sislval.const_fn = BC_Isotope_HalfLife; return CONST_FUNC;}
+
+"inf"|"∞"       {
+    SIScalarRef d = SIScalarCreateWithDoubleComplex(INFINITY, NULL);
+    if(d) OCAutorelease(d);
+    sislval.d = d;
+    return SCALAR;
+}
+
+("inf"|"∞")[ ]*/{UNIT} {
+    temp = INFINITY;
+    BEGIN(together);
+}
 
 "&hbar" {double multiplier = 1;
     SIUnitRef unit = SIUnitFromExpression(STR("ℏ"),&multiplier, &scalarError);

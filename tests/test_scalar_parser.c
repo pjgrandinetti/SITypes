@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>  // For isinf function
 #include "SITypes.h"
 #include "test_utils.h"  // Include the new test utils header
 bool test_scalar_parser_1(void) {
@@ -1156,6 +1157,316 @@ bool test_scalar_parser_13(void) {
     }
     OCRelease(expr_unit_symbol);
     OCRelease(expression);
+    printf("%s passed\n", __func__);
+    return true;
+}
+
+bool test_scalar_parser_infinity(void) {
+    printf("Running %s...\n", __func__);
+    OCStringRef err = NULL;
+
+    // Test 1: Basic infinity parsing - "inf"
+    printf("  Testing basic infinity parsing...\n");
+    SIScalarRef inf_scalar = SIScalarCreateFromExpression(STR("inf"), &err);
+    if (!inf_scalar) {
+        if (err) {
+            printf("Error parsing 'inf': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse 'inf'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double inf_value = SIScalarDoubleValue(inf_scalar);
+    if (!isinf(inf_value)) {
+        printf("%s failed: 'inf' did not produce infinity value: %f\n", __func__, inf_value);
+        OCRelease(inf_scalar);
+        return false;
+    }
+    printf("    inf = %f (isinf: %d)\n", inf_value, isinf(inf_value));
+    OCRelease(inf_scalar);
+
+    // Test 2: Unicode infinity symbol - "∞"
+    printf("  Testing Unicode infinity symbol...\n");
+    SIScalarRef unicode_inf = SIScalarCreateFromExpression(STR("∞"), &err);
+    if (!unicode_inf) {
+        if (err) {
+            printf("Error parsing '∞': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse '∞'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double unicode_inf_value = SIScalarDoubleValue(unicode_inf);
+    if (!isinf(unicode_inf_value)) {
+        printf("%s failed: '∞' did not produce infinity value: %f\n", __func__, unicode_inf_value);
+        OCRelease(unicode_inf);
+        return false;
+    }
+    printf("    ∞ = %f (isinf: %d)\n", unicode_inf_value, isinf(unicode_inf_value));
+    OCRelease(unicode_inf);
+
+    // Test 3: Negative infinity
+    printf("  Testing negative infinity...\n");
+    SIScalarRef neg_inf = SIScalarCreateFromExpression(STR("-inf"), &err);
+    if (!neg_inf) {
+        if (err) {
+            printf("Error parsing '-inf': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse '-inf'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double neg_inf_value = SIScalarDoubleValue(neg_inf);
+    if (!isinf(neg_inf_value) || neg_inf_value > 0) {
+        printf("%s failed: '-inf' did not produce negative infinity: %f\n", __func__, neg_inf_value);
+        OCRelease(neg_inf);
+        return false;
+    }
+    printf("    -inf = %f (isinf: %d, negative: %d)\n", neg_inf_value, isinf(neg_inf_value), neg_inf_value < 0);
+    OCRelease(neg_inf);
+
+    // Test 4: Infinity with units
+    printf("  Testing infinity with units...\n");
+    SIScalarRef inf_with_units = SIScalarCreateFromExpression(STR("inf m/s"), &err);
+    if (!inf_with_units) {
+        if (err) {
+            printf("Error parsing 'inf m/s': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse 'inf m/s'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double inf_units_value = SIScalarDoubleValue(inf_with_units);
+    if (!isinf(inf_units_value)) {
+        printf("%s failed: 'inf m/s' did not produce infinity: %f\n", __func__, inf_units_value);
+        OCRelease(inf_with_units);
+        return false;
+    }
+
+    // Check units are preserved
+    SIUnitRef inf_unit = SIQuantityGetUnit((SIQuantityRef)inf_with_units);
+    OCStringRef inf_unit_symbol = SIUnitCopySymbol(inf_unit);
+    const char* inf_symbol_str = OCStringGetCString(inf_unit_symbol);
+    printf("    inf m/s = %f %s\n", inf_units_value, inf_symbol_str);
+
+    if (strcmp(inf_symbol_str, "m/s") != 0) {
+        printf("%s failed: inf m/s units are '%s' (expected 'm/s')\n", __func__, inf_symbol_str);
+        OCRelease(inf_unit_symbol);
+        OCRelease(inf_with_units);
+        return false;
+    }
+    OCRelease(inf_unit_symbol);
+    OCRelease(inf_with_units);
+
+    // Test 5: Infinity arithmetic - addition
+    printf("  Testing infinity arithmetic - addition...\n");
+    SIScalarRef inf_plus_5 = SIScalarCreateFromExpression(STR("inf + 5"), &err);
+    if (!inf_plus_5) {
+        if (err) {
+            printf("Error parsing 'inf + 5': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse 'inf + 5'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double inf_plus_value = SIScalarDoubleValue(inf_plus_5);
+    if (!isinf(inf_plus_value)) {
+        printf("%s failed: 'inf + 5' did not produce infinity: %f\n", __func__, inf_plus_value);
+        OCRelease(inf_plus_5);
+        return false;
+    }
+    printf("    inf + 5 = %f (isinf: %d)\n", inf_plus_value, isinf(inf_plus_value));
+    OCRelease(inf_plus_5);
+
+    // Test 6: Infinity arithmetic - multiplication
+    printf("  Testing infinity arithmetic - multiplication...\n");
+    SIScalarRef inf_times_2 = SIScalarCreateFromExpression(STR("2 * inf"), &err);
+    if (!inf_times_2) {
+        if (err) {
+            printf("Error parsing '2 * inf': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse '2 * inf'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double inf_times_value = SIScalarDoubleValue(inf_times_2);
+    if (!isinf(inf_times_value)) {
+        printf("%s failed: '2 * inf' did not produce infinity: %f\n", __func__, inf_times_value);
+        OCRelease(inf_times_2);
+        return false;
+    }
+    printf("    2 * inf = %f (isinf: %d)\n", inf_times_value, isinf(inf_times_value));
+    OCRelease(inf_times_2);
+
+    // Test 7: Division by infinity (should give zero)
+    printf("  Testing division by infinity...\n");
+    SIScalarRef five_div_inf = SIScalarCreateFromExpression(STR("5 / inf"), &err);
+    if (!five_div_inf) {
+        if (err) {
+            printf("Error parsing '5 / inf': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse '5 / inf'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double div_inf_value = SIScalarDoubleValue(five_div_inf);
+    if (div_inf_value != 0.0) {
+        printf("%s failed: '5 / inf' did not produce zero: %f\n", __func__, div_inf_value);
+        OCRelease(five_div_inf);
+        return false;
+    }
+    printf("    5 / inf = %f\n", div_inf_value);
+    OCRelease(five_div_inf);
+
+    // Test 8: Division by zero (should give infinity)
+    printf("  Testing division by zero...\n");
+    SIScalarRef five_div_zero = SIScalarCreateFromExpression(STR("5 / 0"), &err);
+    if (!five_div_zero) {
+        if (err) {
+            printf("Error parsing '5 / 0': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse '5 / 0'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double div_zero_value = SIScalarDoubleValue(five_div_zero);
+    if (!isinf(div_zero_value)) {
+        printf("%s failed: '5 / 0' did not produce infinity: %f\n", __func__, div_zero_value);
+        OCRelease(five_div_zero);
+        return false;
+    }
+    printf("    5 / 0 = %f (isinf: %d)\n", div_zero_value, isinf(div_zero_value));
+    OCRelease(five_div_zero);
+
+    // Test 9: Infinity to the power (should remain infinity)
+    printf("  Testing infinity to the power...\n");
+    SIScalarRef inf_power = SIScalarCreateFromExpression(STR("(inf)^2"), &err);
+    if (!inf_power) {
+        if (err) {
+            printf("Error parsing '(inf)^2': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse '(inf)^2'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double inf_power_value = SIScalarDoubleValue(inf_power);
+    if (!isinf(inf_power_value)) {
+        printf("%s failed: '(inf)^2' did not produce infinity: %f\n", __func__, inf_power_value);
+        OCRelease(inf_power);
+        return false;
+    }
+    printf("    (inf)^2 = %f (isinf: %d)\n", inf_power_value, isinf(inf_power_value));
+    OCRelease(inf_power);
+
+    // Test 10: Complex expression with infinity and units
+    printf("  Testing complex expression with infinity and units...\n");
+    SIScalarRef complex_inf = SIScalarCreateFromExpression(STR("(inf m/s) * (2 s)"), &err);
+    if (!complex_inf) {
+        if (err) {
+            printf("Error parsing '(inf m/s) * (2 s)': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse '(inf m/s) * (2 s)'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double complex_inf_value = SIScalarDoubleValue(complex_inf);
+    if (!isinf(complex_inf_value)) {
+        printf("%s failed: '(inf m/s) * (2 s)' did not produce infinity: %f\n", __func__, complex_inf_value);
+        OCRelease(complex_inf);
+        return false;
+    }
+
+    // Check units are correct (should be m•s/s which equals m)
+    SIUnitRef complex_unit = SIQuantityGetUnit((SIQuantityRef)complex_inf);
+    OCStringRef complex_unit_symbol = SIUnitCopySymbol(complex_unit);
+    const char* complex_symbol_str = OCStringGetCString(complex_unit_symbol);
+    printf("    (inf m/s) * (2 s) = %f %s\n", complex_inf_value, complex_symbol_str);
+
+    // Accept either reduced form "m" or unreduced form "m•s/s"
+    if (strcmp(complex_symbol_str, "m") != 0 && strcmp(complex_symbol_str, "m•s/s") != 0) {
+        printf("%s failed: (inf m/s) * (2 s) units are '%s' (expected 'm' or 'm•s/s')\n", __func__, complex_symbol_str);
+        OCRelease(complex_unit_symbol);
+        OCRelease(complex_inf);
+        return false;
+    }
+    OCRelease(complex_unit_symbol);
+    OCRelease(complex_inf);
+
+    // Test 11: Functions with infinity (sqrt of infinity)
+    printf("  Testing functions with infinity...\n");
+    SIScalarRef sqrt_inf = SIScalarCreateFromExpression(STR("sqrt(inf)"), &err);
+    if (!sqrt_inf) {
+        if (err) {
+            printf("Error parsing 'sqrt(inf)': %s\n", OCStringGetCString(err));
+            OCRelease(err);
+        }
+        printf("%s failed: Failed to parse 'sqrt(inf)'\n", __func__);
+        return false;
+    }
+    if (err) {
+        OCRelease(err);
+        err = NULL;
+    }
+
+    double sqrt_inf_value = SIScalarDoubleValue(sqrt_inf);
+    if (!isinf(sqrt_inf_value)) {
+        printf("%s failed: 'sqrt(inf)' did not produce infinity: %f\n", __func__, sqrt_inf_value);
+        OCRelease(sqrt_inf);
+        return false;
+    }
+    printf("    sqrt(inf) = %f (isinf: %d)\n", sqrt_inf_value, isinf(sqrt_inf_value));
+    OCRelease(sqrt_inf);
+
     printf("%s passed\n", __func__);
     return true;
 }
