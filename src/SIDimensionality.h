@@ -111,6 +111,8 @@ bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
                                          int8_t temperature_exponent,
                                          int8_t amount_exponent,
                                          int8_t luminous_intensity_exponent);
+/** @brief Returns true if dimensionality can be reduced by canceling common factors. */
+bool SIDimensionalityCanBeReduced(SIDimensionalityRef theDim);
 #pragma mark Operations
 /** @brief Returns the canonical dimensionless dimensionality. */
 SIDimensionalityRef SIDimensionalityDimensionless(void);

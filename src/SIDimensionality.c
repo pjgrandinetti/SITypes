@@ -408,6 +408,24 @@ bool SIDimensionalityHasSameReducedDimensionality(SIDimensionalityRef theDim1, S
     }
     return true;
 }
+bool SIDimensionalityCanBeReduced(SIDimensionalityRef theDim) {
+    IF_NO_OBJECT_EXISTS_RETURN(theDim, false);
+
+    // A dimensionality can be reduced if there are common factors
+    // between numerator and denominator exponents for any base dimension
+    for (SIBaseDimensionIndex index = 0; index < BASE_DIMENSION_COUNT; index++) {
+        uint8_t num_exp = theDim->num_exp[index];
+        uint8_t den_exp = theDim->den_exp[index];
+
+        // If both numerator and denominator have non-zero exponents,
+        // they can be reduced by their common factor
+        if (num_exp > 0 && den_exp > 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
 static bool SIDimensionalityHasExponents(SIDimensionalityRef theDim,
                                          uint8_t mass_num_exp, uint8_t mass_den_exp,
                                          uint8_t length_num_exp, uint8_t length_den_exp,
