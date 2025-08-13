@@ -244,11 +244,11 @@ static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
     if (name)
         theUnit->name = OCStringCreateCopy(name);
     else
-        theUnit->name = NULL;
+        theUnit->name = STR("");
     if (plural_name)
         theUnit->plural_name = OCStringCreateCopy(plural_name);
     else
-        theUnit->plural_name = NULL;
+        theUnit->plural_name = STR("");;
     if (symbol)
         theUnit->symbol = OCStringCreateCopy(symbol);
     else
