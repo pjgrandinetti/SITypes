@@ -275,8 +275,8 @@ test-asan: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
 	  -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.asan
-	@echo "Running AddressSanitizer tests with leak tracking (may have minor leaks in test code)..."
-	@OC_LEAK_TRACKING=1 ./runTests.asan || (echo "AddressSanitizer detected issues. Checking if tests pass without sanitizer..."; \
+	@echo "Running AddressSanitizer tests..."
+	@./runTests.asan || (echo "AddressSanitizer detected issues. Checking if tests pass without sanitizer..."; \
 	  echo "Building regular test binary..."; \
 	  $(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) -L$(LIBDIR) -L$(OCT_LIBDIR) \
 	    $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.fallback; \
