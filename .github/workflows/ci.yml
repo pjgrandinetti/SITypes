@@ -58,10 +58,10 @@ jobs:
           echo "Runner OS: $RUNNER_OS"
           echo "PATH: $PATH"
           which clang || echo "clang not found"
-          which bison || echo "bison not found" 
+          which bison || echo "bison not found"
           which flex || echo "flex not found"
           echo "=============================="
-          
+
           make clean
           echo "=== Starting octypes step ==="
           make octypes
@@ -73,13 +73,13 @@ jobs:
           if [[ "$RUNNER_OS" == "macOS" ]]; then
             echo "Running regular tests on macOS (skipping AddressSanitizer due to CI limitations)"
             make test
-          else  
+          else
             echo "Running AddressSanitizer tests on Linux"
             make test-asan
           fi
           echo "=== Starting install-shared step ==="
           make install-shared
-          
+
           # Verify libraries were created
           echo "=== Verifying build results ==="
           ls -la install/lib/
@@ -126,7 +126,7 @@ jobs:
                        -Wno-sign-compare -Wno-unused-parameter \
                        -Wno-missing-field-initializers" \
                LEX=flex YACC=bison
-          # Both libSITypes.a and libSITypes.dll are in install/lib/
+          # Libraries are in install/lib/: libSITypes.a, libSITypes.dll, and libSITypes.dll.a
 
       - name: Upload library artifacts (ARM64)
         if: matrix.arch == 'arm64'
@@ -180,7 +180,7 @@ jobs:
       - name: Package libraries into ZIPs
         run: |
           mkdir -p packages
-          
+
           # Debug: show what artifacts we downloaded
           echo "=== Downloaded artifacts ==="
           ls -la artifacts/
@@ -191,16 +191,16 @@ jobs:
             fi
           done
           echo "========================="
-          
+
           for osdir in artifacts/*; do
             if [ ! -d "$osdir" ] || [[ "$osdir" == *"-headers" ]]; then
               continue
             fi
-            
+
             os=$(basename "$osdir")
             # Strip the libSITypes- prefix to get clean platform name
             platform=${os#libSITypes-}
-            
+
             # Map platform labels to clean names for zip files
             case "$platform" in
               "ubuntu-latest.x64") zipname="ubuntu-latest.x64" ;;
@@ -209,12 +209,12 @@ jobs:
               "windows-latest") zipname="windows-latest" ;;
               *) zipname="$platform" ;;
             esac
-            
+
             zipfile="packages/libSITypes-${zipname}.zip"
 
             # Find all library files and package them
             files_to_zip=()
-            
+
             # Try different possible locations for library files
             for pattern in "${osdir}/libSITypes.*" "${osdir}/install/lib/libSITypes.*"; do
               for lib in $pattern; do
@@ -228,7 +228,7 @@ jobs:
               echo "Skipping $osdir (no library files to package)"
               continue
             fi
-            
+
             echo "Creating $zipfile with files: ${files_to_zip[@]}"
 
             if [[ "$zipname" == "windows-latest" ]]; then
@@ -241,7 +241,7 @@ jobs:
               zip -j "${zipfile}" "${files_to_zip[@]}"
             fi
           done
-          
+
           # Debug: show what packages were created
           echo "=== Created packages ==="
           ls -la packages/

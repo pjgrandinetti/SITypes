@@ -297,6 +297,9 @@ install: $(LIBDIR)/libSITypes.a $(SHLIB)
 	cp $(LIBDIR)/libSITypes.a $(INSTALL_LIB_DIR)/
 	cp $(SHLIB) $(INSTALL_LIB_DIR)/
 	cp src/*.h $(INSTALL_INC_DIR)/
+ifneq ($(findstring MINGW,$(UNAME_S)),)
+	@if [ -f $(LIBDIR)/libSITypes.dll.a ]; then cp $(LIBDIR)/libSITypes.dll.a $(INSTALL_LIB_DIR)/; fi
+endif
 
 # Install both static and shared libraries (alias for install)
 install-shared: install
