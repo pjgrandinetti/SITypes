@@ -20,9 +20,6 @@ jobs:
           - os: ubuntu-latest
             arch: x86_64
             label: ubuntu-latest.x64
-          - os: ubuntu-latest
-            arch: arm64
-            label: ubuntu-latest.arm64
           - os: macos-latest
             arch: x86_64
             label: macos-latest
@@ -33,23 +30,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      # ARM64 builds via QEMU + Docker
-      - name: Set up QEMU emulation
-        if: matrix.arch == 'arm64'
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: linux/arm64
-      - name: Install QEMU binfmt handlers
-        if: matrix.arch == 'arm64'
-        run: docker run --rm --privileged tonistiigi/binfmt --install all
-      - name: Build in ARM64 container
-        if: matrix.arch == 'arm64'
-        run: |
-          docker run --rm --platform=linux/arm64 \
-            -v ${{ github.workspace }}:/src -w /src ubuntu:22.04 bash -lc "\
-              apt-get update && apt-get install -y curl clang make flex bison unzip && \
-              make clean && make octypes && make install-shared"
 
       - name: Build & test on Linux/macOS
         if: runner.os != 'Windows' && matrix.arch == 'x86_64'
@@ -123,15 +103,6 @@ jobs:
                LEX=flex YACC=bison
           # Libraries are in install/lib/: libSITypes.a, libSITypes.dll, and libSITypes.dll.a
 
-      - name: Upload library artifacts (ARM64)
-        if: matrix.arch == 'arm64'
-        uses: actions/upload-artifact@v4
-        with:
-          name: libSITypes-${{ matrix.label }}
-          path: |
-            install/lib/libSITypes.a
-            install/lib/libSITypes.*
-
       - name: Upload library artifacts (x86_64)
         if: matrix.arch == 'x86_64'
         uses: actions/upload-artifact@v4
@@ -155,9 +126,41 @@ jobs:
           name: libSITypes-headers
           path: header-pkg/libSITypes-headers.zip
 
+  # ARM64 Linux build: only run on releases (tags) for faster development cycles
+  build-arm64:
+    name: Build & Test (ubuntu-latest.arm64)
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up QEMU emulation
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/arm64
+
+      - name: Install QEMU binfmt handlers
+        run: docker run --rm --privileged tonistiigi/binfmt --install all
+
+      - name: Build in ARM64 container
+        run: |
+          docker run --rm --platform=linux/arm64 \
+            -v ${{ github.workspace }}:/src -w /src ubuntu:22.04 bash -lc "\
+              apt-get update && apt-get install -y curl clang make flex bison unzip && \
+              make clean && make octypes && make install-shared"
+
+      - name: Upload library artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: libSITypes-ubuntu-latest.arm64
+          path: |
+            install/lib/libSITypes.a
+            install/lib/libSITypes.*
+
   release:
     name: Package & Release
-    needs: [build]
+    needs: [build, build-arm64]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
