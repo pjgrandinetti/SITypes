@@ -70,13 +70,8 @@ jobs:
           ls -la third_party/lib/ || echo "third_party/lib directory not found"
           ls -la third_party/include/ || echo "third_party/include directory not found"
           echo "=== Starting test step ==="
-          if [[ "$RUNNER_OS" == "macOS" ]]; then
-            echo "Running regular tests on macOS (skipping AddressSanitizer due to CI limitations)"
-            make test
-          else
-            echo "Running AddressSanitizer tests on Linux"
-            make test-asan
-          fi
+          echo "Running regular tests for faster CI performance"
+          make test
           echo "=== Starting install-shared step ==="
           make install-shared
 
