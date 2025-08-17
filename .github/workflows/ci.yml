@@ -186,7 +186,8 @@ jobs:
           set -euxo pipefail
           docker run --rm --platform=linux/arm64 \
             -v ${{ github.workspace }}:/src -w /src ubuntu:22.04 bash -lc "\
-              apt-get update && apt-get install -y clang make flex bison unzip && \
+              apt-get update && apt-get install -y curl ca-certificates clang make flex bison unzip && \
+              curl --version && \
               make clean && make octypes && make test CC=clang && make install-shared CC=clang && \
               test -f install/lib/libSITypes.a && test -f install/lib/libSITypes.so"
 
@@ -244,4 +245,3 @@ jobs:
           files: packages/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
