@@ -2,19 +2,29 @@ name: CI & Release
 
 on:
   push:
-    branches:
-      - master
-    tags:
-      - 'v*.*.*'
+    branches: [ master ]
+    tags: [ 'v*.*.*' ]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
   pull_request:
-    branches:
-      - master
+    branches: [ master ]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     name: Build & Test (${{ matrix.label }})
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
@@ -26,226 +36,207 @@ jobs:
           - os: windows-latest
             arch: x86_64
             label: windows-latest
+    env:
+      MAKEFLAGS: -j2
+      CCACHE_BASEDIR: ${{ github.workspace }}
+      CCACHE_COMPRESS: "1"
+      CCACHE_MAXSIZE: "200M"
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
 
-      - name: Build & test on Linux/macOS
-        if: runner.os != 'Windows' && matrix.arch == 'x86_64'
+      # ---------- Linux ----------
+      - name: Install deps (Linux)
+        if: runner.os == 'Linux'
         run: |
-          echo "=== Build Environment Info ==="
-          echo "Runner OS: $RUNNER_OS"
-          echo "PATH: $PATH"
-          which clang || echo "clang not found"
-          which bison || echo "bison not found"
-          which flex || echo "flex not found"
-          echo "=============================="
+          sudo apt-get update
+          sudo apt-get install -y clang make flex bison unzip ccache
 
-          make clean
-          echo "=== Starting octypes step ==="
-          make octypes
-          echo "=== octypes completed, checking dependencies ==="
-          ls -la third_party/ || echo "third_party directory not found"
-          ls -la third_party/lib/ || echo "third_party/lib directory not found"
-          ls -la third_party/include/ || echo "third_party/include directory not found"
-          echo "=== Starting test step ==="
-          echo "Running regular tests for faster CI performance"
-          make test
-          echo "=== Starting install-shared step ==="
-          make install-shared
+      # ---------- macOS ----------
+      - name: Install deps (macOS)
+        if: runner.os == 'macOS'
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+          HOMEBREW_NO_INSTALL_CLEANUP: "1"
+        run: |
+          brew install flex bison ccache
+          echo "$(brew --prefix bison)/bin" >> "$GITHUB_PATH"
+          echo "$(brew --prefix flex)/bin"  >> "$GITHUB_PATH"
 
-          # Verify libraries were created
-          echo "=== Verifying build results ==="
-          ls -la install/lib/
-          test -f install/lib/libSITypes.a || (echo "Static library not found!" && exit 1)
-          if [[ "$RUNNER_OS" == "macOS" ]]; then
-            test -f install/lib/libSITypes.dylib || (echo "macOS shared library not found!" && exit 1)
-          else
-            test -f install/lib/libSITypes.so || (echo "Linux shared library not found!" && exit 1)
-          fi
-          echo "All required libraries found!"
-          # Both libSITypes.a and libSITypes.so/.dylib are in install/lib/
-
+      # ---------- Windows ----------
       - name: Set up MSYS2 & MinGW (Windows)
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
           update: true
-          install: |
+          cache: true
+          install: >
             mingw-w64-x86_64-toolchain
             make
             flex
             bison
             unzip
+            mingw-w64-x86_64-ccache
 
-      - name: Build & test on Windows
+      # ---------- Caches (speed + save minutes) ----------
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.ccache
+            C:\msys64\home\runneradmin\.ccache
+          key: ccache-${{ runner.os }}-${{ hashFiles('**/Makefile', 'src/**/*.c', 'src/**/*.h', 'tests/**/*.c', 'tests/**/*.h') }}
+          restore-keys: |
+            ccache-${{ runner.os }}-
+
+      - name: Cache third_party (OCTypes zips + extracted)
+        uses: actions/cache@v4
+        with:
+          path: third_party
+          key: tp-${{ runner.os }}-${{ hashFiles('SITypes/Makefile', 'Makefile', '.github/workflows/**') }}
+          restore-keys: |
+            tp-${{ runner.os }}-
+
+      # ---------- Build & Test ----------
+      - name: Build & test (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          set -euxo pipefail
+          ccache --zero-stats || true
+          make clean
+          make octypes
+          make test CC="ccache clang"
+          make install-shared CC="ccache clang"
+          ccache --show-stats || true
+          # Verify libs
+          test -f install/lib/libSITypes.a
+          if [ "$RUNNER_OS" = "macOS" ]; then
+            test -f install/lib/libSITypes.dylib
+          else
+            test -f install/lib/libSITypes.so
+          fi
+
+      - name: Build & test (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
         run: |
+          set -euxo pipefail
+          ccache --zero-stats || true
           make clean
-          # Ensure OCTypes dependencies are available
-          make octypes CC=gcc \
-               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra \
-                       -Wno-sign-compare -Wno-unused-parameter \
-                       -Wno-missing-field-initializers" \
+          make octypes CC="ccache gcc" \
+               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers" \
                LEX=flex YACC=bison
-          make test CC=gcc \
-               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra \
-                       -Wno-sign-compare -Wno-unused-parameter \
-                       -Wno-missing-field-initializers" \
+          make test CC="ccache gcc" \
+               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers" \
                LEX=flex YACC=bison
-          make install-shared CC=gcc \
-               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra \
-                       -Wno-sign-compare -Wno-unused-parameter \
-                       -Wno-missing-field-initializers" \
+          make install-shared CC="ccache gcc" \
+               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers" \
                LEX=flex YACC=bison
-          # Libraries are in install/lib/: libSITypes.a, libSITypes.dll, and libSITypes.dll.a
+          ccache --show-stats || true
+          # Verify libs
+          test -f install/lib/libSITypes.a
+          test -f install/lib/libSITypes.dll
 
-      - name: Upload library artifacts (x86_64)
-        if: matrix.arch == 'x86_64'
+      # ---------- Artifacts (keep for PRs by default) ----------
+      - name: Upload library artifacts
         uses: actions/upload-artifact@v4
         with:
           name: libSITypes-${{ matrix.label }}
-          path: |
-            install/lib/libSITypes.a
-            install/lib/libSITypes.*
+          path: install/lib/libSITypes.*
+          compression-level: 9
+          if-no-files-found: error
 
-      # Package & upload public headers on Ubuntu only
-      - name: Package public headers
-        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x86_64'
+      # Headers only once (Ubuntu) to avoid duplication
+      - name: Package public headers (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
         run: |
           mkdir -p header-pkg/include
           cp src/*.h header-pkg/include/
           zip -j header-pkg/libSITypes-headers.zip header-pkg/include/*.h
-      - name: Upload headers artifact
-        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x86_64'
+      - name: Upload headers artifact (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: libSITypes-headers
           path: header-pkg/libSITypes-headers.zip
+          compression-level: 9
 
-  # ARM64 Linux build: only run on releases (tags) for faster development cycles
+  # Arm64 Linux only on tags to save minutes
   build-arm64:
+    if: startsWith(github.ref, 'refs/tags/')
     name: Build & Test (ubuntu-latest.arm64)
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    timeout-minutes: 30
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
 
-      - name: Set up QEMU emulation
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
           platforms: linux/arm64
 
-      - name: Install QEMU binfmt handlers
-        run: docker run --rm --privileged tonistiigi/binfmt --install all
-
-      - name: Build in ARM64 container
+      - name: Build & test in ARM64 container
         run: |
+          set -euxo pipefail
           docker run --rm --platform=linux/arm64 \
             -v ${{ github.workspace }}:/src -w /src ubuntu:22.04 bash -lc "\
-              apt-get update && apt-get install -y curl clang make flex bison unzip && \
-              make clean && make octypes && make install-shared"
+              apt-get update && apt-get install -y clang make flex bison unzip && \
+              make clean && make octypes && make test CC=clang && make install-shared CC=clang && \
+              test -f install/lib/libSITypes.a && test -f install/lib/libSITypes.so"
 
-      - name: Upload library artifacts
+      - name: Upload ARM64 artifacts
         uses: actions/upload-artifact@v4
         with:
           name: libSITypes-ubuntu-latest.arm64
-          path: |
-            install/lib/libSITypes.a
-            install/lib/libSITypes.*
+          path: install/lib/libSITypes.*
+          compression-level: 9
+          if-no-files-found: error
 
   release:
+    if: startsWith(github.ref, 'refs/tags/')
     name: Package & Release
     needs: [build, build-arm64]
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
     steps:
-      - name: Download build artifacts
+      - name: Install zip
+        run: sudo apt-get update && sudo apt-get install -y zip
+
+      - name: Download artifacts
         uses: actions/download-artifact@v5
         with:
           path: artifacts
 
-      # Copy the header bundle into the packages folder
       - name: Copy header bundle
         run: |
           mkdir -p packages
-          cp artifacts/libSITypes-headers/libSITypes-headers.zip packages/
+          cp artifacts/libSITypes-headers/libSITypes-headers.zip packages/ || true
 
       - name: Package libraries into ZIPs
         run: |
+          set -euxo pipefail
           mkdir -p packages
-
-          # Debug: show what artifacts we downloaded
-          echo "=== Downloaded artifacts ==="
-          ls -la artifacts/
           for osdir in artifacts/*; do
-            if [ -d "$osdir" ]; then
-              echo "Contents of $osdir:"
-              find "$osdir" -name "libSITypes.*" -o -name "*.a" -o -name "*.so" -o -name "*.dylib" -o -name "*.dll"
-            fi
+            [ -d "$osdir" ] || continue
+            base="$(basename "$osdir")"
+            platform="${base#libSITypes-}"
+            [ "$platform" = "headers" ] && continue
+            files=( "$osdir"/libSITypes.* )
+            keep=()
+            for f in "${files[@]}"; do [ -f "$f" ] && keep+=("$f"); done
+            [ ${#keep[@]} -gt 0 ] || { echo "Skipping $osdir (no library files)"; continue; }
+            zip -j "packages/libSITypes-${platform}.zip" "${keep[@]}"
           done
-          echo "========================="
-
-          for osdir in artifacts/*; do
-            if [ ! -d "$osdir" ] || [[ "$osdir" == *"-headers" ]]; then
-              continue
-            fi
-
-            os=$(basename "$osdir")
-            # Strip the libSITypes- prefix to get clean platform name
-            platform=${os#libSITypes-}
-
-            # Map platform labels to clean names for zip files
-            case "$platform" in
-              "ubuntu-latest.x64") zipname="ubuntu-latest.x64" ;;
-              "ubuntu-latest.arm64") zipname="ubuntu-latest.arm64" ;;
-              "macos-latest") zipname="macos-latest" ;;
-              "windows-latest") zipname="windows-latest" ;;
-              *) zipname="$platform" ;;
-            esac
-
-            zipfile="packages/libSITypes-${zipname}.zip"
-
-            # Find all library files and package them
-            files_to_zip=()
-
-            # Try different possible locations for library files
-            for pattern in "${osdir}/libSITypes.*" "${osdir}/install/lib/libSITypes.*"; do
-              for lib in $pattern; do
-                if [ -f "$lib" ]; then
-                  files_to_zip+=("$lib")
-                fi
-              done
-            done
-
-            if [ ${#files_to_zip[@]} -eq 0 ]; then
-              echo "Skipping $osdir (no library files to package)"
-              continue
-            fi
-
-            echo "Creating $zipfile with files: ${files_to_zip[@]}"
-
-            if [[ "$zipname" == "windows-latest" ]]; then
-              # Use PowerShell for Windows
-              file_list=$(printf "'%s'," "${files_to_zip[@]}")
-              file_list=${file_list%,}  # Remove trailing comma
-              pwsh -Command "Compress-Archive -Path ${file_list} -DestinationPath '${zipfile}'"
-            else
-              # Use zip for Unix-like systems
-              zip -j "${zipfile}" "${files_to_zip[@]}"
-            fi
-          done
-
-          # Debug: show what packages were created
-          echo "=== Created packages ==="
           ls -la packages/
-          echo "========================="
 
-      - name: Create or update GitHub Release and upload assets
+      - name: Create/Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
@@ -253,3 +244,4 @@ jobs:
           files: packages/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
