@@ -74,6 +74,13 @@ TEST_OBJ     := $(patsubst $(TEST_SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(TEST_C_FILES))
 # ─────────────────────────────────────────────────────────────────────────────
 # Platform / linking
 # ─────────────────────────────────────────────────────────────────────────────
+
+# Version information - extracted from git tags or manual override
+VERSION ?= $(shell git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || echo "0.1.3")
+VERSION_MAJOR := $(shell echo $(VERSION) | cut -d. -f1)
+VERSION_MINOR := $(shell echo $(VERSION) | cut -d. -f2)
+VERSION_PATCH := $(shell echo $(VERSION) | cut -d. -f3)
+
 UNAME_S := $(shell uname -s)
 ARCH    := $(shell uname -m)
 
@@ -82,7 +89,7 @@ ifeq ($(UNAME_S),Darwin)
   OCTYPES_LINKLIB := $(OCT_LIBDIR)/libOCTypes.a
   SHLIB_EXT      = .dylib
   SHLIB_FLAGS    = -dynamiclib -fPIC
-  SHLIB_LDFLAGS  = -install_name @rpath/libSITypes.dylib
+  SHLIB_LDFLAGS  = -install_name @rpath/libSITypes.dylib -current_version $(VERSION) -compatibility_version $(VERSION_MAJOR).$(VERSION_MINOR)
 else ifeq ($(UNAME_S),Linux)
   ifeq ($(ARCH),aarch64)
     OCT_LIB_BIN := libOCTypes-ubuntu-latest.arm64.zip
