@@ -108,6 +108,8 @@ else ifneq ($(findstring MINGW,$(UNAME_S)),)
   SHLIB_EXT      = .dll
   SHLIB_FLAGS    = -shared -Wl,--export-all-symbols -Wl,--enable-auto-import
   SHLIB_LDFLAGS  = -Wl,--out-implib=$(LIBDIR)/libSITypes.dll.a
+  # Suppress #pragma mark warnings on Windows/MinGW
+  CFLAGS += -Wno-unknown-pragmas
 else
   OCTYPES_LINKLIB := -lOCTypes
   SHLIB_EXT      = .so
