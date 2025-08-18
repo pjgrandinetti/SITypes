@@ -39,7 +39,7 @@ BUILD_DIR    := build
 OBJ_DIR      := $(BUILD_DIR)/obj
 GEN_DIR      := $(BUILD_DIR)/gen
 BIN_DIR      := $(BUILD_DIR)/bin
-LIBDIR       := lib
+LIBDIR       := $(BUILD_DIR)/lib
 
 CPPFLAGS := -I. -I$(SRC_DIR) -I$(GEN_DIR) -I$(TP_INCLUDE_DIR) -I$(OCT_INCLUDE)
 CFLAGS   := -fPIC -O3 -Wall -Wextra \
@@ -362,9 +362,10 @@ clean-objects:
 	$(RM) $(OBJ) $(TEST_OBJ)
 
 clean:
-	$(RM) -r $(BUILD_DIR) $(LIBDIR) runTests runTests.asan runTests.debug *.dSYM
+	$(RM) -r $(BUILD_DIR) runTests runTests.asan runTests.debug *.dSYM
 	$(RM) *.tab.* *Scanner.c *.d core.*
 	$(RM) -rf docs/doxygen docs/_build docs/html build-xcode install
+	$(RM) -r lib  # Remove old lib directory if it exists
 	$(RM) rebuild.log
 
 clean-docs:
