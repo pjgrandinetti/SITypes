@@ -333,7 +333,7 @@ test-werror: clean all test
 # ─────────────────────────────────────────────────────────────────────────────
 # Install
 # ─────────────────────────────────────────────────────────────────────────────
-INSTALL_DIR     := install
+INSTALL_DIR     ?= install
 INSTALL_LIB_DIR := $(INSTALL_DIR)/lib
 INSTALL_INC_DIR := $(INSTALL_DIR)/include/SITypes
 
