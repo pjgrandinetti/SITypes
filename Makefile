@@ -104,7 +104,7 @@ else ifeq ($(UNAME_S),Linux)
   SHLIB_LDFLAGS  =
 else ifneq ($(findstring MINGW,$(UNAME_S)),)
   OCT_LIB_BIN := libOCTypes-windows-latest.zip
-  OCTYPES_LINKLIB := $(OCT_LIBDIR)/libOCTypes.a
+  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
   SHLIB_EXT      = .dll
   SHLIB_FLAGS    = -shared -Wl,--export-all-symbols -Wl,--enable-auto-import
   SHLIB_LDFLAGS  = -Wl,--out-implib=$(LIBDIR)/libSITypes.dll.a
