@@ -6,7 +6,13 @@
 .DEFAULT_GOAL := all
 .SUFFIXES:
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ──────────────────────runTests: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
+	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) \
+	  $(RPATH_FLAGS) -lm -o $@
+
+test: runTests copy-dlls
+	./runTests─────────────────────────────────────────────────
 # Paths & third_party layout
 # ─────────────────────────────────────────────────────────────────────────────
 XCODE_BUILD := build-xcode
@@ -87,34 +93,17 @@ UNAME_S := $(shell uname -s)
 ARCH    := $(shell uname -m)
 
 ifeq ($(UNAME_S),Darwin)
-  OCT_LIB_BIN := libOCTypes-macos-latest.zip
-  OCTYPES_LINKLIB := $(OCT_LIBDIR)/libOCTypes.a
-  SHLIB_EXT      = .dylib
-  SHLIB_FLAGS    = -dynamiclib -fPIC
-  SHLIB_LDFLAGS  = -install_name @rpath/libSITypes.dylib -current_version $(VERSION) -compatibility_version $(VERSION_MAJOR).$(VERSION_MINOR)
-else ifeq ($(UNAME_S),Linux)
-  ifeq ($(ARCH),aarch64)
-    OCT_LIB_BIN := libOCTypes-ubuntu-latest.arm64.zip
-  else
-    OCT_LIB_BIN := libOCTypes-ubuntu-latest.x64.zip
-  endif
-  OCTYPES_LINKLIB := $(OCT_LIBDIR)/libOCTypes.a
-  SHLIB_EXT      = .so
-  SHLIB_FLAGS    = -shared -fPIC
-  SHLIB_LDFLAGS  =
-else ifneq ($(findstring MINGW,$(UNAME_S)),)
-  OCT_LIB_BIN := libOCTypes-windows-latest.zip
   OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
-  SHLIB_EXT      = .dll
-  SHLIB_FLAGS    = -shared -Wl,--export-all-symbols -Wl,--enable-auto-import
-  SHLIB_LDFLAGS  = -Wl,--out-implib=$(LIBDIR)/libSITypes.dll.a
-  # Suppress #pragma mark warnings on Windows/MinGW
-  CFLAGS += -Wno-unknown-pragmas
+  RPATH_FLAGS     := -Wl,-rpath,$(OCT_LIBDIR)
+else ifeq ($(UNAME_S),Linux)
+  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
+  RPATH_FLAGS     := -Wl,-rpath,$(OCT_LIBDIR)
+else ifneq ($(findstring MINGW,$(UNAME_S)),)
+  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
+  RPATH_FLAGS     := 
 else
-  OCTYPES_LINKLIB := -lOCTypes
-  SHLIB_EXT      = .so
-  SHLIB_FLAGS    = -shared -fPIC
-  SHLIB_LDFLAGS  =
+  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
+  RPATH_FLAGS     := 
 endif
 SHLIB := $(LIBDIR)/libSITypes$(SHLIB_EXT)
 
@@ -315,22 +304,21 @@ shared: $(SHLIB)
 
 # Windows: Copy required DLLs to the current directory for test executables  
 ifneq ($(findstring MINGW,$(UNAME_S)),)
+# Windows: Copy required DLLs to the current directory for test executables
+ifeq ($(findstring MINGW,$(UNAME_S)),MINGW)
 copy-dlls: octypes
-	@if [ -f $(OCT_LIBDIR)/libOCTypes.dll ]; then cp $(OCT_LIBDIR)/libOCTypes.dll .; fi
+	@if [ -f $(OCT_LIBDIR)/libOCTypes.dll ]; then cp $(OCT_LIBDIR)/libOCTypes.dll ./; fi
 else
 copy-dlls:
 	@# No-op on non-Windows platforms
 endif
 
-$(BIN_DIR)/runTests: $(LIBDIR)/libSITypes.a $(TEST_OBJ)
-	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-		$(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) -lm -o $@
-
-runTests: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls
+runTests: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o $@
+	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) \
+	  $(RPATH_FLAGS) -lm -o $@
 
-test: runTests
+test: runTests copy-dlls
 	./runTests
 
 test-debug: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls
