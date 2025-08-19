@@ -130,6 +130,9 @@ jobs:
           make octypes CC="ccache gcc" \
                CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unknown-pragmas" \
                LEX=flex YACC=bison
+          # Debug: Check what files are present in third_party/lib
+          echo "Contents of third_party/lib:"
+          ls -la third_party/lib/
           make test CC="ccache gcc" \
                CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unknown-pragmas" \
                LEX=flex YACC=bison
