@@ -150,7 +150,7 @@ OCT_HEADERS_ARCHIVE := $(TP_DIR)/$(OCT_HEADERS_ZIP)
 .PHONY: all dirs prepare test test-debug test-asan test-werror \
         install install-shared clean clean-objects clean-docs synclib docs \
         doxygen html xcode xcode-open xcode-run octypes octypes-refresh help \
-        format format-check lint pre-commit-install shared compdb rebuild-all copy-dlls
+        format format-check lint pre-commit-install shared compdb rebuild-all copy-dlls runTests
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Help
@@ -326,9 +326,11 @@ $(BIN_DIR)/runTests: $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 		$(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) -lm -o $@
 
-test: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls
+runTests: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests
+	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o $@
+
+test: runTests copy-dlls
 	./runTests
 
 test-debug: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls
