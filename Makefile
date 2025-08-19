@@ -150,7 +150,7 @@ OCT_HEADERS_ARCHIVE := $(TP_DIR)/$(OCT_HEADERS_ZIP)
 .PHONY: all dirs prepare test test-debug test-asan test-werror \
         install install-shared clean clean-objects clean-docs synclib docs \
         doxygen html xcode xcode-open xcode-run octypes octypes-refresh help \
-        format format-check lint pre-commit-install shared compdb rebuild-all
+        format format-check lint pre-commit-install shared compdb rebuild-all copy-dlls
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Help
@@ -312,20 +312,30 @@ shared: $(SHLIB)
 # ─────────────────────────────────────────────────────────────────────────────
 # Tests
 # ─────────────────────────────────────────────────────────────────────────────
+
+# Windows: Copy required DLLs to the current directory for test executables  
+ifneq ($(findstring MINGW,$(UNAME_S)),)
+copy-dlls: octypes
+	@if [ -f $(OCT_LIBDIR)/libOCTypes.dll ]; then cp $(OCT_LIBDIR)/libOCTypes.dll .; fi
+else
+copy-dlls:
+	@# No-op on non-Windows platforms
+endif
+
 $(BIN_DIR)/runTests: $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 		$(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) -lm -o $@
 
-test: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
+test: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls
 	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests
 	./runTests
 
-test-debug: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
+test-debug: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O0 -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.debug
 
-test-asan: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
+test-asan: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
 	  -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.asan
