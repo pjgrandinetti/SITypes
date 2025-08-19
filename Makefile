@@ -1,35 +1,23 @@
-# SITypes Makefile (drop-in replacement)
-# - Fetches latest OCTypes by default (or pin with OCT_RELEASE_TAG=vX.Y.Z)
-# - Force refresh with OCT_FORCE_FETCH=1 or `make octypes-refresh`
-# - Robust bison outputs (no mv race), supports Linux/macOS/Windows
-
 .DEFAULT_GOAL := all
 .SUFFIXES:
 
-# ──────────────────────runTests: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) \
-	  $(RPATH_FLAGS) -lm -o $@
-
-test: runTests copy-dlls
-	./runTests─────────────────────────────────────────────────
-# Paths & third_party layout
-# ─────────────────────────────────────────────────────────────────────────────
-XCODE_BUILD := build-xcode
-
-TP_DIR         := third_party
-TP_LIB_DIR     := $(TP_DIR)/lib
-TP_INCLUDE_DIR := $(TP_DIR)/include
-
-OCT_INCLUDE    := $(TP_INCLUDE_DIR)/OCTypes
-OCT_LIBDIR     := $(TP_LIB_DIR)
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Tools
-# ─────────────────────────────────────────────────────────────────────────────
+#──────── OS / toolchain detection ────────
 UNAME_S := $(shell uname -s)
+ARCH    := $(shell uname -m)
 
-CC     ?= clang
+# Compiler (prefer Homebrew LLVM on macOS if present, override with CC=..)
+ifeq ($(origin CC),default)
+  ifeq ($(UNAME_S),Darwin)
+    ifneq (,$(wildcard /opt/homebrew/opt/llvm/bin/clang))
+      CC := /opt/homebrew/opt/llvm/bin/clang
+    else
+      CC := clang
+    endif
+  else
+    CC := clang
+  endif
+endif
+
 AR     := ar
 LEX    := flex
 YACC   := bison
@@ -38,27 +26,79 @@ YFLAGS := -d
 RM      := rm -f
 MKDIR_P := mkdir -p
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Project structure
-# ─────────────────────────────────────────────────────────────────────────────
-SRC_DIR      := src
-TEST_SRC_DIR := tests
-BUILD_DIR    := build
-OBJ_DIR      := $(BUILD_DIR)/obj
-GEN_DIR      := $(BUILD_DIR)/gen
-BIN_DIR      := $(BUILD_DIR)/bin
-LIBDIR       := $(BUILD_DIR)/lib
+#──────── Layout ────────
+SRC_DIR         := src
+TEST_SRC_DIR    := tests
+BUILD_DIR       := build
+OBJ_DIR         := $(BUILD_DIR)/obj
+GEN_DIR         := $(BUILD_DIR)/gen
+BIN_DIR         := $(BUILD_DIR)/bin
+LIB_DIR         := $(BUILD_DIR)/lib
 
-CPPFLAGS := -I. -I$(SRC_DIR) -I$(GEN_DIR) -I$(TP_INCLUDE_DIR) -I$(OCT_INCLUDE)
+THIRD_PARTY_DIR := third_party
+TP_LIB_DIR      := $(THIRD_PARTY_DIR)/lib
+INCLUDE_DIR     := $(THIRD_PARTY_DIR)/include
+OCT_INCLUDE     := $(INCLUDE_DIR)/OCTypes
+OCT_LIBDIR      := $(TP_LIB_DIR)
+
+REQUIRED_DIRS := \
+  $(BUILD_DIR) $(OBJ_DIR) $(GEN_DIR) $(BIN_DIR) $(LIB_DIR) \
+  $(THIRD_PARTY_DIR) $(TP_LIB_DIR) $(INCLUDE_DIR) $(OCT_INCLUDE)
+
+#──────── Flags ────────
+CPPFLAGS := -I. -I$(SRC_DIR) -I$(GEN_DIR) -I$(INCLUDE_DIR) -I$(OCT_INCLUDE)
+
 CFLAGS   := -fPIC -O3 -Wall -Wextra \
             -Wno-sign-compare -Wno-unused-parameter \
             -Wno-missing-field-initializers -Wno-unused-function \
-            -MMD -MP -I$(OCT_INCLUDE)
-CFLAGS_DEBUG := -fPIC -O0 -g -Wall -Wextra -Werror -MMD -MP
+            -MMD -MP
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Sources
-# ─────────────────────────────────────────────────────────────────────────────
+# Linker group flags for Linux to resolve circular deps
+ifeq ($(UNAME_S),Linux)
+  GROUP_START := -Wl,--start-group
+  GROUP_END   := -Wl,--end-group
+else
+  GROUP_START :=
+  GROUP_END   :=
+endif
+
+#──────── Shared library settings + how to link OCTypes ────────
+
+# Version information - extracted from git tags or manual override
+VERSION ?= $(shell git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || echo "0.1.3")
+VERSION_MAJOR := $(shell echo $(VERSION) | cut -d. -f1)
+VERSION_MINOR := $(shell echo $(VERSION) | cut -d. -f2)
+VERSION_PATCH := $(shell echo $(VERSION) | cut -d. -f3)
+
+ifeq ($(UNAME_S),Darwin)
+  SHLIB_EXT     = .dylib
+  SHLIB_FLAGS   = -dynamiclib -fPIC
+  SHLIB_LDFLAGS = -install_name @rpath/libSITypes.dylib -current_version $(VERSION) -compatibility_version $(VERSION_MAJOR).$(VERSION_MINOR)
+  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
+  RPATH_FLAGS   = -Wl,-rpath,$(TP_LIB_DIR)
+else ifeq ($(UNAME_S),Linux)
+  SHLIB_EXT     = .so
+  SHLIB_FLAGS   = -shared -fPIC
+  SHLIB_LDFLAGS =
+  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
+  RPATH_FLAGS   = -Wl,-rpath,$(TP_LIB_DIR)
+else ifneq ($(findstring MINGW,$(UNAME_S)),)
+  SHLIB_EXT     = .dll
+  SHLIB_FLAGS   = -shared -Wl,--export-all-symbols -Wl,--enable-auto-import
+  SHLIB_LDFLAGS = -Wl,--out-implib=$(LIB_DIR)/libSITypes.dll.a
+  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
+  RPATH_FLAGS   =
+else
+  SHLIB_EXT     = .so
+  SHLIB_FLAGS   = -shared -fPIC
+  SHLIB_LDFLAGS =
+  OCTYPES_LINKLIB := -lOCTypes
+  RPATH_FLAGS   =
+endif
+
+SHLIB := $(LIB_DIR)/libSITypes$(SHLIB_EXT)
+
+#──────── Source discovery ────────
 LEX_SRC  := $(wildcard $(SRC_DIR)/*.l)
 YACC_SRC := $(wildcard $(SRC_DIR)/*Parser.y)
 
@@ -79,45 +119,20 @@ DEP := $(OBJ:.o=.d)
 TEST_C_FILES := $(wildcard $(TEST_SRC_DIR)/*.c)
 TEST_OBJ     := $(patsubst $(TEST_SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(TEST_C_FILES))
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Platform / linking
-# ─────────────────────────────────────────────────────────────────────────────
-
-# Version information - extracted from git tags or manual override
-VERSION ?= $(shell git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || echo "0.1.3")
-VERSION_MAJOR := $(shell echo $(VERSION) | cut -d. -f1)
-VERSION_MINOR := $(shell echo $(VERSION) | cut -d. -f2)
-VERSION_PATCH := $(shell echo $(VERSION) | cut -d. -f3)
-
-UNAME_S := $(shell uname -s)
-ARCH    := $(shell uname -m)
-
+#──────── Release asset names for OCTypes ────────
 ifeq ($(UNAME_S),Darwin)
-  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
-  RPATH_FLAGS     := -Wl,-rpath,$(OCT_LIBDIR)
+  OCT_LIB_BIN := libOCTypes-macos-latest.zip
+else ifeq ($(ARCH),aarch64)
+  OCT_LIB_BIN := libOCTypes-ubuntu-latest.arm64.zip
 else ifeq ($(UNAME_S),Linux)
-  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
-  RPATH_FLAGS     := -Wl,-rpath,$(OCT_LIBDIR)
+  OCT_LIB_BIN := libOCTypes-ubuntu-latest.x64.zip
 else ifneq ($(findstring MINGW,$(UNAME_S)),)
-  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
-  RPATH_FLAGS     := 
+  OCT_LIB_BIN := libOCTypes-windows-latest.zip
 else
-  OCTYPES_LINKLIB := -L$(OCT_LIBDIR) -lOCTypes
-  RPATH_FLAGS     := 
-endif
-SHLIB := $(LIBDIR)/libSITypes$(SHLIB_EXT)
-
-ifeq ($(UNAME_S),Linux)
-  GROUP_START := -Wl,--start-group
-  GROUP_END   := -Wl,--end-group
-else
-  GROUP_START :=
-  GROUP_END   :=
+  OCT_LIB_BIN := libOCTypes-ubuntu-latest.x64.zip
 endif
 
-# ─────────────────────────────────────────────────────────────────────────────
-# OCTypes release selection (latest by default) + force fetch support
-# ─────────────────────────────────────────────────────────────────────────────
+#──────── OCTypes release selection (latest by default) + force fetch support ────────
 # Pin with: make OCT_RELEASE_TAG=v0.1.3 octypes
 # Force refresh: make OCT_FORCE_FETCH=1 octypes  (or target octypes-refresh)
 OCT_RELEASE_TAG ?= latest
@@ -149,7 +164,7 @@ help:
 	@echo ""
 	@echo "Building:"
 	@echo "  all                 Build the complete SITypes library (default)"
-	@echo "  $(LIBDIR)/libSITypes.a  Build only the static library"
+	@echo "  $(LIB_DIR)/libSITypes.a  Build only the static library"
 	@echo "  shared              Build only the shared library"
 	@echo "  dirs                Create build directories"
 	@echo "  prepare             Generate parser/scanner files"
@@ -176,10 +191,10 @@ help:
 # ─────────────────────────────────────────────────────────────────────────────
 # Default build
 # ─────────────────────────────────────────────────────────────────────────────
-all: dirs octypes prepare $(LIBDIR)/libSITypes.a $(SHLIB)
+all: dirs octypes prepare $(LIB_DIR)/libSITypes.a $(SHLIB)
 
 dirs:
-	$(MKDIR_P) $(BUILD_DIR) $(OBJ_DIR) $(GEN_DIR) $(BIN_DIR) $(LIBDIR) $(TP_LIB_DIR) $(TP_INCLUDE_DIR)
+	$(MKDIR_P) $(BUILD_DIR) $(OBJ_DIR) $(GEN_DIR) $(BIN_DIR) $(LIB_DIR) $(TP_LIB_DIR) $(TP_INCLUDE_DIR)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # OCTypes: fetch/extract (latest by default)
@@ -286,7 +301,7 @@ $(OBJ_DIR)/%.o: $(TEST_SRC_DIR)/%.c | dirs
 # ─────────────────────────────────────────────────────────────────────────────
 # Libraries
 # ─────────────────────────────────────────────────────────────────────────────
-$(LIBDIR)/libSITypes.a: prepare $(OBJ)
+$(LIB_DIR)/libSITypes.a: prepare $(OBJ)
 	$(AR) rcs $@ $(filter %.o,$^)
 
 $(SHLIB): prepare $(OBJ)
@@ -302,7 +317,7 @@ shared: $(SHLIB)
 # Tests
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Windows: Copy required DLLs to the current directory for test executables  
+# Windows: Copy required DLLs to the current directory for test executables
 ifneq ($(findstring MINGW,$(UNAME_S)),)
 # Windows: Copy required DLLs to the current directory for test executables
 ifeq ($(findstring MINGW,$(UNAME_S)),MINGW)
@@ -312,27 +327,28 @@ else
 copy-dlls:
 	@# No-op on non-Windows platforms
 endif
+endif
 
-runTests: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
+runTests: octypes prepare $(LIB_DIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) \
+	  $(GROUP_START) $(LIB_DIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) \
 	  $(RPATH_FLAGS) -lm -o $@
 
 test: runTests copy-dlls
 	./runTests
 
-test-debug: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls
+test-debug: octypes prepare $(LIB_DIR)/libSITypes.a $(TEST_OBJ) copy-dlls
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O0 -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.debug
+	  $(GROUP_START) $(LIB_DIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.debug
 
-test-asan: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls
+test-asan: octypes prepare $(LIB_DIR)/libSITypes.a $(TEST_OBJ) copy-dlls
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
 	  -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.asan
+	  $(GROUP_START) $(LIB_DIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.asan
 	@echo "Running AddressSanitizer tests..."
 	@./runTests.asan || (echo "AddressSanitizer detected issues. Checking if tests pass without sanitizer..."; \
 	  echo "Building regular test binary..."; \
-	  $(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) -L$(LIBDIR) -L$(OCT_LIBDIR) \
+	  $(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) -L$(LIB_DIR) -L$(OCT_LIBDIR) \
 	    $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.fallback; \
 	  echo "Running functional verification..."; \
 	  ./runTests.fallback && echo "✓ All functionality tests pass - AddressSanitizer issues are minor" || \
@@ -348,13 +364,13 @@ INSTALL_DIR     ?= install
 INSTALL_LIB_DIR := $(INSTALL_DIR)/lib
 INSTALL_INC_DIR := $(INSTALL_DIR)/include/SITypes
 
-install: $(LIBDIR)/libSITypes.a $(SHLIB)
+install: $(LIB_DIR)/libSITypes.a $(SHLIB)
 	$(MKDIR_P) $(INSTALL_LIB_DIR) $(INSTALL_INC_DIR)
-	cp $(LIBDIR)/libSITypes.a $(INSTALL_LIB_DIR)/
+	cp $(LIB_DIR)/libSITypes.a $(INSTALL_LIB_DIR)/
 	cp $(SHLIB) $(INSTALL_LIB_DIR)/
 	cp src/*.h $(INSTALL_INC_DIR)/
 ifneq ($(findstring MINGW,$(UNAME_S)),)
-	@if [ -f $(LIBDIR)/libSITypes.dll.a ]; then cp $(LIBDIR)/libSITypes.dll.a $(INSTALL_LIB_DIR)/; fi
+	@if [ -f $(LIB_DIR)/libSITypes.dll.a ]; then cp $(LIB_DIR)/libSITypes.dll.a $(INSTALL_LIB_DIR)/; fi
 endif
 
 install-shared: install
