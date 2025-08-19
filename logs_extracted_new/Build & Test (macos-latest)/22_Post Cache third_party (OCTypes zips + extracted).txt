@@ -1,4 +1,0 @@
-﻿2025-08-19T01:33:42.0423760Z Post job cleanup.
-2025-08-19T01:33:42.1463090Z [command]/opt/homebrew/bin/gtar --posix -cf cache.tzst --exclude cache.tzst -P -C /Users/runner/work/SITypes/SITypes --files-from manifest.txt --delay-directory-restore --use-compress-program zstdmt
-2025-08-19T01:33:42.7120210Z Sent 719610 of 719610 (100.0%), 1.7 MBs/sec
-2025-08-19T01:33:42.8265940Z Cache saved with key: tp-macOS-142a9a7b4a2fdcd82f23c23679e92dd166c7c9337f7a756411286840109b85d4

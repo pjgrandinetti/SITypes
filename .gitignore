@@ -105,3 +105,9 @@ doxygen/html/.*
 /third_party/OCTypes/.DS_Store
 /third_party/OCTypes/
 /third_party/
+
+# === Log Files and Debug Artifacts ===
+
+logs_*.zip
+logs_extracted*/
+*.log
