@@ -1,0 +1,25 @@
+﻿2025-08-19T01:07:48.7155795Z ##[group]Run actions/upload-artifact@v4
+2025-08-19T01:07:48.7156114Z with:
+2025-08-19T01:07:48.7156326Z   name: libSITypes-headers
+2025-08-19T01:07:48.7156615Z   path: header-pkg/libSITypes-headers.zip
+2025-08-19T01:07:48.7156926Z   compression-level: 9
+2025-08-19T01:07:48.7157166Z   if-no-files-found: warn
+2025-08-19T01:07:48.7157411Z   overwrite: false
+2025-08-19T01:07:48.7157641Z   include-hidden-files: false
+2025-08-19T01:07:48.7157892Z env:
+2025-08-19T01:07:48.7158086Z   MAKEFLAGS: -j2
+2025-08-19T01:07:48.7158353Z   CCACHE_BASEDIR: /home/runner/work/SITypes/SITypes
+2025-08-19T01:07:48.7158692Z   CCACHE_COMPRESS: 1
+2025-08-19T01:07:48.7158918Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:07:48.7159140Z ##[endgroup]
+2025-08-19T01:07:48.9467040Z With the provided path, there will be 1 file uploaded
+2025-08-19T01:07:48.9472424Z Artifact name is valid!
+2025-08-19T01:07:48.9474024Z Root directory input is valid!
+2025-08-19T01:07:49.0404332Z Beginning upload of artifact content to blob storage
+2025-08-19T01:07:49.1270814Z Uploaded bytes 79182
+2025-08-19T01:07:49.1457183Z Finished uploading artifact content to blob storage!
+2025-08-19T01:07:49.1460694Z SHA256 digest of uploaded artifact zip is 49046e43bde586a14eb02ea2b223a322e33b1c825ca4509444c8e7627e76d67c
+2025-08-19T01:07:49.1462750Z Finalizing artifact upload
+2025-08-19T01:07:49.2176932Z Artifact libSITypes-headers.zip successfully finalized. Artifact ID 3794094839
+2025-08-19T01:07:49.2178797Z Artifact libSITypes-headers has been successfully uploaded! Final size is 79182 bytes. Artifact ID is 3794094839
+2025-08-19T01:07:49.2186606Z Artifact download URL: https://github.com/pjgrandinetti/SITypes/actions/runs/17056659096/artifacts/3794094839

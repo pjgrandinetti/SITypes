@@ -1,0 +1,24 @@
+﻿2025-08-19T01:07:48.6474875Z ##[group]Run mkdir -p header-pkg/include
+2025-08-19T01:07:48.6475307Z [36;1mmkdir -p header-pkg/include[0m
+2025-08-19T01:07:48.6475668Z [36;1mcp src/*.h header-pkg/include/[0m
+2025-08-19T01:07:48.6476134Z [36;1mzip -j header-pkg/libSITypes-headers.zip header-pkg/include/*.h[0m
+2025-08-19T01:07:48.6516135Z shell: /usr/bin/bash -e {0}
+2025-08-19T01:07:48.6516424Z env:
+2025-08-19T01:07:48.6516644Z   MAKEFLAGS: -j2
+2025-08-19T01:07:48.6516960Z   CCACHE_BASEDIR: /home/runner/work/SITypes/SITypes
+2025-08-19T01:07:48.6517370Z   CCACHE_COMPRESS: 1
+2025-08-19T01:07:48.6517648Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:07:48.6517919Z ##[endgroup]
+2025-08-19T01:07:48.6970446Z   adding: SIDimensionality.h (deflated 78%)
+2025-08-19T01:07:48.6971187Z   adding: SIDimensionalityParser.h (deflated 36%)
+2025-08-19T01:07:48.6971875Z   adding: SIDimensionalityPrivate.h (deflated 72%)
+2025-08-19T01:07:48.6973872Z   adding: SIQuantity.h (deflated 75%)
+2025-08-19T01:07:48.6980326Z   adding: SIScalar.h (deflated 80%)
+2025-08-19T01:07:48.6981951Z   adding: SIScalarConstants.h (deflated 83%)
+2025-08-19T01:07:48.7079760Z   adding: SIScalarConstantsData.h (deflated 74%)
+2025-08-19T01:07:48.7080916Z   adding: SIScalarParser.h (deflated 70%)
+2025-08-19T01:07:48.7081697Z   adding: SITypes.h (deflated 58%)
+2025-08-19T01:07:48.7085459Z   adding: SIUnit.h (deflated 68%)
+2025-08-19T01:07:48.7100495Z   adding: SIUnitDefinitions.h (deflated 84%)
+2025-08-19T01:07:48.7102862Z   adding: SIUnitExpression.h (deflated 72%)
+2025-08-19T01:07:48.7103957Z   adding: SIUnitParser.h (deflated 54%)

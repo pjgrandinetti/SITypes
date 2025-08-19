@@ -326,11 +326,11 @@ $(BIN_DIR)/runTests: $(LIBDIR)/libSITypes.a $(TEST_OBJ)
 	$(CC) $(CFLAGS) -Isrc -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 		$(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) -lm -o $@
 
-runTests: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ)
+runTests: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls
 	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) \
 	  $(GROUP_START) $(LIBDIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o $@
 
-test: runTests copy-dlls
+test: runTests
 	./runTests
 
 test-debug: octypes prepare $(LIBDIR)/libSITypes.a $(TEST_OBJ) copy-dlls

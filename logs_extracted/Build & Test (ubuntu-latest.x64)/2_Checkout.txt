@@ -1,0 +1,83 @@
+﻿2025-08-19T01:06:33.2735569Z ##[group]Run actions/checkout@v5
+2025-08-19T01:06:33.2736874Z with:
+2025-08-19T01:06:33.2737589Z   fetch-depth: 0
+2025-08-19T01:06:33.2738411Z   repository: pjgrandinetti/SITypes
+2025-08-19T01:06:33.2739668Z   token: ***
+2025-08-19T01:06:33.2740405Z   ssh-strict: true
+2025-08-19T01:06:33.2741164Z   ssh-user: git
+2025-08-19T01:06:33.2741935Z   persist-credentials: true
+2025-08-19T01:06:33.2742835Z   clean: true
+2025-08-19T01:06:33.2743832Z   sparse-checkout-cone-mode: true
+2025-08-19T01:06:33.2744790Z   fetch-tags: false
+2025-08-19T01:06:33.2745560Z   show-progress: true
+2025-08-19T01:06:33.2746368Z   lfs: false
+2025-08-19T01:06:33.2747083Z   submodules: false
+2025-08-19T01:06:33.2747889Z   set-safe-directory: true
+2025-08-19T01:06:33.2748980Z env:
+2025-08-19T01:06:33.2749700Z   MAKEFLAGS: -j2
+2025-08-19T01:06:33.2750591Z   CCACHE_BASEDIR: /home/runner/work/SITypes/SITypes
+2025-08-19T01:06:33.2751685Z   CCACHE_COMPRESS: 1
+2025-08-19T01:06:33.2752485Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:06:33.2753271Z ##[endgroup]
+2025-08-19T01:06:33.3725499Z Syncing repository: pjgrandinetti/SITypes
+2025-08-19T01:06:33.3728438Z ##[group]Getting Git version info
+2025-08-19T01:06:33.3729785Z Working directory is '/home/runner/work/SITypes/SITypes'
+2025-08-19T01:06:33.3731715Z [command]/usr/bin/git version
+2025-08-19T01:06:33.3732661Z git version 2.50.1
+2025-08-19T01:06:33.3748249Z ##[endgroup]
+2025-08-19T01:06:33.3762945Z Temporarily overriding HOME='/home/runner/work/_temp/6ea45cfb-3dd1-4b08-9fef-85a48b30cf8b' before making global git config changes
+2025-08-19T01:06:33.3766396Z Adding repository directory to the temporary git global config as a safe directory
+2025-08-19T01:06:33.3769285Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/SITypes/SITypes
+2025-08-19T01:06:33.3801173Z Deleting the contents of '/home/runner/work/SITypes/SITypes'
+2025-08-19T01:06:33.3804699Z ##[group]Initializing the repository
+2025-08-19T01:06:33.3809660Z [command]/usr/bin/git init /home/runner/work/SITypes/SITypes
+2025-08-19T01:06:33.3865309Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-08-19T01:06:33.3869537Z hint: is subject to change. To configure the initial branch name to use in all
+2025-08-19T01:06:33.3873090Z hint: of your new repositories, which will suppress this warning, call:
+2025-08-19T01:06:33.3875293Z hint:
+2025-08-19T01:06:33.3876925Z hint: 	git config --global init.defaultBranch <name>
+2025-08-19T01:06:33.3878906Z hint:
+2025-08-19T01:06:33.3880374Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-08-19T01:06:33.3882448Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-08-19T01:06:33.3884203Z hint:
+2025-08-19T01:06:33.3884982Z hint: 	git branch -m <name>
+2025-08-19T01:06:33.3886021Z hint:
+2025-08-19T01:06:33.3887220Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-08-19T01:06:33.3889172Z Initialized empty Git repository in /home/runner/work/SITypes/SITypes/.git/
+2025-08-19T01:06:33.3892421Z [command]/usr/bin/git remote add origin https://github.com/pjgrandinetti/SITypes
+2025-08-19T01:06:33.3913023Z ##[endgroup]
+2025-08-19T01:06:33.3915093Z ##[group]Disabling automatic garbage collection
+2025-08-19T01:06:33.3917114Z [command]/usr/bin/git config --local gc.auto 0
+2025-08-19T01:06:33.3944564Z ##[endgroup]
+2025-08-19T01:06:33.3946576Z ##[group]Setting up auth
+2025-08-19T01:06:33.3949899Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-08-19T01:06:33.3980806Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-08-19T01:06:33.4247447Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-08-19T01:06:33.4279668Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-08-19T01:06:33.4507619Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-08-19T01:06:33.4547298Z ##[endgroup]
+2025-08-19T01:06:33.4550181Z ##[group]Fetching the repository
+2025-08-19T01:06:33.4559832Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2025-08-19T01:06:33.9653211Z From https://github.com/pjgrandinetti/SITypes
+2025-08-19T01:06:33.9656487Z  * [new branch]      master     -> origin/master
+2025-08-19T01:06:33.9658918Z  * [new tag]         v0.1.0     -> v0.1.0
+2025-08-19T01:06:33.9661200Z  * [new tag]         v0.1.1     -> v0.1.1
+2025-08-19T01:06:33.9663517Z  * [new tag]         v0.1.2     -> v0.1.2
+2025-08-19T01:06:33.9664750Z  * [new tag]         v0.1.3     -> v0.1.3
+2025-08-19T01:06:33.9666160Z  * [new tag]         v0.1.4     -> v0.1.4
+2025-08-19T01:06:33.9695938Z [command]/usr/bin/git branch --list --remote origin/master
+2025-08-19T01:06:33.9718449Z   origin/master
+2025-08-19T01:06:33.9727334Z [command]/usr/bin/git rev-parse refs/remotes/origin/master
+2025-08-19T01:06:33.9748538Z 6158c6b2f14553669906653a0b7a05c72f25a031
+2025-08-19T01:06:33.9755045Z ##[endgroup]
+2025-08-19T01:06:33.9756911Z ##[group]Determining the checkout info
+2025-08-19T01:06:33.9759627Z ##[endgroup]
+2025-08-19T01:06:33.9760814Z [command]/usr/bin/git sparse-checkout disable
+2025-08-19T01:06:33.9799726Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-08-19T01:06:33.9829364Z ##[group]Checking out the ref
+2025-08-19T01:06:33.9832473Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+2025-08-19T01:06:33.9977696Z Reset branch 'master'
+2025-08-19T01:06:33.9980405Z branch 'master' set up to track 'origin/master'.
+2025-08-19T01:06:33.9992821Z ##[endgroup]
+2025-08-19T01:06:34.0028717Z [command]/usr/bin/git log -1 --format=%H
+2025-08-19T01:06:34.0060749Z 6158c6b2f14553669906653a0b7a05c72f25a031

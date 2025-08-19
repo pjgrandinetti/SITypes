@@ -1,0 +1,846 @@
+﻿2025-08-19T01:06:34.3499420Z Current runner version: '2.327.1'
+2025-08-19T01:06:34.3522180Z ##[group]Operating System
+2025-08-19T01:06:34.3522720Z macOS
+2025-08-19T01:06:34.3523010Z 14.7.6
+2025-08-19T01:06:34.3523300Z 23H626
+2025-08-19T01:06:34.3523590Z ##[endgroup]
+2025-08-19T01:06:34.3523920Z ##[group]Runner Image
+2025-08-19T01:06:34.3524270Z Image: macos-14-arm64
+2025-08-19T01:06:34.3524600Z Version: 20250813.1729
+2025-08-19T01:06:34.3525290Z Included Software: https://github.com/actions/runner-images/blob/macos-14-arm64/20250813.1729/images/macos/macos-14-arm64-Readme.md
+2025-08-19T01:06:34.3526260Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-14-arm64%2F20250813.1729
+2025-08-19T01:06:34.3526840Z ##[endgroup]
+2025-08-19T01:06:34.3527150Z ##[group]Runner Image Provisioner
+2025-08-19T01:06:34.3527550Z 2.0.449.1+6d46f4794670abc677653e70ad733fc4b7478209
+2025-08-19T01:06:34.3527940Z ##[endgroup]
+2025-08-19T01:06:34.3529520Z ##[group]GITHUB_TOKEN Permissions
+2025-08-19T01:06:34.3531220Z Actions: write
+2025-08-19T01:06:34.3531570Z Attestations: write
+2025-08-19T01:06:34.3531900Z Checks: write
+2025-08-19T01:06:34.3532200Z Contents: write
+2025-08-19T01:06:34.3532510Z Deployments: write
+2025-08-19T01:06:34.3532820Z Discussions: write
+2025-08-19T01:06:34.3533130Z Issues: write
+2025-08-19T01:06:34.3533420Z Metadata: read
+2025-08-19T01:06:34.3533730Z Models: read
+2025-08-19T01:06:34.3534020Z Packages: write
+2025-08-19T01:06:34.3534330Z Pages: write
+2025-08-19T01:06:34.3534640Z PullRequests: write
+2025-08-19T01:06:34.3534980Z RepositoryProjects: write
+2025-08-19T01:06:34.3535340Z SecurityEvents: write
+2025-08-19T01:06:34.3535660Z Statuses: write
+2025-08-19T01:06:34.3535980Z ##[endgroup]
+2025-08-19T01:06:34.3538710Z Secret source: Actions
+2025-08-19T01:06:34.3539380Z Prepare workflow directory
+2025-08-19T01:06:34.3950810Z Prepare all required actions
+2025-08-19T01:06:34.3982080Z Getting action download info
+2025-08-19T01:06:34.7683370Z Download action repository 'actions/checkout@v5' (SHA:08c6903cd8c0fde910a37f88322edcfb5dd907a8)
+2025-08-19T01:06:35.9728560Z Download action repository 'msys2/setup-msys2@v2' (SHA:40677d36a502eb2cf0fb808cc9dec31bf6152638)
+2025-08-19T01:06:36.9528500Z Download action repository 'actions/cache@v4' (SHA:0400d5f644dc74513175e3cd8d07132dd4860809)
+2025-08-19T01:06:38.1458320Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-08-19T01:06:38.3035070Z Complete job name: Build & Test (macos-latest)
+2025-08-19T01:06:38.3375340Z ##[group]Run actions/checkout@v5
+2025-08-19T01:06:38.3375710Z with:
+2025-08-19T01:06:38.3375860Z   fetch-depth: 0
+2025-08-19T01:06:38.3376030Z   repository: pjgrandinetti/SITypes
+2025-08-19T01:06:38.3376420Z   token: ***
+2025-08-19T01:06:38.3376570Z   ssh-strict: true
+2025-08-19T01:06:38.3376730Z   ssh-user: git
+2025-08-19T01:06:38.3376880Z   persist-credentials: true
+2025-08-19T01:06:38.3377080Z   clean: true
+2025-08-19T01:06:38.3377240Z   sparse-checkout-cone-mode: true
+2025-08-19T01:06:38.3377440Z   fetch-tags: false
+2025-08-19T01:06:38.3377610Z   show-progress: true
+2025-08-19T01:06:38.3377760Z   lfs: false
+2025-08-19T01:06:38.3377900Z   submodules: false
+2025-08-19T01:06:38.3378060Z   set-safe-directory: true
+2025-08-19T01:06:38.3378320Z env:
+2025-08-19T01:06:38.3378490Z   MAKEFLAGS: -j2
+2025-08-19T01:06:38.3378680Z   CCACHE_BASEDIR: /Users/runner/work/SITypes/SITypes
+2025-08-19T01:06:38.3378900Z   CCACHE_COMPRESS: 1
+2025-08-19T01:06:38.3379060Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:06:38.3379230Z ##[endgroup]
+2025-08-19T01:06:38.6593770Z Syncing repository: pjgrandinetti/SITypes
+2025-08-19T01:06:38.6595130Z ##[group]Getting Git version info
+2025-08-19T01:06:38.6595440Z Working directory is '/Users/runner/work/SITypes/SITypes'
+2025-08-19T01:06:38.6595880Z [command]/opt/homebrew/bin/git version
+2025-08-19T01:06:38.6939170Z git version 2.50.1
+2025-08-19T01:06:38.6980270Z ##[endgroup]
+2025-08-19T01:06:38.6986650Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/5a116726-2f5f-4581-882c-77c077051e86/.gitconfig'
+2025-08-19T01:06:38.6988010Z Temporarily overriding HOME='/Users/runner/work/_temp/5a116726-2f5f-4581-882c-77c077051e86' before making global git config changes
+2025-08-19T01:06:38.6988660Z Adding repository directory to the temporary git global config as a safe directory
+2025-08-19T01:06:38.6989250Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/SITypes/SITypes
+2025-08-19T01:06:38.7090690Z Deleting the contents of '/Users/runner/work/SITypes/SITypes'
+2025-08-19T01:06:38.7095660Z ##[group]Initializing the repository
+2025-08-19T01:06:38.7101480Z [command]/opt/homebrew/bin/git init /Users/runner/work/SITypes/SITypes
+2025-08-19T01:06:38.7499140Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-08-19T01:06:38.7517550Z hint: is subject to change. To configure the initial branch name to use in all
+2025-08-19T01:06:38.7550310Z hint: of your new repositories, which will suppress this warning, call:
+2025-08-19T01:06:38.7551020Z hint:
+2025-08-19T01:06:38.7551590Z hint: 	git config --global init.defaultBranch <name>
+2025-08-19T01:06:38.7552030Z hint:
+2025-08-19T01:06:38.7552460Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-08-19T01:06:38.7553000Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-08-19T01:06:38.7553490Z hint:
+2025-08-19T01:06:38.7553840Z hint: 	git branch -m <name>
+2025-08-19T01:06:38.7554200Z hint:
+2025-08-19T01:06:38.7556650Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-08-19T01:06:38.7558600Z Initialized empty Git repository in /Users/runner/work/SITypes/SITypes/.git/
+2025-08-19T01:06:38.7562430Z [command]/opt/homebrew/bin/git remote add origin https://github.com/pjgrandinetti/SITypes
+2025-08-19T01:06:38.7628040Z ##[endgroup]
+2025-08-19T01:06:38.7628680Z ##[group]Disabling automatic garbage collection
+2025-08-19T01:06:38.7631050Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2025-08-19T01:06:38.7702620Z ##[endgroup]
+2025-08-19T01:06:38.7703390Z ##[group]Setting up auth
+2025-08-19T01:06:38.7716670Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-08-19T01:06:38.7786640Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-08-19T01:06:38.9241720Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-08-19T01:06:38.9284700Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-08-19T01:06:38.9995760Z [command]/opt/homebrew/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-08-19T01:06:39.0051930Z ##[endgroup]
+2025-08-19T01:06:39.0052850Z ##[group]Fetching the repository
+2025-08-19T01:06:39.0058350Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2025-08-19T01:06:40.3971640Z From https://github.com/pjgrandinetti/SITypes
+2025-08-19T01:06:40.3972610Z  * [new branch]      master     -> origin/master
+2025-08-19T01:06:40.3974610Z  * [new tag]         v0.1.0     -> v0.1.0
+2025-08-19T01:06:40.3981380Z  * [new tag]         v0.1.1     -> v0.1.1
+2025-08-19T01:06:40.3988990Z  * [new tag]         v0.1.2     -> v0.1.2
+2025-08-19T01:06:40.3991860Z  * [new tag]         v0.1.3     -> v0.1.3
+2025-08-19T01:06:40.3997630Z  * [new tag]         v0.1.4     -> v0.1.4
+2025-08-19T01:06:40.4090250Z [command]/opt/homebrew/bin/git branch --list --remote origin/master
+2025-08-19T01:06:40.4163800Z   origin/master
+2025-08-19T01:06:40.4169090Z [command]/opt/homebrew/bin/git rev-parse refs/remotes/origin/master
+2025-08-19T01:06:40.4227760Z 6158c6b2f14553669906653a0b7a05c72f25a031
+2025-08-19T01:06:40.4230920Z ##[endgroup]
+2025-08-19T01:06:40.4232010Z ##[group]Determining the checkout info
+2025-08-19T01:06:40.4232850Z ##[endgroup]
+2025-08-19T01:06:40.4233480Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2025-08-19T01:06:40.4316820Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2025-08-19T01:06:40.4374900Z ##[group]Checking out the ref
+2025-08-19T01:06:40.4375370Z [command]/opt/homebrew/bin/git checkout --progress --force -B master refs/remotes/origin/master
+2025-08-19T01:06:40.4686440Z Reset branch 'master'
+2025-08-19T01:06:40.4888830Z branch 'master' set up to track 'origin/master'.
+2025-08-19T01:06:40.5094480Z ##[endgroup]
+2025-08-19T01:06:40.5397400Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2025-08-19T01:06:40.5496880Z 6158c6b2f14553669906653a0b7a05c72f25a031
+2025-08-19T01:06:40.5871160Z ##[group]Run brew install flex bison ccache
+2025-08-19T01:06:40.5871640Z [36;1mbrew install flex bison ccache[0m
+2025-08-19T01:06:40.5871980Z [36;1mecho "$(brew --prefix bison)/bin" >> "$GITHUB_PATH"[0m
+2025-08-19T01:06:40.5872350Z [36;1mecho "$(brew --prefix flex)/bin"  >> "$GITHUB_PATH"[0m
+2025-08-19T01:06:40.5933490Z shell: /bin/bash -e {0}
+2025-08-19T01:06:40.5949270Z env:
+2025-08-19T01:06:40.5949570Z   MAKEFLAGS: -j2
+2025-08-19T01:06:40.5949810Z   CCACHE_BASEDIR: /Users/runner/work/SITypes/SITypes
+2025-08-19T01:06:40.5950040Z   CCACHE_COMPRESS: 1
+2025-08-19T01:06:40.5950220Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:06:40.5950440Z   HOMEBREW_NO_AUTO_UPDATE: 1
+2025-08-19T01:06:40.5950610Z   HOMEBREW_NO_INSTALL_CLEANUP: 1
+2025-08-19T01:06:40.5950780Z ##[endgroup]
+2025-08-19T01:06:44.0060700Z [32m==>[0m [1mFetching downloads for: [32mflex[39m, [32mbison[39m and [32mccache[39m[0m
+2025-08-19T01:06:44.0070420Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/flex/manifests/2.6.4_2[0m
+2025-08-19T01:06:44.4223090Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/bison/manifests/3.8.2[0m
+2025-08-19T01:06:44.8025720Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/ccache/manifests/4.11.3_1[0m
+2025-08-19T01:06:45.3551530Z [32m==>[0m [1mFetching [32mflex[39m[0m
+2025-08-19T01:06:45.3555930Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/flex/blobs/sha256:0f7f1fc52a0326f07019c5e90dfc3dd728c69afaffc2e5a75154f132975e8b0b[0m
+2025-08-19T01:06:45.8803460Z [32m==>[0m [1mFetching [32mbison[39m[0m
+2025-08-19T01:06:45.8820460Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/bison/blobs/sha256:d4c06638f63876867e8fc485129ea6683487a249f0b2bc98bfaa6f1dab4ff6a4[0m
+2025-08-19T01:06:46.4937790Z [32m==>[0m [1mFetching dependencies for ccache: [32mblake3[39m, [32mfmt[39m, [32mhiredis[39m and [32mxxhash[39m[0m
+2025-08-19T01:06:46.4958140Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/blake3/manifests/1.8.2[0m
+2025-08-19T01:06:46.8351210Z [32m==>[0m [1mFetching [32mblake3[39m[0m
+2025-08-19T01:06:46.8369020Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/blake3/blobs/sha256:ab21d31a2ea8bfc1c5dde99a668ef0bd3a804db97c8834300f4e5f27ea34533b[0m
+2025-08-19T01:06:47.2192430Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/fmt/manifests/11.2.0[0m
+2025-08-19T01:06:47.6450490Z [32m==>[0m [1mFetching [32mfmt[39m[0m
+2025-08-19T01:06:47.6462610Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/fmt/blobs/sha256:21f1e3cd8c9b24293c9a00fd01743f0be9dd6405c31a834cf6599824ace92c39[0m
+2025-08-19T01:06:48.0420040Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/hiredis/manifests/1.3.0[0m
+2025-08-19T01:06:48.3982860Z [32m==>[0m [1mFetching [32mhiredis[39m[0m
+2025-08-19T01:06:48.3995050Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/hiredis/blobs/sha256:68e9423a13a8c5dc27884296ec0ee6ab25930aaa85d3b6e5e8726855fd864211[0m
+2025-08-19T01:06:48.7551430Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/xxhash/manifests/0.8.3[0m
+2025-08-19T01:06:49.1000420Z [32m==>[0m [1mFetching [32mxxhash[39m[0m
+2025-08-19T01:06:49.1020630Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/xxhash/blobs/sha256:32a8ae9615395368644020266663a1758cd4b32b15cdf8c547c9b5a3a3bc3016[0m
+2025-08-19T01:06:49.4743230Z [32m==>[0m [1mFetching [32mccache[39m[0m
+2025-08-19T01:06:49.4748070Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/ccache/blobs/sha256:aa9c9558b72ef410e13c8718080ee0d98f67b2c3c04d11bf3ade424965bdd098[0m
+2025-08-19T01:06:49.8646260Z [34m==>[0m [1mPouring flex--2.6.4_2.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:06:50.1227230Z [34m==>[0m [1mCaveats[0m
+2025-08-19T01:06:50.1227770Z flex is keg-only, which means it was not symlinked into /opt/homebrew,
+2025-08-19T01:06:50.1228270Z because macOS already provides this software and installing another version in
+2025-08-19T01:06:50.1229330Z parallel can cause all kinds of trouble.
+2025-08-19T01:06:50.1229630Z 
+2025-08-19T01:06:50.1229900Z If you need to have flex first in your PATH, run:
+2025-08-19T01:06:50.1230370Z   echo 'export PATH="/opt/homebrew/opt/flex/bin:$PATH"' >> /Users/runner/.bash_profile
+2025-08-19T01:06:50.1257310Z 
+2025-08-19T01:06:50.1257570Z For compilers to find flex you may need to set:
+2025-08-19T01:06:50.1258030Z   export LDFLAGS="-L/opt/homebrew/opt/flex/lib"
+2025-08-19T01:06:50.1258710Z   export CPPFLAGS="-I/opt/homebrew/opt/flex/include"
+2025-08-19T01:06:50.1259170Z [34m==>[0m [1mSummary[0m
+2025-08-19T01:06:50.1266560Z 🍺  /opt/homebrew/Cellar/flex/2.6.4_2: 47 files, 1.6MB
+2025-08-19T01:06:50.1299370Z [34m==>[0m [1mPouring bison--3.8.2.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:06:50.2218750Z [34m==>[0m [1mCaveats[0m
+2025-08-19T01:06:50.2219100Z bison is keg-only, which means it was not symlinked into /opt/homebrew,
+2025-08-19T01:06:50.2219510Z because macOS already provides this software and installing another version in
+2025-08-19T01:06:50.2219880Z parallel can cause all kinds of trouble.
+2025-08-19T01:06:50.2220030Z 
+2025-08-19T01:06:50.2220120Z If you need to have bison first in your PATH, run:
+2025-08-19T01:06:50.2220490Z   echo 'export PATH="/opt/homebrew/opt/bison/bin:$PATH"' >> /Users/runner/.bash_profile
+2025-08-19T01:06:50.2220740Z 
+2025-08-19T01:06:50.2220830Z For compilers to find bison you may need to set:
+2025-08-19T01:06:50.2221130Z   export LDFLAGS="-L/opt/homebrew/opt/bison/lib"
+2025-08-19T01:06:50.2221420Z [34m==>[0m [1mSummary[0m
+2025-08-19T01:06:50.2265460Z 🍺  /opt/homebrew/Cellar/bison/3.8.2: 100 files, 3.7MB
+2025-08-19T01:06:50.2750160Z [32m==>[0m [1mInstalling dependencies for ccache: [32mblake3[39m, [32mfmt[39m, [32mhiredis[39m and [32mxxhash[39m[0m
+2025-08-19T01:06:50.2751590Z [32m==>[0m [1mInstalling ccache dependency: [32mblake3[39m[0m
+2025-08-19T01:06:50.2754810Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/blake3/manifests/1.8.2[0m
+2025-08-19T01:06:50.2756830Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/fd8aa2201dffd4a0db6644c9eff70b8c0d1a0a643ed362fc54f77d3a80fd3478--blake3-1.8.2.bottle_manifest.json
+2025-08-19T01:06:50.2783330Z [34m==>[0m [1mPouring blake3--1.8.2.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:06:50.3669150Z 🍺  /opt/homebrew/Cellar/blake3/1.8.2: 13 files, 94.8KB
+2025-08-19T01:06:50.3672800Z [32m==>[0m [1mInstalling ccache dependency: [32mfmt[39m[0m
+2025-08-19T01:06:50.3675840Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/fmt/manifests/11.2.0[0m
+2025-08-19T01:06:50.3676590Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/b2b745c1a4876928bc7e18761de1d83662c2e4a5ac992f8f059579850db6fb36--fmt-11.2.0.bottle_manifest.json
+2025-08-19T01:06:50.3708600Z [34m==>[0m [1mPouring fmt--11.2.0.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:06:50.4580400Z 🍺  /opt/homebrew/Cellar/fmt/11.2.0: 29 files, 1MB
+2025-08-19T01:06:50.4583730Z [32m==>[0m [1mInstalling ccache dependency: [32mhiredis[39m[0m
+2025-08-19T01:06:50.4597110Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/hiredis/manifests/1.3.0[0m
+2025-08-19T01:06:50.4597970Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/3b794b72d22c70fbaa25fdada9fa1613da0c754151bdbd9118fb9008b989a1c8--hiredis-1.3.0.bottle_manifest.json
+2025-08-19T01:06:50.4672550Z [34m==>[0m [1mPouring hiredis--1.3.0.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:06:50.6158770Z 🍺  /opt/homebrew/Cellar/hiredis/1.3.0: 53 files, 479.5KB
+2025-08-19T01:06:50.6161190Z [32m==>[0m [1mInstalling ccache dependency: [32mxxhash[39m[0m
+2025-08-19T01:06:50.6164450Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/xxhash/manifests/0.8.3[0m
+2025-08-19T01:06:50.6165310Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/50d7a45c8aca7a38ebe38c4b8fb63fa7404dc4c360092f1e301c275fcc585cf0--xxhash-0.8.3.bottle_manifest.json
+2025-08-19T01:06:50.6198020Z [34m==>[0m [1mPouring xxhash--0.8.3.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:06:50.7070130Z 🍺  /opt/homebrew/Cellar/xxhash/0.8.3: 28 files, 544.0KB
+2025-08-19T01:06:50.7072420Z [32m==>[0m [1mInstalling [32mccache[39m[0m
+2025-08-19T01:06:50.7075040Z [34m==>[0m [1mPouring ccache--4.11.3_1.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:06:50.7992840Z [34m==>[0m [1mCaveats[0m
+2025-08-19T01:06:50.7993150Z To install symlinks for compilers that will automatically use
+2025-08-19T01:06:50.7993480Z ccache, prepend this directory to your PATH:
+2025-08-19T01:06:50.7993710Z   /opt/homebrew/opt/ccache/libexec
+2025-08-19T01:06:50.7993840Z 
+2025-08-19T01:06:50.7993970Z If this is an upgrade and you have previously added the symlinks to
+2025-08-19T01:06:50.7994300Z your PATH, you may need to modify it to the path specified above so
+2025-08-19T01:06:50.7994570Z it points to the current version.
+2025-08-19T01:06:50.7994690Z 
+2025-08-19T01:06:50.7994800Z NOTE: ccache can prevent some software from compiling.
+2025-08-19T01:06:50.7995110Z ALSO NOTE: The brew command, by design, will never use ccache.
+2025-08-19T01:06:50.7995410Z [34m==>[0m [1mSummary[0m
+2025-08-19T01:06:50.8009130Z 🍺  /opt/homebrew/Cellar/ccache/4.11.3_1: 85 files, 1.4MB
+2025-08-19T01:06:50.8013720Z [34m==>[0m [1mNo outdated dependents to upgrade![0m
+2025-08-19T01:06:50.8014210Z [32m==>[0m [1mCaveats[0m
+2025-08-19T01:06:50.8014440Z [34m==>[0m [1mflex[0m
+2025-08-19T01:06:50.8014700Z flex is keg-only, which means it was not symlinked into /opt/homebrew,
+2025-08-19T01:06:50.8015070Z because macOS already provides this software and installing another version in
+2025-08-19T01:06:50.8015400Z parallel can cause all kinds of trouble.
+2025-08-19T01:06:50.8015560Z 
+2025-08-19T01:06:50.8015660Z If you need to have flex first in your PATH, run:
+2025-08-19T01:06:50.8016050Z   echo 'export PATH="/opt/homebrew/opt/flex/bin:$PATH"' >> /Users/runner/.bash_profile
+2025-08-19T01:06:50.8016330Z 
+2025-08-19T01:06:50.8016410Z For compilers to find flex you may need to set:
+2025-08-19T01:06:50.8016700Z   export LDFLAGS="-L/opt/homebrew/opt/flex/lib"
+2025-08-19T01:06:50.8016980Z   export CPPFLAGS="-I/opt/homebrew/opt/flex/include"
+2025-08-19T01:06:50.8017240Z [34m==>[0m [1mbison[0m
+2025-08-19T01:06:50.8017490Z bison is keg-only, which means it was not symlinked into /opt/homebrew,
+2025-08-19T01:06:50.8017950Z because macOS already provides this software and installing another version in
+2025-08-19T01:06:50.8018270Z parallel can cause all kinds of trouble.
+2025-08-19T01:06:50.8018420Z 
+2025-08-19T01:06:50.8018510Z If you need to have bison first in your PATH, run:
+2025-08-19T01:06:50.8018840Z   echo 'export PATH="/opt/homebrew/opt/bison/bin:$PATH"' >> /Users/runner/.bash_profile
+2025-08-19T01:06:50.8019180Z 
+2025-08-19T01:06:50.8019290Z For compilers to find bison you may need to set:
+2025-08-19T01:06:50.8019550Z   export LDFLAGS="-L/opt/homebrew/opt/bison/lib"
+2025-08-19T01:06:50.8019800Z [34m==>[0m [1mccache[0m
+2025-08-19T01:06:50.8020070Z To install symlinks for compilers that will automatically use
+2025-08-19T01:06:50.8020360Z ccache, prepend this directory to your PATH:
+2025-08-19T01:06:50.8020590Z   /opt/homebrew/opt/ccache/libexec
+2025-08-19T01:06:50.8020730Z 
+2025-08-19T01:06:50.8021200Z If this is an upgrade and you have previously added the symlinks to
+2025-08-19T01:06:50.8021620Z your PATH, you may need to modify it to the path specified above so
+2025-08-19T01:06:50.8021880Z it points to the current version.
+2025-08-19T01:06:50.8022020Z 
+2025-08-19T01:06:50.8022120Z NOTE: ccache can prevent some software from compiling.
+2025-08-19T01:06:50.8022430Z ALSO NOTE: The brew command, by design, will never use ccache.
+2025-08-19T01:06:51.1095160Z ##[group]Run actions/cache@v4
+2025-08-19T01:06:51.1095410Z with:
+2025-08-19T01:06:51.1095580Z   path: ~/.ccache
+C:\msys64\home\runneradmin\.ccache
+
+2025-08-19T01:06:51.1095940Z   key: ccache-macOS-4a900c46ed108d3dfb3adcfaea76a5f9325cf27e4984a33f3f3111d20d25618e
+2025-08-19T01:06:51.1096250Z   restore-keys: ccache-macOS-
+
+2025-08-19T01:06:51.1096430Z   enableCrossOsArchive: false
+2025-08-19T01:06:51.1096600Z   fail-on-cache-miss: false
+2025-08-19T01:06:51.1096770Z   lookup-only: false
+2025-08-19T01:06:51.1096900Z   save-always: false
+2025-08-19T01:06:51.1097060Z env:
+2025-08-19T01:06:51.1097170Z   MAKEFLAGS: -j2
+2025-08-19T01:06:51.1097330Z   CCACHE_BASEDIR: /Users/runner/work/SITypes/SITypes
+2025-08-19T01:06:51.1097530Z   CCACHE_COMPRESS: 1
+2025-08-19T01:06:51.1106620Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:06:51.1106750Z ##[endgroup]
+2025-08-19T01:06:51.3938350Z Cache not found for input keys: ccache-macOS-4a900c46ed108d3dfb3adcfaea76a5f9325cf27e4984a33f3f3111d20d25618e, ccache-macOS-
+2025-08-19T01:06:51.4658350Z ##[group]Run actions/cache@v4
+2025-08-19T01:06:51.4658580Z with:
+2025-08-19T01:06:51.4658730Z   path: third_party
+2025-08-19T01:06:51.4659000Z   key: tp-macOS-938a2e6f3b18269d635b5d0b340f0fb5a92836893aab92af11fcc55f881bb0e6
+2025-08-19T01:06:51.4659310Z   restore-keys: tp-macOS-
+
+2025-08-19T01:06:51.4659490Z   enableCrossOsArchive: false
+2025-08-19T01:06:51.4659670Z   fail-on-cache-miss: false
+2025-08-19T01:06:51.4659830Z   lookup-only: false
+2025-08-19T01:06:51.4659980Z   save-always: false
+2025-08-19T01:06:51.4660120Z env:
+2025-08-19T01:06:51.4660270Z   MAKEFLAGS: -j2
+2025-08-19T01:06:51.4660450Z   CCACHE_BASEDIR: /Users/runner/work/SITypes/SITypes
+2025-08-19T01:06:51.4660660Z   CCACHE_COMPRESS: 1
+2025-08-19T01:06:51.4660810Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:06:51.4660960Z ##[endgroup]
+2025-08-19T01:06:51.7542060Z Cache hit for restore-key: tp-macOS-20f1bec874b8cbd40b1ded9e738285e76f8f283698cac08226a3f1a81e5ab226
+2025-08-19T01:06:52.3387100Z Received 719608 of 719608 (100.0%), 1.8 MBs/sec
+2025-08-19T01:06:52.3394020Z Cache Size: ~1 MB (719608 B)
+2025-08-19T01:06:52.3490660Z [command]/opt/homebrew/bin/gtar -xf /Users/runner/work/_temp/3439c25d-718f-4397-a97a-33ad7af72ff0/cache.tzst -P -C /Users/runner/work/SITypes/SITypes --delay-directory-restore --use-compress-program unzstd
+2025-08-19T01:06:52.3826040Z Cache restored successfully
+2025-08-19T01:06:52.4118190Z Cache restored from key: tp-macOS-20f1bec874b8cbd40b1ded9e738285e76f8f283698cac08226a3f1a81e5ab226
+2025-08-19T01:06:52.4176620Z ##[group]Run set -euxo pipefail
+2025-08-19T01:06:52.4176920Z [36;1mset -euxo pipefail[0m
+2025-08-19T01:06:52.4177240Z [36;1mccache --zero-stats || true[0m
+2025-08-19T01:06:52.4177460Z [36;1mmake clean[0m
+2025-08-19T01:06:52.4177640Z [36;1mmake octypes[0m
+2025-08-19T01:06:52.4177880Z [36;1mmake test CC="ccache clang"[0m
+2025-08-19T01:06:52.4179060Z [36;1mmake install-shared CC="ccache clang"[0m
+2025-08-19T01:06:52.4179560Z [36;1mccache --show-stats || true[0m
+2025-08-19T01:06:52.4179790Z [36;1m# Verify libs[0m
+2025-08-19T01:06:52.4180000Z [36;1mtest -f install/lib/libSITypes.a[0m
+2025-08-19T01:06:52.4180270Z [36;1mif [ "$RUNNER_OS" = "macOS" ]; then[0m
+2025-08-19T01:06:52.4180540Z [36;1m  test -f install/lib/libSITypes.dylib[0m
+2025-08-19T01:06:52.4180770Z [36;1melse[0m
+2025-08-19T01:06:52.4180970Z [36;1m  test -f install/lib/libSITypes.so[0m
+2025-08-19T01:06:52.4181200Z [36;1mfi[0m
+2025-08-19T01:06:52.4282420Z shell: /bin/bash -e {0}
+2025-08-19T01:06:52.4282690Z env:
+2025-08-19T01:06:52.4282820Z   MAKEFLAGS: -j2
+2025-08-19T01:06:52.4283260Z   CCACHE_BASEDIR: /Users/runner/work/SITypes/SITypes
+2025-08-19T01:06:52.4283500Z   CCACHE_COMPRESS: 1
+2025-08-19T01:06:52.4283650Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:06:52.4283800Z ##[endgroup]
+2025-08-19T01:06:52.4504460Z + ccache --zero-stats
+2025-08-19T01:06:52.5387530Z Statistics zeroed
+2025-08-19T01:06:52.5388950Z + make clean
+2025-08-19T01:06:52.9656460Z rm -f -r build runTests runTests.asan runTests.debug *.dSYM
+2025-08-19T01:06:52.9694590Z rm -f *.tab.* *Scanner.c *.d core.*
+2025-08-19T01:06:52.9726200Z rm -f -rf docs/doxygen docs/_build docs/html build-xcode install
+2025-08-19T01:06:52.9764470Z rm -f -r lib  # Remove old lib directory if it exists
+2025-08-19T01:06:52.9794180Z rm -f rebuild.log
+2025-08-19T01:06:52.9820820Z + make octypes
+2025-08-19T01:06:53.0332720Z OCTypes lib ready at third_party/lib/libOCTypes.a
+2025-08-19T01:06:53.0339560Z OCTypes headers ready under third_party/include/OCTypes
+2025-08-19T01:06:53.0342350Z + make test 'CC=ccache clang'
+2025-08-19T01:06:53.1556740Z OCTypes lib ready at third_party/lib/libOCTypes.a
+2025-08-19T01:06:53.1557280Z OCTypes headers ready under third_party/include/OCTypes
+2025-08-19T01:06:53.1557950Z mkdir -p build build/obj build/gen build/bin build/lib third_party/lib third_party/include
+2025-08-19T01:06:53.1580700Z bison -d --defines=build/gen/SIDimensionalityParser.tab.h -o build/gen/SIDimensionalityParser.tab.c src/SIDimensionalityParser.y
+2025-08-19T01:06:53.1589870Z bison -d --defines=build/gen/SIScalarParser.tab.h -o build/gen/SIScalarParser.tab.c src/SIScalarParser.y
+2025-08-19T01:06:53.1596270Z src/SIDimensionalityParser.y:13.1-18: warning: deprecated directive: ‘%name-prefix="sid"’, use ‘%define api.prefix {sid}’ [-Wdeprecated]
+2025-08-19T01:06:53.1596860Z    13 | %name-prefix="sid"
+2025-08-19T01:06:53.1597140Z       | ^~~~~~~~~~~~~~~~~~
+2025-08-19T01:06:53.1597400Z       | %define api.prefix {sid}
+2025-08-19T01:06:53.1618920Z src/SIScalarParser.y:14.1-18: warning: deprecated directive: ‘%name-prefix="sis"’, use ‘%define api.prefix {sis}’ [-Wdeprecated]
+2025-08-19T01:06:53.1649370Z    14 | %name-prefix="sis"
+2025-08-19T01:06:53.1650510Z       | ^~~~~~~~~~~~~~~~~~
+2025-08-19T01:06:53.1651830Z       | %define api.prefix {sis}
+2025-08-19T01:06:53.1773560Z src/SIScalarParser.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
+2025-08-19T01:06:53.2012790Z src/SIScalarParser.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
+2025-08-19T01:06:53.9611820Z src/SIDimensionalityParser.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+2025-08-19T01:06:53.9613380Z bison -d --defines=build/gen/SIUnitExpressionParser.tab.h -o build/gen/SIUnitExpressionParser.tab.c src/SIUnitExpressionParser.y
+2025-08-19T01:06:53.9630490Z src/SIUnitExpressionParser.y:15.1-19: warning: deprecated directive: ‘%name-prefix="siue"’, use ‘%define api.prefix {siue}’ [-Wdeprecated]
+2025-08-19T01:06:53.9631110Z    15 | %name-prefix="siue"
+2025-08-19T01:06:53.9631910Z       | ^~~~~~~~~~~~~~~~~~~
+2025-08-19T01:06:53.9632220Z       | %define api.prefix {siue}
+2025-08-19T01:06:53.9633900Z src/SIUnitExpressionParser.y:202.3-207.1: warning: unset value: $$ [-Wother]
+2025-08-19T01:06:53.9634560Z   202 | | UNKNOWN_SYMBOL {
+2025-08-19T01:06:53.9634790Z       |   ^~~~~~~~~~~~~~~~
+2025-08-19T01:06:53.9635410Z src/SIUnitExpressionParser.y: warning: 4 shift/reduce conflicts [-Wconflicts-sr]
+2025-08-19T01:06:53.9635940Z src/SIUnitExpressionParser.y: warning: 3 reduce/reduce conflicts [-Wconflicts-rr]
+2025-08-19T01:06:53.9636550Z src/SIUnitExpressionParser.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
+2025-08-19T01:06:53.9687650Z src/SIScalarParser.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+2025-08-19T01:06:53.9689290Z bison -d --defines=build/gen/SIUnitParser.tab.h -o build/gen/SIUnitParser.tab.c src/SIUnitParser.y
+2025-08-19T01:06:53.9703590Z src/SIUnitParser.y:13.1-18: warning: deprecated directive: ‘%name-prefix="siu"’, use ‘%define api.prefix {siu}’ [-Wdeprecated]
+2025-08-19T01:06:53.9704290Z    13 | %name-prefix="siu"
+2025-08-19T01:06:53.9705340Z       | ^~~~~~~~~~~~~~~~~~
+2025-08-19T01:06:53.9705620Z       | %define api.prefix {siu}
+2025-08-19T01:06:54.0084890Z src/SIUnitParser.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+2025-08-19T01:06:54.0087930Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIDimensionality.o src/SIDimensionality.c
+2025-08-19T01:06:54.0130770Z src/SIUnitExpressionParser.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+2025-08-19T01:06:54.0134930Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIDimensionalityLib.o src/SIDimensionalityLib.c
+2025-08-19T01:06:54.3197890Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIQuantity.o src/SIQuantity.c
+2025-08-19T01:06:54.3970040Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIScalar.o src/SIScalar.c
+2025-08-19T01:06:54.5165070Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIScalarConstants.o src/SIScalarConstants.c
+2025-08-19T01:06:54.6392600Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIScalarParser.o src/SIScalarParser.c
+2025-08-19T01:06:54.6445160Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIScalarParserHelpers.o src/SIScalarParserHelpers.c
+2025-08-19T01:06:54.7304580Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SITypes.o src/SITypes.c
+2025-08-19T01:06:54.7311720Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIUnit.o src/SIUnit.c
+2025-08-19T01:06:54.7910620Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIUnitExpression.o src/SIUnitExpression.c
+2025-08-19T01:06:54.9076910Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIDimensionalityParser.tab.o build/gen/SIDimensionalityParser.tab.c
+2025-08-19T01:06:55.0019840Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIScalarParser.tab.o build/gen/SIScalarParser.tab.c
+2025-08-19T01:06:55.1186190Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIUnitExpressionParser.tab.o build/gen/SIUnitExpressionParser.tab.c
+2025-08-19T01:06:55.2183330Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIUnitParser.tab.o build/gen/SIUnitParser.tab.c
+2025-08-19T01:06:55.2267140Z flex -o build/gen/SIDimensionalityScanner.c src/SIDimensionalityScanner.l
+2025-08-19T01:06:55.2308580Z src/SIDimensionalityScanner.l:24: warning, -s option given but default rule can be matched
+2025-08-19T01:06:55.2416690Z flex -o build/gen/SIFormulaScanner.c src/SIFormulaScanner.l
+2025-08-19T01:06:55.2565630Z flex -o build/gen/SIScalarScanner.c src/SIScalarScanner.l
+2025-08-19T01:06:55.2602550Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:06:55.2639320Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:06:55.2639870Z src/SIScalarScanner.l:173: warning, dangerous trailing context
+2025-08-19T01:06:55.2640300Z src/SIScalarScanner.l:163: warning, dangerous trailing context
+2025-08-19T01:06:55.2640720Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:06:55.2641180Z src/SIScalarScanner.l:163: warning, dangerous trailing context
+2025-08-19T01:06:55.2641620Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:55.2642040Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:55.2642460Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:55.2642860Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:06:55.2643300Z src/SIScalarScanner.l:188: warning, dangerous trailing context
+2025-08-19T01:06:55.2643710Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:55.2644120Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:55.2644540Z src/SIScalarScanner.l:188: warning, dangerous trailing context
+2025-08-19T01:06:55.2644950Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:55.2645370Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:55.2645780Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:55.2748550Z flex -o build/gen/SIUnitExpressionScanner.c src/SIUnitExpressionScanner.l
+2025-08-19T01:06:55.2793520Z src/SIUnitExpressionScanner.l:61: warning, -s option given but default rule can be matched
+2025-08-19T01:06:55.2933780Z flex -o build/gen/SIUnitScanner.c src/SIUnitScanner.l
+2025-08-19T01:06:55.2998610Z src/SIUnitScanner.l:36: warning, -s option given but default rule can be matched
+2025-08-19T01:06:55.3056660Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/main.o tests/main.c
+2025-08-19T01:06:55.3146560Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/test_dimensionality.o tests/test_dimensionality.c
+2025-08-19T01:06:55.4241350Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/test_duplicate_units.o tests/test_duplicate_units.c
+2025-08-19T01:06:55.4457450Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/test_octypes.o tests/test_octypes.c
+2025-08-19T01:06:55.5083770Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/test_scalar.o tests/test_scalar.c
+2025-08-19T01:06:55.5258550Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/test_scalar_parser.o tests/test_scalar_parser.c
+2025-08-19T01:06:55.6544950Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/test_unit.o tests/test_unit.c
+2025-08-19T01:06:55.7337940Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/test_unit_expression.o tests/test_unit_expression.c
+2025-08-19T01:06:55.8072250Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/test_unit_from_expression_robust.o tests/test_unit_from_expression_robust.c
+2025-08-19T01:06:55.8401560Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/test_unit_power_operations.o tests/test_unit_power_operations.c
+2025-08-19T01:06:55.8936840Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIDimensionalityScanner.o build/gen/SIDimensionalityScanner.c
+2025-08-19T01:06:55.9197260Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIFormulaScanner.o build/gen/SIFormulaScanner.c
+2025-08-19T01:06:56.0479410Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIScalarScanner.o build/gen/SIScalarScanner.c
+2025-08-19T01:06:56.0637640Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIUnitExpressionScanner.o build/gen/SIUnitExpressionScanner.c
+2025-08-19T01:06:56.2064740Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIUnitScanner.o build/gen/SIUnitScanner.c
+2025-08-19T01:06:56.3456470Z ar rcs build/lib/libSITypes.a build/obj/SIDimensionality.o build/obj/SIDimensionalityLib.o build/obj/SIQuantity.o build/obj/SIScalar.o build/obj/SIScalarConstants.o build/obj/SIScalarParser.o build/obj/SIScalarParserHelpers.o build/obj/SITypes.o build/obj/SIUnit.o build/obj/SIUnitExpression.o build/obj/SIDimensionalityParser.tab.o build/obj/SIScalarParser.tab.o build/obj/SIUnitExpressionParser.tab.o build/obj/SIUnitParser.tab.o build/obj/SIDimensionalityScanner.o build/obj/SIFormulaScanner.o build/obj/SIScalarScanner.o build/obj/SIUnitExpressionScanner.o build/obj/SIUnitScanner.o
+2025-08-19T01:06:56.6920880Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -Itests build/obj/main.o build/obj/test_dimensionality.o build/obj/test_duplicate_units.o build/obj/test_octypes.o build/obj/test_scalar.o build/obj/test_scalar_parser.o build/obj/test_unit.o build/obj/test_unit_expression.o build/obj/test_unit_from_expression_robust.o build/obj/test_unit_power_operations.o \
+2025-08-19T01:06:56.6922580Z 	   build/lib/libSITypes.a third_party/lib/libOCTypes.a  -lm -o runTests
+2025-08-19T01:06:56.8594820Z ./runTests
+2025-08-19T01:06:59.3900960Z === OCTypes Tests ===
+2025-08-19T01:06:59.3901190Z Running octypesTest1...
+2025-08-19T01:06:59.3901370Z octypesTest1 passed
+2025-08-19T01:06:59.3901640Z Running octypesTest2...
+2025-08-19T01:06:59.3901820Z octypesTest2 passed
+2025-08-19T01:06:59.3901980Z Running octypesTest3...
+2025-08-19T01:06:59.3902170Z octypesTest3 passed
+2025-08-19T01:06:59.3902340Z Running octypesTest4...
+2025-08-19T01:06:59.3902520Z octypesTest4 passed
+2025-08-19T01:06:59.3902670Z Running octypesTest5...
+2025-08-19T01:06:59.3902860Z octypesTest5 passed
+2025-08-19T01:06:59.3903010Z Running octypesTest6...
+2025-08-19T01:06:59.3903160Z octypesTest6 passed
+2025-08-19T01:06:59.3903260Z 
+2025-08-19T01:06:59.3903330Z === Dimensionality Tests ===
+2025-08-19T01:06:59.3903520Z Running test_dimensionality_0...
+2025-08-19T01:06:59.3903720Z test_dimensionality_0 passed
+2025-08-19T01:06:59.3903920Z Running test_dimensionality_1...
+2025-08-19T01:06:59.3904110Z test_dimensionality_1 passed
+2025-08-19T01:06:59.3904290Z Running test_dimensionality_2...
+2025-08-19T01:06:59.3904480Z test_dimensionality_2 passed
+2025-08-19T01:06:59.3904660Z Running test_dimensionality_3...
+2025-08-19T01:06:59.3904830Z test_dimensionality_3 passed
+2025-08-19T01:06:59.3905030Z Running test_dimensionality_show...
+2025-08-19T01:06:59.3905240Z test_dimensionality_show passed
+2025-08-19T01:06:59.3905450Z Running test_dimensionality_symbol_acceleration...
+2025-08-19T01:06:59.3906420Z test_dimensionality_symbol_acceleration passed
+2025-08-19T01:06:59.3906790Z Running test_dimensionality_divide_mass...
+2025-08-19T01:06:59.3907020Z test_dimensionality_divide_mass passed
+2025-08-19T01:06:59.3907240Z Running test_dimensionality_multiply_work...
+2025-08-19T01:06:59.3907470Z test_dimensionality_multiply_work passed
+2025-08-19T01:06:59.3907680Z Running test_dimensionality_power_area...
+2025-08-19T01:06:59.3907900Z test_dimensionality_power_area passed
+2025-08-19T01:06:59.3908130Z Running test_dimensionality_reduction_behavior...
+2025-08-19T01:06:59.3908420Z test_dimensionality_reduction_behavior passed
+2025-08-19T01:06:59.3908640Z Running test_dimensionality_deep_copy...
+2025-08-19T01:06:59.3908850Z test_dimensionality_deep_copy passed
+2025-08-19T01:06:59.3909000Z 
+2025-08-19T01:06:59.3909080Z Running test_dimensionality_parser_strictness...
+2025-08-19T01:06:59.3909330Z test_dimensionality_parser_strictness passed
+2025-08-19T01:06:59.3909480Z 
+2025-08-19T01:06:59.3909530Z === SIUnit Tests ===
+2025-08-19T01:06:59.3909680Z Running test_unit_0...
+2025-08-19T01:06:59.3910050Z test_unit_0 passed
+2025-08-19T01:06:59.3910200Z Running test_unit_1...
+2025-08-19T01:06:59.3910350Z test_unit_1 passed
+2025-08-19T01:06:59.3910500Z Running test_unit_3...
+2025-08-19T01:06:59.3910660Z test_unit_3 passed
+2025-08-19T01:06:59.3910800Z Running test_unit_4...
+2025-08-19T01:06:59.3910930Z test_unit_4 passed
+2025-08-19T01:06:59.3911060Z Running test_unit_5...
+2025-08-19T01:06:59.3911220Z test_unit_5 passed
+2025-08-19T01:06:59.3911380Z Running test_unit_6...
+2025-08-19T01:06:59.3911530Z test_unit_6 passed
+2025-08-19T01:06:59.3911670Z Running test_unit_7...
+2025-08-19T01:06:59.3911830Z test_unit_7 passed
+2025-08-19T01:06:59.3911970Z Running test_unit_8...
+2025-08-19T01:06:59.3912120Z test_unit_8 passed
+2025-08-19T01:06:59.3912250Z Running test_unit_9...
+2025-08-19T01:06:59.3912390Z test_unit_9 passed
+2025-08-19T01:06:59.3912520Z Running test_unit_10...
+2025-08-19T01:06:59.3912660Z test_unit_10 passed
+2025-08-19T01:06:59.3912800Z Running test_unit_11...
+2025-08-19T01:06:59.3912960Z test_unit_11 passed
+2025-08-19T01:06:59.3913040Z 
+2025-08-19T01:06:59.3913100Z Running test_unit_12...
+2025-08-19T01:06:59.3913260Z test_unit_12 passed
+2025-08-19T01:06:59.3913410Z Running test_unit_13...
+2025-08-19T01:06:59.3913550Z test_unit_13 passed
+2025-08-19T01:06:59.3913730Z Running test_unit_14...
+2025-08-19T01:06:59.3913890Z test_unit_14 passed
+2025-08-19T01:06:59.3914070Z Running test_unit_by_multiplying_without_reducing...
+2025-08-19T01:06:59.3914300Z test_unit_by_multiplying_without_reducing passed
+2025-08-19T01:06:59.3914470Z 
+2025-08-19T01:06:59.3914560Z Running test_unit_by_dividing_without_reducing...
+2025-08-19T01:06:59.3914800Z test_unit_by_dividing_without_reducing passed
+2025-08-19T01:06:59.3915010Z Running test_unit_by_taking_nth_root...
+2025-08-19T01:06:59.3915220Z test_unit_by_taking_nth_root passed
+2025-08-19T01:06:59.3915350Z 
+2025-08-19T01:06:59.3915450Z Running test_unit_by_raising_to_power_without_reducing...
+2025-08-19T01:06:59.3915710Z test_unit_by_raising_to_power_without_reducing passed
+2025-08-19T01:06:59.3915870Z 
+2025-08-19T01:06:59.3915940Z Running test_unit_unicode_normalization...
+2025-08-19T01:06:59.3916140Z test_unit_unicode_normalization passed
+2025-08-19T01:06:59.3916270Z 
+2025-08-19T01:06:59.3916350Z Running test_unit_registration...
+2025-08-19T01:06:59.3916530Z Testing unit registration behavior
+2025-08-19T01:06:59.3916710Z test_unit_registration passed
+2025-08-19T01:06:59.3916910Z Running test_unit_canonical_expressions...
+2025-08-19T01:06:59.3917120Z test_unit_canonical_expressions passed
+2025-08-19T01:06:59.3917250Z 
+2025-08-19T01:06:59.3917330Z Running test_unit_from_expression_equivalence...
+2025-08-19T01:06:59.3917580Z test_unit_from_expression_equivalence passed
+2025-08-19T01:06:59.3917730Z 
+2025-08-19T01:06:59.3917800Z Running test_unit_count_token_symbols...
+2025-08-19T01:06:59.3918000Z test_unit_count_token_symbols passed
+2025-08-19T01:06:59.3918150Z 
+2025-08-19T01:06:59.3918150Z 
+2025-08-19T01:06:59.3918380Z === SIUnitCreateCleanedExpression Comprehensive Tests ===
+2025-08-19T01:06:59.3918720Z Running comprehensive SIUnitCreateCleanedExpression test suite...
+2025-08-19T01:06:59.3918930Z 
+2025-08-19T01:06:59.3919060Z Running test_unit_expression_cleaner_basic_canonicalization...
+2025-08-19T01:06:59.3919360Z test_unit_expression_cleaner_basic_canonicalization passed
+2025-08-19T01:06:59.3919640Z Running test_unit_expression_cleaner_power_notation...
+2025-08-19T01:06:59.3919910Z test_unit_expression_cleaner_power_notation passed
+2025-08-19T01:06:59.3920180Z Running test_unit_expression_cleaner_multiplication_ordering...
+2025-08-19T01:06:59.3920480Z test_unit_expression_cleaner_multiplication_ordering passed
+2025-08-19T01:06:59.3920780Z Running test_unit_expression_cleaner_power_consolidation...
+2025-08-19T01:06:59.3921070Z test_unit_expression_cleaner_power_consolidation passed
+2025-08-19T01:06:59.3921350Z Running test_unit_expression_cleaner_division_operations...
+2025-08-19T01:06:59.3921650Z test_unit_expression_cleaner_division_operations passed
+2025-08-19T01:06:59.3921940Z Running test_unit_expression_cleaner_complex_expressions...
+2025-08-19T01:06:59.3922330Z test_unit_expression_cleaner_complex_expressions passed
+2025-08-19T01:06:59.3922600Z Running test_unit_expression_cleaner_unicode_operators...
+2025-08-19T01:06:59.3922880Z test_unit_expression_cleaner_unicode_operators passed
+2025-08-19T01:06:59.3923160Z Running test_unit_expression_cleaner_unicode_normalization...
+2025-08-19T01:06:59.3923440Z test_unit_expression_cleaner_unicode_normalization passed
+2025-08-19T01:06:59.3923720Z Running test_unit_expression_cleaner_expression_equivalence...
+2025-08-19T01:06:59.3924020Z test_unit_expression_cleaner_expression_equivalence passed
+2025-08-19T01:06:59.3924290Z Running test_unit_expression_cleaner_edge_cases...
+2025-08-19T01:06:59.3924530Z test_unit_expression_cleaner_edge_cases passed
+2025-08-19T01:06:59.3924800Z Running test_unit_expression_cleaner_parenthetical_powers...
+2025-08-19T01:06:59.3925090Z test_unit_expression_cleaner_parenthetical_powers passed
+2025-08-19T01:06:59.3925350Z Running test_unit_expression_cleaner_consistency...
+2025-08-19T01:06:59.3925620Z test_unit_expression_cleaner_consistency passed
+2025-08-19T01:06:59.3925890Z Running test_unit_expression_cleaner_reciprocal_expressions...
+2025-08-19T01:06:59.3926190Z test_unit_expression_cleaner_reciprocal_expressions passed
+2025-08-19T01:06:59.3926360Z 
+2025-08-19T01:06:59.3926490Z === SIUnitCreateCleanedExpression Comprehensive Test Results ===
+2025-08-19T01:06:59.3926760Z Overall result: ALL TESTS PASSED
+2025-08-19T01:06:59.3926940Z 
+2025-08-19T01:06:59.3926990Z === Duplicate Units Tests ===
+2025-08-19T01:06:59.3927220Z === Testing for duplicate unit pointers in unitsLibrary ===
+2025-08-19T01:06:59.3927510Z Total units in library: 4070
+2025-08-19T01:06:59.3927620Z 
+2025-08-19T01:06:59.3927700Z === Checking static instance status ===
+2025-08-19T01:06:59.3928070Z ✓ All 4070 units are static instances.
+2025-08-19T01:06:59.3928220Z 
+2025-08-19T01:06:59.3928310Z === Checking for duplicate unit pointers ===
+2025-08-19T01:06:59.3928450Z 
+2025-08-19T01:06:59.3928560Z ✓ Library integrity check passed:
+2025-08-19T01:06:59.3928750Z   - No duplicate unit pointers
+2025-08-19T01:06:59.3928940Z   - All units are static instances
+2025-08-19T01:06:59.3929060Z 
+2025-08-19T01:06:59.3929130Z === Unit Power Operations Tests ===
+2025-08-19T01:06:59.3929340Z Running test_unit_negative_power_operations...
+2025-08-19T01:06:59.3929580Z test_unit_negative_power_operations passed
+2025-08-19T01:06:59.3929800Z Running test_unit_inverse_expression_parsing...
+2025-08-19T01:06:59.3930030Z test_unit_inverse_expression_parsing passed
+2025-08-19T01:06:59.3930260Z Running test_unit_negative_exponent_parsing...
+2025-08-19T01:06:59.3930490Z test_unit_negative_exponent_parsing passed
+2025-08-19T01:06:59.3930620Z 
+2025-08-19T01:06:59.3930690Z === SIUnitFromExpression Robust Tests ===
+2025-08-19T01:06:59.3930910Z     SUCCESS: Canonical form working correctly
+2025-08-19T01:06:59.3931160Z 
+2025-08-19T01:06:59.3931230Z SIUnitFromExpression robust test PASSED
+2025-08-19T01:06:59.3931390Z 
+2025-08-19T01:06:59.3931460Z === SIScalar Parser Tests ===
+2025-08-19T01:06:59.3931630Z Running test_scalar_parser_1...
+2025-08-19T01:06:59.3931810Z test_scalar_parser_1 passed
+2025-08-19T01:06:59.3931990Z Running test_scalar_parser_2...
+2025-08-19T01:06:59.3932170Z test_scalar_parser_2 passed
+2025-08-19T01:06:59.3932350Z Running test_scalar_parser_3...
+2025-08-19T01:06:59.3932520Z test_scalar_parser_3 passed
+2025-08-19T01:06:59.3932680Z Running test_scalar_parser_4...
+2025-08-19T01:06:59.3932840Z test_scalar_parser_4 passed
+2025-08-19T01:06:59.3932990Z Running test_scalar_parser_5...
+2025-08-19T01:06:59.3933150Z test_scalar_parser_5 passed
+2025-08-19T01:06:59.3933310Z Running test_scalar_parser_6...
+2025-08-19T01:06:59.3933500Z test_scalar_parser_6 passed
+2025-08-19T01:06:59.3933670Z Running test_scalar_parser_7...
+2025-08-19T01:06:59.3933840Z test_scalar_parser_7 passed
+2025-08-19T01:06:59.3934020Z Running test_scalar_parser_8...
+2025-08-19T01:06:59.3934180Z test_scalar_parser_8 passed
+2025-08-19T01:06:59.3934460Z Running test_scalar_parser_9...
+2025-08-19T01:06:59.3934620Z test_scalar_parser_9 passed
+2025-08-19T01:06:59.3934780Z Running test_scalar_parser_10...
+2025-08-19T01:06:59.3934940Z test_scalar_parser_10 passed
+2025-08-19T01:06:59.3935100Z Running test_scalar_parser_11...
+2025-08-19T01:06:59.3935260Z test_scalar_parser_11 passed
+2025-08-19T01:06:59.3935420Z Running test_scalar_parser_12...
+2025-08-19T01:06:59.3935590Z test_scalar_parser_12 passed
+2025-08-19T01:06:59.3935740Z Running test_scalar_parser_13...
+2025-08-19T01:06:59.3935930Z     π value: 1.000000000000000
+2025-08-19T01:06:59.3936130Z     π * (5 m)^2 value: 78.539816339744817
+2025-08-19T01:06:59.3942060Z     π * (5 m)^2 units: m^3/m
+2025-08-19T01:06:59.3942230Z test_scalar_parser_13 passed
+2025-08-19T01:06:59.3942410Z Running test_scalar_parser_infinity...
+2025-08-19T01:06:59.3942600Z   Testing basic infinity parsing...
+2025-08-19T01:06:59.3942780Z     inf = inf (isinf: 1)
+2025-08-19T01:06:59.3942940Z   Testing Unicode infinity symbol...
+2025-08-19T01:06:59.3943130Z     ∞ = inf (isinf: 1)
+2025-08-19T01:06:59.3943290Z   Testing negative infinity...
+2025-08-19T01:06:59.3943460Z     -inf = -inf (isinf: 1, negative: 1)
+2025-08-19T01:06:59.3943640Z   Testing infinity with units...
+2025-08-19T01:06:59.3943800Z     inf m/s = inf m/s
+2025-08-19T01:06:59.3943960Z   Testing infinity arithmetic - addition...
+2025-08-19T01:06:59.3944150Z     inf + 5 = inf (isinf: 1)
+2025-08-19T01:06:59.3944340Z   Testing infinity arithmetic - multiplication...
+2025-08-19T01:06:59.3944540Z     2 * inf = inf (isinf: 1)
+2025-08-19T01:06:59.3944700Z   Testing division by infinity...
+2025-08-19T01:06:59.3944860Z     5 / inf = 0.000000
+2025-08-19T01:06:59.3945000Z   Testing division by zero...
+2025-08-19T01:06:59.3945150Z     5 / 0 = inf (isinf: 1)
+2025-08-19T01:06:59.3945310Z   Testing infinity to the power...
+2025-08-19T01:06:59.3945480Z     (inf)^2 = inf (isinf: 1)
+2025-08-19T01:06:59.3945680Z   Testing complex expression with infinity and units...
+2025-08-19T01:06:59.3945920Z     (inf m/s) * (2 s) = inf m•s/s
+2025-08-19T01:06:59.3946100Z   Testing functions with infinity...
+2025-08-19T01:06:59.3946270Z     sqrt(inf) = inf (isinf: 1)
+2025-08-19T01:06:59.3946440Z test_scalar_parser_infinity passed
+2025-08-19T01:06:59.3946560Z 
+2025-08-19T01:06:59.3946620Z === NMR Function Tests ===
+2025-08-19T01:06:59.3946770Z Running test_nmr_functions...
+2025-08-19T01:06:59.3946930Z   Testing spin[H1]...
+2025-08-19T01:06:59.3947060Z     spin[H1] = 0.500000
+2025-08-19T01:06:59.3947250Z   Testing μ_I[H1]...
+2025-08-19T01:06:59.3947400Z     μ_I[H1] = 2.792847 µ_N
+2025-08-19T01:06:59.3947570Z   Testing 𝛾_I[H1]...
+2025-08-19T01:06:59.3947760Z     𝛾_I[H1] = 267522191.787411 rad/(s·T)
+2025-08-19T01:06:59.3947940Z   Testing nmr[H1]...
+2025-08-19T01:06:59.3948070Z     nmr[H1] = 42.577479 MHz/T
+2025-08-19T01:06:59.3948220Z test_nmr_functions passed
+2025-08-19T01:06:59.3948320Z 
+2025-08-19T01:06:59.3948530Z === SIScalar Tests ===
+2025-08-19T01:06:59.3948680Z test_SIScalarGetTypeID passed
+2025-08-19T01:06:59.3948860Z test_SIScalarCreateCopy passed
+2025-08-19T01:06:59.3949040Z test_SIScalarCreateMutableCopy passed
+2025-08-19T01:06:59.3949240Z test_SIScalarCreateWithFloat passed
+2025-08-19T01:06:59.3949440Z test_SIScalarCreateMutableWithFloat passed
+2025-08-19T01:06:59.3949650Z test_SIScalarCreateWithDouble passed
+2025-08-19T01:06:59.3949850Z test_SIScalarCreateMutableWithDouble passed
+2025-08-19T01:06:59.3950070Z test_SIScalarCreateWithFloatComplex passed
+2025-08-19T01:06:59.3950310Z test_SIScalarCreateMutableWithFloatComplex passed
+2025-08-19T01:06:59.3950540Z test_SIScalarCreateWithDoubleComplex passed
+2025-08-19T01:06:59.3950790Z test_SIScalarCreateMutableWithDoubleComplex passed
+2025-08-19T01:06:59.3951000Z test_SIScalarGetValue passed
+2025-08-19T01:06:59.3951170Z test_SIScalarSetFloatValue passed
+2025-08-19T01:06:59.3951360Z test_SIScalarSetDoubleValue passed
+2025-08-19T01:06:59.3951560Z test_SIScalarSetFloatComplexValue passed
+2025-08-19T01:06:59.3951770Z test_SIScalarSetDoubleComplexValue passed
+2025-08-19T01:06:59.3952080Z test_SIScalarSetNumericType passed
+2025-08-19T01:06:59.3952260Z test_SIScalarFloatValue passed
+2025-08-19T01:06:59.3952440Z test_SIScalarDoubleValue passed
+2025-08-19T01:06:59.3952620Z test_SIScalarFloatComplexValue passed
+2025-08-19T01:06:59.3952820Z test_SIScalarDoubleComplexValue passed
+2025-08-19T01:06:59.3953050Z test_SIScalarCreateByConvertingToNumberType passed
+2025-08-19T01:06:59.3953280Z test_SIScalarTakeComplexPart passed
+2025-08-19T01:06:59.3953490Z test_SIScalarCreateByTakingComplexPart passed
+2025-08-19T01:06:59.3953720Z test_SIScalarCreateByReducingUnit passed
+2025-08-19T01:06:59.3953910Z test_SIScalarReduceUnit passed
+2025-08-19T01:06:59.3954090Z test_SIScalarConvertToUnit passed
+2025-08-19T01:06:59.3954290Z test_SIScalarCreateByConvertingToUnit passed
+2025-08-19T01:06:59.3954500Z test_SIScalarConvertToCoherentUnit passed
+2025-08-19T01:06:59.3954750Z test_SIScalarCreateByConvertingToCoherentUnit passed
+2025-08-19T01:06:59.3954990Z test_SIScalarCreateByAdding passed
+2025-08-19T01:06:59.3955170Z test_SIScalarAdd passed
+2025-08-19T01:06:59.3955330Z test_SIScalarCreateBySubtracting passed
+2025-08-19T01:06:59.3955520Z test_SIScalarSubtract passed
+2025-08-19T01:06:59.3955760Z test_SIScalarCreateByMultiplyingWithoutReducingUnit passed
+2025-08-19T01:06:59.3956040Z test_SIScalarMultiplyWithoutReducingUnit passed
+2025-08-19T01:06:59.3956270Z test_SIScalarCreateByMultiplying passed
+2025-08-19T01:06:59.3956460Z test_SIScalarMultiply passed
+2025-08-19T01:06:59.3956680Z test_SIScalarCreateByDividingWithoutReducingUnit passed
+2025-08-19T01:06:59.3956940Z test_SIScalarDivideWithoutReducingUnit passed
+2025-08-19T01:06:59.3957150Z test_SIScalarCreateByDividing passed
+2025-08-19T01:06:59.3957330Z test_SIScalarDivide passed
+2025-08-19T01:06:59.3957570Z test_SIScalarCreateByRaisingToPowerWithoutReducingUnit passed
+2025-08-19T01:06:59.3957880Z test_SIScalarRaiseToAPowerWithoutReducingUnit passed
+2025-08-19T01:06:59.3958120Z test_SIScalarCreateByRaisingToPower passed
+2025-08-19T01:06:59.3958330Z test_SIScalarRaiseToAPower passed
+2025-08-19T01:06:59.3958540Z test_SIScalarCreateByTakingAbsoluteValue passed
+2025-08-19T01:06:59.3958760Z test_SIScalarTakeAbsoluteValue passed
+2025-08-19T01:06:59.3959020Z test_SIScalarCreateByGammaFunctionWithoutReducingUnit passed
+2025-08-19T01:06:59.3959290Z test_SIScalarCreateByTakingNthRoot passed
+2025-08-19T01:06:59.3959490Z test_SIScalarTakeNthRoot passed
+2025-08-19T01:06:59.3959660Z test_SIScalarTakeLog10 passed
+2025-08-19T01:06:59.3959850Z test_SIScalarCreateByZeroingPart passed
+2025-08-19T01:06:59.3960040Z test_SIScalarZeroPart passed
+2025-08-19T01:06:59.3960260Z test_SIScalarMultiplyByDimensionlessRealConstant passed
+2025-08-19T01:06:59.3960590Z test_SIScalarCreateByMultiplyingByDimensionlessRealConstant passed
+2025-08-19T01:06:59.3960970Z test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant passed
+2025-08-19T01:06:59.3961430Z test_SIScalarMultiplyByDimensionlessComplexConstant passed
+2025-08-19T01:06:59.3961700Z test_SIScalarCreateByConjugation passed
+2025-08-19T01:06:59.3961900Z test_SIScalarConjugate passed
+2025-08-19T01:06:59.3962080Z Testing SIScalarShow (output below): 1.23 m
+2025-08-19T01:06:59.4217780Z 
+2025-08-19T01:06:59.4218590Z test_SIScalarShow passed
+2025-08-19T01:06:59.4219000Z test_SIScalarCreateStringValue passed
+2025-08-19T01:06:59.4219670Z test_SIScalarCreateNumericStringValue passed
+2025-08-19T01:06:59.4220520Z test_SIScalarCreateStringValueForPart passed
+2025-08-19T01:06:59.4222340Z test_SIScalarCopyUnitSymbol passed
+2025-08-19T01:06:59.4222610Z test_SIScalarCreateStringValueWithFormat passed
+2025-08-19T01:06:59.4222910Z test_SIScalarCreateNumericStringValueWithFormat passed
+2025-08-19T01:06:59.4223180Z test_SIScalarAddToArrayAsStringValue passed
+2025-08-19T01:06:59.4223390Z test_SIScalarIsReal passed
+2025-08-19T01:06:59.4223560Z test_SIScalarIsImaginary passed
+2025-08-19T01:06:59.4223740Z test_SIScalarIsComplex passed
+2025-08-19T01:06:59.4224250Z test_SIScalarIsZero passed
+2025-08-19T01:06:59.4224440Z test_SIScalarIsInfinite passed
+2025-08-19T01:06:59.4224920Z test_SIScalarIsRealNonNegativeInteger passed
+2025-08-19T01:06:59.4225180Z test_SIScalarValidateProposedStringValue passed
+2025-08-19T01:06:59.4225400Z test_SIScalarEqual passed
+2025-08-19T01:06:59.4225630Z test_SIScalarCompare passed
+2025-08-19T01:06:59.4225810Z test_SIScalarCompareReduced passed
+2025-08-19T01:06:59.4226020Z test_SIScalarCompareLoose passed
+2025-08-19T01:06:59.4226240Z test_SIScalarBestConversionForQuantity passed
+2025-08-19T01:06:59.4226500Z test_SIScalarBestConversionForQuantity_large passed
+2025-08-19T01:06:59.4226760Z test_SIScalarBestConversionForQuantity_tiny passed
+2025-08-19T01:06:59.4227030Z test_SIScalarBestConversionForQuantity_noop passed
+2025-08-19T01:06:59.4227290Z test_SIScalarBestConversionForQuantity_zero passed
+2025-08-19T01:06:59.4227560Z test_SIScalarBestConversionForQuantity_negative passed
+2025-08-19T01:06:59.4227810Z test_SIScalarWriteReadJSON_simple passed
+2025-08-19T01:06:59.4228020Z test_SIScalarWriteReadJSON_negative passed
+2025-08-19T01:06:59.4228250Z test_SIScalarWriteReadJSON_complex_unit passed
+2025-08-19T01:06:59.4228520Z Running test_SIScalarWriteReadJSON_array_and_dictionary...
+2025-08-19T01:06:59.4228800Z Serialized SIScalar array: ["42 m","-7 kg","3.14 s"]
+2025-08-19T01:06:59.4229130Z Serialized SIScalar dictionary: {"distance":"42 m","mass":"-7 kg","duration":"3.14 s"}
+2025-08-19T01:06:59.4229480Z test_SIScalarWriteReadJSON_array_and_dictionary passed
+2025-08-19T01:06:59.4229700Z 
+2025-08-19T01:06:59.4229760Z 0 test(s) failed
+2025-08-19T01:06:59.4230260Z rm build/gen/SIDimensionalityScanner.c build/gen/SIScalarScanner.c build/gen/SIUnitExpressionScanner.c build/gen/SIUnitScanner.c build/gen/SIFormulaScanner.c
+2025-08-19T01:06:59.4230800Z + make install-shared 'CC=ccache clang'
+2025-08-19T01:06:59.4661140Z mkdir -p build build/obj build/gen build/bin build/lib third_party/lib third_party/include
+2025-08-19T01:06:59.4674870Z flex -o build/gen/SIDimensionalityScanner.c src/SIDimensionalityScanner.l
+2025-08-19T01:06:59.4685700Z OCTypes headers ready under third_party/include/OCTypes
+2025-08-19T01:06:59.4686430Z flex -o build/gen/SIFormulaScanner.c src/SIFormulaScanner.l
+2025-08-19T01:06:59.4706160Z src/SIDimensionalityScanner.l:24: warning, -s option given but default rule can be matched
+2025-08-19T01:06:59.4812190Z flex -o build/gen/SIScalarScanner.c src/SIScalarScanner.l
+2025-08-19T01:06:59.4815170Z flex -o build/gen/SIUnitExpressionScanner.c src/SIUnitExpressionScanner.l
+2025-08-19T01:06:59.4841530Z src/SIUnitExpressionScanner.l:61: warning, -s option given but default rule can be matched
+2025-08-19T01:06:59.4857420Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:06:59.4860120Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:06:59.4862420Z src/SIScalarScanner.l:173: warning, dangerous trailing context
+2025-08-19T01:06:59.4864010Z src/SIScalarScanner.l:163: warning, dangerous trailing context
+2025-08-19T01:06:59.4866470Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:06:59.4867460Z src/SIScalarScanner.l:163: warning, dangerous trailing context
+2025-08-19T01:06:59.4868760Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:59.4879590Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:59.4880020Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:59.4880430Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:06:59.4880840Z src/SIScalarScanner.l:188: warning, dangerous trailing context
+2025-08-19T01:06:59.4881270Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:59.4881670Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:59.4882070Z src/SIScalarScanner.l:188: warning, dangerous trailing context
+2025-08-19T01:06:59.4882460Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:59.4882870Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:59.4883480Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:06:59.4961860Z flex -o build/gen/SIUnitScanner.c src/SIUnitScanner.l
+2025-08-19T01:06:59.4987280Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIDimensionalityScanner.o build/gen/SIDimensionalityScanner.c
+2025-08-19T01:06:59.5016920Z src/SIUnitScanner.l:36: warning, -s option given but default rule can be matched
+2025-08-19T01:06:59.5043220Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIFormulaScanner.o build/gen/SIFormulaScanner.c
+2025-08-19T01:06:59.5097130Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIScalarScanner.o build/gen/SIScalarScanner.c
+2025-08-19T01:06:59.5155350Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIUnitExpressionScanner.o build/gen/SIUnitExpressionScanner.c
+2025-08-19T01:06:59.5157980Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -c -o build/obj/SIUnitScanner.o build/gen/SIUnitScanner.c
+2025-08-19T01:06:59.5215120Z ar rcs build/lib/libSITypes.a build/obj/SIDimensionality.o build/obj/SIDimensionalityLib.o build/obj/SIQuantity.o build/obj/SIScalar.o build/obj/SIScalarConstants.o build/obj/SIScalarParser.o build/obj/SIScalarParserHelpers.o build/obj/SITypes.o build/obj/SIUnit.o build/obj/SIUnitExpression.o build/obj/SIDimensionalityParser.tab.o build/obj/SIScalarParser.tab.o build/obj/SIUnitExpressionParser.tab.o build/obj/SIUnitParser.tab.o build/obj/SIDimensionalityScanner.o build/obj/SIFormulaScanner.o build/obj/SIScalarScanner.o build/obj/SIUnitExpressionScanner.o build/obj/SIUnitScanner.o
+2025-08-19T01:06:59.5373330Z ccache clang -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Ithird_party/include/OCTypes -dynamiclib -fPIC -install_name @rpath/libSITypes.dylib -current_version 0.1.4 -compatibility_version 0.1 -o build/lib/libSITypes.dylib build/obj/SIDimensionality.o build/obj/SIDimensionalityLib.o build/obj/SIQuantity.o build/obj/SIScalar.o build/obj/SIScalarConstants.o build/obj/SIScalarParser.o build/obj/SIScalarParserHelpers.o build/obj/SITypes.o build/obj/SIUnit.o build/obj/SIUnitExpression.o build/obj/SIDimensionalityParser.tab.o build/obj/SIScalarParser.tab.o build/obj/SIUnitExpressionParser.tab.o build/obj/SIUnitParser.tab.o build/obj/SIDimensionalityScanner.o build/obj/SIFormulaScanner.o build/obj/SIScalarScanner.o build/obj/SIUnitExpressionScanner.o build/obj/SIUnitScanner.o -Lthird_party/lib -lOCTypes -lm
+2025-08-19T01:06:59.5772470Z mkdir -p install/lib install/include/SITypes
+2025-08-19T01:06:59.5791680Z cp build/lib/libSITypes.a install/lib/
+2025-08-19T01:06:59.5819140Z cp build/lib/libSITypes.dylib install/lib/
+2025-08-19T01:06:59.5849470Z cp src/*.h install/include/SITypes/
+2025-08-19T01:06:59.6050210Z + ccache --show-stats
+2025-08-19T01:06:59.6151960Z Cacheable calls:    34 /  36 (94.44%)
+2025-08-19T01:06:59.6152610Z   Hits:              5 /  34 (14.71%)
+2025-08-19T01:06:59.6153130Z     Direct:          5 /   5 (100.0%)
+2025-08-19T01:06:59.6153640Z     Preprocessed:    0 /   5 ( 0.00%)
+2025-08-19T01:06:59.6155260Z   Misses:           29 /  34 (85.29%)
+2025-08-19T01:06:59.6155740Z Uncacheable calls:   2 /  36 ( 5.56%)
+2025-08-19T01:06:59.6156220Z Local storage:
+2025-08-19T01:06:59.6156600Z   Cache size (GB): 0.0 / 0.2 ( 0.36%)
+2025-08-19T01:06:59.6157060Z   Hits:              5 /  34 (14.71%)
+2025-08-19T01:06:59.6157530Z   Misses:           29 /  34 (85.29%)
+2025-08-19T01:06:59.6158040Z + test -f install/lib/libSITypes.a
+2025-08-19T01:06:59.6158510Z + '[' macOS = macOS ']'
+2025-08-19T01:06:59.6158940Z + test -f install/lib/libSITypes.dylib
+2025-08-19T01:06:59.6207810Z ##[group]Run actions/upload-artifact@v4
+2025-08-19T01:06:59.6208020Z with:
+2025-08-19T01:06:59.6208150Z   name: libSITypes-macos-latest
+2025-08-19T01:06:59.6208410Z   path: install/lib/libSITypes.*
+2025-08-19T01:06:59.6208580Z   compression-level: 9
+2025-08-19T01:06:59.6208730Z   if-no-files-found: error
+2025-08-19T01:06:59.6208880Z   overwrite: false
+2025-08-19T01:06:59.6209030Z   include-hidden-files: false
+2025-08-19T01:06:59.6209560Z env:
+2025-08-19T01:06:59.6210260Z   MAKEFLAGS: -j2
+2025-08-19T01:06:59.6210770Z   CCACHE_BASEDIR: /Users/runner/work/SITypes/SITypes
+2025-08-19T01:06:59.6211340Z   CCACHE_COMPRESS: 1
+2025-08-19T01:06:59.6211740Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:06:59.6212130Z ##[endgroup]
+2025-08-19T01:06:59.8042770Z With the provided path, there will be 2 files uploaded
+2025-08-19T01:06:59.8045360Z Artifact name is valid!
+2025-08-19T01:06:59.8046150Z Root directory input is valid!
+2025-08-19T01:07:00.0092340Z Beginning upload of artifact content to blob storage
+2025-08-19T01:07:00.5777050Z Uploaded bytes 502528
+2025-08-19T01:07:00.6386560Z Finished uploading artifact content to blob storage!
+2025-08-19T01:07:00.6394420Z SHA256 digest of uploaded artifact zip is 2e69c2f2dfa3bee3d8e4c33daa6dba694ca864e0e046ea24c9e837f1b8d2016e
+2025-08-19T01:07:00.6398370Z Finalizing artifact upload
+2025-08-19T01:07:00.7668110Z Artifact libSITypes-macos-latest.zip successfully finalized. Artifact ID 3794091369
+2025-08-19T01:07:00.7669670Z Artifact libSITypes-macos-latest has been successfully uploaded! Final size is 502528 bytes. Artifact ID is 3794091369
+2025-08-19T01:07:00.7686260Z Artifact download URL: https://github.com/pjgrandinetti/SITypes/actions/runs/17056659096/artifacts/3794091369
+2025-08-19T01:07:00.8592300Z Post job cleanup.
+2025-08-19T01:07:00.9790840Z [command]/opt/homebrew/bin/gtar --posix -cf cache.tzst --exclude cache.tzst -P -C /Users/runner/work/SITypes/SITypes --files-from manifest.txt --delay-directory-restore --use-compress-program zstdmt
+2025-08-19T01:07:01.7107410Z Sent 719634 of 719634 (100.0%), 1.2 MBs/sec
+2025-08-19T01:07:01.8113880Z Cache saved with key: tp-macOS-938a2e6f3b18269d635b5d0b340f0fb5a92836893aab92af11fcc55f881bb0e6
+2025-08-19T01:07:01.9300880Z Post job cleanup.
+2025-08-19T01:07:02.0733730Z [warning]Path Validation Error: Path(s) specified in the action for caching do(es) not exist, hence no cache is being saved.
+2025-08-19T01:07:02.0813520Z Post job cleanup.
+2025-08-19T01:07:02.2026350Z [command]/opt/homebrew/bin/git version
+2025-08-19T01:07:02.2084240Z git version 2.50.1
+2025-08-19T01:07:02.2120870Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/36882aca-9ea0-45c2-aad9-2a70b2b8d454/.gitconfig'
+2025-08-19T01:07:02.2133720Z Temporarily overriding HOME='/Users/runner/work/_temp/36882aca-9ea0-45c2-aad9-2a70b2b8d454' before making global git config changes
+2025-08-19T01:07:02.2138720Z Adding repository directory to the temporary git global config as a safe directory
+2025-08-19T01:07:02.2142930Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/SITypes/SITypes
+2025-08-19T01:07:02.2234610Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-08-19T01:07:02.2351200Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-08-19T01:07:02.3329840Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-08-19T01:07:02.3393000Z http.https://github.com/.extraheader
+2025-08-19T01:07:02.3407740Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-08-19T01:07:02.3483680Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-08-19T01:07:02.4583110Z Cleaning up orphan processes

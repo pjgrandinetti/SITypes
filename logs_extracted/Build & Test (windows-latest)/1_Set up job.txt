@@ -1,0 +1,44 @@
+﻿2025-08-19T01:06:32.3054200Z Current runner version: '2.327.1'
+2025-08-19T01:06:32.3112973Z ##[group]Runner Image Provisioner
+2025-08-19T01:06:32.3113750Z Hosted Compute Agent
+2025-08-19T01:06:32.3114249Z Version: 20250818.377
+2025-08-19T01:06:32.3114758Z Commit: 3c593e9f75fe0b87e893bca80d6e12ba089c61fc
+2025-08-19T01:06:32.3115411Z Build Date: 2025-08-18T14:52:18Z
+2025-08-19T01:06:32.3115948Z ##[endgroup]
+2025-08-19T01:06:32.3116401Z ##[group]Operating System
+2025-08-19T01:06:32.3116986Z Microsoft Windows Server 2022
+2025-08-19T01:06:32.3117519Z 10.0.20348
+2025-08-19T01:06:32.3117948Z Datacenter
+2025-08-19T01:06:32.3118366Z ##[endgroup]
+2025-08-19T01:06:32.3118795Z ##[group]Runner Image
+2025-08-19T01:06:32.3119235Z Image: windows-2022
+2025-08-19T01:06:32.3119724Z Version: 20250811.1.0
+2025-08-19T01:06:32.3120664Z Included Software: https://github.com/actions/runner-images/blob/win22/20250811.1/images/windows/Windows2022-Readme.md
+2025-08-19T01:06:32.3121969Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20250811.1
+2025-08-19T01:06:32.3123254Z ##[endgroup]
+2025-08-19T01:06:32.3125749Z ##[group]GITHUB_TOKEN Permissions
+2025-08-19T01:06:32.3128107Z Actions: write
+2025-08-19T01:06:32.3128640Z Attestations: write
+2025-08-19T01:06:32.3129081Z Checks: write
+2025-08-19T01:06:32.3129544Z Contents: write
+2025-08-19T01:06:32.3129956Z Deployments: write
+2025-08-19T01:06:32.3130424Z Discussions: write
+2025-08-19T01:06:32.3130894Z Issues: write
+2025-08-19T01:06:32.3131302Z Metadata: read
+2025-08-19T01:06:32.3131717Z Models: read
+2025-08-19T01:06:32.3132179Z Packages: write
+2025-08-19T01:06:32.3132629Z Pages: write
+2025-08-19T01:06:32.3133016Z PullRequests: write
+2025-08-19T01:06:32.3133520Z RepositoryProjects: write
+2025-08-19T01:06:32.3134009Z SecurityEvents: write
+2025-08-19T01:06:32.3134524Z Statuses: write
+2025-08-19T01:06:32.3134963Z ##[endgroup]
+2025-08-19T01:06:32.3136979Z Secret source: Actions
+2025-08-19T01:06:32.3137761Z Prepare workflow directory
+2025-08-19T01:06:32.3673606Z Prepare all required actions
+2025-08-19T01:06:32.3715655Z Getting action download info
+2025-08-19T01:06:32.6143573Z Download action repository 'actions/checkout@v5' (SHA:08c6903cd8c0fde910a37f88322edcfb5dd907a8)
+2025-08-19T01:06:32.9417616Z Download action repository 'msys2/setup-msys2@v2' (SHA:40677d36a502eb2cf0fb808cc9dec31bf6152638)
+2025-08-19T01:06:33.2178200Z Download action repository 'actions/cache@v4' (SHA:0400d5f644dc74513175e3cd8d07132dd4860809)
+2025-08-19T01:06:33.5459097Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-08-19T01:06:33.8492284Z Complete job name: Build & Test (windows-latest)

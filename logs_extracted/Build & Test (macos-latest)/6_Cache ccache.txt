@@ -1,0 +1,19 @@
+﻿2025-08-19T01:06:51.1095150Z ##[group]Run actions/cache@v4
+2025-08-19T01:06:51.1095410Z with:
+2025-08-19T01:06:51.1095580Z   path: ~/.ccache
+C:\msys64\home\runneradmin\.ccache
+
+2025-08-19T01:06:51.1095940Z   key: ccache-macOS-4a900c46ed108d3dfb3adcfaea76a5f9325cf27e4984a33f3f3111d20d25618e
+2025-08-19T01:06:51.1096250Z   restore-keys: ccache-macOS-
+
+2025-08-19T01:06:51.1096430Z   enableCrossOsArchive: false
+2025-08-19T01:06:51.1096600Z   fail-on-cache-miss: false
+2025-08-19T01:06:51.1096770Z   lookup-only: false
+2025-08-19T01:06:51.1096900Z   save-always: false
+2025-08-19T01:06:51.1097060Z env:
+2025-08-19T01:06:51.1097170Z   MAKEFLAGS: -j2
+2025-08-19T01:06:51.1097330Z   CCACHE_BASEDIR: /Users/runner/work/SITypes/SITypes
+2025-08-19T01:06:51.1097530Z   CCACHE_COMPRESS: 1
+2025-08-19T01:06:51.1106620Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:06:51.1106750Z ##[endgroup]
+2025-08-19T01:06:51.3938210Z Cache not found for input keys: ccache-macOS-4a900c46ed108d3dfb3adcfaea76a5f9325cf27e4984a33f3f3111d20d25618e, ccache-macOS-
