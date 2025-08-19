@@ -530,7 +530,7 @@ float SIScalarFloatValueInUnit(SIScalarRef theScalar, SIUnitRef unit, bool *succ
             }
         }
     }
-    if (success) *success *= false;
+    if (success) *success &= false;
     return nan(NULL);
 }
 double SIScalarDoubleValueInUnit(SIScalarRef theScalar, SIUnitRef unit, bool *success) {
@@ -552,7 +552,7 @@ double SIScalarDoubleValueInUnit(SIScalarRef theScalar, SIUnitRef unit, bool *su
             }
         }
     }
-    if (success) *success *= false;
+    if (success) *success &= false;
     return nan(NULL);
 }
 float complex SIScalarFloatComplexValueInUnit(SIScalarRef theScalar, SIUnitRef unit, bool *success) {
@@ -574,7 +574,7 @@ float complex SIScalarFloatComplexValueInUnit(SIScalarRef theScalar, SIUnitRef u
             }
         }
     }
-    if (success) *success *= false;
+    if (success) *success &= false;
     return nan(NULL);
 }
 double complex SIScalarDoubleComplexValueInUnit(SIScalarRef theScalar, SIUnitRef unit, bool *success) {
@@ -599,7 +599,7 @@ double complex SIScalarDoubleComplexValueInUnit(SIScalarRef theScalar, SIUnitRef
             }
         }
     }
-    if (success) *success *= false;
+    if (success) *success &= false;
     return nan(NULL);
 }
 #pragma mark Operations
