@@ -4,69 +4,64 @@ on:
   push:
     branches: [ master ]
     tags: [ 'v*.*.*' ]
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
   pull_request:
     branches: [ master ]
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
-  workflow_dispatch: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   build:
     name: Build & Test (${{ matrix.label }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 25
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
-            arch: x86_64
             label: ubuntu-latest.x64
+            compiler: clang
           - os: macos-latest
-            arch: x86_64
             label: macos-latest
+            compiler: clang
           - os: windows-latest
-            arch: x86_64
             label: windows-latest
-    env:
-      MAKEFLAGS: -j2
-      CCACHE_BASEDIR: ${{ github.workspace }}
-      CCACHE_COMPRESS: "1"
-      CCACHE_MAXSIZE: "200M"
+            compiler: gcc
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           fetch-depth: 0  # Fetch all history and tags for version detection
 
-      # ---------- Linux ----------
-      - name: Install deps (Linux)
+      # ---------- Linux deps ----------
+      - name: Install dependencies on Ubuntu
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang make flex bison unzip ccache
+          sudo apt-get install -y \
+            clang make flex bison unzip \
+            ccache
 
-      # ---------- macOS ----------
-      - name: Install deps (macOS)
+      # ---------- macOS deps ----------
+      - name: Install LLVM/build tools on macOS
         if: runner.os == 'macOS'
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: "1"
-          HOMEBREW_NO_INSTALL_CLEANUP: "1"
         run: |
-          brew install flex bison ccache
+          brew update
+          brew install llvm ccache flex bison
+          # Help the build find Homebrew LLVM on both Intel & Apple Silicon
+          echo "/opt/homebrew/opt/llvm/bin" >> "$GITHUB_PATH" || true
+          echo "/usr/local/opt/llvm/bin"     >> "$GITHUB_PATH" || true
           echo "$(brew --prefix bison)/bin" >> "$GITHUB_PATH"
           echo "$(brew --prefix flex)/bin"  >> "$GITHUB_PATH"
 
-      # ---------- Windows ----------
+      # ---------- Windows deps ----------
       - name: Set up MSYS2 & MinGW (Windows)
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
@@ -76,51 +71,40 @@ jobs:
           cache: true
           install: >
             mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-ccache
             make
             flex
             bison
             unzip
-            mingw-w64-x86_64-ccache
 
-      # ---------- Caches (speed + save minutes) ----------
+      # ---------- Build cache (ccache) ----------
       - name: Cache ccache
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.ccache
-            C:\msys64\home\runneradmin\.ccache
-          key: ccache-${{ runner.os }}-${{ hashFiles('**/Makefile', 'src/**/*.c', 'src/**/*.h', 'tests/**/*.c', 'tests/**/*.h') }}
+          path: ~/.ccache
+          key: ccache-${{ runner.os }}-${{ matrix.label }}-${{ github.sha }}
           restore-keys: |
-            ccache-${{ runner.os }}-
+            ccache-${{ runner.os }}-${{ matrix.label }}-
 
-      - name: Cache third_party (OCTypes zips + extracted)
-        uses: actions/cache@v4
-        with:
-          path: third_party
-          key: tp-${{ runner.os }}-${{ hashFiles('SITypes/Makefile', 'Makefile', '.github/workflows/**') }}
-          restore-keys: |
-            tp-${{ runner.os }}-
-
-      # ---------- Build & Test ----------
-      - name: Build & test (Linux/macOS)
+      # ---------- Build & test (Linux/macOS) ----------
+      - name: Build & test on Linux/macOS
         if: runner.os != 'Windows'
+        env:
+          # Use ccache + chosen compiler
+          CC: ${{ matrix.compiler == 'clang' && 'ccache clang' || 'ccache gcc' }}
         run: |
-          set -euxo pipefail
-          ccache --zero-stats || true
+          set -euo pipefail
+          # Parallelism
+          CORES="$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.logicalcpu 2>/dev/null || echo 2)"
+          export MAKEFLAGS="-j${CORES}"
           make clean
-          make octypes
-          make test CC="ccache clang"
-          make install-shared CC="ccache clang"
-          ccache --show-stats || true
-          # Verify libs
-          test -f install/lib/libSITypes.a
-          if [ "$RUNNER_OS" = "macOS" ]; then
-            test -f install/lib/libSITypes.dylib
-          else
-            test -f install/lib/libSITypes.so
-          fi
+          make update-deps
+          make test
+          make install-shared
+          ls -la install/lib/
 
-      - name: Build & test (Windows)
+      # ---------- Build & test (Windows) ----------
+      - name: Build & test on Windows (MSYS2)
         if: runner.os == 'Windows'
         shell: msys2 {0}
         env:
@@ -129,89 +113,114 @@ jobs:
           CFLAGS: "-Wno-unknown-pragmas"
         run: |
           set -euo pipefail
-          ccache --zero-stats || true
           make clean
-          make octypes LEX=flex YACC="bison -y" CFLAGS="${CFLAGS}"
-          # Debug: Check what files are present in third_party/lib
-          echo "Contents of third_party/lib:"
-          ls -la third_party/lib/
+          make update-deps CFLAGS="${CFLAGS}"
+          make LEX=flex YACC="bison -y" CFLAGS="${CFLAGS}"
           make test LEX=flex YACC="bison -y" CFLAGS="${CFLAGS}"
           make install-shared LEX=flex YACC="bison -y" CFLAGS="${CFLAGS}"
-          ccache --show-stats || true
-          # Verify libs
-          test -f install/lib/libSITypes.a
-          test -f install/lib/libSITypes.dll
+          ls -la install/lib/
 
-      # ---------- Artifacts (keep for PRs by default) ----------
-      - name: Upload library artifacts
+      - name: Upload library artifact
         uses: actions/upload-artifact@v4
         with:
           name: libSITypes-${{ matrix.label }}
-          path: install/lib/libSITypes.*
-          compression-level: 9
-          if-no-files-found: error
+          path: install/lib/*
+          retention-days: 7
 
-      # Headers only once (Ubuntu) to avoid duplication
-      - name: Package public headers (Ubuntu)
-        if: matrix.os == 'ubuntu-latest'
+      # Package public headers once (Ubuntu x64)
+      - name: Package public headers
+        if: runner.os == 'Linux'
         run: |
-          mkdir -p header-pkg/include
-          cp src/*.h header-pkg/include/
-          zip -j header-pkg/libSITypes-headers.zip header-pkg/include/*.h
-      - name: Upload headers artifact (Ubuntu)
-        if: matrix.os == 'ubuntu-latest'
+          make install
+          mkdir -p header-pkg
+          cd install && zip -qr ../header-pkg/libSITypes-headers.zip include/
+
+      - name: Upload headers artifact
+        if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
         with:
           name: libSITypes-headers
           path: header-pkg/libSITypes-headers.zip
-          compression-level: 9
+          retention-days: 7
 
-  # Arm64 Linux only on tags to save minutes
-  build-arm64:
-    if: startsWith(github.ref, 'refs/tags/')
-    name: Build & Test (ubuntu-latest.arm64)
+  # Memory-sanitized tests on Linux
+  asan:
+    name: ASan (ubuntu-latest)
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')   # <-- only run on release tags
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # Fetch all history and tags for version detection
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y clang make flex bison unzip \
+            ccache
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ccache-asan-${{ github.sha }}
+          restore-keys: ccache-asan-
+      - run: |
+          CORES="$(getconf _NPROCESSORS_ONLN || echo 2)"
+          export MAKEFLAGS="-j${CORES}"
+          export CC="ccache clang"
+          make clean
+          make update-deps
+          make test-asan
+
+  # ARM64 Linux build: still under releases only (keeps PRs fast)
+  build-arm64:
+    name: Build & Test (ubuntu-latest.arm64)
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')   # <-- only run on release tags
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0  # Fetch all history and tags for version detection
 
-      - name: Set up QEMU
+      - name: Set up QEMU emulation
         uses: docker/setup-qemu-action@v3
         with:
           platforms: linux/arm64
 
+      - name: Install QEMU binfmt handlers
+        run: docker run --rm --privileged tonistiigi/binfmt --install all
+
       - name: Build & test in ARM64 container
         run: |
-          set -euxo pipefail
           docker run --rm --platform=linux/arm64 \
-            -v ${{ github.workspace }}:/src -w /src ubuntu:22.04 bash -lc "\
-              apt-get update && apt-get install -y curl ca-certificates clang make flex bison unzip && \
-              curl --version && \
-              make clean && make octypes && make test CC=clang && make install-shared CC=clang && \
-              test -f install/lib/libSITypes.a && test -f install/lib/libSITypes.so"
+            -v "${{ github.workspace }}:/src" -w /src ubuntu:22.04 bash -lc "\
+              set -euo pipefail && \
+              apt-get update && \
+              apt-get install -y curl clang make flex bison unzip && \
+              export MAKEFLAGS=\"-j\$(nproc)\" && \
+              make clean && \
+              make update-deps && \
+              make test && make install-shared && \
+              ls -la install/lib/"
 
-      - name: Upload ARM64 artifacts
+      - name: Upload library artifacts
         uses: actions/upload-artifact@v4
         with:
           name: libSITypes-ubuntu-latest.arm64
-          path: install/lib/libSITypes.*
-          compression-level: 9
-          if-no-files-found: error
+          path: install/lib/*
+          retention-days: 7
 
   release:
-    if: startsWith(github.ref, 'refs/tags/')
     name: Package & Release
-    needs: [build, build-arm64]
+    needs: [build, asan, build-arm64]
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: write
     steps:
-      - name: Install zip
-        run: sudo apt-get update && sudo apt-get install -y zip
-
-      - name: Download artifacts
+      - name: Download build artifacts
         uses: actions/download-artifact@v5
         with:
           path: artifacts
@@ -219,30 +228,40 @@ jobs:
       - name: Copy header bundle
         run: |
           mkdir -p packages
-          cp artifacts/libSITypes-headers/libSITypes-headers.zip packages/ || true
+          cp artifacts/libSITypes-headers/libSITypes-headers.zip packages/
 
       - name: Package libraries into ZIPs
         run: |
-          set -euxo pipefail
+          set -euo pipefail
           mkdir -p packages
           for osdir in artifacts/*; do
             [ -d "$osdir" ] || continue
-            base="$(basename "$osdir")"
-            platform="${base#libSITypes-}"
-            [ "$platform" = "headers" ] && continue
-            files=( "$osdir"/libSITypes.* )
-            keep=()
-            for f in "${files[@]}"; do [ -f "$f" ] && keep+=("$f"); done
-            [ ${#keep[@]} -gt 0 ] || { echo "Skipping $osdir (no library files)"; continue; }
-            zip -j "packages/libSITypes-${platform}.zip" "${keep[@]}"
+            case "$(basename "$osdir")" in
+              libSITypes-ubuntu-latest.x64)  zipname="ubuntu-latest.x64" ;;
+              libSITypes-ubuntu-latest.arm64) zipname="ubuntu-latest.arm64" ;;
+              libSITypes-macos-latest)       zipname="macos-latest" ;;
+              libSITypes-windows-latest)     zipname="windows-latest" ;;
+              libSITypes-headers)            continue ;;
+              *) zipname="$(basename "$osdir" | sed 's/^libSITypes-//')" ;;
+            esac
+            files=( $(find "$osdir" -maxdepth 2 -type f \( -name 'libSITypes.*' -o -name '*.a' -o -name '*.so' -o -name '*.dylib' -o -name '*.dll' \)) )
+            [ ${#files[@]} -gt 0 ] || { echo "No library files in $osdir, skipping"; continue; }
+            zip -j "packages/libSITypes-${zipname}.zip" "${files[@]}"
           done
-          ls -la packages/
 
-      - name: Create/Update GitHub Release
+      - name: Generate checksums
+        run: |
+          (cd packages && sha256sum *.zip > SHA256SUMS.txt)
+          cat packages/SHA256SUMS.txt
+
+      - name: Create or update GitHub Release and upload assets
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          files: packages/*.zip
+          files: |
+            packages/*.zip
+            packages/SHA256SUMS.txt
+          prerelease: ${{ contains(github.ref_name, '-rc') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

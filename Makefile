@@ -185,6 +185,7 @@ help:
 	@echo ""
 	@echo "Examples:"
 	@echo "  make                           # Build everything"
+	@echo "  make update-deps               # Fetch/update dependencies"
 	@echo "  make OCT_RELEASE_TAG=v0.1.3 octypes  # Pin to a release"
 	@echo "  make OCT_FORCE_FETCH=1 octypes # Force-refresh OCTypes"
 
@@ -269,6 +270,10 @@ octypes-refresh:
 	@echo "Forcing OCTypes refresh…"
 	@$(RM) -r "$(TP_LIB_DIR)" "$(OCT_INCLUDE)" "$(OCT_LIB_ARCHIVE)" "$(OCT_HEADERS_ARCHIVE)"
 	@$(MAKE) OCT_FORCE_FETCH=1 octypes
+
+.PHONY: update-deps
+update-deps: octypes
+	@echo "Dependencies updated."
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Generators (Bison/Flex) — direct outputs to GEN_DIR (no mv; race-free)
