@@ -350,12 +350,13 @@ test-debug: octypes prepare $(LIB_DIR)/libSITypes.a $(TEST_OBJ) copy-dlls
 test-asan: octypes prepare $(LIB_DIR)/libSITypes.a $(TEST_OBJ) copy-dlls
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g -O1 -fsanitize=address -fno-omit-frame-pointer \
 	  -I$(TEST_SRC_DIR) $(TEST_OBJ) \
-	  $(GROUP_START) $(LIB_DIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.asan
+	  $(GROUP_START) $(LIB_DIR)/libSITypes.a $(OCTYPES_LINKLIB) $(GROUP_END) \
+	  $(RPATH_FLAGS) -lm -o runTests.asan
 	@echo "Running AddressSanitizer tests..."
 	@./runTests.asan || (echo "AddressSanitizer detected issues. Checking if tests pass without sanitizer..."; \
 	  echo "Building regular test binary..."; \
 	  $(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_SRC_DIR) $(TEST_OBJ) -L$(LIB_DIR) -L$(OCT_LIBDIR) \
-	    $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) -lm -o runTests.fallback; \
+	    $(GROUP_START) -lSITypes $(OCTYPES_LINKLIB) $(GROUP_END) $(RPATH_FLAGS) -lm -o runTests.fallback; \
 	  echo "Running functional verification..."; \
 	  ./runTests.fallback && echo "✓ All functionality tests pass - AddressSanitizer issues are minor" || \
 	  (echo "✗ Functional tests failed" && exit 1))
