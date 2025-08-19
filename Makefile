@@ -36,6 +36,7 @@ BIN_DIR         := $(BUILD_DIR)/bin
 LIB_DIR         := $(BUILD_DIR)/lib
 
 THIRD_PARTY_DIR := third_party
+TP_DIR          := $(THIRD_PARTY_DIR)
 TP_LIB_DIR      := $(THIRD_PARTY_DIR)/lib
 INCLUDE_DIR     := $(THIRD_PARTY_DIR)/include
 OCT_INCLUDE     := $(INCLUDE_DIR)/OCTypes
