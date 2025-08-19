@@ -1,0 +1,22 @@
+﻿2025-08-19T01:33:33.0371940Z ##[group]Run actions/cache@v4
+2025-08-19T01:33:33.0372220Z with:
+2025-08-19T01:33:33.0372350Z   path: third_party
+2025-08-19T01:33:33.0372590Z   key: tp-macOS-142a9a7b4a2fdcd82f23c23679e92dd166c7c9337f7a756411286840109b85d4
+2025-08-19T01:33:33.0372880Z   restore-keys: tp-macOS-
+
+2025-08-19T01:33:33.0373040Z   enableCrossOsArchive: false
+2025-08-19T01:33:33.0373210Z   fail-on-cache-miss: false
+2025-08-19T01:33:33.0373360Z   lookup-only: false
+2025-08-19T01:33:33.0373490Z   save-always: false
+2025-08-19T01:33:33.0373610Z env:
+2025-08-19T01:33:33.0373730Z   MAKEFLAGS: -j2
+2025-08-19T01:33:33.0373900Z   CCACHE_BASEDIR: /Users/runner/work/SITypes/SITypes
+2025-08-19T01:33:33.0374100Z   CCACHE_COMPRESS: 1
+2025-08-19T01:33:33.0374230Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:33:33.0374360Z ##[endgroup]
+2025-08-19T01:33:33.2891820Z Cache hit for restore-key: tp-macOS-738c4654e1c05609b547a41f504b5fc4e0d5e0aeb2ea7e8c88ad855dfcce0e65
+2025-08-19T01:33:33.9953900Z Received 719616 of 719616 (100.0%), 1.5 MBs/sec
+2025-08-19T01:33:33.9972350Z Cache Size: ~1 MB (719616 B)
+2025-08-19T01:33:34.0070250Z [command]/opt/homebrew/bin/gtar -xf /Users/runner/work/_temp/35c9a159-13e2-416b-b608-54f42941efd1/cache.tzst -P -C /Users/runner/work/SITypes/SITypes --delay-directory-restore --use-compress-program unzstd
+2025-08-19T01:33:34.0392160Z Cache restored successfully
+2025-08-19T01:33:34.0670400Z Cache restored from key: tp-macOS-738c4654e1c05609b547a41f504b5fc4e0d5e0aeb2ea7e8c88ad855dfcce0e65

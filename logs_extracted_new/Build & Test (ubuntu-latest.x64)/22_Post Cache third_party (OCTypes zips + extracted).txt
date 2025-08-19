@@ -1,0 +1,4 @@
+﻿2025-08-19T01:34:49.7787276Z Post job cleanup.
+2025-08-19T01:34:49.9243450Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/SITypes/SITypes --files-from manifest.txt --use-compress-program zstdmt
+2025-08-19T01:34:50.4180843Z Sent 968454 of 968454 (100.0%), 2.6 MBs/sec
+2025-08-19T01:34:50.4941550Z Cache saved with key: tp-Linux-142a9a7b4a2fdcd82f23c23679e92dd166c7c9337f7a756411286840109b85d4

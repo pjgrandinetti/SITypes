@@ -1,0 +1,543 @@
+﻿2025-08-19T01:34:26.0505748Z ##[group]Run set -euxo pipefail
+2025-08-19T01:34:26.0506077Z [36;1mset -euxo pipefail[0m
+2025-08-19T01:34:26.0506338Z [36;1mccache --zero-stats || true[0m
+2025-08-19T01:34:26.0506587Z [36;1mmake clean[0m
+2025-08-19T01:34:26.0506792Z [36;1mmake octypes[0m
+2025-08-19T01:34:26.0507004Z [36;1mmake test CC="ccache clang"[0m
+2025-08-19T01:34:26.0507277Z [36;1mmake install-shared CC="ccache clang"[0m
+2025-08-19T01:34:26.0507550Z [36;1mccache --show-stats || true[0m
+2025-08-19T01:34:26.0507800Z [36;1m# Verify libs[0m
+2025-08-19T01:34:26.0508034Z [36;1mtest -f install/lib/libSITypes.a[0m
+2025-08-19T01:34:26.0508309Z [36;1mif [ "$RUNNER_OS" = "macOS" ]; then[0m
+2025-08-19T01:34:26.0508582Z [36;1m  test -f install/lib/libSITypes.dylib[0m
+2025-08-19T01:34:26.0508843Z [36;1melse[0m
+2025-08-19T01:34:26.0509052Z [36;1m  test -f install/lib/libSITypes.so[0m
+2025-08-19T01:34:26.0509296Z [36;1mfi[0m
+2025-08-19T01:34:26.0549130Z shell: /usr/bin/bash -e {0}
+2025-08-19T01:34:26.0549368Z env:
+2025-08-19T01:34:26.0549577Z   MAKEFLAGS: -j2
+2025-08-19T01:34:26.0549820Z   CCACHE_BASEDIR: /home/runner/work/SITypes/SITypes
+2025-08-19T01:34:26.0550118Z   CCACHE_COMPRESS: 1
+2025-08-19T01:34:26.0550326Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:34:26.0550530Z ##[endgroup]
+2025-08-19T01:34:26.0608394Z + ccache --zero-stats
+2025-08-19T01:34:26.1254587Z Statistics zeroed
+2025-08-19T01:34:26.1258320Z + make clean
+2025-08-19T01:34:26.1638357Z rm -f -r build runTests runTests.asan runTests.debug *.dSYM
+2025-08-19T01:34:26.1652924Z rm -f *.tab.* *Scanner.c *.d core.*
+2025-08-19T01:34:26.1667590Z rm -f -rf docs/doxygen docs/_build docs/html build-xcode install
+2025-08-19T01:34:26.1675892Z rm -f -r lib  # Remove old lib directory if it exists
+2025-08-19T01:34:26.1689908Z rm -f rebuild.log
+2025-08-19T01:34:26.1700465Z + make octypes
+2025-08-19T01:34:26.1888544Z OCTypes library already present. Set OCT_FORCE_FETCH=1 to refresh.
+2025-08-19T01:34:26.1890879Z OCTypes headers already present. Set OCT_FORCE_FETCH=1 to refresh.
+2025-08-19T01:34:26.1896401Z OCTypes lib ready at third_party/lib/libOCTypes.a
+2025-08-19T01:34:26.1898870Z OCTypes headers ready under third_party/include/OCTypes
+2025-08-19T01:34:26.1902368Z + make test 'CC=ccache clang'
+2025-08-19T01:34:26.2090232Z OCTypes library already present. Set OCT_FORCE_FETCH=1 to refresh.
+2025-08-19T01:34:26.2091151Z mkdir -p build build/obj build/gen build/bin build/lib third_party/lib 
+2025-08-19T01:34:26.2093042Z OCTypes headers already present. Set OCT_FORCE_FETCH=1 to refresh.
+2025-08-19T01:34:26.2106439Z OCTypes lib ready at third_party/lib/libOCTypes.a
+2025-08-19T01:34:26.2108172Z bison -d --defines=build/gen/SIDimensionalityParser.tab.h -o build/gen/SIDimensionalityParser.tab.c src/SIDimensionalityParser.y
+2025-08-19T01:34:26.2110491Z OCTypes headers ready under third_party/include/OCTypes
+2025-08-19T01:34:26.2330557Z bison -d --defines=build/gen/SIScalarParser.tab.h -o build/gen/SIScalarParser.tab.c src/SIScalarParser.y
+2025-08-19T01:34:26.3284008Z src/SIScalarParser.ysrc/SIDimensionalityParser.y:13.1-18: :14warning:.1 -18deprecated directive: ‘%name-prefix="sid"’, use ‘%define api.prefix {sid}’:  [warning: deprecated directive: ‘%name-prefix="sis"’, use ‘%define api.prefix {sis}’ [-Wdeprecated]
+2025-08-19T01:34:26.3286458Z -Wdeprecated]
+2025-08-19T01:34:26.3287270Z    14 | %   13 | n%anmaem-ep-rperfeifxi=x"=s"issi"d
+2025-08-19T01:34:26.3287943Z "
+2025-08-19T01:34:26.3288469Z       | ^      | ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2025-08-19T01:34:26.3289441Z ~
+2025-08-19T01:34:26.3289764Z       | %define api.prefix {sis}      | 
+2025-08-19T01:34:26.3290210Z %define api.prefix {sid}
+2025-08-19T01:34:26.3290770Z src/SIScalarParser.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
+2025-08-19T01:34:26.3291726Z src/SIScalarParser.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
+2025-08-19T01:34:26.6373069Z src/SIDimensionalityParser.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+2025-08-19T01:34:26.6376204Z bison -d --defines=build/gen/SIUnitExpressionParser.tab.h -o build/gen/SIUnitExpressionParser.tab.c src/SIUnitExpressionParser.y
+2025-08-19T01:34:26.6387779Z src/SIUnitExpressionParser.y:15.1-19: warning: deprecated directive: ‘%name-prefix="siue"’, use ‘%define api.prefix {siue}’ [-Wdeprecated]
+2025-08-19T01:34:26.6388921Z    15 | %name-prefix="siue"
+2025-08-19T01:34:26.6389288Z       | ^~~~~~~~~~~~~~~~~~~
+2025-08-19T01:34:26.6389667Z       | %define api.prefix {siue}
+2025-08-19T01:34:26.6397231Z src/SIUnitExpressionParser.y:202.3-207.1: warning: unset value: $$ [-Wother]
+2025-08-19T01:34:26.6398896Z   202 | | UNKNOWN_SYMBOL {
+2025-08-19T01:34:26.6399265Z       |   ^~~~~~~~~~~~~~~~
+2025-08-19T01:34:26.6399894Z src/SIUnitExpressionParser.y: warning: 4 shift/reduce conflicts [-Wconflicts-sr]
+2025-08-19T01:34:26.6400846Z src/SIUnitExpressionParser.y: warning: 3 reduce/reduce conflicts [-Wconflicts-rr]
+2025-08-19T01:34:26.6401968Z src/SIUnitExpressionParser.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
+2025-08-19T01:34:26.6412258Z src/SIScalarParser.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+2025-08-19T01:34:26.6414729Z bison -d --defines=build/gen/SIUnitParser.tab.h -o build/gen/SIUnitParser.tab.c src/SIUnitParser.y
+2025-08-19T01:34:26.6424150Z src/SIUnitParser.y:13.1-18: warning: deprecated directive: ‘%name-prefix="siu"’, use ‘%define api.prefix {siu}’ [-Wdeprecated]
+2025-08-19T01:34:26.6425369Z    13 | %name-prefix="siu"
+2025-08-19T01:34:26.6425756Z       | ^~~~~~~~~~~~~~~~~~
+2025-08-19T01:34:26.6426123Z       | %define api.prefix {siu}
+2025-08-19T01:34:26.6642710Z src/SIUnitParser.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+2025-08-19T01:34:26.6645773Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIDimensionality.o src/SIDimensionality.c
+2025-08-19T01:34:26.6720423Z src/SIUnitExpressionParser.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+2025-08-19T01:34:26.6723595Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIDimensionalityLib.o src/SIDimensionalityLib.c
+2025-08-19T01:34:34.1865807Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIQuantity.o src/SIQuantity.c
+2025-08-19T01:34:34.2908739Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIScalar.o src/SIScalar.c
+2025-08-19T01:34:34.3213580Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIScalarConstants.o src/SIScalarConstants.c
+2025-08-19T01:34:34.5638965Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIScalarParser.o src/SIScalarParser.c
+2025-08-19T01:34:34.7259184Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIScalarParserHelpers.o src/SIScalarParserHelpers.c
+2025-08-19T01:34:34.8596686Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SITypes.o src/SITypes.c
+2025-08-19T01:34:34.8819628Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIUnit.o src/SIUnit.c
+2025-08-19T01:34:34.9421042Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIUnitExpression.o src/SIUnitExpression.c
+2025-08-19T01:34:35.1730503Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIDimensionalityParser.tab.o build/gen/SIDimensionalityParser.tab.c
+2025-08-19T01:34:35.2816024Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIScalarParser.tab.o build/gen/SIScalarParser.tab.c
+2025-08-19T01:34:35.3932615Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIUnitExpressionParser.tab.o build/gen/SIUnitExpressionParser.tab.c
+2025-08-19T01:34:35.5134845Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIUnitParser.tab.o build/gen/SIUnitParser.tab.c
+2025-08-19T01:34:35.6188914Z flex -o build/gen/SIDimensionalityScanner.c src/SIDimensionalityScanner.l
+2025-08-19T01:34:35.6738521Z src/SIDimensionalityScanner.l:24: warning, -s option given but default rule can be matched
+2025-08-19T01:34:35.6776608Z flex -o build/gen/SIFormulaScanner.c src/SIFormulaScanner.l
+2025-08-19T01:34:35.6827168Z flex -o build/gen/SIScalarScanner.c src/SIScalarScanner.l
+2025-08-19T01:34:35.6853841Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:34:35.6860271Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:34:35.6861079Z src/SIScalarScanner.l:173: warning, dangerous trailing context
+2025-08-19T01:34:35.6861782Z src/SIScalarScanner.l:163: warning, dangerous trailing context
+2025-08-19T01:34:35.6866606Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:34:35.6867436Z src/SIScalarScanner.l:163: warning, dangerous trailing context
+2025-08-19T01:34:35.6870632Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:35.6871424Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:35.6874530Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:35.6875314Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:34:35.6876787Z src/SIScalarScanner.l:188: warning, dangerous trailing context
+2025-08-19T01:34:35.6880022Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:35.6880821Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:35.6883273Z src/SIScalarScanner.l:188: warning, dangerous trailing context
+2025-08-19T01:34:35.6885077Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:35.6887740Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:35.6889265Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:35.6933183Z flex -o build/gen/SIUnitExpressionScanner.c src/SIUnitExpressionScanner.l
+2025-08-19T01:34:35.6947456Z src/SIUnitExpressionScanner.l:61: warning, -s option given but default rule can be matched
+2025-08-19T01:34:35.6983175Z flex -o build/gen/SIUnitScanner.c src/SIUnitScanner.l
+2025-08-19T01:34:35.7019497Z src/SIUnitScanner.l:36: warning, -s option given but default rule can be matched
+2025-08-19T01:34:35.7055507Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/main.o tests/main.c
+2025-08-19T01:34:35.7692049Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/test_dimensionality.o tests/test_dimensionality.c
+2025-08-19T01:34:35.8433277Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/test_duplicate_units.o tests/test_duplicate_units.c
+2025-08-19T01:34:35.9299149Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/test_octypes.o tests/test_octypes.c
+2025-08-19T01:34:35.9699093Z tests/test_duplicate_units.c:23:46: warning: format specifies type 'unsigned long long' but the argument has type 'uint64_t' (aka 'unsigned long') [-Wformat]
+2025-08-19T01:34:35.9700314Z    23 |     printf("Total units in library: %llu\n", count);
+2025-08-19T01:34:35.9700806Z       |                                     ~~~~     ^~~~~
+2025-08-19T01:34:35.9701241Z       |                                     %lu
+2025-08-19T01:34:35.9701951Z tests/test_duplicate_units.c:59:64: warning: format specifies type 'unsigned long long' but the argument has type 'uint64_t' (aka 'unsigned long') [-Wformat]
+2025-08-19T01:34:35.9702894Z    59 |         printf("✓ All %llu units are static instances.\n\n", count);
+2025-08-19T01:34:35.9703231Z       |                       ~~~~                                   ^~~~~
+2025-08-19T01:34:35.9703492Z       |                       %lu
+2025-08-19T01:34:35.9703722Z 2 warnings generated.
+2025-08-19T01:34:35.9721192Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/test_scalar.o tests/test_scalar.c
+2025-08-19T01:34:36.0313723Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/test_scalar_parser.o tests/test_scalar_parser.c
+2025-08-19T01:34:36.2486241Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/test_unit.o tests/test_unit.c
+2025-08-19T01:34:36.4343840Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/test_unit_expression.o tests/test_unit_expression.c
+2025-08-19T01:34:36.5138957Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/test_unit_from_expression_robust.o tests/test_unit_from_expression_robust.c
+2025-08-19T01:34:36.6108630Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/test_unit_power_operations.o tests/test_unit_power_operations.c
+2025-08-19T01:34:36.6333068Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIDimensionalityScanner.o build/gen/SIDimensionalityScanner.c
+2025-08-19T01:34:36.6992240Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIFormulaScanner.o build/gen/SIFormulaScanner.c
+2025-08-19T01:34:36.9009757Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIScalarScanner.o build/gen/SIScalarScanner.c
+2025-08-19T01:34:36.9180733Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIUnitExpressionScanner.o build/gen/SIUnitExpressionScanner.c
+2025-08-19T01:34:37.1376322Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIUnitScanner.o build/gen/SIUnitScanner.c
+2025-08-19T01:34:37.1509992Z build/gen/SIScalarScanner.c:1679:13: warning: misleading indentation; statement is not part of the previous 'if' [-Wmisleading-indentation]
+2025-08-19T01:34:37.1511102Z  1679 |             if ( ! (yy_state_buf) )
+2025-08-19T01:34:37.1511514Z       |             ^
+2025-08-19T01:34:37.1512037Z build/gen/SIScalarScanner.c:1677:9: note: previous statement is here
+2025-08-19T01:34:37.1512669Z  1677 |         if ( ! (yy_state_buf) )
+2025-08-19T01:34:37.1513010Z       |         ^
+2025-08-19T01:34:37.1513815Z build/gen/SIScalarScanner.c:2491:3: warning: misleading indentation; statement is not part of the previous 'if' [-Wmisleading-indentation]
+2025-08-19T01:34:37.1515077Z  2491 |                 return yy_is_jam ? 0 : yy_current_state;
+2025-08-19T01:34:37.1515526Z       |                 ^
+2025-08-19T01:34:37.1516052Z build/gen/SIScalarScanner.c:2488:2: note: previous statement is here
+2025-08-19T01:34:37.1516422Z  2488 |         if ( ! yy_is_jam )
+2025-08-19T01:34:37.1516647Z       |         ^
+2025-08-19T01:34:37.1516834Z 2 warnings generated.
+2025-08-19T01:34:37.3550865Z ar rcs build/lib/libSITypes.a build/obj/SIDimensionality.o build/obj/SIDimensionalityLib.o build/obj/SIQuantity.o build/obj/SIScalar.o build/obj/SIScalarConstants.o build/obj/SIScalarParser.o build/obj/SIScalarParserHelpers.o build/obj/SITypes.o build/obj/SIUnit.o build/obj/SIUnitExpression.o build/obj/SIDimensionalityParser.tab.o build/obj/SIScalarParser.tab.o build/obj/SIUnitExpressionParser.tab.o build/obj/SIUnitParser.tab.o build/obj/SIDimensionalityScanner.o build/obj/SIFormulaScanner.o build/obj/SIScalarScanner.o build/obj/SIUnitExpressionScanner.o build/obj/SIUnitScanner.o
+2025-08-19T01:34:42.9297486Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -Itests build/obj/main.o build/obj/test_dimensionality.o build/obj/test_duplicate_units.o build/obj/test_octypes.o build/obj/test_scalar.o build/obj/test_scalar_parser.o build/obj/test_unit.o build/obj/test_unit_expression.o build/obj/test_unit_from_expression_robust.o build/obj/test_unit_power_operations.o \
+2025-08-19T01:34:42.9300560Z   -Wl,--start-group build/lib/libSITypes.a -Lthird_party/lib -lOCTypes -Wl,--end-group \
+2025-08-19T01:34:42.9303342Z   -Wl,-rpath,third_party/lib -lm -o runTests
+2025-08-19T01:34:43.1664212Z ./runTests
+2025-08-19T01:34:46.8863766Z === OCTypes Tests ===
+2025-08-19T01:34:46.8864543Z Running octypesTest1...
+2025-08-19T01:34:46.8864985Z octypesTest1 passed
+2025-08-19T01:34:46.8865401Z Running octypesTest2...
+2025-08-19T01:34:46.8865836Z octypesTest2 passed
+2025-08-19T01:34:46.8866256Z Running octypesTest3...
+2025-08-19T01:34:46.8866666Z octypesTest3 passed
+2025-08-19T01:34:46.8867145Z Running octypesTest4...
+2025-08-19T01:34:46.8867444Z octypesTest4 passed
+2025-08-19T01:34:46.8867651Z Running octypesTest5...
+2025-08-19T01:34:46.8867856Z octypesTest5 passed
+2025-08-19T01:34:46.8868082Z Running octypesTest6...
+2025-08-19T01:34:46.8868274Z octypesTest6 passed
+2025-08-19T01:34:46.8868391Z 
+2025-08-19T01:34:46.8868474Z === Dimensionality Tests ===
+2025-08-19T01:34:46.8868706Z Running test_dimensionality_0...
+2025-08-19T01:34:46.8868952Z test_dimensionality_0 passed
+2025-08-19T01:34:46.8869185Z Running test_dimensionality_1...
+2025-08-19T01:34:46.8869421Z test_dimensionality_1 passed
+2025-08-19T01:34:46.8869636Z Running test_dimensionality_2...
+2025-08-19T01:34:46.8869861Z test_dimensionality_2 passed
+2025-08-19T01:34:46.8870079Z Running test_dimensionality_3...
+2025-08-19T01:34:46.8870303Z test_dimensionality_3 passed
+2025-08-19T01:34:46.8870523Z Running test_dimensionality_show...
+2025-08-19T01:34:46.8870766Z test_dimensionality_show passed
+2025-08-19T01:34:46.8871035Z Running test_dimensionality_symbol_acceleration...
+2025-08-19T01:34:46.8871350Z test_dimensionality_symbol_acceleration passed
+2025-08-19T01:34:46.8871634Z Running test_dimensionality_divide_mass...
+2025-08-19T01:34:46.8871900Z test_dimensionality_divide_mass passed
+2025-08-19T01:34:46.8872164Z Running test_dimensionality_multiply_work...
+2025-08-19T01:34:46.8872439Z test_dimensionality_multiply_work passed
+2025-08-19T01:34:46.8872709Z Running test_dimensionality_power_area...
+2025-08-19T01:34:46.8872968Z test_dimensionality_power_area passed
+2025-08-19T01:34:46.8873251Z Running test_dimensionality_reduction_behavior...
+2025-08-19T01:34:46.8873547Z test_dimensionality_reduction_behavior passed
+2025-08-19T01:34:46.8873821Z Running test_dimensionality_deep_copy...
+2025-08-19T01:34:46.8874074Z test_dimensionality_deep_copy passed
+2025-08-19T01:34:46.8874426Z 
+2025-08-19T01:34:46.8874579Z Running test_dimensionality_parser_strictness...
+2025-08-19T01:34:46.8874877Z test_dimensionality_parser_strictness passed
+2025-08-19T01:34:46.8875060Z 
+2025-08-19T01:34:46.8875133Z === SIUnit Tests ===
+2025-08-19T01:34:46.8875329Z Running test_unit_0...
+2025-08-19T01:34:46.8875523Z test_unit_0 passed
+2025-08-19T01:34:46.8875703Z Running test_unit_1...
+2025-08-19T01:34:46.8875893Z test_unit_1 passed
+2025-08-19T01:34:46.8876076Z Running test_unit_3...
+2025-08-19T01:34:46.8876257Z test_unit_3 passed
+2025-08-19T01:34:46.8876437Z Running test_unit_4...
+2025-08-19T01:34:46.8876622Z test_unit_4 passed
+2025-08-19T01:34:46.8876799Z Running test_unit_5...
+2025-08-19T01:34:46.8876987Z test_unit_5 passed
+2025-08-19T01:34:46.8877167Z Running test_unit_6...
+2025-08-19T01:34:46.8877352Z test_unit_6 passed
+2025-08-19T01:34:46.8877526Z Running test_unit_7...
+2025-08-19T01:34:46.8877713Z test_unit_7 passed
+2025-08-19T01:34:46.8877902Z Running test_unit_8...
+2025-08-19T01:34:46.8878090Z test_unit_8 passed
+2025-08-19T01:34:46.8878272Z Running test_unit_9...
+2025-08-19T01:34:46.8878458Z test_unit_9 passed
+2025-08-19T01:34:46.8878635Z Running test_unit_10...
+2025-08-19T01:34:46.8879424Z test_unit_10 passed
+2025-08-19T01:34:46.8879623Z Running test_unit_11...
+2025-08-19T01:34:46.8879809Z test_unit_11 passed
+2025-08-19T01:34:46.8879921Z 
+2025-08-19T01:34:46.8879995Z Running test_unit_12...
+2025-08-19T01:34:46.8880184Z test_unit_12 passed
+2025-08-19T01:34:46.8880360Z Running test_unit_13...
+2025-08-19T01:34:46.8880548Z test_unit_13 passed
+2025-08-19T01:34:46.8880788Z Running test_unit_14...
+2025-08-19T01:34:46.8881013Z test_unit_14 passed
+2025-08-19T01:34:46.8881237Z Running test_unit_by_multiplying_without_reducing...
+2025-08-19T01:34:46.8881788Z test_unit_by_multiplying_without_reducing passed
+2025-08-19T01:34:46.8881974Z 
+2025-08-19T01:34:46.8882090Z Running test_unit_by_dividing_without_reducing...
+2025-08-19T01:34:46.8882379Z test_unit_by_dividing_without_reducing passed
+2025-08-19T01:34:46.8882643Z Running test_unit_by_taking_nth_root...
+2025-08-19T01:34:46.8882897Z test_unit_by_taking_nth_root passed
+2025-08-19T01:34:46.8883053Z 
+2025-08-19T01:34:46.8883199Z Running test_unit_by_raising_to_power_without_reducing...
+2025-08-19T01:34:46.8883528Z test_unit_by_raising_to_power_without_reducing passed
+2025-08-19T01:34:46.8883733Z 
+2025-08-19T01:34:46.8883831Z Running test_unit_unicode_normalization...
+2025-08-19T01:34:46.8884098Z test_unit_unicode_normalization passed
+2025-08-19T01:34:46.8884439Z 
+2025-08-19T01:34:46.8884538Z Running test_unit_registration...
+2025-08-19T01:34:46.8884775Z Testing unit registration behavior
+2025-08-19T01:34:46.8885015Z test_unit_registration passed
+2025-08-19T01:34:46.8885277Z Running test_unit_canonical_expressions...
+2025-08-19T01:34:46.8903648Z test_unit_canonical_expressions passed
+2025-08-19T01:34:46.8903991Z 
+2025-08-19T01:34:46.8904184Z Running test_unit_from_expression_equivalence...
+2025-08-19T01:34:46.8904849Z test_unit_from_expression_equivalence passed
+2025-08-19T01:34:46.8905158Z 
+2025-08-19T01:34:46.8905322Z Running test_unit_count_token_symbols...
+2025-08-19T01:34:46.8905663Z test_unit_count_token_symbols passed
+2025-08-19T01:34:46.8905856Z 
+2025-08-19T01:34:46.8905860Z 
+2025-08-19T01:34:46.8906015Z === SIUnitCreateCleanedExpression Comprehensive Tests ===
+2025-08-19T01:34:46.8906433Z Running comprehensive SIUnitCreateCleanedExpression test suite...
+2025-08-19T01:34:46.8906686Z 
+2025-08-19T01:34:46.8906849Z Running test_unit_expression_cleaner_basic_canonicalization...
+2025-08-19T01:34:46.8907226Z test_unit_expression_cleaner_basic_canonicalization passed
+2025-08-19T01:34:46.8907595Z Running test_unit_expression_cleaner_power_notation...
+2025-08-19T01:34:46.8907936Z test_unit_expression_cleaner_power_notation passed
+2025-08-19T01:34:46.8908287Z Running test_unit_expression_cleaner_multiplication_ordering...
+2025-08-19T01:34:46.8908669Z test_unit_expression_cleaner_multiplication_ordering passed
+2025-08-19T01:34:46.8909028Z Running test_unit_expression_cleaner_power_consolidation...
+2025-08-19T01:34:46.8909375Z test_unit_expression_cleaner_power_consolidation passed
+2025-08-19T01:34:46.8909714Z Running test_unit_expression_cleaner_division_operations...
+2025-08-19T01:34:46.8910065Z test_unit_expression_cleaner_division_operations passed
+2025-08-19T01:34:46.8910405Z Running test_unit_expression_cleaner_complex_expressions...
+2025-08-19T01:34:46.8910740Z test_unit_expression_cleaner_complex_expressions passed
+2025-08-19T01:34:46.8911077Z Running test_unit_expression_cleaner_unicode_operators...
+2025-08-19T01:34:46.8911416Z test_unit_expression_cleaner_unicode_operators passed
+2025-08-19T01:34:46.8911760Z Running test_unit_expression_cleaner_unicode_normalization...
+2025-08-19T01:34:46.8912122Z test_unit_expression_cleaner_unicode_normalization passed
+2025-08-19T01:34:46.8912499Z Running test_unit_expression_cleaner_expression_equivalence...
+2025-08-19T01:34:46.8912872Z test_unit_expression_cleaner_expression_equivalence passed
+2025-08-19T01:34:46.8913205Z Running test_unit_expression_cleaner_edge_cases...
+2025-08-19T01:34:46.8913514Z test_unit_expression_cleaner_edge_cases passed
+2025-08-19T01:34:46.8913845Z Running test_unit_expression_cleaner_parenthetical_powers...
+2025-08-19T01:34:46.8914611Z test_unit_expression_cleaner_parenthetical_powers passed
+2025-08-19T01:34:47.3267518Z Running test_unit_expression_cleaner_consistency...
+2025-08-19T01:34:47.3268135Z test_unit_expression_cleaner_consistency passed
+2025-08-19T01:34:47.3268695Z Running test_unit_expression_cleaner_reciprocal_expressions...
+2025-08-19T01:34:47.3269284Z test_unit_expression_cleaner_reciprocal_expressions passed
+2025-08-19T01:34:47.3269635Z 
+2025-08-19T01:34:47.3269897Z === SIUnitCreateCleanedExpression Comprehensive Test Results ===
+2025-08-19T01:34:47.3270869Z Overall result: ALL TESTS PASSED
+2025-08-19T01:34:47.3271121Z 
+2025-08-19T01:34:47.3271245Z === Duplicate Units Tests ===
+2025-08-19T01:34:47.3271668Z === Testing for duplicate unit pointers in unitsLibrary ===
+2025-08-19T01:34:47.3272117Z Total units in library: 4070
+2025-08-19T01:34:47.3272337Z 
+2025-08-19T01:34:47.3272472Z === Checking static instance status ===
+2025-08-19T01:34:47.3273117Z ✓ All 4070 units are static instances.
+2025-08-19T01:34:47.3273386Z 
+2025-08-19T01:34:47.3273537Z === Checking for duplicate unit pointers ===
+2025-08-19T01:34:47.3273814Z 
+2025-08-19T01:34:47.3273993Z ✓ Library integrity check passed:
+2025-08-19T01:34:47.3274568Z   - No duplicate unit pointers
+2025-08-19T01:34:47.3274922Z   - All units are static instances
+2025-08-19T01:34:47.3275184Z 
+2025-08-19T01:34:47.3275327Z === Unit Power Operations Tests ===
+2025-08-19T01:34:47.3275680Z Running test_unit_negative_power_operations...
+2025-08-19T01:34:47.3276034Z test_unit_negative_power_operations passed
+2025-08-19T01:34:47.3276392Z Running test_unit_inverse_expression_parsing...
+2025-08-19T01:34:47.3276741Z test_unit_inverse_expression_parsing passed
+2025-08-19T01:34:47.3277089Z Running test_unit_negative_exponent_parsing...
+2025-08-19T01:34:47.3277435Z test_unit_negative_exponent_parsing passed
+2025-08-19T01:34:47.3277645Z 
+2025-08-19T01:34:47.3277765Z === SIUnitFromExpression Robust Tests ===
+2025-08-19T01:34:47.3278099Z     SUCCESS: Canonical form working correctly
+2025-08-19T01:34:47.3278319Z 
+2025-08-19T01:34:47.3278435Z SIUnitFromExpression robust test PASSED
+2025-08-19T01:34:47.3278651Z 
+2025-08-19T01:34:47.3278759Z === SIScalar Parser Tests ===
+2025-08-19T01:34:47.3279031Z Running test_scalar_parser_1...
+2025-08-19T01:34:47.3279309Z test_scalar_parser_1 passed
+2025-08-19T01:34:47.3279574Z Running test_scalar_parser_2...
+2025-08-19T01:34:47.3279840Z test_scalar_parser_2 passed
+2025-08-19T01:34:47.3280102Z Running test_scalar_parser_3...
+2025-08-19T01:34:47.3280378Z test_scalar_parser_3 passed
+2025-08-19T01:34:47.3280635Z Running test_scalar_parser_4...
+2025-08-19T01:34:47.3280903Z test_scalar_parser_4 passed
+2025-08-19T01:34:47.3281163Z Running test_scalar_parser_5...
+2025-08-19T01:34:47.3281432Z test_scalar_parser_5 passed
+2025-08-19T01:34:47.3281688Z Running test_scalar_parser_6...
+2025-08-19T01:34:47.3281957Z test_scalar_parser_6 passed
+2025-08-19T01:34:47.3282220Z Running test_scalar_parser_7...
+2025-08-19T01:34:47.3282486Z test_scalar_parser_7 passed
+2025-08-19T01:34:47.3282744Z Running test_scalar_parser_8...
+2025-08-19T01:34:47.3283010Z test_scalar_parser_8 passed
+2025-08-19T01:34:47.3283267Z Running test_scalar_parser_9...
+2025-08-19T01:34:47.3283533Z test_scalar_parser_9 passed
+2025-08-19T01:34:47.3283802Z Running test_scalar_parser_10...
+2025-08-19T01:34:47.3284077Z test_scalar_parser_10 passed
+2025-08-19T01:34:47.3284454Z Running test_scalar_parser_11...
+2025-08-19T01:34:47.3284730Z test_scalar_parser_11 passed
+2025-08-19T01:34:47.3284995Z Running test_scalar_parser_12...
+2025-08-19T01:34:47.3285276Z test_scalar_parser_12 passed
+2025-08-19T01:34:47.3285545Z Running test_scalar_parser_13...
+2025-08-19T01:34:47.3285854Z     π value: 1.000000000000000
+2025-08-19T01:34:47.3286133Z     π * (5 m)^2 value: 78.539816339744817
+2025-08-19T01:34:47.3286424Z     π * (5 m)^2 units: m^3/m
+2025-08-19T01:34:47.3286641Z test_scalar_parser_13 passed
+2025-08-19T01:34:47.3286864Z Running test_scalar_parser_infinity...
+2025-08-19T01:34:47.3287278Z   Testing basic infinity parsing...
+2025-08-19T01:34:47.3287515Z     inf = inf (isinf: 1)
+2025-08-19T01:34:47.3287727Z   Testing Unicode infinity symbol...
+2025-08-19T01:34:47.3287997Z     ∞ = inf (isinf: 1)
+2025-08-19T01:34:47.3288204Z   Testing negative infinity...
+2025-08-19T01:34:47.3288620Z     -inf = -inf (isinf: -1, negative: 1)
+2025-08-19T01:34:47.3289019Z   Testing infinity with units...
+2025-08-19T01:34:47.3289364Z     inf m/s = inf m/s
+2025-08-19T01:34:47.3289696Z   Testing infinity arithmetic - addition...
+2025-08-19T01:34:47.3290348Z     inf + 5 = inf (isinf: 1)
+2025-08-19T01:34:47.3290796Z   Testing infinity arithmetic - multiplication...
+2025-08-19T01:34:47.3291243Z     2 * inf = inf (isinf: 1)
+2025-08-19T01:34:47.3291626Z   Testing division by infinity...
+2025-08-19T01:34:47.3292002Z     5 / inf = 0.000000
+2025-08-19T01:34:47.3292333Z   Testing division by zero...
+2025-08-19T01:34:47.3292694Z     5 / 0 = inf (isinf: 1)
+2025-08-19T01:34:47.3293063Z   Testing infinity to the power...
+2025-08-19T01:34:47.3293482Z     (inf)^2 = inf (isinf: 1)
+2025-08-19T01:34:47.3293917Z   Testing complex expression with infinity and units...
+2025-08-19T01:34:47.3294712Z     (inf m/s) * (2 s) = inf m•s/s
+2025-08-19T01:34:47.3295136Z   Testing functions with infinity...
+2025-08-19T01:34:47.3295577Z     sqrt(inf) = inf (isinf: 1)
+2025-08-19T01:34:47.3295941Z test_scalar_parser_infinity passed
+2025-08-19T01:34:47.3296213Z 
+2025-08-19T01:34:47.3296363Z === NMR Function Tests ===
+2025-08-19T01:34:47.3296586Z Running test_nmr_functions...
+2025-08-19T01:34:47.3296818Z   Testing spin[H1]...
+2025-08-19T01:34:47.3297006Z     spin[H1] = 0.500000
+2025-08-19T01:34:47.3297254Z   Testing μ_I[H1]...
+2025-08-19T01:34:47.3297476Z     μ_I[H1] = 2.792847 µ_N
+2025-08-19T01:34:47.3297699Z   Testing 𝛾_I[H1]...
+2025-08-19T01:34:47.3298298Z     𝛾_I[H1] = 267522191.787411 rad/(s·T)
+2025-08-19T01:34:47.3298586Z   Testing nmr[H1]...
+2025-08-19T01:34:47.3298771Z     nmr[H1] = 42.577479 MHz/T
+2025-08-19T01:34:47.3298990Z test_nmr_functions passed
+2025-08-19T01:34:47.3299137Z 
+2025-08-19T01:34:47.3299216Z === SIScalar Tests ===
+2025-08-19T01:34:47.3299419Z test_SIScalarGetTypeID passed
+2025-08-19T01:34:47.3299651Z test_SIScalarCreateCopy passed
+2025-08-19T01:34:47.3299897Z test_SIScalarCreateMutableCopy passed
+2025-08-19T01:34:47.3300161Z test_SIScalarCreateWithFloat passed
+2025-08-19T01:34:47.3300427Z test_SIScalarCreateMutableWithFloat passed
+2025-08-19T01:34:47.3300706Z test_SIScalarCreateWithDouble passed
+2025-08-19T01:34:47.3300978Z test_SIScalarCreateMutableWithDouble passed
+2025-08-19T01:34:47.3301272Z test_SIScalarCreateWithFloatComplex passed
+2025-08-19T01:34:47.3301581Z test_SIScalarCreateMutableWithFloatComplex passed
+2025-08-19T01:34:47.3301895Z test_SIScalarCreateWithDoubleComplex passed
+2025-08-19T01:34:47.3302212Z test_SIScalarCreateMutableWithDoubleComplex passed
+2025-08-19T01:34:47.3302509Z test_SIScalarGetValue passed
+2025-08-19T01:34:47.3302747Z test_SIScalarSetFloatValue passed
+2025-08-19T01:34:47.3302996Z test_SIScalarSetDoubleValue passed
+2025-08-19T01:34:47.3303267Z test_SIScalarSetFloatComplexValue passed
+2025-08-19T01:34:47.3303549Z test_SIScalarSetDoubleComplexValue passed
+2025-08-19T01:34:47.3303822Z test_SIScalarSetNumericType passed
+2025-08-19T01:34:47.3304063Z test_SIScalarFloatValue passed
+2025-08-19T01:34:47.3304425Z test_SIScalarDoubleValue passed
+2025-08-19T01:34:47.3304675Z test_SIScalarFloatComplexValue passed
+2025-08-19T01:34:47.3304939Z test_SIScalarDoubleComplexValue passed
+2025-08-19T01:34:47.3305241Z test_SIScalarCreateByConvertingToNumberType passed
+2025-08-19T01:34:47.3305560Z test_SIScalarTakeComplexPart passed
+2025-08-19T01:34:47.4421527Z test_SIScalarCreateByTakingComplexPart passed
+2025-08-19T01:34:47.4422160Z test_SIScalarCreateByReducingUnit passed
+2025-08-19T01:34:47.4422618Z test_SIScalarReduceUnit passed
+2025-08-19T01:34:47.4423018Z test_SIScalarConvertToUnit passed
+2025-08-19T01:34:47.4423460Z test_SIScalarCreateByConvertingToUnit passed
+2025-08-19T01:34:47.4423947Z test_SIScalarConvertToCoherentUnit passed
+2025-08-19T01:34:47.4425235Z test_SIScalarCreateByConvertingToCoherentUnit passed
+2025-08-19T01:34:47.4425752Z test_SIScalarCreateByAdding passed
+2025-08-19T01:34:47.4426150Z test_SIScalarAdd passed
+2025-08-19T01:34:47.4426516Z test_SIScalarCreateBySubtracting passed
+2025-08-19T01:34:47.4426938Z test_SIScalarSubtract passed
+2025-08-19T01:34:47.4427440Z test_SIScalarCreateByMultiplyingWithoutReducingUnit passed
+2025-08-19T01:34:47.4427984Z test_SIScalarMultiplyWithoutReducingUnit passed
+2025-08-19T01:34:47.4428386Z test_SIScalarCreateByMultiplying passed
+2025-08-19T01:34:47.4428794Z test_SIScalarMultiply passed
+2025-08-19T01:34:47.4429136Z test_SIScalarCreateByDividingWithoutReducingUnit passed
+2025-08-19T01:34:47.4429487Z test_SIScalarDivideWithoutReducingUnit passed
+2025-08-19T01:34:47.4429774Z test_SIScalarCreateByDividing passed
+2025-08-19T01:34:47.4430022Z test_SIScalarDivide passed
+2025-08-19T01:34:47.4430328Z test_SIScalarCreateByRaisingToPowerWithoutReducingUnit passed
+2025-08-19T01:34:47.4430737Z test_SIScalarRaiseToAPowerWithoutReducingUnit passed
+2025-08-19T01:34:47.4431056Z test_SIScalarCreateByRaisingToPower passed
+2025-08-19T01:34:47.4431324Z test_SIScalarRaiseToAPower passed
+2025-08-19T01:34:47.4431604Z test_SIScalarCreateByTakingAbsoluteValue passed
+2025-08-19T01:34:47.4431900Z test_SIScalarTakeAbsoluteValue passed
+2025-08-19T01:34:47.4432228Z test_SIScalarCreateByGammaFunctionWithoutReducingUnit passed
+2025-08-19T01:34:47.4432583Z test_SIScalarCreateByTakingNthRoot passed
+2025-08-19T01:34:47.4432850Z test_SIScalarTakeNthRoot passed
+2025-08-19T01:34:47.4433088Z test_SIScalarTakeLog10 passed
+2025-08-19T01:34:47.4433326Z test_SIScalarCreateByZeroingPart passed
+2025-08-19T01:34:47.4433585Z test_SIScalarZeroPart passed
+2025-08-19T01:34:47.4433873Z test_SIScalarMultiplyByDimensionlessRealConstant passed
+2025-08-19T01:34:47.4434404Z test_SIScalarCreateByMultiplyingByDimensionlessRealConstant passed
+2025-08-19T01:34:47.4434889Z test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant passed
+2025-08-19T01:34:47.4435341Z test_SIScalarMultiplyByDimensionlessComplexConstant passed
+2025-08-19T01:34:47.4435671Z test_SIScalarCreateByConjugation passed
+2025-08-19T01:34:47.4435925Z test_SIScalarConjugate passed
+2025-08-19T01:34:47.4436167Z Testing SIScalarShow (output below): 1.23 m
+2025-08-19T01:34:47.5004914Z 
+2025-08-19T01:34:47.5005516Z test_SIScalarShow passed
+2025-08-19T01:34:47.5006135Z test_SIScalarCreateStringValue passed
+2025-08-19T01:34:47.5006741Z test_SIScalarCreateNumericStringValue passed
+2025-08-19T01:34:47.5007186Z test_SIScalarCreateStringValueForPart passed
+2025-08-19T01:34:47.5007613Z test_SIScalarCopyUnitSymbol passed
+2025-08-19T01:34:47.5008000Z test_SIScalarCreateStringValueWithFormat passed
+2025-08-19T01:34:47.5008470Z test_SIScalarCreateNumericStringValueWithFormat passed
+2025-08-19T01:34:47.5008900Z test_SIScalarAddToArrayAsStringValue passed
+2025-08-19T01:34:47.5009210Z test_SIScalarIsReal passed
+2025-08-19T01:34:47.5009458Z test_SIScalarIsImaginary passed
+2025-08-19T01:34:47.5009720Z test_SIScalarIsComplex passed
+2025-08-19T01:34:47.5009949Z test_SIScalarIsZero passed
+2025-08-19T01:34:47.5010174Z test_SIScalarIsInfinite passed
+2025-08-19T01:34:47.5010439Z test_SIScalarIsRealNonNegativeInteger passed
+2025-08-19T01:34:47.5010751Z test_SIScalarValidateProposedStringValue passed
+2025-08-19T01:34:47.5011037Z test_SIScalarEqual passed
+2025-08-19T01:34:47.5011349Z test_SIScalarCompare passed
+2025-08-19T01:34:47.5011709Z test_SIScalarCompareReduced passed
+2025-08-19T01:34:47.5012138Z test_SIScalarCompareLoose passed
+2025-08-19T01:34:47.5012622Z test_SIScalarBestConversionForQuantity passed
+2025-08-19T01:34:47.5013170Z test_SIScalarBestConversionForQuantity_large passed
+2025-08-19T01:34:47.5013769Z test_SIScalarBestConversionForQuantity_tiny passed
+2025-08-19T01:34:47.5014528Z test_SIScalarBestConversionForQuantity_noop passed
+2025-08-19T01:34:47.5015150Z test_SIScalarBestConversionForQuantity_zero passed
+2025-08-19T01:34:47.5015718Z test_SIScalarBestConversionForQuantity_negative passed
+2025-08-19T01:34:47.5016665Z test_SIScalarWriteReadJSON_simple passed
+2025-08-19T01:34:47.5017131Z test_SIScalarWriteReadJSON_negative passed
+2025-08-19T01:34:47.5017640Z test_SIScalarWriteReadJSON_complex_unit passed
+2025-08-19T01:34:47.5018180Z Running test_SIScalarWriteReadJSON_array_and_dictionary...
+2025-08-19T01:34:47.5018662Z Serialized SIScalar array: ["42 m","-7 kg","3.14 s"]
+2025-08-19T01:34:47.5019088Z Serialized SIScalar dictionary: {"distance":"42 m","mass":"-7 kg","duration":"3.14 s"}
+2025-08-19T01:34:47.5019525Z test_SIScalarWriteReadJSON_array_and_dictionary passed
+2025-08-19T01:34:47.5020035Z 
+2025-08-19T01:34:47.5020173Z 0 test(s) failed
+2025-08-19T01:34:47.5021191Z rm build/gen/SIScalarScanner.c build/gen/SIUnitExpressionScanner.c build/gen/SIUnitScanner.c build/gen/SIDimensionalityScanner.c build/gen/SIFormulaScanner.c
+2025-08-19T01:34:47.5021869Z + make install-shared 'CC=ccache clang'
+2025-08-19T01:34:47.5223121Z mkdir -p build build/obj build/gen build/bin build/lib third_party/lib 
+2025-08-19T01:34:47.5232460Z OCTypes headers already present. Set OCT_FORCE_FETCH=1 to refresh.
+2025-08-19T01:34:47.5238204Z flex -o build/gen/SIDimensionalityScanner.c src/SIDimensionalityScanner.l
+2025-08-19T01:34:47.5241779Z OCTypes headers ready under third_party/include/OCTypes
+2025-08-19T01:34:47.5242868Z flex -o build/gen/SIFormulaScanner.c src/SIFormulaScanner.l
+2025-08-19T01:34:47.5253642Z src/SIDimensionalityScanner.l:24: warning, -s option given but default rule can be matched
+2025-08-19T01:34:47.5291300Z flex -o build/gen/SIScalarScanner.c src/SIScalarScanner.l
+2025-08-19T01:34:47.5300340Z flex -o build/gen/SIUnitExpressionScanner.c src/SIUnitExpressionScanner.l
+2025-08-19T01:34:47.5320744Z src/SIUnitExpressionScanner.l:61: warning, -s option given but default rule can be matched
+2025-08-19T01:34:47.5321650Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:34:47.5322425Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:34:47.5323344Z src/SIScalarScanner.l:173: warning, dangerous trailing context
+2025-08-19T01:34:47.5324882Z src/SIScalarScanner.l:163: warning, dangerous trailing context
+2025-08-19T01:34:47.5332165Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:34:47.5333135Z src/SIScalarScanner.l:163: warning, dangerous trailing context
+2025-08-19T01:34:47.5336684Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:47.5337491Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:47.5338318Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:47.5339027Z src/SIScalarScanner.l:168: warning, dangerous trailing context
+2025-08-19T01:34:47.5341476Z src/SIScalarScanner.l:188: warning, dangerous trailing context
+2025-08-19T01:34:47.5343354Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:47.5344112Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:47.5347542Z src/SIScalarScanner.l:188: warning, dangerous trailing context
+2025-08-19T01:34:47.5349313Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:47.5351323Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:47.5352821Z src/SIScalarScanner.l:98: warning, dangerous trailing context
+2025-08-19T01:34:47.5359024Z flex -o build/gen/SIUnitScanner.c src/SIUnitScanner.l
+2025-08-19T01:34:47.5398497Z src/SIUnitScanner.l:36: warning, -s option given but default rule can be matched
+2025-08-19T01:34:47.5411294Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIDimensionalityScanner.o build/gen/SIDimensionalityScanner.c
+2025-08-19T01:34:47.5438891Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIFormulaScanner.o build/gen/SIFormulaScanner.c
+2025-08-19T01:34:47.5452578Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIScalarScanner.o build/gen/SIScalarScanner.c
+2025-08-19T01:34:47.5480603Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIUnitExpressionScanner.o build/gen/SIUnitExpressionScanner.c
+2025-08-19T01:34:47.5487180Z build/gen/SIScalarScanner.c:1679:13: warning: misleading indentation; statement is not part of the previous 'if' [-Wmisleading-indentation]
+2025-08-19T01:34:47.5488243Z  1679 |             if ( ! (yy_state_buf) )
+2025-08-19T01:34:47.5488683Z       |             ^
+2025-08-19T01:34:47.5489222Z build/gen/SIScalarScanner.c:1677:9: note: previous statement is here
+2025-08-19T01:34:47.5489829Z  1677 |         if ( ! (yy_state_buf) )
+2025-08-19T01:34:47.5490227Z       |         ^
+2025-08-19T01:34:47.5491140Z build/gen/SIScalarScanner.c:2491:3: warning: misleading indentation; statement is not part of the previous 'if' [-Wmisleading-indentation]
+2025-08-19T01:34:47.5492213Z  2491 |                 return yy_is_jam ? 0 : yy_current_state;
+2025-08-19T01:34:47.5492693Z       |                 ^
+2025-08-19T01:34:47.5493250Z build/gen/SIScalarScanner.c:2488:2: note: previous statement is here
+2025-08-19T01:34:47.5493859Z  2488 |         if ( ! yy_is_jam )
+2025-08-19T01:34:47.5494799Z       |         ^
+2025-08-19T01:34:47.5495143Z 2 warnings generated.
+2025-08-19T01:34:47.5496882Z ccache clang -I. -Isrc -Ibuild/gen -Ithird_party/include -Ithird_party/include/OCTypes -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -c -o build/obj/SIUnitScanner.o build/gen/SIUnitScanner.c
+2025-08-19T01:34:47.5532982Z ar rcs build/lib/libSITypes.a build/obj/SIDimensionality.o build/obj/SIDimensionalityLib.o build/obj/SIQuantity.o build/obj/SIScalar.o build/obj/SIScalarConstants.o build/obj/SIScalarParser.o build/obj/SIScalarParserHelpers.o build/obj/SITypes.o build/obj/SIUnit.o build/obj/SIUnitExpression.o build/obj/SIDimensionalityParser.tab.o build/obj/SIScalarParser.tab.o build/obj/SIUnitExpressionParser.tab.o build/obj/SIUnitParser.tab.o build/obj/SIDimensionalityScanner.o build/obj/SIFormulaScanner.o build/obj/SIScalarScanner.o build/obj/SIUnitExpressionScanner.o build/obj/SIUnitScanner.o
+2025-08-19T01:34:47.5542417Z ccache clang -fPIC -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-function -MMD -MP -shared -fPIC  -o build/lib/libSITypes.so build/obj/SIDimensionality.o build/obj/SIDimensionalityLib.o build/obj/SIQuantity.o build/obj/SIScalar.o build/obj/SIScalarConstants.o build/obj/SIScalarParser.o build/obj/SIScalarParserHelpers.o build/obj/SITypes.o build/obj/SIUnit.o build/obj/SIUnitExpression.o build/obj/SIDimensionalityParser.tab.o build/obj/SIScalarParser.tab.o build/obj/SIUnitExpressionParser.tab.o build/obj/SIUnitParser.tab.o build/obj/SIDimensionalityScanner.o build/obj/SIFormulaScanner.o build/obj/SIScalarScanner.o build/obj/SIUnitExpressionScanner.o build/obj/SIUnitScanner.o -Lthird_party/lib -lOCTypes -lm
+2025-08-19T01:34:47.6005736Z mkdir -p install/lib install/include/SITypes
+2025-08-19T01:34:47.6019049Z cp build/lib/libSITypes.a install/lib/
+2025-08-19T01:34:47.6038494Z cp build/lib/libSITypes.so install/lib/
+2025-08-19T01:34:47.6054210Z cp src/*.h install/include/SITypes/
+2025-08-19T01:34:47.6082706Z + ccache --show-stats
+2025-08-19T01:34:47.6135705Z Cacheable calls:    34 /  36 (94.44%)
+2025-08-19T01:34:47.6136161Z   Hits:              5 /  34 (14.71%)
+2025-08-19T01:34:47.6136545Z     Direct:          5 /   5 (100.0%)
+2025-08-19T01:34:47.6137087Z     Preprocessed:    0 /   5 ( 0.00%)
+2025-08-19T01:34:47.6137359Z   Misses:           29 /  34 (85.29%)
+2025-08-19T01:34:47.6137787Z Uncacheable calls:   2 /  36 ( 5.56%)
+2025-08-19T01:34:47.6138213Z Local storage:
+2025-08-19T01:34:47.6138575Z   Cache size (GB): 0.0 / 0.2 ( 0.33%)
+2025-08-19T01:34:47.6138975Z   Hits:              5 /  34 (14.71%)
+2025-08-19T01:34:47.6139395Z   Misses:           29 /  34 (85.29%)
+2025-08-19T01:34:47.6139862Z + test -f install/lib/libSITypes.a
+2025-08-19T01:34:47.6140294Z + '[' Linux = macOS ']'
+2025-08-19T01:34:47.6140940Z + test -f install/lib/libSITypes.so

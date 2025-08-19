@@ -123,22 +123,20 @@ jobs:
       - name: Build & test (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
+        env:
+          CC: "ccache gcc"
+          MAKEFLAGS: "-j$(nproc)"
+          CFLAGS: "-Wno-unknown-pragmas"
         run: |
-          set -euxo pipefail
+          set -euo pipefail
           ccache --zero-stats || true
           make clean
-          make octypes CC="ccache gcc" \
-               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unknown-pragmas" \
-               LEX=flex YACC=bison
+          make octypes LEX=flex YACC="bison -y" CFLAGS="${CFLAGS}"
           # Debug: Check what files are present in third_party/lib
           echo "Contents of third_party/lib:"
           ls -la third_party/lib/
-          make test CC="ccache gcc" \
-               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unknown-pragmas" \
-               LEX=flex YACC=bison
-          make install-shared CC="ccache gcc" \
-               CFLAGS="-std=c99 -I. -Isrc -O3 -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unknown-pragmas" \
-               LEX=flex YACC=bison
+          make test LEX=flex YACC="bison -y" CFLAGS="${CFLAGS}"
+          make install-shared LEX=flex YACC="bison -y" CFLAGS="${CFLAGS}"
           ccache --show-stats || true
           # Verify libs
           test -f install/lib/libSITypes.a

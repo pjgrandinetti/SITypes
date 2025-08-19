@@ -1,0 +1,133 @@
+﻿2025-08-19T01:33:23.1589710Z ##[group]Run brew install flex bison ccache
+2025-08-19T01:33:23.1590040Z [36;1mbrew install flex bison ccache[0m
+2025-08-19T01:33:23.1590320Z [36;1mecho "$(brew --prefix bison)/bin" >> "$GITHUB_PATH"[0m
+2025-08-19T01:33:23.1590640Z [36;1mecho "$(brew --prefix flex)/bin"  >> "$GITHUB_PATH"[0m
+2025-08-19T01:33:23.1643950Z shell: /bin/bash -e {0}
+2025-08-19T01:33:23.1644140Z env:
+2025-08-19T01:33:23.1644320Z   MAKEFLAGS: -j2
+2025-08-19T01:33:23.1644570Z   CCACHE_BASEDIR: /Users/runner/work/SITypes/SITypes
+2025-08-19T01:33:23.1644820Z   CCACHE_COMPRESS: 1
+2025-08-19T01:33:23.1644990Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:33:23.1645170Z   HOMEBREW_NO_AUTO_UPDATE: 1
+2025-08-19T01:33:23.1645360Z   HOMEBREW_NO_INSTALL_CLEANUP: 1
+2025-08-19T01:33:23.1657450Z ##[endgroup]
+2025-08-19T01:33:25.8590600Z [32m==>[0m [1mFetching downloads for: [32mflex[39m, [32mbison[39m and [32mccache[39m[0m
+2025-08-19T01:33:25.8600140Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/flex/manifests/2.6.4_2[0m
+2025-08-19T01:33:26.2757210Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/bison/manifests/3.8.2[0m
+2025-08-19T01:33:26.6885720Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/ccache/manifests/4.11.3_1[0m
+2025-08-19T01:33:27.2035850Z [32m==>[0m [1mFetching [32mflex[39m[0m
+2025-08-19T01:33:27.2040680Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/flex/blobs/sha256:0f7f1fc52a0326f07019c5e90dfc3dd728c69afaffc2e5a75154f132975e8b0b[0m
+2025-08-19T01:33:27.6774630Z [32m==>[0m [1mFetching [32mbison[39m[0m
+2025-08-19T01:33:27.6799790Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/bison/blobs/sha256:d4c06638f63876867e8fc485129ea6683487a249f0b2bc98bfaa6f1dab4ff6a4[0m
+2025-08-19T01:33:28.1880430Z [32m==>[0m [1mFetching dependencies for ccache: [32mblake3[39m, [32mfmt[39m, [32mhiredis[39m and [32mxxhash[39m[0m
+2025-08-19T01:33:28.1899610Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/blake3/manifests/1.8.2[0m
+2025-08-19T01:33:28.5402090Z [32m==>[0m [1mFetching [32mblake3[39m[0m
+2025-08-19T01:33:28.5415410Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/blake3/blobs/sha256:ab21d31a2ea8bfc1c5dde99a668ef0bd3a804db97c8834300f4e5f27ea34533b[0m
+2025-08-19T01:33:28.9140110Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/fmt/manifests/11.2.0[0m
+2025-08-19T01:33:29.2992440Z [32m==>[0m [1mFetching [32mfmt[39m[0m
+2025-08-19T01:33:29.3014990Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/fmt/blobs/sha256:21f1e3cd8c9b24293c9a00fd01743f0be9dd6405c31a834cf6599824ace92c39[0m
+2025-08-19T01:33:29.7306210Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/hiredis/manifests/1.3.0[0m
+2025-08-19T01:33:30.0849050Z [32m==>[0m [1mFetching [32mhiredis[39m[0m
+2025-08-19T01:33:30.0859560Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/hiredis/blobs/sha256:68e9423a13a8c5dc27884296ec0ee6ab25930aaa85d3b6e5e8726855fd864211[0m
+2025-08-19T01:33:30.4583520Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/xxhash/manifests/0.8.3[0m
+2025-08-19T01:33:30.8033490Z [32m==>[0m [1mFetching [32mxxhash[39m[0m
+2025-08-19T01:33:30.8048110Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/xxhash/blobs/sha256:32a8ae9615395368644020266663a1758cd4b32b15cdf8c547c9b5a3a3bc3016[0m
+2025-08-19T01:33:31.2099550Z [32m==>[0m [1mFetching [32mccache[39m[0m
+2025-08-19T01:33:31.2127460Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/ccache/blobs/sha256:aa9c9558b72ef410e13c8718080ee0d98f67b2c3c04d11bf3ade424965bdd098[0m
+2025-08-19T01:33:31.6735390Z [34m==>[0m [1mPouring flex--2.6.4_2.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:33:31.8700410Z [34m==>[0m [1mCaveats[0m
+2025-08-19T01:33:31.8700760Z flex is keg-only, which means it was not symlinked into /opt/homebrew,
+2025-08-19T01:33:31.8701150Z because macOS already provides this software and installing another version in
+2025-08-19T01:33:31.8701570Z parallel can cause all kinds of trouble.
+2025-08-19T01:33:31.8702220Z 
+2025-08-19T01:33:31.8702340Z If you need to have flex first in your PATH, run:
+2025-08-19T01:33:31.8702670Z   echo 'export PATH="/opt/homebrew/opt/flex/bin:$PATH"' >> /Users/runner/.bash_profile
+2025-08-19T01:33:31.8702930Z 
+2025-08-19T01:33:31.8703020Z For compilers to find flex you may need to set:
+2025-08-19T01:33:31.8703260Z   export LDFLAGS="-L/opt/homebrew/opt/flex/lib"
+2025-08-19T01:33:31.8703500Z   export CPPFLAGS="-I/opt/homebrew/opt/flex/include"
+2025-08-19T01:33:31.8703760Z [34m==>[0m [1mSummary[0m
+2025-08-19T01:33:31.8721680Z 🍺  /opt/homebrew/Cellar/flex/2.6.4_2: 47 files, 1.6MB
+2025-08-19T01:33:31.8739680Z [34m==>[0m [1mPouring bison--3.8.2.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:33:31.9253470Z [34m==>[0m [1mCaveats[0m
+2025-08-19T01:33:31.9253810Z bison is keg-only, which means it was not symlinked into /opt/homebrew,
+2025-08-19T01:33:31.9254190Z because macOS already provides this software and installing another version in
+2025-08-19T01:33:31.9254560Z parallel can cause all kinds of trouble.
+2025-08-19T01:33:31.9254700Z 
+2025-08-19T01:33:31.9254800Z If you need to have bison first in your PATH, run:
+2025-08-19T01:33:31.9255150Z   echo 'export PATH="/opt/homebrew/opt/bison/bin:$PATH"' >> /Users/runner/.bash_profile
+2025-08-19T01:33:31.9255400Z 
+2025-08-19T01:33:31.9255490Z For compilers to find bison you may need to set:
+2025-08-19T01:33:31.9255730Z   export LDFLAGS="-L/opt/homebrew/opt/bison/lib"
+2025-08-19T01:33:31.9255970Z [34m==>[0m [1mSummary[0m
+2025-08-19T01:33:31.9274930Z 🍺  /opt/homebrew/Cellar/bison/3.8.2: 100 files, 3.7MB
+2025-08-19T01:33:31.9493250Z [32m==>[0m [1mInstalling dependencies for ccache: [32mblake3[39m, [32mfmt[39m, [32mhiredis[39m and [32mxxhash[39m[0m
+2025-08-19T01:33:31.9494900Z [32m==>[0m [1mInstalling ccache dependency: [32mblake3[39m[0m
+2025-08-19T01:33:31.9497700Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/blake3/manifests/1.8.2[0m
+2025-08-19T01:33:31.9498430Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/fd8aa2201dffd4a0db6644c9eff70b8c0d1a0a643ed362fc54f77d3a80fd3478--blake3-1.8.2.bottle_manifest.json
+2025-08-19T01:33:31.9520240Z [34m==>[0m [1mPouring blake3--1.8.2.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:33:32.0292090Z 🍺  /opt/homebrew/Cellar/blake3/1.8.2: 13 files, 94.8KB
+2025-08-19T01:33:32.0298470Z [32m==>[0m [1mInstalling ccache dependency: [32mfmt[39m[0m
+2025-08-19T01:33:32.0301110Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/fmt/manifests/11.2.0[0m
+2025-08-19T01:33:32.0301850Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/b2b745c1a4876928bc7e18761de1d83662c2e4a5ac992f8f059579850db6fb36--fmt-11.2.0.bottle_manifest.json
+2025-08-19T01:33:32.0328610Z [34m==>[0m [1mPouring fmt--11.2.0.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:33:32.1047160Z 🍺  /opt/homebrew/Cellar/fmt/11.2.0: 29 files, 1MB
+2025-08-19T01:33:32.1050250Z [32m==>[0m [1mInstalling ccache dependency: [32mhiredis[39m[0m
+2025-08-19T01:33:32.1053020Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/hiredis/manifests/1.3.0[0m
+2025-08-19T01:33:32.1053860Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/3b794b72d22c70fbaa25fdada9fa1613da0c754151bdbd9118fb9008b989a1c8--hiredis-1.3.0.bottle_manifest.json
+2025-08-19T01:33:32.1139530Z [34m==>[0m [1mPouring hiredis--1.3.0.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:33:32.2226120Z 🍺  /opt/homebrew/Cellar/hiredis/1.3.0: 53 files, 479.5KB
+2025-08-19T01:33:32.2228690Z [32m==>[0m [1mInstalling ccache dependency: [32mxxhash[39m[0m
+2025-08-19T01:33:32.2231170Z [34m==>[0m [1mDownloading https://ghcr.io/v2/homebrew/core/xxhash/manifests/0.8.3[0m
+2025-08-19T01:33:32.2231910Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/50d7a45c8aca7a38ebe38c4b8fb63fa7404dc4c360092f1e301c275fcc585cf0--xxhash-0.8.3.bottle_manifest.json
+2025-08-19T01:33:32.2258900Z [34m==>[0m [1mPouring xxhash--0.8.3.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:33:32.2994880Z 🍺  /opt/homebrew/Cellar/xxhash/0.8.3: 28 files, 544.0KB
+2025-08-19T01:33:32.2997090Z [32m==>[0m [1mInstalling [32mccache[39m[0m
+2025-08-19T01:33:32.2999540Z [34m==>[0m [1mPouring ccache--4.11.3_1.arm64_sonoma.bottle.tar.gz[0m
+2025-08-19T01:33:32.3840660Z [34m==>[0m [1mCaveats[0m
+2025-08-19T01:33:32.3841060Z To install symlinks for compilers that will automatically use
+2025-08-19T01:33:32.3841340Z ccache, prepend this directory to your PATH:
+2025-08-19T01:33:32.3841570Z   /opt/homebrew/opt/ccache/libexec
+2025-08-19T01:33:32.3841690Z 
+2025-08-19T01:33:32.3841820Z If this is an upgrade and you have previously added the symlinks to
+2025-08-19T01:33:32.3842120Z your PATH, you may need to modify it to the path specified above so
+2025-08-19T01:33:32.3842400Z it points to the current version.
+2025-08-19T01:33:32.3842520Z 
+2025-08-19T01:33:32.3842620Z NOTE: ccache can prevent some software from compiling.
+2025-08-19T01:33:32.3842920Z ALSO NOTE: The brew command, by design, will never use ccache.
+2025-08-19T01:33:32.3843210Z [34m==>[0m [1mSummary[0m
+2025-08-19T01:33:32.3858270Z 🍺  /opt/homebrew/Cellar/ccache/4.11.3_1: 85 files, 1.4MB
+2025-08-19T01:33:32.3863310Z [34m==>[0m [1mNo outdated dependents to upgrade![0m
+2025-08-19T01:33:32.3863720Z [32m==>[0m [1mCaveats[0m
+2025-08-19T01:33:32.3863980Z [34m==>[0m [1mflex[0m
+2025-08-19T01:33:32.3864210Z flex is keg-only, which means it was not symlinked into /opt/homebrew,
+2025-08-19T01:33:32.3864580Z because macOS already provides this software and installing another version in
+2025-08-19T01:33:32.3864880Z parallel can cause all kinds of trouble.
+2025-08-19T01:33:32.3865030Z 
+2025-08-19T01:33:32.3865130Z If you need to have flex first in your PATH, run:
+2025-08-19T01:33:32.3865460Z   echo 'export PATH="/opt/homebrew/opt/flex/bin:$PATH"' >> /Users/runner/.bash_profile
+2025-08-19T01:33:32.3865720Z 
+2025-08-19T01:33:32.3865800Z For compilers to find flex you may need to set:
+2025-08-19T01:33:32.3866050Z   export LDFLAGS="-L/opt/homebrew/opt/flex/lib"
+2025-08-19T01:33:32.3866310Z   export CPPFLAGS="-I/opt/homebrew/opt/flex/include"
+2025-08-19T01:33:32.3866570Z [34m==>[0m [1mbison[0m
+2025-08-19T01:33:32.3866830Z bison is keg-only, which means it was not symlinked into /opt/homebrew,
+2025-08-19T01:33:32.3867210Z because macOS already provides this software and installing another version in
+2025-08-19T01:33:32.3867520Z parallel can cause all kinds of trouble.
+2025-08-19T01:33:32.3867670Z 
+2025-08-19T01:33:32.3867750Z If you need to have bison first in your PATH, run:
+2025-08-19T01:33:32.3868100Z   echo 'export PATH="/opt/homebrew/opt/bison/bin:$PATH"' >> /Users/runner/.bash_profile
+2025-08-19T01:33:32.3868350Z 
+2025-08-19T01:33:32.3868450Z For compilers to find bison you may need to set:
+2025-08-19T01:33:32.3868700Z   export LDFLAGS="-L/opt/homebrew/opt/bison/lib"
+2025-08-19T01:33:32.3868950Z [34m==>[0m [1mccache[0m
+2025-08-19T01:33:32.3869180Z To install symlinks for compilers that will automatically use
+2025-08-19T01:33:32.3869470Z ccache, prepend this directory to your PATH:
+2025-08-19T01:33:32.3869690Z   /opt/homebrew/opt/ccache/libexec
+2025-08-19T01:33:32.3869830Z 
+2025-08-19T01:33:32.3870280Z If this is an upgrade and you have previously added the symlinks to
+2025-08-19T01:33:32.3870610Z your PATH, you may need to modify it to the path specified above so
+2025-08-19T01:33:32.3870880Z it points to the current version.
+2025-08-19T01:33:32.3871010Z 
+2025-08-19T01:33:32.3871130Z NOTE: ccache can prevent some software from compiling.
+2025-08-19T01:33:32.3871420Z ALSO NOTE: The brew command, by design, will never use ccache.

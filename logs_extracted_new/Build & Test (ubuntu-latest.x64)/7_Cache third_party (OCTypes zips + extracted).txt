@@ -1,0 +1,22 @@
+﻿2025-08-19T01:34:25.4071994Z ##[group]Run actions/cache@v4
+2025-08-19T01:34:25.4072291Z with:
+2025-08-19T01:34:25.4072494Z   path: third_party
+2025-08-19T01:34:25.4072894Z   key: tp-Linux-142a9a7b4a2fdcd82f23c23679e92dd166c7c9337f7a756411286840109b85d4
+2025-08-19T01:34:25.4073368Z   restore-keys: tp-Linux-
+
+2025-08-19T01:34:25.4073629Z   enableCrossOsArchive: false
+2025-08-19T01:34:25.4073899Z   fail-on-cache-miss: false
+2025-08-19T01:34:25.4074154Z   lookup-only: false
+2025-08-19T01:34:25.4074886Z   save-always: false
+2025-08-19T01:34:25.4075091Z env:
+2025-08-19T01:34:25.4075253Z   MAKEFLAGS: -j2
+2025-08-19T01:34:25.4075485Z   CCACHE_BASEDIR: /home/runner/work/SITypes/SITypes
+2025-08-19T01:34:25.4075762Z   CCACHE_COMPRESS: 1
+2025-08-19T01:34:25.4075952Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:34:25.4076139Z ##[endgroup]
+2025-08-19T01:34:25.6553027Z Cache hit for restore-key: tp-Linux-738c4654e1c05609b547a41f504b5fc4e0d5e0aeb2ea7e8c88ad855dfcce0e65
+2025-08-19T01:34:26.0104645Z Received 968454 of 968454 (100.0%), 4.2 MBs/sec
+2025-08-19T01:34:26.0105973Z Cache Size: ~1 MB (968454 B)
+2025-08-19T01:34:26.0134500Z [command]/usr/bin/tar -xf /home/runner/work/_temp/01bf28e5-ea0b-45ca-ad19-99dd84e4868f/cache.tzst -P -C /home/runner/work/SITypes/SITypes --use-compress-program unzstd
+2025-08-19T01:34:26.0341973Z Cache restored successfully
+2025-08-19T01:34:26.0422553Z Cache restored from key: tp-Linux-738c4654e1c05609b547a41f504b5fc4e0d5e0aeb2ea7e8c88ad855dfcce0e65

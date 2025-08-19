@@ -1,0 +1,84 @@
+﻿2025-08-19T01:33:21.3379650Z ##[group]Run actions/checkout@v5
+2025-08-19T01:33:21.3380410Z with:
+2025-08-19T01:33:21.3380860Z   fetch-depth: 0
+2025-08-19T01:33:21.3381370Z   repository: pjgrandinetti/SITypes
+2025-08-19T01:33:21.3382180Z   token: ***
+2025-08-19T01:33:21.3382620Z   ssh-strict: true
+2025-08-19T01:33:21.3383090Z   ssh-user: git
+2025-08-19T01:33:21.3383570Z   persist-credentials: true
+2025-08-19T01:33:21.3384120Z   clean: true
+2025-08-19T01:33:21.3384620Z   sparse-checkout-cone-mode: true
+2025-08-19T01:33:21.3385230Z   fetch-tags: false
+2025-08-19T01:33:21.3385750Z   show-progress: true
+2025-08-19T01:33:21.3386240Z   lfs: false
+2025-08-19T01:33:21.3386680Z   submodules: false
+2025-08-19T01:33:21.3387150Z   set-safe-directory: true
+2025-08-19T01:33:21.3387760Z env:
+2025-08-19T01:33:21.3388210Z   MAKEFLAGS: -j2
+2025-08-19T01:33:21.3388750Z   CCACHE_BASEDIR: /Users/runner/work/SITypes/SITypes
+2025-08-19T01:33:21.3389420Z   CCACHE_COMPRESS: 1
+2025-08-19T01:33:21.3389890Z   CCACHE_MAXSIZE: 200M
+2025-08-19T01:33:21.3390370Z ##[endgroup]
+2025-08-19T01:33:21.6118750Z Syncing repository: pjgrandinetti/SITypes
+2025-08-19T01:33:21.6120420Z ##[group]Getting Git version info
+2025-08-19T01:33:21.6121190Z Working directory is '/Users/runner/work/SITypes/SITypes'
+2025-08-19T01:33:21.6122320Z [command]/opt/homebrew/bin/git version
+2025-08-19T01:33:21.6313870Z git version 2.50.1
+2025-08-19T01:33:21.6327480Z ##[endgroup]
+2025-08-19T01:33:21.6332430Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/10a8aed9-c4bc-453b-af77-8ed0f4b5aad1/.gitconfig'
+2025-08-19T01:33:21.6337840Z Temporarily overriding HOME='/Users/runner/work/_temp/10a8aed9-c4bc-453b-af77-8ed0f4b5aad1' before making global git config changes
+2025-08-19T01:33:21.6340720Z Adding repository directory to the temporary git global config as a safe directory
+2025-08-19T01:33:21.6342770Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/SITypes/SITypes
+2025-08-19T01:33:21.6418590Z Deleting the contents of '/Users/runner/work/SITypes/SITypes'
+2025-08-19T01:33:21.6420900Z ##[group]Initializing the repository
+2025-08-19T01:33:21.6423660Z [command]/opt/homebrew/bin/git init /Users/runner/work/SITypes/SITypes
+2025-08-19T01:33:21.6581770Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-08-19T01:33:21.6583380Z hint: is subject to change. To configure the initial branch name to use in all
+2025-08-19T01:33:21.6584880Z hint: of your new repositories, which will suppress this warning, call:
+2025-08-19T01:33:21.6585840Z hint:
+2025-08-19T01:33:21.6589780Z hint: 	git config --global init.defaultBranch <name>
+2025-08-19T01:33:21.6590620Z hint:
+2025-08-19T01:33:21.6591550Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-08-19T01:33:21.6593370Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-08-19T01:33:21.6594980Z hint:
+2025-08-19T01:33:21.6595680Z hint: 	git branch -m <name>
+2025-08-19T01:33:21.6596560Z hint:
+2025-08-19T01:33:21.6597370Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-08-19T01:33:21.6598550Z Initialized empty Git repository in /Users/runner/work/SITypes/SITypes/.git/
+2025-08-19T01:33:21.6600550Z [command]/opt/homebrew/bin/git remote add origin https://github.com/pjgrandinetti/SITypes
+2025-08-19T01:33:21.6629860Z ##[endgroup]
+2025-08-19T01:33:21.6630730Z ##[group]Disabling automatic garbage collection
+2025-08-19T01:33:21.6632630Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2025-08-19T01:33:21.6667930Z ##[endgroup]
+2025-08-19T01:33:21.6668760Z ##[group]Setting up auth
+2025-08-19T01:33:21.6671420Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-08-19T01:33:21.6713180Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-08-19T01:33:21.7488420Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-08-19T01:33:21.7492890Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-08-19T01:33:21.7948560Z [command]/opt/homebrew/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-08-19T01:33:21.7989750Z ##[endgroup]
+2025-08-19T01:33:21.7990640Z ##[group]Fetching the repository
+2025-08-19T01:33:21.7995160Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2025-08-19T01:33:23.0948930Z From https://github.com/pjgrandinetti/SITypes
+2025-08-19T01:33:23.0950980Z  * [new branch]      master     -> origin/master
+2025-08-19T01:33:23.0954020Z  * [new tag]         v0.1.0     -> v0.1.0
+2025-08-19T01:33:23.0954570Z  * [new tag]         v0.1.1     -> v0.1.1
+2025-08-19T01:33:23.0955380Z  * [new tag]         v0.1.2     -> v0.1.2
+2025-08-19T01:33:23.0955750Z  * [new tag]         v0.1.3     -> v0.1.3
+2025-08-19T01:33:23.0956100Z  * [new tag]         v0.1.4     -> v0.1.4
+2025-08-19T01:33:23.1006200Z [command]/opt/homebrew/bin/git branch --list --remote origin/master
+2025-08-19T01:33:23.1047520Z   origin/master
+2025-08-19T01:33:23.1053460Z [command]/opt/homebrew/bin/git rev-parse refs/remotes/origin/master
+2025-08-19T01:33:23.1083910Z 4c33d1cd457cf34ca10f585bd2bbe39c9e142b52
+2025-08-19T01:33:23.1086150Z ##[endgroup]
+2025-08-19T01:33:23.1086620Z ##[group]Determining the checkout info
+2025-08-19T01:33:23.1087080Z ##[endgroup]
+2025-08-19T01:33:23.1089250Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2025-08-19T01:33:23.1134780Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2025-08-19T01:33:23.1171630Z ##[group]Checking out the ref
+2025-08-19T01:33:23.1174160Z [command]/opt/homebrew/bin/git checkout --progress --force -B master refs/remotes/origin/master
+2025-08-19T01:33:23.1344330Z Reset branch 'master'
+2025-08-19T01:33:23.1349030Z branch 'master' set up to track 'origin/master'.
+2025-08-19T01:33:23.1352740Z ##[endgroup]
+2025-08-19T01:33:23.1413560Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2025-08-19T01:33:23.1453630Z 4c33d1cd457cf34ca10f585bd2bbe39c9e142b52
