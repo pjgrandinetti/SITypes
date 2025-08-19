@@ -1,6 +1,12 @@
 #include "SITypes.h"
 #include "SIDimensionalityPrivate.h"
 #include "SIScalarConstants.h"
+
+// GCC compatibility: __has_feature is Clang-specific
+#ifndef __has_feature
+#define __has_feature(x) 0
+#endif
+
 static bool siTypesShutdownCalled = false;
 void SITypesShutdown(void) {
     if (siTypesShutdownCalled) return;
