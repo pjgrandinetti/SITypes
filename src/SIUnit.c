@@ -439,6 +439,10 @@ static bool SIUnitSymbolIsUnderived(OCStringRef symbol) {
             return false;
         }
     }
+    // Check for bullet operator (U+2022: •) which is a 3-byte UTF-8 sequence: 0xE2 0x80 0xA2
+    if (strstr(cstr, "\xe2\x80\xa2") != NULL) {
+        return false;
+    }
     return true;
 }
 static void AddToUnitsDictionaryLibrary(SIUnitRef unit) {
