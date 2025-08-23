@@ -343,6 +343,13 @@ OCArrayRef SIDimensionalityCreateArrayOfQuantitiesWithSameReducedDimensionality(
 //     return sorted;
 // }
 //
+OCArrayRef SIDimensionalityCreateArrayOfAllQuantityNames(void) {
+    if (NULL == dimQuantitiesLibrary) 
+        DimensionalityLibraryBuild();
+    
+    return OCDictionaryCreateArrayWithAllKeys(dimQuantitiesLibrary);
+}
+
 OCArrayRef SIDimensionalityCreateArrayOfQuantityNames(SIDimensionalityRef dim) {
     if (!dim) return NULL;
     // Lazy initialization of the dimensionality-to-quantity map
