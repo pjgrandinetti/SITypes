@@ -2,6 +2,11 @@
 
 ![CI Status](https://github.com/pjgrandinetti/SITypes/actions/workflows/ci.yml/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/SITypes/badge/?version=latest)](https://SITypes.readthedocs.io/en/latest/?badge=latest)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/pjgrandinetti/SITypes)](https://github.com/pjgrandinetti/SITypes/releases/latest)
+[![License](https://img.shields.io/github/license/pjgrandinetti/SITypes)](https://github.com/pjgrandinetti/SITypes/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/pjgrandinetti/SITypes)](https://github.com/pjgrandinetti/SITypes/issues)
+[![GitHub last commit](https://img.shields.io/github/last-commit/pjgrandinetti/SITypes)](https://github.com/pjgrandinetti/SITypes/commits/main)
+[![Platform Support](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-blue)](https://github.com/pjgrandinetti/SITypes#release-v010-alpha)
 
 
 Physical quantities appear in nearly every aspect of our daily lives. An athlete checks her wristwatch to measure the physical quantity of time elapsed during a race. A doctor measures the physical quantity of temperature inside a patient's mouth and the physical quantities of pressure: systolic and diastolic. A merchant uses a scale to measure the physical quantity of mass for a piece of cheese.
