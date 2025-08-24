@@ -184,19 +184,29 @@ static OCStringRef impl_SIUnitCopyFormattingDescription(OCTypeRef theType) {
     if (theUnit->symbol) return OCStringCreateCopy(theUnit->symbol);
     return OCStringCreateWithCString("<SIUnit>");
 }
+SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
+                               OCStringRef name,
+                               OCStringRef plural_name,
+                               OCStringRef symbol,
+                               double scale_to_coherent_si);
 static void *impl_SIUnitDeepCopy(const void *obj) {
     if (!obj) return NULL;
     const SIUnitRef src = (SIUnitRef)obj;
-    struct impl_SIUnit *copy = SIUnitAllocate();
-    if (!copy) return NULL;
-    copy->dimensionality = OCTypeDeepCopy(src->dimensionality);
-    // Copy simple fields
-    copy->scale_to_coherent_si = src->scale_to_coherent_si;
-    // Copy strings (OCStringRef)
-    if (src->symbol) copy->symbol = OCStringCreateCopy(src->symbol);
-    if (src->name) copy->name = OCStringCreateCopy(src->name);
-    if (src->plural_name) copy->plural_name = OCStringCreateCopy(src->plural_name);
-    return (void *)copy;
+    // struct impl_SIUnit *copy = SIUnitAllocate();
+    // if (!copy) return NULL;
+    // copy->dimensionality = OCTypeDeepCopy(src->dimensionality);
+    // // Copy simple fields
+    // copy->scale_to_coherent_si = src->scale_to_coherent_si;
+    // // Copy strings (OCStringRef)
+    // if (src->symbol) copy->symbol = OCStringCreateCopy(src->symbol);
+    // if (src->name) copy->name = OCStringCreateCopy(src->name);
+    // if (src->plural_name) copy->plural_name = OCStringCreateCopy(src->plural_name);
+    // return (void *)copy;
+    return (void *)SIUnitWithParameters(src->dimensionality,
+                                        src->name,
+                                        src->plural_name,
+                                        src->symbol,
+                                        src->scale_to_coherent_si);
 }
 static void *impl_SIUnitDeepCopyMutable(const void *obj) {
     // SIUnit is immutable; just return a standard deep copy
@@ -248,7 +258,8 @@ static SIUnitRef SIUnitCreate(SIDimensionalityRef dimensionality,
     if (plural_name)
         theUnit->plural_name = OCStringCreateCopy(plural_name);
     else
-        theUnit->plural_name = STR("");;
+        theUnit->plural_name = STR("");
+    ;
     if (symbol)
         theUnit->symbol = OCStringCreateCopy(symbol);
     else
@@ -1193,11 +1204,11 @@ SIUnitRef SIUnitFindWithName(OCStringRef input) {
     }
     return NULL;
 }
-static SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
-                                      OCStringRef name,
-                                      OCStringRef plural_name,
-                                      OCStringRef symbol,
-                                      double scale_to_coherent_si) {
+SIUnitRef SIUnitWithParameters(SIDimensionalityRef dimensionality,
+                               OCStringRef name,
+                               OCStringRef plural_name,
+                               OCStringRef symbol,
+                               double scale_to_coherent_si) {
     // Create a temporary unit to get its symbol, then check if equivalent exists
     SIUnitRef tempUnit = SIUnitCreate(dimensionality, name, plural_name, symbol, scale_to_coherent_si);
     if (NULL == tempUnit) return NULL;
