@@ -197,7 +197,7 @@ SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensiona
     if (error && *error) return NULL;
     // 2) Validate input
     IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
-    if (power == 0) return SIDimensionalityDimensionless();
+    if (power == 0 || SIDimensionalityIsDimensionless(theDim)) return SIDimensionalityDimensionless();
     // 3) Compute new exponents in two small arrays
     uint8_t num_exp[BASE_DIMENSION_COUNT];
     uint8_t den_exp[BASE_DIMENSION_COUNT];
