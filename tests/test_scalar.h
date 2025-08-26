@@ -101,7 +101,7 @@ bool test_SIScalarWriteReadJSON_simple(void);
 bool test_SIScalarWriteReadJSON_negative(void);
 bool test_SIScalarWriteReadJSON_complex_unit(void);
 bool test_SIScalarWriteReadJSON_array_and_dictionary(void);
-bool test_SIScalarCreateArrayFromOCNumberArray(void);
-bool test_SIScalarCreateArrayFromNumberTypeArray(void);
-bool test_SIQuantityValidateArrayForDimensionality(void);
+bool test_SIScalarCreateArrayFromMixedTypeArray(void);
+bool test_SIScalarCreateArrayFromNumberArray(void);
+bool test_SIQuantityValidateMixedArrayForDimensionality(void);
 #endif /* TEST_SCALAR_H */

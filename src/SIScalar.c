@@ -3024,7 +3024,7 @@ OCComparisonResult SIScalarCompareLooseReduced(SIScalarRef theScalar, SIScalarRe
 
 #pragma mark Array Creation Functions
 
-OCArrayRef SIScalarCreateArrayFromOCNumberArray(OCArrayRef numbers, OCStringRef *outError) {
+OCArrayRef SIScalarCreateArrayFromMixedTypeArray(OCArrayRef numbers, OCStringRef *outError) {
     if (outError) *outError = NULL;
     
     if (!numbers) {
@@ -3071,6 +3071,31 @@ OCArrayRef SIScalarCreateArrayFromOCNumberArray(OCArrayRef numbers, OCStringRef 
                 return NULL;
             }
             OCRelease(s);  // Release local reference after array retains it
+        } else if (objType == OCStringGetTypeID()) {
+            // It's an OCString - convert to SIScalar using expression parsing
+            OCStringRef str = (OCStringRef)obj;
+            OCStringRef parseError = NULL;
+            SIScalarRef s = SIScalarCreateFromExpression(str, &parseError);
+            if (!s) {
+                OCRelease(arr);
+                if (outError) {
+                    if (parseError) {
+                        OCRelease(parseError);
+                        *outError = STR("Failed to parse string expression");
+                    } else {
+                        *outError = STR("Failed to create SIScalar from string");
+                    }
+                }
+                return NULL;
+            }
+            
+            if (!OCArrayAppendValue(arr, s)) {
+                OCRelease(s);
+                OCRelease(arr);
+                if (outError) *outError = STR("Failed to append SIScalar to array");
+                return NULL;
+            }
+            OCRelease(s);  // Release local reference after array retains it
         } else if (objType == SIScalarGetTypeID()) {
             // It's already a SIScalar - add directly without extra retain/release
             if (!OCArrayAppendValue(arr, obj)) {
@@ -3088,7 +3113,7 @@ OCArrayRef SIScalarCreateArrayFromOCNumberArray(OCArrayRef numbers, OCStringRef 
     return arr;
 }
 
-OCArrayRef SIScalarCreateArrayFromNumberTypeArray(const void *values, OCNumberType type, OCIndex count, OCStringRef *outError) {
+OCArrayRef SIScalarCreateArrayFromNumberArray(const void *values, OCNumberType type, OCIndex count, OCStringRef *outError) {
     if (outError) *outError = NULL;
     
     if (!values) {

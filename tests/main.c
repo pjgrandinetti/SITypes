@@ -189,9 +189,9 @@ int main(int argc, const char* argv[]) {
     TRACK(test_SIScalarWriteReadJSON_negative);
     TRACK(test_SIScalarWriteReadJSON_complex_unit);
     TRACK(test_SIScalarWriteReadJSON_array_and_dictionary);
-    TRACK(test_SIScalarCreateArrayFromOCNumberArray);
-    TRACK(test_SIScalarCreateArrayFromNumberTypeArray);
-    TRACK(test_SIQuantityValidateArrayForDimensionality);
+    TRACK(test_SIScalarCreateArrayFromMixedTypeArray);
+    TRACK(test_SIScalarCreateArrayFromNumberArray);
+    TRACK(test_SIQuantityValidateMixedArrayForDimensionality);
     if (failures) {
         fprintf(stderr, "\n%d test(s) failed.\n", failures);
     } else

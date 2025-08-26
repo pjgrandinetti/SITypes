@@ -114,7 +114,7 @@ static bool isQuantityLike(void *obj) {
     
     return (dim != NULL || qty->unit == NULL);  // NULL unit is OK (dimensionless)
 }
-bool SIQuantityValidateArrayForDimensionality(OCArrayRef array, SIDimensionalityRef dimensionality, OCStringRef *outError) {
+bool SIQuantityValidateMixedArrayForDimensionality(OCArrayRef array, SIDimensionalityRef dimensionality, OCStringRef *outError) {
     if (outError) *outError = NULL;
     
     if (!array) {
@@ -162,6 +162,31 @@ bool SIQuantityValidateArrayForDimensionality(OCArrayRef array, SIDimensionality
             if (!isDimensionless) {
                 if (outError) {
                     *outError = STR("OCNumber elements are only allowed for dimensionless arrays");
+                }
+                return false;
+            }
+        } else if (objType == OCStringGetTypeID()) {
+            // It's an OCString - try to parse as SIScalar and check dimensionality
+            OCStringRef str = (OCStringRef)obj;
+            OCStringRef parse_error = NULL;
+            SIScalarRef scalar = SIScalarCreateFromExpression(str, &parse_error);
+            
+            if (!scalar) {
+                if (outError) {
+                    *outError = STR("Invalid expression in string element");
+                }
+                return false;
+            }
+            
+            // Check dimensionality of the parsed scalar
+            SIDimensionalityRef scalarDim = SIQuantityGetUnitDimensionality((SIQuantityRef)scalar);
+            bool compatible = SIDimensionalityHasSameReducedDimensionality(scalarDim, dimensionality);
+            
+            OCRelease(scalar);
+            
+            if (!compatible) {
+                if (outError) {
+                    *outError = STR("String element has incompatible dimensionality");
                 }
                 return false;
             }

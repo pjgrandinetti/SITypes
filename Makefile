@@ -308,7 +308,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | dirs
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)/%.o: $(GEN_DIR)/%.c | dirs
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -Wno-misleading-indentation -c -o $@ $<
 
 $(OBJ_DIR)/%.o: $(TEST_SRC_DIR)/%.c | dirs
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<

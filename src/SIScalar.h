@@ -94,9 +94,9 @@ SIScalarRef SIScalarCreateWithOCNumber(OCNumberRef number, SIUnitRef unit);
 /** @brief Creates a scalar from a string containing a single unit name. */
 SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef theString);
 /** @brief Creates an array of SIScalar objects from an array of OCNumber or SIScalar objects. */
-OCArrayRef SIScalarCreateArrayFromOCNumberArray(OCArrayRef numbers, OCStringRef *outError);
+OCArrayRef SIScalarCreateArrayFromMixedTypeArray(OCArrayRef numbers, OCStringRef *outError);
 /** @brief Creates an array of SIScalar objects from a typed array of numeric values. */
-OCArrayRef SIScalarCreateArrayFromNumberTypeArray(const void *values, OCNumberType type, OCIndex count, OCStringRef *outError);
+OCArrayRef SIScalarCreateArrayFromNumberArray(const void *values, OCNumberType type, OCIndex count, OCStringRef *outError);
 #pragma mark Accessors
 /** @brief Retrieves the numeric value of a SIScalar instance. */
 impl_SINumber SIScalarGetValue(SIScalarRef theScalar);

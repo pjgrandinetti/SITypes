@@ -122,7 +122,7 @@ bool SIQuantityHasSameReducedDimensionality(SIQuantityRef input1, SIQuantityRef 
  * @param outError Pointer to store error message if validation fails.
  * @return True if all elements have compatible dimensionality, false otherwise.
  */
-bool SIQuantityValidateArrayForDimensionality(OCArrayRef array, SIDimensionalityRef dimensionality, OCStringRef *outError);
+bool SIQuantityValidateMixedArrayForDimensionality(OCArrayRef array, SIDimensionalityRef dimensionality, OCStringRef *outError);
 /**
  * @brief Returns larger numeric type for the two input quantities.
  * @param input1 The first SIQuantity.
