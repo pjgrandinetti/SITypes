@@ -191,6 +191,7 @@ int main(int argc, const char* argv[]) {
     TRACK(test_SIScalarWriteReadJSON_array_and_dictionary);
     TRACK(test_SIScalarCreateArrayFromOCNumberArray);
     TRACK(test_SIScalarCreateArrayFromNumberTypeArray);
+    TRACK(test_SIQuantityValidateArrayForDimensionality);
     if (failures) {
         fprintf(stderr, "\n%d test(s) failed.\n", failures);
     } else

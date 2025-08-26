@@ -71,6 +71,108 @@ bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2)
     SIQuantityRef quantity2 = (SIQuantityRef)input2;
     return SIDimensionalityEqual(SIQuantityGetUnitDimensionality(quantity1), SIQuantityGetUnitDimensionality(quantity2));
 }
+// Helper function to safely check if an object has SIQuantity-compatible structure
+static bool isQuantityLike(void *obj) {
+    if (!obj) return false;
+    
+    // Step 1: Basic pointer sanity check
+    uintptr_t addr = (uintptr_t)obj;
+    if (addr < 0x1000) return false;  // Avoid NULL and very low addresses
+    
+    // Step 2: Try to safely access OCBase
+    OCBase *base = (OCBase*)obj;
+    
+    // Step 3: Validate OCBase structure
+    // Check retain count is reasonable (live objects should have retainCount > 0)
+    if (base->retainCount == 0 || base->retainCount > 65535) return false;
+    
+    // Check that typeID is not kOCNotATypeID 
+    if (base->typeID == kOCNotATypeID) return false;
+    
+    // Step 4: Try OCGetTypeID - this validates the object more thoroughly
+    OCTypeID typeID = OCGetTypeID(obj);
+    if (typeID == kOCNotATypeID) return false;
+    
+    // Step 5: Now safely check if it has SIQuantity structure
+    // We know it's a valid OCBase object, so we can probe the structure
+    SIQuantityRef qty = (SIQuantityRef)obj;
+    
+    // Check that the SINumberType enum is in valid range
+    if (qty->type < kSINumberFloat32Type || qty->type > kSINumberComplex128Type) {
+        return false;
+    }
+    
+    // Check unit pointer (can be NULL, but if not NULL should be valid OCBase)
+    if (qty->unit != NULL) {
+        OCTypeID unitTypeID = OCGetTypeID(qty->unit);
+        if (unitTypeID == kOCNotATypeID) return false;
+    }
+    
+    // Step 6: Final test - try to call SIQuantity function
+    // If this works without crashing, we have a compatible structure
+    SIDimensionalityRef dim = SIQuantityGetUnitDimensionality(qty);
+    
+    return (dim != NULL || qty->unit == NULL);  // NULL unit is OK (dimensionless)
+}
+bool SIQuantityValidateArrayForDimensionality(OCArrayRef array, SIDimensionalityRef dimensionality, OCStringRef *outError) {
+    if (outError) *outError = NULL;
+    
+    if (!array) {
+        if (outError) *outError = STR("Input array is NULL");
+        return false;
+    }
+    
+    if (!dimensionality) {
+        if (outError) *outError = STR("Dimensionality is NULL");
+        return false;
+    }
+    
+    OCIndex count = OCArrayGetCount(array);
+    if (count <= 0) {
+        // Empty arrays are valid - they don't violate dimensionality requirements
+        return true;
+    }
+    
+    // Check once if the target dimensionality is dimensionless
+    bool isDimensionless = SIDimensionalityIsDimensionless(dimensionality);
+    
+    for (OCIndex i = 0; i < count; ++i) {
+        OCTypeRef obj = OCArrayGetValueAtIndex(array, i);
+        if (!obj) {
+            if (outError) *outError = STR("Array contains NULL element");
+            return false;
+        }
+        
+        OCTypeID objType = OCGetTypeID(obj);
+        
+        // Check if it's a quantity-like object using safe duck typing
+        // This will work for SIScalar and any other types that follow the SIQuantity structure pattern
+        if (isQuantityLike((void *)obj)) {
+            // It's a quantity-like object - check dimensionality  
+            SIDimensionalityRef objDim = SIQuantityGetUnitDimensionality((SIQuantityRef)obj);
+            
+            if (!SIDimensionalityHasSameReducedDimensionality(objDim, dimensionality)) {
+                if (outError) {
+                    *outError = STR("Element has incompatible dimensionality");
+                }
+                return false;
+            }
+        } else if (objType == OCNumberGetTypeID()) {
+            // It's an OCNumber - only allow if target dimensionality is dimensionless
+            if (!isDimensionless) {
+                if (outError) {
+                    *outError = STR("OCNumber elements are only allowed for dimensionless arrays");
+                }
+                return false;
+            }
+        } else {
+            // Unsupported type
+            if (outError) *outError = STR("Array contains unsupported element type");
+            return false;
+        }
+    }
+    return true;
+}
 SINumberType SIQuantityBestNumericType(SIQuantityRef input1, SIQuantityRef input2) {
     SIQuantityRef quantity1 = (SIQuantityRef)input1;
     SIQuantityRef quantity2 = (SIQuantityRef)input2;

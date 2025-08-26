@@ -3745,3 +3745,154 @@ cleanup:
     if (success) printf("%s passed\n", __func__);
     return success;
 }
+
+bool test_SIQuantityValidateArrayForDimensionality(void) {
+    printf("Testing SIQuantityValidateArrayForDimensionality...\n");
+    bool success = true;
+    OCStringRef error = NULL;
+    
+    // Create test scalars with different dimensionalities
+    SIUnitRef meter_unit = SIUnitWithSymbol(STR("m"));
+    SIUnitRef kilogram_unit = SIUnitWithSymbol(STR("kg"));
+    SIUnitRef dimensionless_unit = SIUnitWithSymbol(STR(""));
+    
+    if (!meter_unit || !kilogram_unit || !dimensionless_unit) {
+        printf("%s failed: Failed to create units\n", __func__);
+        success = false;
+        goto cleanup;
+    }
+    
+    SIScalarRef s_meter = SIScalarCreateWithDouble(1.0, meter_unit);
+    SIScalarRef s_kilogram = SIScalarCreateWithDouble(1.0, kilogram_unit);
+    SIScalarRef s_dimensionless = SIScalarCreateWithDouble(42.0, dimensionless_unit);
+    
+    // Create OCNumbers (which should be treated as dimensionless)
+    OCNumberRef num1 = OCNumberCreateWithDouble(3.14);
+    OCNumberRef num2 = OCNumberCreateWithDouble(2.71);
+    
+    if (!s_meter || !s_kilogram || !s_dimensionless || !num1 || !num2) {
+        printf("%s failed: Failed to create test objects\n", __func__);
+        success = false;
+        goto cleanup;
+    }
+    
+    // Test 1: Array with consistent dimensionality (length)
+    OCMutableArrayRef length_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
+    OCArrayAppendValue(length_array, s_meter);
+    SIUnitRef centimeter_unit = SIUnitWithSymbol(STR("cm"));
+    SIScalarRef s_centimeter = SIScalarCreateWithDouble(100.0, centimeter_unit);
+    OCArrayAppendValue(length_array, s_centimeter);
+    
+    SIUnitRef meter_unit_ref = SIQuantityGetUnit((SIQuantityRef)s_meter);
+    SIDimensionalityRef length_dim = SIUnitGetDimensionality(meter_unit_ref);
+    bool result1 = SIQuantityValidateArrayForDimensionality((OCArrayRef)length_array, length_dim, &error);
+    if (!result1) {
+        printf("%s failed: Consistent length array should validate\n", __func__);
+        if (error) {
+            printf("Error: %s\n", OCStringGetCString(error));
+            OCRelease(error);
+            error = NULL;
+        }
+        success = false;
+        goto cleanup;
+    }
+    
+    // Test 2: Array with mixed incompatible dimensionality (should fail)
+    OCMutableArrayRef mixed_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
+    OCArrayAppendValue(mixed_array, s_meter);
+    OCArrayAppendValue(mixed_array, s_kilogram);
+    
+    bool result2 = SIQuantityValidateArrayForDimensionality((OCArrayRef)mixed_array, length_dim, &error);
+    if (result2) {
+        printf("%s failed: Mixed dimensionality array should not validate\n", __func__);
+        success = false;
+        goto cleanup;
+    }
+    if (error) {
+        OCRelease(error);
+        error = NULL;
+    }
+    
+    // Test 3: Array with dimensionless SIScalars and OCNumbers (should work for dimensionless)
+    OCMutableArrayRef dimensionless_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
+    OCArrayAppendValue(dimensionless_array, s_dimensionless);
+    OCArrayAppendValue(dimensionless_array, num1);
+    OCArrayAppendValue(dimensionless_array, num2);
+    
+    SIUnitRef dimensionless_unit_ref = SIQuantityGetUnit((SIQuantityRef)s_dimensionless);
+    SIDimensionalityRef dimensionless_dim = SIUnitGetDimensionality(dimensionless_unit_ref);
+    bool result3 = SIQuantityValidateArrayForDimensionality((OCArrayRef)dimensionless_array, dimensionless_dim, &error);
+    if (!result3) {
+        printf("%s failed: Dimensionless array with OCNumbers should validate\n", __func__);
+        if (error) {
+            printf("Error: %s\n", OCStringGetCString(error));
+            OCRelease(error);
+            error = NULL;
+        }
+        success = false;
+        goto cleanup;
+    }
+    
+    // Test 4: Array with OCNumbers but non-dimensionless target (should fail)
+    OCMutableArrayRef number_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
+    OCArrayAppendValue(number_array, num1);
+    OCArrayAppendValue(number_array, num2);
+    
+    bool result4 = SIQuantityValidateArrayForDimensionality((OCArrayRef)number_array, length_dim, &error);
+    if (result4) {
+        printf("%s failed: OCNumber array should not validate for non-dimensionless target\n", __func__);
+        success = false;
+        goto cleanup;
+    }
+    if (error) {
+        OCRelease(error);
+        error = NULL;
+    }
+    
+    // Test 5: Invalid input - NULL array
+    bool result5 = SIQuantityValidateArrayForDimensionality(NULL, length_dim, &error);
+    if (result5) {
+        printf("%s failed: NULL array should not validate\n", __func__);
+        success = false;
+        goto cleanup;
+    }
+    if (error) {
+        OCRelease(error);
+        error = NULL;
+    }
+    
+    // Test 6: Empty array (should validate)
+    OCMutableArrayRef empty_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
+    bool result6 = SIQuantityValidateArrayForDimensionality((OCArrayRef)empty_array, length_dim, &error);
+    if (!result6) {
+        printf("%s failed: Empty array should validate\n", __func__);
+        if (error) {
+            printf("Error: %s\n", OCStringGetCString(error));
+            OCRelease(error);
+            error = NULL;
+        }
+        success = false;
+        goto cleanup;
+    }
+    
+cleanup:
+    if (meter_unit) OCRelease(meter_unit);
+    if (kilogram_unit) OCRelease(kilogram_unit);
+    if (dimensionless_unit) OCRelease(dimensionless_unit);
+    if (centimeter_unit) OCRelease(centimeter_unit);
+    if (s_meter) OCRelease(s_meter);
+    if (s_kilogram) OCRelease(s_kilogram);
+    if (s_dimensionless) OCRelease(s_dimensionless);
+    if (s_centimeter) OCRelease(s_centimeter);
+    if (num1) OCRelease(num1);
+    if (num2) OCRelease(num2);
+    if (length_array) OCRelease(length_array);
+    if (mixed_array) OCRelease(mixed_array);
+    if (dimensionless_array) OCRelease(dimensionless_array);
+    if (number_array) OCRelease(number_array);
+    if (empty_array) OCRelease(empty_array);
+    if (error) OCRelease(error);
+    
+    if (success) printf("%s passed\n", __func__);
+    return success;
+}

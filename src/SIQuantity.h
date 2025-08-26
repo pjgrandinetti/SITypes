@@ -116,6 +116,14 @@ bool SIQuantityHasSameDimensionality(SIQuantityRef input1, SIQuantityRef input2)
  */
 bool SIQuantityHasSameReducedDimensionality(SIQuantityRef input1, SIQuantityRef input2);
 /**
+ * @brief Validates that all elements in an array have compatible dimensionality.
+ * @param array Array containing OCNumber or SIScalar objects.
+ * @param dimensionality Target dimensionality to validate against.
+ * @param outError Pointer to store error message if validation fails.
+ * @return True if all elements have compatible dimensionality, false otherwise.
+ */
+bool SIQuantityValidateArrayForDimensionality(OCArrayRef array, SIDimensionalityRef dimensionality, OCStringRef *outError);
+/**
  * @brief Returns larger numeric type for the two input quantities.
  * @param input1 The first SIQuantity.
  * @param input2 The second SIQuantity.
