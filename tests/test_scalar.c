@@ -3550,3 +3550,198 @@ cleanup:
     if (success) printf("%s passed\n", __func__);
     return success;
 }
+
+bool test_SIScalarCreateArrayFromOCNumberArray(void) {
+    printf("Testing SIScalarCreateArrayFromOCNumberArray...\n");
+    bool success = true;
+    OCStringRef error = NULL;
+    OCMutableArrayRef input = NULL;
+    OCArrayRef result = NULL;
+    
+    // Create test input array with mixed OCNumbers and SIScalars
+    input = OCArrayCreateMutable(5, &kOCTypeArrayCallBacks);
+    if (!input) {
+        printf("%s failed: Could not create input array\n", __func__);
+        return false;
+    }
+    
+    // Add OCNumbers of different types
+    OCNumberRef num1 = OCNumberCreateWithSInt32(42);
+    OCNumberRef num2 = OCNumberCreateWithFloat(3.14f);
+    OCNumberRef num3 = OCNumberCreateWithDoubleComplex(2.0 + 3.0*I);
+    
+    // Add existing SIScalar
+    SIUnitRef meter = SIUnitWithSymbol(STR("m"));
+    SIScalarRef scalar1 = SIScalarCreateWithDouble(100.0, meter);
+    
+    OCArrayAppendValue(input, num1);
+    OCArrayAppendValue(input, num2);
+    OCArrayAppendValue(input, num3);
+    OCArrayAppendValue(input, scalar1);
+    
+    // Test function
+    result = SIScalarCreateArrayFromOCNumberArray(input, &error);
+    
+    if (!result) {
+        printf("%s failed: Function returned NULL", __func__);
+        if (error) {
+            const char *err_str = OCStringGetCString(error);
+            printf(" with error: %s", err_str ? err_str : "(unknown)");
+        }
+        printf("\n");
+        success = false;
+        goto cleanup;
+    }
+    
+    // Verify result array has correct count
+    OCIndex count = OCArrayGetCount(result);
+    if (count != 4) {
+        printf("%s failed: Expected 4 elements, got %ld\n", __func__, count);
+        success = false;
+        goto cleanup;
+    }
+    
+    // Verify all elements are SIScalars
+    for (OCIndex i = 0; i < count; i++) {
+        OCTypeRef obj = OCArrayGetValueAtIndex(result, i);
+        if (OCGetTypeID(obj) != SIScalarGetTypeID()) {
+            printf("%s failed: Element %ld is not a SIScalar\n", __func__, i);
+            success = false;
+            goto cleanup;
+        }
+    }
+    
+    // Test with NULL input
+    OCArrayRef null_result = SIScalarCreateArrayFromOCNumberArray(NULL, &error);
+    if (null_result != NULL) {
+        printf("%s failed: Should return NULL for NULL input\n", __func__);
+        success = false;
+        OCRelease(null_result);
+        goto cleanup;
+    }
+    
+    // Test with empty array
+    OCMutableArrayRef empty = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
+    OCArrayRef empty_result = SIScalarCreateArrayFromOCNumberArray(empty, &error);
+    if (empty_result != NULL) {
+        printf("%s failed: Should return NULL for empty input\n", __func__);
+        success = false;
+        OCRelease(empty_result);
+    }
+    OCRelease(empty);
+    
+cleanup:
+    if (input) OCRelease(input);
+    if (result) OCRelease(result);
+    if (num1) OCRelease(num1);
+    if (num2) OCRelease(num2);
+    if (num3) OCRelease(num3);
+    if (scalar1) OCRelease(scalar1);
+    if (error) OCRelease(error);
+    
+    if (success) printf("%s passed\n", __func__);
+    return success;
+}
+
+bool test_SIScalarCreateArrayFromNumberTypeArray(void) {
+    printf("Testing SIScalarCreateArrayFromNumberTypeArray...\n");
+    bool success = true;
+    OCStringRef error = NULL;
+    OCArrayRef result = NULL;
+    
+    // Test with double array
+    double values[] = {1.0, 2.5, -3.14, 0.0, 42.0};
+    OCIndex count = sizeof(values) / sizeof(values[0]);
+    
+    result = SIScalarCreateArrayFromNumberTypeArray(values, kOCNumberFloat64Type, count, &error);
+    
+    if (!result) {
+        printf("%s failed: Function returned NULL for double array", __func__);
+        if (error) {
+            const char *err_str = OCStringGetCString(error);
+            printf(" with error: %s", err_str ? err_str : "(unknown)");
+        }
+        printf("\n");
+        success = false;
+        goto cleanup;
+    }
+    
+    // Verify result array has correct count
+    OCIndex result_count = OCArrayGetCount(result);
+    if (result_count != count) {
+        printf("%s failed: Expected %ld elements, got %ld\n", __func__, count, result_count);
+        success = false;
+        goto cleanup;
+    }
+    
+    // Verify all elements are SIScalars with correct values
+    for (OCIndex i = 0; i < count; i++) {
+        SIScalarRef scalar = (SIScalarRef)OCArrayGetValueAtIndex(result, i);
+        if (OCGetTypeID(scalar) != SIScalarGetTypeID()) {
+            printf("%s failed: Element %ld is not a SIScalar\n", __func__, i);
+            success = false;
+            goto cleanup;
+        }
+        
+        double value = SIScalarDoubleValue(scalar);
+        if (fabs(value - values[i]) > 1e-10) {
+            printf("%s failed: Element %ld value mismatch: expected %f, got %f\n", 
+                   __func__, i, values[i], value);
+            success = false;
+            goto cleanup;
+        }
+    }
+    
+    OCRelease(result);
+    result = NULL;
+    
+    // Test with complex array
+    float complex complex_values[] = {1.0f + 2.0f*I, -3.0f + 4.0f*I, 0.0f + 0.0f*I};
+    OCIndex complex_count = sizeof(complex_values) / sizeof(complex_values[0]);
+    
+    result = SIScalarCreateArrayFromNumberTypeArray(complex_values, kOCNumberComplex64Type, complex_count, &error);
+    
+    if (!result) {
+        printf("%s failed: Function returned NULL for complex array\n", __func__);
+        success = false;
+        goto cleanup;
+    }
+    
+    // Verify complex values
+    for (OCIndex i = 0; i < complex_count; i++) {
+        SIScalarRef scalar = (SIScalarRef)OCArrayGetValueAtIndex(result, i);
+        float complex value = SIScalarFloatComplexValue(scalar);
+        if (cabsf(value - complex_values[i]) > 1e-6f) {
+            printf("%s failed: Complex element %ld value mismatch\n", __func__, i);
+            success = false;
+            goto cleanup;
+        }
+    }
+    
+    OCRelease(result);
+    result = NULL;
+    
+    // Test error cases
+    OCArrayRef null_result = SIScalarCreateArrayFromNumberTypeArray(NULL, kOCNumberFloat64Type, 1, &error);
+    if (null_result != NULL) {
+        printf("%s failed: Should return NULL for NULL values\n", __func__);
+        success = false;
+        OCRelease(null_result);
+        goto cleanup;
+    }
+    
+    null_result = SIScalarCreateArrayFromNumberTypeArray(values, kOCNumberFloat64Type, 0, &error);
+    if (null_result != NULL) {
+        printf("%s failed: Should return NULL for zero count\n", __func__);
+        success = false;
+        OCRelease(null_result);
+        goto cleanup;
+    }
+    
+cleanup:
+    if (result) OCRelease(result);
+    if (error) OCRelease(error);
+    
+    if (success) printf("%s passed\n", __func__);
+    return success;
+}

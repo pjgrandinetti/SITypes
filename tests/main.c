@@ -189,6 +189,8 @@ int main(int argc, const char* argv[]) {
     TRACK(test_SIScalarWriteReadJSON_negative);
     TRACK(test_SIScalarWriteReadJSON_complex_unit);
     TRACK(test_SIScalarWriteReadJSON_array_and_dictionary);
+    TRACK(test_SIScalarCreateArrayFromOCNumberArray);
+    TRACK(test_SIScalarCreateArrayFromNumberTypeArray);
     if (failures) {
         fprintf(stderr, "\n%d test(s) failed.\n", failures);
     } else

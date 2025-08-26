@@ -89,8 +89,14 @@ SIMutableScalarRef SIScalarCreateMutableWithFloatComplex(float complex input_val
 SIScalarRef SIScalarCreateWithDoubleComplex(double complex input_value, SIUnitRef unit);
 /** @brief Creates a mutable SIScalar from a double complex value and SI unit. */
 SIMutableScalarRef SIScalarCreateMutableWithDoubleComplex(double complex input_value, SIUnitRef unit);
+/** @brief Creates an immutable SIScalar from an OCNumber value and SI unit. */
+SIScalarRef SIScalarCreateWithOCNumber(OCNumberRef number, SIUnitRef unit);
 /** @brief Creates a scalar from a string containing a single unit name. */
 SIScalarRef SIScalarCreateWithStringContainingSingleUnitFromLibrary(OCStringRef theString);
+/** @brief Creates an array of SIScalar objects from an array of OCNumber or SIScalar objects. */
+OCArrayRef SIScalarCreateArrayFromOCNumberArray(OCArrayRef numbers, OCStringRef *outError);
+/** @brief Creates an array of SIScalar objects from a typed array of numeric values. */
+OCArrayRef SIScalarCreateArrayFromNumberTypeArray(const void *values, OCNumberType type, OCIndex count, OCStringRef *outError);
 #pragma mark Accessors
 /** @brief Retrieves the numeric value of a SIScalar instance. */
 impl_SINumber SIScalarGetValue(SIScalarRef theScalar);

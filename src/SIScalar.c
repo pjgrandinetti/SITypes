@@ -222,6 +222,100 @@ SIScalarRef SIScalarCreateWithDoubleComplex(double complex input_value, SIUnitRe
 SIMutableScalarRef SIScalarCreateMutableWithDoubleComplex(double complex input_value, SIUnitRef unit) {
     return SIScalarCreateMutable(unit, kSINumberComplex128Type, &input_value);
 }
+SIScalarRef SIScalarCreateWithOCNumber(OCNumberRef number, SIUnitRef unit) {
+    IF_NO_OBJECT_EXISTS_RETURN(number, NULL);
+    OCNumberType type = OCNumberGetType(number);
+    
+    switch (type) {
+        case kOCNumberSInt8Type: {
+            int8_t v;
+            if (OCNumberGetValue(number, type, &v)) {
+                return SIScalarCreateWithDouble((double)v, unit);
+            }
+            break;
+        }
+        case kOCNumberSInt16Type: {
+            int16_t v;
+            if (OCNumberGetValue(number, type, &v)) {
+                return SIScalarCreateWithDouble((double)v, unit);
+            }
+            break;
+        }
+        case kOCNumberSInt32Type: {
+            int32_t v;
+            if (OCNumberGetValue(number, type, &v)) {
+                return SIScalarCreateWithDouble((double)v, unit);
+            }
+            break;
+        }
+        case kOCNumberSInt64Type: {
+            int64_t v;
+            if (OCNumberGetValue(number, type, &v)) {
+                return SIScalarCreateWithDouble((double)v, unit);
+            }
+            break;
+        }
+        case kOCNumberUInt8Type: {
+            uint8_t v;
+            if (OCNumberGetValue(number, type, &v)) {
+                return SIScalarCreateWithDouble((double)v, unit);
+            }
+            break;
+        }
+        case kOCNumberUInt16Type: {
+            uint16_t v;
+            if (OCNumberGetValue(number, type, &v)) {
+                return SIScalarCreateWithDouble((double)v, unit);
+            }
+            break;
+        }
+        case kOCNumberUInt32Type: {
+            uint32_t v;
+            if (OCNumberGetValue(number, type, &v)) {
+                return SIScalarCreateWithDouble((double)v, unit);
+            }
+            break;
+        }
+        case kOCNumberUInt64Type: {
+            uint64_t v;
+            if (OCNumberGetValue(number, type, &v)) {
+                return SIScalarCreateWithDouble((double)v, unit);
+            }
+            break;
+        }
+        case kOCNumberFloat32Type: {
+            float v;
+            if (OCNumberGetValue(number, type, &v)) {
+                return SIScalarCreateWithFloat(v, unit);
+            }
+            break;
+        }
+        case kOCNumberFloat64Type: {
+            double v;
+            if (OCNumberGetValue(number, type, &v)) {
+                return SIScalarCreateWithDouble(v, unit);
+            }
+            break;
+        }
+        case kOCNumberComplex64Type: {
+            float complex v;
+            if (OCNumberTryGetComplex64(number, &v)) {
+                return SIScalarCreateWithFloatComplex(v, unit);
+            }
+            break;
+        }
+        case kOCNumberComplex128Type: {
+            double complex v;
+            if (OCNumberTryGetComplex128(number, &v)) {
+                return SIScalarCreateWithDoubleComplex(v, unit);
+            }
+            break;
+        }
+        default:
+            break;  // Unsupported type
+    }
+    return NULL;  // Failed to get value or unsupported type
+}
 // helper: take a mutable scalar and re‐prefix it so its mantissa ∈ [1,1000)
 static bool __NormalizeScalarMantissaToSI3(SIMutableScalarRef sc) {
     if (!sc) return false;
@@ -2926,4 +3020,154 @@ OCComparisonResult SIScalarCompareLooseReduced(SIScalarRef theScalar, SIScalarRe
     OCRelease(theScalarReduced);
     OCRelease(theOtherScalarReduced);
     return result;
+}
+
+#pragma mark Array Creation Functions
+
+OCArrayRef SIScalarCreateArrayFromOCNumberArray(OCArrayRef numbers, OCStringRef *outError) {
+    if (outError) *outError = NULL;
+    
+    if (!numbers) {
+        if (outError) *outError = STR("Input array is NULL");
+        return NULL;
+    }
+    
+    OCIndex count = OCArrayGetCount(numbers);
+    if (count <= 0) {
+        if (outError) *outError = STR("Input array is empty");
+        return NULL;
+    }
+    
+    OCMutableArrayRef arr = OCArrayCreateMutable(count, &kOCTypeArrayCallBacks);
+    if (!arr) {
+        if (outError) *outError = STR("Failed to create mutable array");
+        return NULL;
+    }
+    
+    for (OCIndex i = 0; i < count; ++i) {
+        OCTypeRef obj = OCArrayGetValueAtIndex(numbers, i);
+        if (!obj) {
+            OCRelease(arr);
+            if (outError) *outError = STR("Array contains NULL element");
+            return NULL;
+        }
+        
+        OCTypeID objType = OCGetTypeID(obj);
+        
+        if (objType == OCNumberGetTypeID()) {
+            // It's an OCNumber - convert to SIScalar
+            OCNumberRef num = (OCNumberRef)obj;
+            SIScalarRef s = SIScalarCreateWithOCNumber(num, NULL);
+            if (!s) {
+                OCRelease(arr);
+                if (outError) *outError = STR("Failed to create SIScalar from OCNumber");
+                return NULL;
+            }
+            
+            if (!OCArrayAppendValue(arr, s)) {
+                OCRelease(s);
+                OCRelease(arr);
+                if (outError) *outError = STR("Failed to append SIScalar to array");
+                return NULL;
+            }
+            OCRelease(s);  // Release local reference after array retains it
+        } else if (objType == SIScalarGetTypeID()) {
+            // It's already a SIScalar - add directly without extra retain/release
+            if (!OCArrayAppendValue(arr, obj)) {
+                OCRelease(arr);
+                if (outError) *outError = STR("Failed to append SIScalar to array");
+                return NULL;
+            }
+        } else {
+            // Unsupported type
+            OCRelease(arr);
+            if (outError) *outError = STR("Array contains unsupported object type");
+            return NULL;
+        }
+    }
+    return arr;
+}
+
+OCArrayRef SIScalarCreateArrayFromNumberTypeArray(const void *values, OCNumberType type, OCIndex count, OCStringRef *outError) {
+    if (outError) *outError = NULL;
+    
+    if (!values) {
+        if (outError) *outError = STR("Input values array is NULL");
+        return NULL;
+    }
+    
+    if (count <= 0) {
+        if (outError) *outError = STR("Invalid count");
+        return NULL;
+    }
+    
+    OCMutableArrayRef arr = OCArrayCreateMutable(count, &kOCTypeArrayCallBacks);
+    if (!arr) {
+        if (outError) *outError = STR("Failed to create mutable array");
+        return NULL;
+    }
+    
+    for (OCIndex i = 0; i < count; ++i) {
+        SIScalarRef s = NULL;
+        
+        // Create SIScalar using the most appropriate function for each type
+        switch (type) {
+            case kOCNumberSInt8Type:
+                s = SIScalarCreateWithDouble((double)((const int8_t*)values)[i], NULL);
+                break;
+            case kOCNumberSInt16Type:
+                s = SIScalarCreateWithDouble((double)((const int16_t*)values)[i], NULL);
+                break;
+            case kOCNumberSInt32Type:
+                s = SIScalarCreateWithDouble((double)((const int32_t*)values)[i], NULL);
+                break;
+            case kOCNumberSInt64Type:
+                s = SIScalarCreateWithDouble((double)((const int64_t*)values)[i], NULL);
+                break;
+            case kOCNumberUInt8Type:
+                s = SIScalarCreateWithDouble((double)((const uint8_t*)values)[i], NULL);
+                break;
+            case kOCNumberUInt16Type:
+                s = SIScalarCreateWithDouble((double)((const uint16_t*)values)[i], NULL);
+                break;
+            case kOCNumberUInt32Type:
+                s = SIScalarCreateWithDouble((double)((const uint32_t*)values)[i], NULL);
+                break;
+            case kOCNumberUInt64Type:
+                s = SIScalarCreateWithDouble((double)((const uint64_t*)values)[i], NULL);
+                break;
+            case kOCNumberFloat32Type:
+                s = SIScalarCreateWithFloat(((const float*)values)[i], NULL);
+                break;
+            case kOCNumberFloat64Type:
+                s = SIScalarCreateWithDouble(((const double*)values)[i], NULL);
+                break;
+            case kOCNumberComplex64Type:
+                s = SIScalarCreateWithFloatComplex(((const float complex*)values)[i], NULL);
+                break;
+            case kOCNumberComplex128Type:
+                s = SIScalarCreateWithDoubleComplex(((const double complex*)values)[i], NULL);
+                break;
+            default:
+                // Unsupported type
+                OCRelease(arr);
+                if (outError) *outError = STR("Unsupported OCNumberType");
+                return NULL;
+        }
+        
+        if (!s) {
+            OCRelease(arr);
+            if (outError) *outError = STR("Failed to create SIScalar from numeric value");
+            return NULL;
+        }
+        
+        if (!OCArrayAppendValue(arr, s)) {
+            OCRelease(s);
+            OCRelease(arr);
+            if (outError) *outError = STR("Failed to append SIScalar to array");
+            return NULL;
+        }
+        OCRelease(s);
+    }
+    return arr;
 }

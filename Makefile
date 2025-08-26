@@ -54,6 +54,11 @@ CFLAGS   := -fPIC -O3 -Wall -Wextra \
             -Wno-missing-field-initializers -Wno-unused-function \
             -MMD -MP
 
+# Optional OC_LEAK_TRACKING support
+ifeq ($(OC_LEAK_TRACKING),1)
+  CFLAGS += -DOC_LEAK_TRACKING
+endif
+
 # Linker group flags for Linux to resolve circular deps
 ifeq ($(UNAME_S),Linux)
   GROUP_START := -Wl,--start-group
@@ -189,6 +194,10 @@ help:
 	@echo "  make update-deps               # Fetch/update dependencies"
 	@echo "  make OCT_RELEASE_TAG=v0.1.3 octypes  # Pin to a release"
 	@echo "  make OCT_FORCE_FETCH=1 octypes # Force-refresh OCTypes"
+	@echo "  make OC_LEAK_TRACKING=1 test   # Run tests with leak tracking"
+	@echo ""
+	@echo "Environment Variables:"
+	@echo "  OC_LEAK_TRACKING=1             Enable OCTypes leak tracking (-DOC_LEAK_TRACKING)"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Default build
