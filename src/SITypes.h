@@ -40,4 +40,22 @@ typedef struct impl_SIScalar *SIMutableScalarRef;
 // Library management functions
 void SITypesShutdown(void);
 
+// Enhanced JSON serialization for OCDictionary containing SITypes objects
+/**
+ * @brief Create JSON representation of a dictionary that may contain SITypes objects.
+ * @param dict The dictionary to serialize.
+ * @return A cJSON object representing the dictionary, or cJSON null if dict is NULL.
+ * @note This function handles SIScalar and SIUnit types in addition to standard OCTypes.
+ */
+cJSON *SIMetadataCopyJSON(OCDictionaryRef dict);
+
+/**
+ * @brief Create a dictionary from JSON that may contain SITypes objects.
+ * @param json The JSON object to deserialize.
+ * @param outError Optional pointer to receive error message if parsing fails.
+ * @return A new OCDictionaryRef, or NULL on failure.
+ * @note This function can reconstruct SIScalar and SIUnit types from JSON.
+ */
+OCDictionaryRef SIMetadataCreateFromJSON(cJSON *json, OCStringRef *outError);
+
 #endif /* SITypes_h */
