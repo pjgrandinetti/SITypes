@@ -127,17 +127,17 @@ SIDimensionalityRef SIDimensionalityByReducing(SIDimensionalityRef theDimensiona
 /** @brief Returns the nth-root of a dimensionality, or NULL and error if invalid. */
 SIDimensionalityRef SIDimensionalityByTakingNthRoot(SIDimensionalityRef theDim, uint8_t root, OCStringRef *error);
 /** @brief Multiplies two dimensionalities and reduces to lowest terms. */
-SIDimensionalityRef SIDimensionalityByMultiplying(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByMultiplying(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
 /** @brief Multiplies two dimensionalities without reducing exponents. */
-SIDimensionalityRef SIDimensionalityByMultiplyingWithoutReducing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByMultiplyingWithoutReducing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
 /** @brief Divides one dimensionality by another, reduces result. */
 SIDimensionalityRef SIDimensionalityByDividing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
 /** @brief Divides one dimensionality by another, does not reduce exponents. */
 SIDimensionalityRef SIDimensionalityByDividingWithoutReducing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
 /** @brief Create a new dimensionality by raising to a power and reducing exponents to lowest terms. */
-SIDimensionalityRef SIDimensionalityByRaisingToPower(SIDimensionalityRef theDim, int power, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByRaisingToPower(SIDimensionalityRef theDim, int power);
 /** @brief Create a new dimensionality by raising to a power without reducing exponents. */
-SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensionalityRef theDim, int power, OCStringRef *error);
+SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensionalityRef theDim, int power);
 /** @brief Returns all quantity names matching this dimensionality exactly. */
 OCArrayRef SIDimensionalityCreateArrayOfQuantities(SIDimensionalityRef theDim);
 /** @brief Returns all quantity names with the same reduced dimensionality. */

@@ -1504,9 +1504,9 @@ static SIUnitRef SIUnitByRaisingToPowerInternal(SIUnitRef input,
     // Choose the appropriate dimensionality function based on parameter
     SIDimensionalityRef dimensionality;
     if (reduce) {
-        dimensionality = SIDimensionalityByRaisingToPower(input->dimensionality, power, error);
+        dimensionality = SIDimensionalityByRaisingToPower(input->dimensionality, power);
     } else {
-        dimensionality = SIDimensionalityByRaisingToPowerWithoutReducing(input->dimensionality, power, error);
+        dimensionality = SIDimensionalityByRaisingToPowerWithoutReducing(input->dimensionality, power);
     }
     if (!dimensionality) return NULL;
     // Calculate the new scale factor
@@ -1562,9 +1562,9 @@ static SIUnitRef SIUnitByMultiplyingInternal(SIUnitRef theUnit1,
     // Compute new dimensionality
     SIDimensionalityRef dimensionality;
     if (reduce) {
-        dimensionality = SIDimensionalityByMultiplying(theUnit1->dimensionality, theUnit2->dimensionality, error);
+        dimensionality = SIDimensionalityByMultiplying(theUnit1->dimensionality, theUnit2->dimensionality);
     } else {
-        dimensionality = SIDimensionalityByMultiplyingWithoutReducing(theUnit1->dimensionality, theUnit2->dimensionality, error);
+        dimensionality = SIDimensionalityByMultiplyingWithoutReducing(theUnit1->dimensionality, theUnit2->dimensionality);
     }
     if (error && *error) return NULL;
     // Calculate the new scale factor

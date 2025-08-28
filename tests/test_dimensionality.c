@@ -309,12 +309,8 @@ bool test_dimensionality_multiply_work(void) {
         OCRelease(force);
         return false;
     }
-    SIDimensionalityRef work = SIDimensionalityByMultiplying(force, dist, &err);
-    if (!work || err) {
-        if (err) {
-            printf("Error multiplying force and distance: %s\n", OCStringGetCString(err));
-            OCRelease(err);
-        }
+    SIDimensionalityRef work = SIDimensionalityByMultiplying(force, dist);
+    if (!work) {
         OCRelease(force);
         OCRelease(dist);
         return false;
@@ -344,12 +340,8 @@ bool test_dimensionality_power_area(void) {
         }
         return false;
     }
-    SIDimensionalityRef area = SIDimensionalityByRaisingToPower(dist, 2, &err);
-    if (!area || err) {
-        if (err) {
-            printf("Error raising dimensionality to power: %s\n", OCStringGetCString(err));
-            OCRelease(err);
-        }
+    SIDimensionalityRef area = SIDimensionalityByRaisingToPower(dist, 2);
+    if (!area) {
         OCRelease(dist);
         return false;
     }
@@ -385,18 +377,12 @@ bool test_dimensionality_reduction_behavior(void) {
         success = false;
     }
     OCRelease(symAngle);
-    SIDimensionalityRef area = SIDimensionalityByRaisingToPower(dist, 2, &err);
-    if (!area || err) {
-        if (err) {
-            printf("Error raising to power: %s\n", OCStringGetCString(err));
-            OCRelease(err);
-        }
+    SIDimensionalityRef area = SIDimensionalityByRaisingToPower(dist, 2);
+    if (!area) {
         OCRelease(dist);
         OCRelease(angle);
         return false;
     }
-    OCRelease(err);
-    err = NULL;
     SIDimensionalityRef solidAngle = SIDimensionalityByDividing(area, area);
     OCStringRef symSolid = SIDimensionalityCopySymbol(solidAngle);
     if (!symSolid || OCStringCompare(symSolid, STR("1"), 0) != kOCCompareEqualTo) {

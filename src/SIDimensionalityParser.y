@@ -28,11 +28,11 @@ calclist: /* do nothing */ { $$ = NULL; }
 ;
 
 exp: '(' exp ')' {$$ = $2;}
-| exp '*' exp {$$ = SIDimensionalityByMultiplyingWithoutReducing($1,$3,&dimensionalityError);}
+| exp '*' exp {$$ = SIDimensionalityByMultiplyingWithoutReducing($1,$3);}
 | exp '/' exp {$$ = SIDimensionalityByDividingWithoutReducing($1,$3);}
-| exp '^' INTEGER {$$ = SIDimensionalityByRaisingToPowerWithoutReducing($1,$3,&dimensionalityError);}
+| exp '^' INTEGER {$$ = SIDimensionalityByRaisingToPowerWithoutReducing($1,$3);}
 | INTEGER '/' exp {
-    if($1 == 1) {$$ = SIDimensionalityByRaisingToPowerWithoutReducing($3,-1,&dimensionalityError);}
+    if($1 == 1) {$$ = SIDimensionalityByRaisingToPowerWithoutReducing($3,-1);}
     else  {
         dimensionalityError = STR("Unknown dimensionality symbol");
         yyerror("Unknown unit symbol");

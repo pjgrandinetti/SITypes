@@ -190,15 +190,11 @@ SIDimensionalityRef SIDimensionalityByDividingWithoutReducing(SIDimensionalityRe
 SIDimensionalityRef SIDimensionalityByDividing(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2) {
     return SIDimensionalityByReducing(SIDimensionalityByDividingWithoutReducing(theDim1, theDim2));
 }
-SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensionalityRef theDim,
-                                                                    int power,
-                                                                    OCStringRef *error) {
-    // 1) Propagate any preexisting error
-    if (error && *error) return NULL;
-    // 2) Validate input
+SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensionalityRef theDim, int power) {
+    // Validate input
     IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
     if (power == 0 || SIDimensionalityIsDimensionless(theDim)) return SIDimensionalityDimensionless();
-    // 3) Compute new exponents in two small arrays
+    // Compute new exponents in two small arrays
     uint8_t num_exp[BASE_DIMENSION_COUNT];
     uint8_t den_exp[BASE_DIMENSION_COUNT];
     for (size_t i = 0; i < BASE_DIMENSION_COUNT; ++i) {
@@ -212,24 +208,19 @@ SIDimensionalityRef SIDimensionalityByRaisingToPowerWithoutReducing(SIDimensiona
             den_exp[i] = theDim->num_exp[i] * magnitude;
         }
     }
-    // 6) Delegate to the array-based constructor + intern
+    // Delegate to the array-based constructor + intern
     return SIDimensionalityWithExponentArrays(num_exp, den_exp);
 }
-SIDimensionalityRef SIDimensionalityByRaisingToPower(SIDimensionalityRef theDim, int power, OCStringRef *error) {
-    if (error)
-        if (*error) return NULL;
-    return SIDimensionalityByReducing(SIDimensionalityByRaisingToPowerWithoutReducing(theDim, power, error));
+SIDimensionalityRef SIDimensionalityByRaisingToPower(SIDimensionalityRef theDim, int power) {
+    return SIDimensionalityByReducing(SIDimensionalityByRaisingToPowerWithoutReducing(theDim, power));
 }
 SIDimensionalityRef SIDimensionalityByMultiplyingWithoutReducing(SIDimensionalityRef theDim1,
-                                                                 SIDimensionalityRef theDim2,
-                                                                 OCStringRef *error) {
-    // Propagate existing error
-    if (error && *error) return NULL;
+                                                                 SIDimensionalityRef theDim2) {
     IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL);
     IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL);
     // If both refer to the same dimensionality, square it
     if (theDim1 == theDim2)
-        return SIDimensionalityByRaisingToPowerWithoutReducing(theDim1, 2, error);
+        return SIDimensionalityByRaisingToPowerWithoutReducing(theDim1, 2);
     // Build numerator and denominator exponent arrays
     uint8_t num_exp[BASE_DIMENSION_COUNT];
     uint8_t den_exp[BASE_DIMENSION_COUNT];
@@ -240,10 +231,8 @@ SIDimensionalityRef SIDimensionalityByMultiplyingWithoutReducing(SIDimensionalit
     // Delegate to the array-based creator + interner
     return SIDimensionalityWithExponentArrays(num_exp, den_exp);
 }
-SIDimensionalityRef SIDimensionalityByMultiplying(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2, OCStringRef *error) {
-    if (error)
-        if (*error) return NULL;
-    return SIDimensionalityByReducing(SIDimensionalityByMultiplyingWithoutReducing(theDim1, theDim2, error));
+SIDimensionalityRef SIDimensionalityByMultiplying(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2) {
+    return SIDimensionalityByReducing(SIDimensionalityByMultiplyingWithoutReducing(theDim1, theDim2));
 }
 OCArrayRef SIDimensionalityCreateArrayOfQuantities(SIDimensionalityRef theDim) {
     IF_NO_OBJECT_EXISTS_RETURN(theDim, NULL);
