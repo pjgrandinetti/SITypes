@@ -40,6 +40,59 @@ typedef struct impl_SIScalar *SIMutableScalarRef;
 // Library management functions
 void SITypesShutdown(void);
 
+// Arithmetic operations
+/**
+ * @brief Perform binary arithmetic operation on SITypes objects.
+ * @param a First operand (SIScalar, SIUnit, or SIDimensionality).
+ * @param b Second operand (must be same type as a).
+ * @param op Operation character: '+', '-', '*', or '/'.
+ * @param outError Optional pointer to receive error message if operation fails.
+ * @return Result of the operation, or NULL on failure.
+ * @note Addition and subtraction are only supported for SIScalar objects.
+ *       Multiplication and division work for all SITypes.
+ */
+OCTypeRef SITypesCreateWithBinaryArithmeticOperation(OCTypeRef a, OCTypeRef b, char op, OCStringRef *outError);
+
+/**
+ * @brief Raise SITypes object to an integer power.
+ * @param a The base operand (SIScalar, SIUnit, or SIDimensionality).
+ * @param power The integer exponent to raise a to.
+ * @param outError Optional pointer to receive error message if operation fails.
+ * @return Result of the power operation, or NULL on failure.
+ * @note All SITypes support power operations with integer exponents.
+ */
+OCTypeRef SITypesCreateByRaisingToPower(OCTypeRef a, int power, OCStringRef *outError);
+
+/**
+ * @brief Take the nth root of an SITypes object.
+ * @param a The operand (SIScalar, SIUnit, or SIDimensionality).
+ * @param root The integer root to take (e.g., 2 for square root, 3 for cube root).
+ * @param outError Optional pointer to receive error message if operation fails.
+ * @return Result of the nth root operation, or NULL on failure.
+ * @note All SITypes support nth root operations with integer roots.
+ */
+OCTypeRef SITypesCreateByTakingNthRoot(OCTypeRef a, int root, OCStringRef *outError);
+
+/**
+ * @brief Reduce an SITypes object to its simplest form.
+ * @param a The operand (SIScalar, SIUnit, or SIDimensionality).
+ * @return Result of the reduction operation, or NULL on failure.
+ * @note For scalars, reduces the unit; for units, reduces to lowest terms; 
+ *       for dimensionalities, reduces exponents to lowest terms.
+ */
+OCTypeRef SITypesCreateByReducing(OCTypeRef a);
+
+/**
+ * @brief Create a string representation of an SITypes object.
+ * @param obj The SITypes object (SIScalar, SIUnit, or SIDimensionality).
+ * @return String representation of the object, or NULL if obj is NULL or unsupported type.
+ * @note For scalars, returns the full value with unit; for units, returns the symbol;
+ *       for dimensionalities, returns the symbolic representation.
+ *       The returned string must be released with OCRelease().
+ */
+OCStringRef SITypesCreateStringRepresentation(OCTypeRef obj);
+
+
 // Enhanced JSON serialization for OCDictionary containing SITypes objects
 /**
  * @brief Create JSON representation of a dictionary that may contain SITypes objects.
@@ -47,7 +100,7 @@ void SITypesShutdown(void);
  * @return A cJSON object representing the dictionary, or cJSON null if dict is NULL.
  * @note This function handles SIScalar and SIUnit types in addition to standard OCTypes.
  */
-cJSON *SIMetadataCopyJSON(OCDictionaryRef dict);
+cJSON *SITypesMetadataCopyJSON(OCDictionaryRef dict);
 
 /**
  * @brief Create a dictionary from JSON that may contain SITypes objects.
@@ -56,6 +109,6 @@ cJSON *SIMetadataCopyJSON(OCDictionaryRef dict);
  * @return A new OCDictionaryRef, or NULL on failure.
  * @note This function can reconstruct SIScalar and SIUnit types from JSON.
  */
-OCDictionaryRef SIMetadataCreateFromJSON(cJSON *json, OCStringRef *outError);
+OCDictionaryRef SITypesMetadataCreateFromJSON(cJSON *json, OCStringRef *outError);
 
 #endif /* SITypes_h */
