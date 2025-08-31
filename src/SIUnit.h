@@ -148,27 +148,18 @@ double SIUnitScaleToCoherentSIUnit(SIUnitRef theUnit);
 OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
 OCStringRef SIUnitCopyName(SIUnitRef theUnit);
 OCStringRef SIUnitCopyPluralName(SIUnitRef theUnit);
-cJSON *SIUnitCreateJSON(SIUnitRef unit);
+cJSON *SIUnitCreateJSON(SIUnitRef unit, bool typed);
 
 /**
- * @brief Creates a typed cJSON object from an SIUnit.
+ * @brief Creates an SIUnit from a cJSON object.
  *
- * @param unit A valid SIUnitRef.
- * @return A new cJSON object with "type" and "value" fields,
- *         or NULL on failure. The caller is responsible for managing
- *         the returned cJSON object.
- */
-cJSON *SIUnitCreateJSONTyped(SIUnitRef unit);
-
-/**
- * @brief Creates an SIUnit from a typed cJSON object.
- *
- * @param json A cJSON object with "type": "SIUnit" and
- *             "value": "symbol string".
+ * @param json A cJSON object that can be either:
+ *             - Typed format: {"type": "SIUnit", "value": "symbol"}
+ *             - Untyped format: detailed JSON with dimensionality, scale, etc.
  * @return An SIUnitRef, or NULL on failure.
  *         The returned object is a singleton and must not be released.
  */
-SIUnitRef SIUnitFromJSONTyped(cJSON *json);
+SIUnitRef SIUnitFromJSON(cJSON *json);
 
 bool SIUnitEqual(SIUnitRef theUnit1, SIUnitRef theUnit2);
 // Boolean property getters

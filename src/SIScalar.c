@@ -21,7 +21,7 @@ struct impl_SIScalar {
     impl_SINumber value;
 };
 OCTypeID SIScalarGetTypeID(void) {
-    if (kSIScalarID == kOCNotATypeID) kSIScalarID = OCRegisterType("SIScalar", (OCTypeRef (*)(cJSON *))SIScalarCreateFromJSONTyped);
+    if (kSIScalarID == kOCNotATypeID) kSIScalarID = OCRegisterType("SIScalar", (OCTypeRef (*)(cJSON *))SIScalarCreateFromJSON);
     return kSIScalarID;
 }
 static bool impl_SIScalarEqual(const void *theType1, const void *theType2) {
@@ -114,12 +114,8 @@ static void *impl_SIScalarDeepCopyMutable(const void *theType) {
 OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar) {
     return impl_SIScalarCopyFormattingDescription((OCTypeRef)scalar);
 }
-static cJSON *impl_SIScalarCopyJSON(const void *obj) {
-    return SIScalarCreateJSON((SIScalarRef)obj);
-}
-
-static cJSON *impl_SIScalarCopyJSONTyped(const void *obj) {
-    return SIScalarCreateJSONTyped((SIScalarRef)obj);
+static cJSON *impl_SIScalarCopyJSON(const void *obj, bool typed) {
+    return SIScalarCreateJSON((SIScalarRef)obj, typed);
 }
 static struct impl_SIScalar *SIScalarAllocate(void) {
     struct impl_SIScalar *obj = OCTypeAlloc(struct impl_SIScalar,
@@ -128,7 +124,6 @@ static struct impl_SIScalar *SIScalarAllocate(void) {
                                             impl_SIScalarEqual,
                                             impl_SIScalarCopyFormattingDescription,
                                             impl_SIScalarCopyJSON,
-                                            impl_SIScalarCopyJSONTyped,
                                             impl_SIScalarDeepCopy,
                                             impl_SIScalarDeepCopyMutable);
     obj->unit = NULL;
@@ -165,186 +160,192 @@ SIScalarRef SIScalarCreate(SIUnitRef unit, SINumberType type, void *value) {
 static SIMutableScalarRef SIScalarCreateMutable(SIUnitRef unit, SINumberType elementType, void *value) {
     return (SIMutableScalarRef)SIScalarCreate(unit, elementType, value);
 }
-cJSON *SIScalarCreateJSON(SIScalarRef scalar) {
+cJSON *SIScalarCreateJSON(SIScalarRef scalar, bool typed) {
     if (!scalar) return cJSON_CreateNull();
-    OCStringRef stringValue = SIScalarCreateStringValue(scalar);
-    if (!stringValue) {
-        fprintf(stderr, "SIScalarCreateJSON: Failed to get symbol.\n");
-        return cJSON_CreateNull();
-    }
-    const char *s = OCStringGetCString(stringValue);
-    cJSON *node = cJSON_CreateString(s ? s : "");
-    OCRelease(stringValue);
-    return node;
-}
-SIScalarRef SIScalarCreateFromJSON(cJSON *json) {
-    if (!json || !cJSON_IsString(json)) return NULL;
-    const char *str = json->valuestring;
-    if (!str) return NULL;
-    OCStringRef expressions = OCStringCreateWithCString(str);
-    if (!expressions) return NULL;
-    OCStringRef err = NULL;
-    SIScalarRef scalar = SIScalarCreateFromExpression(expressions, &err);
-    OCRelease(expressions);
-    OCRelease(err);
-    return scalar;
-}
+    
+    if (typed) {
+        cJSON *entry = cJSON_CreateObject();
+        cJSON_AddStringToObject(entry, "type", "SIScalar");
 
-cJSON *SIScalarCreateJSONTyped(SIScalarRef scalar) {
-    if (!scalar) return cJSON_CreateNull();
+        cJSON *value = cJSON_CreateObject();
 
-    cJSON *entry = cJSON_CreateObject();
-    cJSON_AddStringToObject(entry, "type", "SIScalar");
-
-    cJSON *value = cJSON_CreateObject();
-
-    // Add numeric_type
-    const char *typeString = NULL;
-    switch (scalar->type) {
-        case kSINumberFloat32Type:
-            typeString = "float32";
-            break;
-        case kSINumberFloat64Type:
-            typeString = "float64";
-            break;
-        case kSINumberComplex64Type:
-            typeString = "complex64";
-            break;
-        case kSINumberComplex128Type:
-            typeString = "complex128";
-            break;
-        default:
-            typeString = "unknown";
-            break;
-    }
-    cJSON_AddStringToObject(value, "numeric_type", typeString);
-
-    // Add value
-    switch (scalar->type) {
-        case kSINumberFloat32Type:
-            cJSON_AddNumberToObject(value, "value", scalar->value.floatValue);
-            break;
-        case kSINumberFloat64Type:
-            cJSON_AddNumberToObject(value, "value", scalar->value.doubleValue);
-            break;
-        case kSINumberComplex64Type:
-        case kSINumberComplex128Type: {
-            // Complex numbers: serialize as object with real/imag parts
-            cJSON *complexObj = cJSON_CreateObject();
-            if (scalar->type == kSINumberComplex64Type) {
-                float complex val = scalar->value.floatComplexValue;
-                cJSON_AddNumberToObject(complexObj, "real", crealf(val));
-                cJSON_AddNumberToObject(complexObj, "imag", cimagf(val));
-            } else {
-                double complex val = scalar->value.doubleComplexValue;
-                cJSON_AddNumberToObject(complexObj, "real", creal(val));
-                cJSON_AddNumberToObject(complexObj, "imag", cimag(val));
-            }
-            cJSON_AddItemToObject(value, "value", complexObj);
-            break;
+        // Add numeric_type
+        const char *typeString = NULL;
+        switch (scalar->type) {
+            case kSINumberFloat32Type:
+                typeString = "float32";
+                break;
+            case kSINumberFloat64Type:
+                typeString = "float64";
+                break;
+            case kSINumberComplex64Type:
+                typeString = "complex64";
+                break;
+            case kSINumberComplex128Type:
+                typeString = "complex128";
+                break;
+            default:
+                typeString = "unknown";
+                break;
         }
-        default:
-            cJSON_AddNullToObject(value, "value");
-            break;
-    }
+        cJSON_AddStringToObject(value, "numeric_type", typeString);
 
-    // Add unit symbol
-    if (scalar->unit) {
-        OCStringRef symbol = SIUnitCopySymbol(scalar->unit);
-        if (symbol) {
-            const char *s = OCStringGetCString(symbol);
-            cJSON_AddStringToObject(value, "unit", s ? s : "");
-            OCRelease(symbol);
+        // Add value
+        switch (scalar->type) {
+            case kSINumberFloat32Type:
+                cJSON_AddNumberToObject(value, "value", scalar->value.floatValue);
+                break;
+            case kSINumberFloat64Type:
+                cJSON_AddNumberToObject(value, "value", scalar->value.doubleValue);
+                break;
+            case kSINumberComplex64Type:
+            case kSINumberComplex128Type: {
+                // Complex numbers: serialize as object with real/imag parts
+                cJSON *complexObj = cJSON_CreateObject();
+                if (scalar->type == kSINumberComplex64Type) {
+                    float complex val = scalar->value.floatComplexValue;
+                    cJSON_AddNumberToObject(complexObj, "real", crealf(val));
+                    cJSON_AddNumberToObject(complexObj, "imag", cimagf(val));
+                } else {
+                    double complex val = scalar->value.doubleComplexValue;
+                    cJSON_AddNumberToObject(complexObj, "real", creal(val));
+                    cJSON_AddNumberToObject(complexObj, "imag", cimag(val));
+                }
+                cJSON_AddItemToObject(value, "value", complexObj);
+                break;
+            }
+            default:
+                cJSON_AddNullToObject(value, "value");
+                break;
+        }
+
+        // Add unit symbol
+        if (scalar->unit) {
+            OCStringRef symbol = SIUnitCopySymbol(scalar->unit);
+            if (symbol) {
+                const char *s = OCStringGetCString(symbol);
+                cJSON_AddStringToObject(value, "unit", s ? s : "");
+                OCRelease(symbol);
+            } else {
+                cJSON_AddStringToObject(value, "unit", "");
+            }
         } else {
             cJSON_AddStringToObject(value, "unit", "");
         }
+
+        cJSON_AddItemToObject(entry, "value", value);
+        return entry;
     } else {
-        cJSON_AddStringToObject(value, "unit", "");
-    }
-
-    cJSON_AddItemToObject(entry, "value", value);
-    return entry;
-}
-
-SIScalarRef SIScalarCreateFromJSONTyped(cJSON *json) {
-    if (!json || !cJSON_IsObject(json)) return NULL;
-
-    cJSON *type = cJSON_GetObjectItem(json, "type");
-    cJSON *value = cJSON_GetObjectItem(json, "value");
-
-    if (!cJSON_IsString(type) || !cJSON_IsObject(value)) return NULL;
-
-    const char *typeName = cJSON_GetStringValue(type);
-    if (!typeName || strcmp(typeName, "SIScalar") != 0) return NULL;
-
-    // Extract numeric_type
-    cJSON *numericType = cJSON_GetObjectItem(value, "numeric_type");
-    if (!cJSON_IsString(numericType)) return NULL;
-
-    const char *typeStr = cJSON_GetStringValue(numericType);
-    SINumberType siType;
-    if (strcmp(typeStr, "float32") == 0) {
-        siType = kSINumberFloat32Type;
-    } else if (strcmp(typeStr, "float64") == 0) {
-        siType = kSINumberFloat64Type;
-    } else if (strcmp(typeStr, "complex64") == 0) {
-        siType = kSINumberComplex64Type;
-    } else if (strcmp(typeStr, "complex128") == 0) {
-        siType = kSINumberComplex128Type;
-    } else {
-        return NULL;
-    }
-
-    // Extract unit
-    cJSON *unitJson = cJSON_GetObjectItem(value, "unit");
-    if (!cJSON_IsString(unitJson)) return NULL;
-
-    const char *unitSymbol = cJSON_GetStringValue(unitJson);
-    SIUnitRef unit = NULL;
-    if (unitSymbol && strlen(unitSymbol) > 0) {
-        OCStringRef unitStr = OCStringCreateWithCString(unitSymbol);
-        if (unitStr) {
-            unit = SIUnitWithSymbol(unitStr);
-            OCRelease(unitStr);
+        OCStringRef stringValue = SIScalarCreateStringValue(scalar);
+        if (!stringValue) {
+            fprintf(stderr, "SIScalarCreateJSON: Failed to get symbol.\n");
+            return cJSON_CreateNull();
         }
-        if (!unit) return NULL;
-    }
-
-    // Extract value and create scalar
-    cJSON *valueJson = cJSON_GetObjectItem(value, "value");
-    if (!valueJson) return NULL;
-
-    switch (siType) {
-        case kSINumberFloat32Type: {
-            if (!cJSON_IsNumber(valueJson)) return NULL;
-            float val = (float)cJSON_GetNumberValue(valueJson);
-            return SIScalarCreate(unit, siType, &val);
-        }
-        case kSINumberFloat64Type: {
-            if (!cJSON_IsNumber(valueJson)) return NULL;
-            double val = cJSON_GetNumberValue(valueJson);
-            return SIScalarCreate(unit, siType, &val);
-        }
-        case kSINumberComplex64Type: {
-            if (!cJSON_IsObject(valueJson)) return NULL;
-            cJSON *real = cJSON_GetObjectItem(valueJson, "real");
-            cJSON *imag = cJSON_GetObjectItem(valueJson, "imag");
-            if (!cJSON_IsNumber(real) || !cJSON_IsNumber(imag)) return NULL;
-            float complex val = (float)cJSON_GetNumberValue(real) + (float)cJSON_GetNumberValue(imag) * I;
-            return SIScalarCreate(unit, siType, &val);
-        }
-        case kSINumberComplex128Type: {
-            if (!cJSON_IsObject(valueJson)) return NULL;
-            cJSON *real = cJSON_GetObjectItem(valueJson, "real");
-            cJSON *imag = cJSON_GetObjectItem(valueJson, "imag");
-            if (!cJSON_IsNumber(real) || !cJSON_IsNumber(imag)) return NULL;
-            double complex val = cJSON_GetNumberValue(real) + cJSON_GetNumberValue(imag) * I;
-            return SIScalarCreate(unit, siType, &val);
-        }
-        default:
-            return NULL;
+        const char *s = OCStringGetCString(stringValue);
+        cJSON *node = cJSON_CreateString(s ? s : "");
+        OCRelease(stringValue);
+        return node;
     }
 }
+SIScalarRef SIScalarCreateFromJSON(cJSON *json) {
+    if (!json) return NULL;
+    
+    // Handle typed format
+    if (cJSON_IsObject(json)) {
+        cJSON *type = cJSON_GetObjectItem(json, "type");
+        if (type && cJSON_IsString(type)) {
+            const char *typeName = cJSON_GetStringValue(type);
+            if (typeName && strcmp(typeName, "SIScalar") == 0) {
+                // This is typed format
+                cJSON *value = cJSON_GetObjectItem(json, "value");
+                if (!cJSON_IsObject(value)) return NULL;
+
+                // Extract numeric_type
+                cJSON *numericType = cJSON_GetObjectItem(value, "numeric_type");
+                if (!cJSON_IsString(numericType)) return NULL;
+
+                const char *typeStr = cJSON_GetStringValue(numericType);
+                SINumberType siType;
+                if (strcmp(typeStr, "float32") == 0) {
+                    siType = kSINumberFloat32Type;
+                } else if (strcmp(typeStr, "float64") == 0) {
+                    siType = kSINumberFloat64Type;
+                } else if (strcmp(typeStr, "complex64") == 0) {
+                    siType = kSINumberComplex64Type;
+                } else if (strcmp(typeStr, "complex128") == 0) {
+                    siType = kSINumberComplex128Type;
+                } else {
+                    return NULL;
+                }
+
+                // Extract unit
+                cJSON *unitJson = cJSON_GetObjectItem(value, "unit");
+                if (!cJSON_IsString(unitJson)) return NULL;
+
+                const char *unitSymbol = cJSON_GetStringValue(unitJson);
+                SIUnitRef unit = NULL;
+                if (unitSymbol && strlen(unitSymbol) > 0) {
+                    OCStringRef unitStr = OCStringCreateWithCString(unitSymbol);
+                    if (unitStr) {
+                        unit = SIUnitWithSymbol(unitStr);
+                        OCRelease(unitStr);
+                    }
+                    if (!unit) return NULL;
+                }
+
+                // Extract value and create scalar
+                cJSON *valueJson = cJSON_GetObjectItem(value, "value");
+                if (!valueJson) return NULL;
+
+                switch (siType) {
+                    case kSINumberFloat32Type: {
+                        if (!cJSON_IsNumber(valueJson)) return NULL;
+                        float val = (float)cJSON_GetNumberValue(valueJson);
+                        return SIScalarCreate(unit, siType, &val);
+                    }
+                    case kSINumberFloat64Type: {
+                        if (!cJSON_IsNumber(valueJson)) return NULL;
+                        double val = cJSON_GetNumberValue(valueJson);
+                        return SIScalarCreate(unit, siType, &val);
+                    }
+                    case kSINumberComplex64Type: {
+                        if (!cJSON_IsObject(valueJson)) return NULL;
+                        cJSON *real = cJSON_GetObjectItem(valueJson, "real");
+                        cJSON *imag = cJSON_GetObjectItem(valueJson, "imag");
+                        if (!cJSON_IsNumber(real) || !cJSON_IsNumber(imag)) return NULL;
+                        float complex val = (float)cJSON_GetNumberValue(real) + (float)cJSON_GetNumberValue(imag) * I;
+                        return SIScalarCreate(unit, siType, &val);
+                    }
+                    case kSINumberComplex128Type: {
+                        if (!cJSON_IsObject(valueJson)) return NULL;
+                        cJSON *real = cJSON_GetObjectItem(valueJson, "real");
+                        cJSON *imag = cJSON_GetObjectItem(valueJson, "imag");
+                        if (!cJSON_IsNumber(real) || !cJSON_IsNumber(imag)) return NULL;
+                        double complex val = cJSON_GetNumberValue(real) + cJSON_GetNumberValue(imag) * I;
+                        return SIScalarCreate(unit, siType, &val);
+                    }
+                    default:
+                        return NULL;
+                }
+            }
+        }
+    }
+    // Handle untyped format
+    else if (cJSON_IsString(json)) {
+        const char *str = json->valuestring;
+        if (!str) return NULL;
+        OCStringRef expressions = OCStringCreateWithCString(str);
+        if (!expressions) return NULL;
+        OCStringRef err = NULL;
+        SIScalarRef scalar = SIScalarCreateFromExpression(expressions, &err);
+        OCRelease(expressions);
+        OCRelease(err);
+        return scalar;
+    }
+    
+    return NULL;
+}
+
 /*
  @function SIScalarCreateCopy
  @abstract Creates a copy of a scalar

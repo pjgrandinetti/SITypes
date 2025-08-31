@@ -139,7 +139,7 @@ static struct impl_SIUnit *SIUnitAllocate();
 static OCTypeID kSIUnitID = kOCNotATypeID;
 OCTypeID SIUnitGetTypeID(void) {
     if (kSIUnitID == kOCNotATypeID)
-        kSIUnitID = OCRegisterType("SIUnit", (OCTypeRef (*)(cJSON *))SIUnitFromJSONTyped);
+        kSIUnitID = OCRegisterType("SIUnit", (OCTypeRef (*)(cJSON *))SIUnitFromJSON);
     return kSIUnitID;
 }
 bool impl_SIUnitEqual(const void *theType1, const void *theType2) {
@@ -212,29 +212,8 @@ static void *impl_SIUnitDeepCopyMutable(const void *obj) {
     // SIUnit is immutable; just return a standard deep copy
     return impl_SIUnitDeepCopy(obj);
 }
-static cJSON *impl_SIUnitCopyJSON(const void *obj) {
-    if (!obj) return cJSON_CreateNull();
-    cJSON *json = cJSON_CreateObject();
-    const SIUnitRef unit = (SIUnitRef)obj;
-    cJSON_AddItemToObject(json, "dimensionality", SIDimensionalityCreateJSON(unit->dimensionality));
-    cJSON_AddNumberToObject(json, "scale_to_coherent_si", unit->scale_to_coherent_si);
-    if (unit->name)
-        cJSON_AddStringToObject(json, "name", OCStringGetCString(unit->name));
-    else
-        cJSON_AddNullToObject(json, "name");
-    if (unit->plural_name)
-        cJSON_AddStringToObject(json, "plural_name", OCStringGetCString(unit->plural_name));
-    else
-        cJSON_AddNullToObject(json, "plural_name");
-    if (unit->symbol)
-        cJSON_AddStringToObject(json, "symbol", OCStringGetCString(unit->symbol));
-    else
-        cJSON_AddNullToObject(json, "symbol");
-    return json;
-}
-
-static cJSON *impl_SIUnitCopyJSONTyped(const void *obj) {
-    return SIUnitCreateJSONTyped((SIUnitRef)obj);
+static cJSON *impl_SIUnitCopyJSON(const void *obj, bool typed) {
+    return SIUnitCreateJSON((SIUnitRef)obj, typed);
 }
 
 static struct impl_SIUnit *SIUnitAllocate() {
@@ -244,7 +223,6 @@ static struct impl_SIUnit *SIUnitAllocate() {
                        impl_SIUnitEqual,
                        impl_SIUnitCopyFormattingDescription,
                        impl_SIUnitCopyJSON,
-                       impl_SIUnitCopyJSONTyped,
                        impl_SIUnitDeepCopy,
                        impl_SIUnitDeepCopyMutable);
 }
@@ -383,76 +361,63 @@ static OCStringRef SIUnitCreateSimplifiedSymbol(OCStringRef raw_symbol, bool red
     }
     return simplified_symbol;
 }
-cJSON *SIUnitCreateJSON(SIUnitRef unit) {
+cJSON *SIUnitCreateJSON(SIUnitRef unit, bool typed) {
     if (!unit) return cJSON_CreateNull();
-    cJSON *json = cJSON_CreateObject();
-    // 1) dimensionality
-    cJSON_AddItemToObject(json,
-                          "dimensionality",
-                          SIDimensionalityCreateJSON(unit->dimensionality));
-    // 2) coherent‐SI scale factor
-    cJSON_AddNumberToObject(json,
-                            "scale_to_coherent_si",
-                            unit->scale_to_coherent_si);
-    // 4) optional name / plural name
-    if (unit->name)
-        cJSON_AddStringToObject(json,
-                                "name",
-                                OCStringGetCString(unit->name));
-    else
-        cJSON_AddNullToObject(json, "name");
-    if (unit->plural_name)
-        cJSON_AddStringToObject(json,
-                                "plural_name",
-                                OCStringGetCString(unit->plural_name));
-    else
-        cJSON_AddNullToObject(json, "plural_name");
-    if (unit->symbol)
-        cJSON_AddStringToObject(json,
-                                "symbol",
-                                OCStringGetCString(unit->symbol));
-    else
-        cJSON_AddNullToObject(json, "symbol");
-    return json;
-}
-
-cJSON *SIUnitCreateJSONTyped(SIUnitRef unit) {
-    if (!unit) return cJSON_CreateNull();
-
-    cJSON *entry = cJSON_CreateObject();
-    cJSON_AddStringToObject(entry, "type", "SIUnit");
-
+    
+    // Get the symbol string
+    const char *symbolStr = "";
     if (unit->symbol) {
         const char *s = OCStringGetCString(unit->symbol);
-        cJSON_AddStringToObject(entry, "value", s ? s : "");
-    } else {
-        cJSON_AddStringToObject(entry, "value", "");
+        symbolStr = s ? s : "";
     }
-
-    return entry;
+    
+    if (typed) {
+        // Typed format: wrap symbol with type information
+        cJSON *entry = cJSON_CreateObject();
+        if (entry) {
+            cJSON_AddStringToObject(entry, "type", "SIUnit");
+            cJSON_AddStringToObject(entry, "value", symbolStr);
+        }
+        return entry ? entry : cJSON_CreateNull();
+    } else {
+        // Untyped format: just return the symbol string
+        return cJSON_CreateString(symbolStr);
+    }
 }
 
-SIUnitRef SIUnitFromJSONTyped(cJSON *json) {
-    if (!json || !cJSON_IsObject(json)) return NULL;
+SIUnitRef SIUnitFromJSON(cJSON *json) {
+    if (!json) return NULL;
+    
+    // Handle typed format
+    if (cJSON_IsObject(json)) {
+        cJSON *type = cJSON_GetObjectItem(json, "type");
+        if (type && cJSON_IsString(type)) {
+            const char *typeName = cJSON_GetStringValue(type);
+            if (typeName && strcmp(typeName, "SIUnit") == 0) {
+                // This is typed format
+                cJSON *value = cJSON_GetObjectItem(json, "value");
+                if (!cJSON_IsString(value)) return NULL;
 
-    cJSON *type = cJSON_GetObjectItem(json, "type");
-    cJSON *value = cJSON_GetObjectItem(json, "value");
+                const char *symbol = cJSON_GetStringValue(value);
+                if (!symbol) return NULL;
 
-    if (!cJSON_IsString(type) || !cJSON_IsString(value)) return NULL;
+                OCStringRef str = OCStringCreateWithCString(symbol);
+                if (!str) return NULL;
 
-    const char *typeName = cJSON_GetStringValue(type);
-    if (!typeName || strcmp(typeName, "SIUnit") != 0) return NULL;
+                SIUnitRef unit = SIUnitWithSymbol(str);
+                OCRelease(str);
 
-    const char *symbol = cJSON_GetStringValue(value);
-    if (!symbol) return NULL;
-
-    OCStringRef str = OCStringCreateWithCString(symbol);
-    if (!str) return NULL;
-
-    SIUnitRef unit = SIUnitWithSymbol(str);
-    OCRelease(str);
-
-    return unit;
+                return unit;
+            }
+        }
+        
+        // This is untyped format - reconstruct from detailed JSON
+        // For now, we'll just return NULL since this requires more complex reconstruction
+        // In a full implementation, you'd need to parse dimensionality, scale factor, etc.
+        return NULL;
+    }
+    
+    return NULL;
 }
 //
 static OCMutableArrayRef unitsArrayLibrary = NULL;

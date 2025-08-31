@@ -3322,7 +3322,7 @@ bool test_SIScalarWriteReadJSON_simple(void) {
     }
     close(fd);
     OCStringRef err = NULL;
-    if (!OCTypeWriteJSONToFile((OCTypeRef)scalar, tmpl, &err)) {
+    if (!OCTypeWriteJSONToFile((OCTypeRef)scalar, false, true, tmpl, &err)) {
         printf("test_SIScalarWriteReadJSON_simple failed: could not write JSON: %s\n",
                err ? OCStringGetCString(err) : "no error");
         if (err) OCRelease(err);
@@ -3367,7 +3367,7 @@ bool test_SIScalarWriteReadJSON_negative(void) {
     }
     close(fd);
     OCStringRef err = NULL;
-    if (!OCTypeWriteJSONToFile((OCTypeRef)scalar, tmpl, &err)) {
+    if (!OCTypeWriteJSONToFile((OCTypeRef)scalar, false, true, tmpl, &err)) {
         printf("test_SIScalarWriteReadJSON_negative failed: could not write JSON: %s\n",
                err ? OCStringGetCString(err) : "no error");
         if (err) OCRelease(err);
@@ -3414,7 +3414,7 @@ bool test_SIScalarWriteReadJSON_complex_unit(void) {
         return false;
     }
     close(fd);
-    if (!OCTypeWriteJSONToFile((OCTypeRef)scalar, tmpl, &err)) {
+    if (!OCTypeWriteJSONToFile((OCTypeRef)scalar, false, true, tmpl, &err)) {
         printf("test_SIScalarWriteReadJSON_complex_unit failed: could not write JSON: %s\n",
                err ? OCStringGetCString(err) : "no error");
         if (err) OCRelease(err);
@@ -3481,7 +3481,7 @@ bool test_SIScalarWriteReadJSON_array_and_dictionary(void) {
     }
     close(arr_fd);
     OCStringRef arr_err = NULL;
-    if (!OCTypeWriteJSONToFile((OCTypeRef)arr, arr_tmpl, &arr_err)) {
+    if (!OCTypeWriteJSONToFile((OCTypeRef)arr, false, true, arr_tmpl, &arr_err)) {
         printf("%s failed: could not write array JSON: %s\n", __func__, arr_err ? OCStringGetCString(arr_err) : "no error");
         if (arr_err) OCRelease(arr_err);
         success = false;
@@ -3514,7 +3514,7 @@ bool test_SIScalarWriteReadJSON_array_and_dictionary(void) {
     }
     close(dict_fd);
     OCStringRef dict_err = NULL;
-    if (!OCTypeWriteJSONToFile((OCTypeRef)dict, dict_tmpl, &dict_err)) {
+    if (!OCTypeWriteJSONToFile((OCTypeRef)dict, false, true, dict_tmpl, &dict_err)) {
         printf("%s failed: could not write dictionary JSON: %s\n", __func__, dict_err ? OCStringGetCString(dict_err) : "no error");
         if (dict_err) OCRelease(dict_err);
         success = false;

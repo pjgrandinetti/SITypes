@@ -37,7 +37,7 @@ bool test_SIScalar_json_typed_roundtrip_simple(void) {
     }
 
     // Serialize to JSONTyped
-    cJSON *json = OCTypeCopyJSONTyped((OCTypeRef)original);
+    cJSON *json = OCTypeCopyJSON((OCTypeRef)original, true);
     if (!json) {
         printf("  Failed to serialize SIScalar to JSONTyped\n");
         OCRelease(original);
@@ -110,7 +110,7 @@ bool test_SIScalar_json_typed_roundtrip_complex(void) {
     }
 
     // Serialize to JSONTyped
-    cJSON *json = OCTypeCopyJSONTyped((OCTypeRef)original);
+    cJSON *json = OCTypeCopyJSON((OCTypeRef)original, true);
     if (!json) {
         printf("  Failed to serialize complex SIScalar to JSONTyped\n");
         OCRelease(original);
@@ -184,7 +184,7 @@ bool test_SIScalar_json_typed_roundtrip_with_units(void) {
     }
 
     // Serialize to JSONTyped
-    cJSON *json = OCTypeCopyJSONTyped((OCTypeRef)original);
+    cJSON *json = OCTypeCopyJSON((OCTypeRef)original, true);
     if (!json) {
         printf("  Failed to serialize SIScalar with compound units to JSONTyped\n");
         OCRelease(original);
@@ -245,7 +245,7 @@ bool test_SIUnit_json_typed_roundtrip_basic(void) {
     if (unit_error) OCRelease(unit_error);
 
     // Serialize to JSONTyped
-    cJSON *json = OCTypeCopyJSONTyped((OCTypeRef)original);
+    cJSON *json = OCTypeCopyJSON((OCTypeRef)original, true);
     if (!json) {
         printf("  Failed to serialize SIUnit to JSONTyped\n");
         return false;
@@ -296,7 +296,7 @@ bool test_SIUnit_json_typed_roundtrip_compound(void) {
     if (unit_error) OCRelease(unit_error);
 
     // Serialize to JSONTyped
-    cJSON *json = OCTypeCopyJSONTyped((OCTypeRef)original);
+    cJSON *json = OCTypeCopyJSON((OCTypeRef)original, true);
     if (!json) {
         printf("  Failed to serialize compound SIUnit to JSONTyped\n");
         return false;
@@ -345,7 +345,7 @@ bool test_SIDimensionality_json_typed_roundtrip(void) {
     if (dim_error) OCRelease(dim_error);
 
     // Serialize to JSONTyped
-    cJSON *json = OCTypeCopyJSONTyped((OCTypeRef)original);
+    cJSON *json = OCTypeCopyJSON((OCTypeRef)original, true);
     if (!json) {
         printf("  Failed to serialize SIDimensionality to JSONTyped\n");
         OCRelease(original);
@@ -462,7 +462,7 @@ bool test_json_typed_comprehensive_coverage(void) {
         if (error) OCRelease(error);
 
         // Test roundtrip
-        cJSON *json = OCTypeCopyJSONTyped((OCTypeRef)original);
+        cJSON *json = OCTypeCopyJSON((OCTypeRef)original, true);
         if (!json) {
             printf("  Failed to serialize case %d (%s)\n", i, testCases[i].description);
             OCRelease(original);

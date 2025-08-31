@@ -71,28 +71,18 @@ SIMutableScalarRef SIScalarCreateMutableCopy(SIScalarRef theScalar);
  * @file SIScalar.h
  * @brief Convert between SIScalarRef and cJSON representations.
  */
-cJSON *SIScalarCreateJSON(SIScalarRef scalar);
-SIScalarRef SIScalarCreateFromJSON(cJSON *json);
+cJSON *SIScalarCreateJSON(SIScalarRef scalar, bool typed);
 
 /**
- * @brief Creates a typed cJSON object from an SIScalar.
+ * @brief Creates an SIScalar from a cJSON object.
  *
- * @param scalar A valid SIScalarRef.
- * @return A new cJSON object with "type" and "value" fields,
- *         or NULL on failure. The caller is responsible for managing
- *         the returned cJSON object.
- */
-cJSON *SIScalarCreateJSONTyped(SIScalarRef scalar);
-
-/**
- * @brief Creates an SIScalar from a typed cJSON object.
- *
- * @param json A cJSON object with "type": "SIScalar" and
- *             "value": object containing "numeric_type", "value", and "unit".
+ * @param json A cJSON object that can be either:
+ *             - Typed format: {"type": "SIScalar", "value": {...}}
+ *             - Untyped format: string representation
  * @return An SIScalarRef, or NULL on failure.
  *         The caller is responsible for releasing the returned scalar.
  */
-SIScalarRef SIScalarCreateFromJSONTyped(cJSON *json);
+SIScalarRef SIScalarCreateFromJSON(cJSON *json);
 /** @brief Creates an immutable SIScalar from a float value and SI unit. */
 SIScalarRef SIScalarCreateWithFloat(float input_value, SIUnitRef unit);
 /** @brief Creates a mutable SIScalar from a float value and SI unit. */

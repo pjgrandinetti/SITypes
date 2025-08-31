@@ -70,43 +70,27 @@ int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDim, SIBase
 /**
  * @brief Create a JSON representation of an SIDimensionality.
  *
- * The returned JSON is a string node containing the canonical symbol,
- * e.g., "m/s^2". Caller owns the returned cJSON object.
+ * Creates either a typed or untyped JSON representation based on the typed parameter.
+ * - Typed: {"type": "SIDimensionality", "value": "m/s^2"}
+ * - Untyped: "m/s^2"
  *
  * @param dim An SIDimensionalityRef instance.
- * @return A cJSON string object, or cJSON null on failure.
+ * @param typed If true, creates a typed JSON object. If false, creates a plain string.
+ * @return A cJSON object or string, or cJSON null on failure.
  */
-cJSON *SIDimensionalityCreateJSON(SIDimensionalityRef dim);
+cJSON *SIDimensionalityCreateJSON(SIDimensionalityRef dim, bool typed);
+
 /**
- * @brief Create an SIDimensionality object from a JSON string node.
+ * @brief Create an SIDimensionality object from a JSON representation.
  *
- * The input must be a JSON string representing a valid dimensionality symbol,
- * e.g., "m/s^2". If parsing fails, returns NULL.
+ * Accepts both typed and untyped JSON formats:
+ * - Typed: {"type": "SIDimensionality", "value": "m/s^2"}
+ * - Untyped: "m/s^2"
  *
- * @param json A cJSON string object.
+ * @param json A cJSON object or string representing the dimensionality.
  * @return An SIDimensionalityRef or NULL on failure.
  */
 SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json);
-
-/**
- * @brief Creates a typed cJSON object from an SIDimensionality.
- *
- * @param dim A valid SIDimensionalityRef.
- * @return A new cJSON object with "type" and "value" fields,
- *         or NULL on failure. The caller is responsible for managing
- *         the returned cJSON object.
- */
-cJSON *SIDimensionalityCreateJSONTyped(SIDimensionalityRef dim);
-
-/**
- * @brief Creates an SIDimensionality from a typed cJSON object.
- *
- * @param json A cJSON object with "type": "SIDimensionality" and
- *             "value": "symbol string".
- * @return An SIDimensionalityRef, or NULL on failure.
- *         The returned object is a singleton and must not be released.
- */
-SIDimensionalityRef SIDimensionalityFromJSONTyped(cJSON *json);
 #pragma mark Tests
 /** @brief Returns true if two dimensionalities are strictly equal. */
 bool SIDimensionalityEqual(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
