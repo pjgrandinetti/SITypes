@@ -15,6 +15,7 @@
 #include "test_unit_expression.h"
 #include "test_unit_from_expression_robust.h"
 #include "test_unit_power_operations.h"
+#include "test_json_typed.h"
 #ifdef LEAK_SANITIZER
 extern void __lsan_do_leak_check() __attribute__((weak));
 #endif
@@ -192,6 +193,17 @@ int main(int argc, const char* argv[]) {
     TRACK(test_SIScalarCreateArrayFromMixedTypeArray);
     TRACK(test_SIScalarCreateArrayFromNumberArray);
     TRACK(test_SIQuantityValidateMixedArrayForDimensionality);
+
+    printf("\n=== JSONTyped Serialization Tests ===\n");
+    TRACK(test_SIScalar_json_typed_roundtrip_simple);
+    TRACK(test_SIScalar_json_typed_roundtrip_complex);
+    TRACK(test_SIScalar_json_typed_roundtrip_with_units);
+    TRACK(test_SIUnit_json_typed_roundtrip_basic);
+    TRACK(test_SIUnit_json_typed_roundtrip_compound);
+    TRACK(test_SIDimensionality_json_typed_roundtrip);
+    TRACK(test_json_typed_error_handling);
+    TRACK(test_json_typed_comprehensive_coverage);
+
     if (failures) {
         fprintf(stderr, "\n%d test(s) failed.\n", failures);
     } else

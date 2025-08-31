@@ -27,7 +27,7 @@ typedef const struct impl_SIScalar *SIScalarRef;
 typedef struct impl_SIScalar *SIMutableScalarRef;
 /** @endcond */
 // Include OCTypes base framework
-#include <OCTypes.h>
+#include <OCTypes/OCTypes.h>
 // Public SITypes API headers
 #include "SIDimensionality.h"
 #include "SIDimensionalityParser.h"
@@ -77,7 +77,7 @@ OCTypeRef SITypesCreateByTakingNthRoot(OCTypeRef a, int root, OCStringRef *outEr
  * @brief Reduce an SITypes object to its simplest form.
  * @param a The operand (SIScalar, SIUnit, or SIDimensionality).
  * @return Result of the reduction operation, or NULL on failure.
- * @note For scalars, reduces the unit; for units, reduces to lowest terms; 
+ * @note For scalars, reduces the unit; for units, reduces to lowest terms;
  *       for dimensionalities, reduces exponents to lowest terms.
  */
 OCTypeRef SITypesCreateByReducing(OCTypeRef a);
@@ -92,23 +92,5 @@ OCTypeRef SITypesCreateByReducing(OCTypeRef a);
  */
 OCStringRef SITypesCreateStringRepresentation(OCTypeRef obj);
 
-
-// Enhanced JSON serialization for OCDictionary containing SITypes objects
-/**
- * @brief Create JSON representation of a dictionary that may contain SITypes objects.
- * @param dict The dictionary to serialize.
- * @return A cJSON object representing the dictionary, or cJSON null if dict is NULL.
- * @note This function handles SIScalar and SIUnit types in addition to standard OCTypes.
- */
-cJSON *SITypesMetadataCopyJSON(OCDictionaryRef dict);
-
-/**
- * @brief Create a dictionary from JSON that may contain SITypes objects.
- * @param json The JSON object to deserialize.
- * @param outError Optional pointer to receive error message if parsing fails.
- * @return A new OCDictionaryRef, or NULL on failure.
- * @note This function can reconstruct SIScalar and SIUnit types from JSON.
- */
-OCDictionaryRef SITypesMetadataCreateFromJSON(cJSON *json, OCStringRef *outError);
 
 #endif /* SITypes_h */

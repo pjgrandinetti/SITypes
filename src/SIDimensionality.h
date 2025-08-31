@@ -87,6 +87,26 @@ cJSON *SIDimensionalityCreateJSON(SIDimensionalityRef dim);
  * @return An SIDimensionalityRef or NULL on failure.
  */
 SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json);
+
+/**
+ * @brief Creates a typed cJSON object from an SIDimensionality.
+ *
+ * @param dim A valid SIDimensionalityRef.
+ * @return A new cJSON object with "type" and "value" fields,
+ *         or NULL on failure. The caller is responsible for managing
+ *         the returned cJSON object.
+ */
+cJSON *SIDimensionalityCreateJSONTyped(SIDimensionalityRef dim);
+
+/**
+ * @brief Creates an SIDimensionality from a typed cJSON object.
+ *
+ * @param json A cJSON object with "type": "SIDimensionality" and
+ *             "value": "symbol string".
+ * @return An SIDimensionalityRef, or NULL on failure.
+ *         The returned object is a singleton and must not be released.
+ */
+SIDimensionalityRef SIDimensionalityFromJSONTyped(cJSON *json);
 #pragma mark Tests
 /** @brief Returns true if two dimensionalities are strictly equal. */
 bool SIDimensionalityEqual(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);

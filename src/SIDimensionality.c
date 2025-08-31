@@ -13,7 +13,7 @@
 static OCTypeID kSIDimensionalityID = kOCNotATypeID;
 OCTypeID SIDimensionalityGetTypeID(void) {
     if (kSIDimensionalityID == kOCNotATypeID)
-        kSIDimensionalityID = OCRegisterType("SIDimensionality");
+        kSIDimensionalityID = OCRegisterType("SIDimensionality", (OCTypeRef (*)(cJSON *))SIDimensionalityFromJSONTyped);
     return kSIDimensionalityID;
 }
 static bool impl_SIDimensionalityEqual(const void *theType1, const void *theType2) {
@@ -64,6 +64,10 @@ impl_SIDimensionalityDeepCopyMutable(const void *obj) {
 static cJSON *impl_SIDimensionalityCopyJSON(const void *obj) {
     return SIDimensionalityCreateJSON((SIDimensionalityRef)obj);
 }
+
+static cJSON *impl_SIDimensionalityCopyJSONTyped(const void *obj) {
+    return SIDimensionalityCreateJSONTyped((SIDimensionalityRef)obj);
+}
 static struct impl_SIDimensionality *SIDimensionalityAllocate() {
     struct impl_SIDimensionality *obj = OCTypeAlloc(struct impl_SIDimensionality,
                                                     SIDimensionalityGetTypeID(),
@@ -71,6 +75,7 @@ static struct impl_SIDimensionality *SIDimensionalityAllocate() {
                                                     impl_SIDimensionalityEqual,
                                                     impl_SIDimensionalityCopyFormattingDescription,
                                                     impl_SIDimensionalityCopyJSON,
+                                                    impl_SIDimensionalityCopyJSONTyped,
                                                     impl_SIDimensionalityDeepCopy,
                                                     impl_SIDimensionalityDeepCopyMutable);
     if (!obj) {
@@ -127,6 +132,51 @@ SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json) {
     SIDimensionalityRef dim = SIDimensionalityFromExpression(str, &err);
     OCRelease(str);
     OCRelease(err);
+    return dim;
+}
+
+cJSON *SIDimensionalityCreateJSONTyped(SIDimensionalityRef dim) {
+    if (!dim) return cJSON_CreateNull();
+
+    cJSON *entry = cJSON_CreateObject();
+    cJSON_AddStringToObject(entry, "type", "SIDimensionality");
+
+    OCStringRef symbol = SIDimensionalityCopySymbol(dim);
+    if (!symbol) {
+        fprintf(stderr, "SIDimensionalityCreateJSONTyped: Failed to get symbol.\n");
+        cJSON_Delete(entry);
+        return cJSON_CreateNull();
+    }
+
+    const char *s = OCStringGetCString(symbol);
+    cJSON_AddStringToObject(entry, "value", s ? s : "");
+    OCRelease(symbol);
+
+    return entry;
+}
+
+SIDimensionalityRef SIDimensionalityFromJSONTyped(cJSON *json) {
+    if (!json || !cJSON_IsObject(json)) return NULL;
+
+    cJSON *type = cJSON_GetObjectItem(json, "type");
+    cJSON *value = cJSON_GetObjectItem(json, "value");
+
+    if (!cJSON_IsString(type) || !cJSON_IsString(value)) return NULL;
+
+    const char *typeName = cJSON_GetStringValue(type);
+    if (!typeName || strcmp(typeName, "SIDimensionality") != 0) return NULL;
+
+    const char *symbol = cJSON_GetStringValue(value);
+    if (!symbol) return NULL;
+
+    OCStringRef str = OCStringCreateWithCString(symbol);
+    if (!str) return NULL;
+
+    OCStringRef err = NULL;
+    SIDimensionalityRef dim = SIDimensionalityFromExpression(str, &err);
+    OCRelease(str);
+    OCRelease(err);
+
     return dim;
 }
 #pragma mark Static Utility Functions

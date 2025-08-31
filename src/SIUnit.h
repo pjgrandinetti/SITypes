@@ -149,6 +149,27 @@ OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
 OCStringRef SIUnitCopyName(SIUnitRef theUnit);
 OCStringRef SIUnitCopyPluralName(SIUnitRef theUnit);
 cJSON *SIUnitCreateJSON(SIUnitRef unit);
+
+/**
+ * @brief Creates a typed cJSON object from an SIUnit.
+ *
+ * @param unit A valid SIUnitRef.
+ * @return A new cJSON object with "type" and "value" fields,
+ *         or NULL on failure. The caller is responsible for managing
+ *         the returned cJSON object.
+ */
+cJSON *SIUnitCreateJSONTyped(SIUnitRef unit);
+
+/**
+ * @brief Creates an SIUnit from a typed cJSON object.
+ *
+ * @param json A cJSON object with "type": "SIUnit" and
+ *             "value": "symbol string".
+ * @return An SIUnitRef, or NULL on failure.
+ *         The returned object is a singleton and must not be released.
+ */
+SIUnitRef SIUnitFromJSONTyped(cJSON *json);
+
 bool SIUnitEqual(SIUnitRef theUnit1, SIUnitRef theUnit2);
 // Boolean property getters
 bool SIUnitIsSIUnit(SIUnitRef theUnit);

@@ -139,7 +139,7 @@ static struct impl_SIUnit *SIUnitAllocate();
 static OCTypeID kSIUnitID = kOCNotATypeID;
 OCTypeID SIUnitGetTypeID(void) {
     if (kSIUnitID == kOCNotATypeID)
-        kSIUnitID = OCRegisterType("SIUnit");
+        kSIUnitID = OCRegisterType("SIUnit", (OCTypeRef (*)(cJSON *))SIUnitFromJSONTyped);
     return kSIUnitID;
 }
 bool impl_SIUnitEqual(const void *theType1, const void *theType2) {
@@ -232,6 +232,11 @@ static cJSON *impl_SIUnitCopyJSON(const void *obj) {
         cJSON_AddNullToObject(json, "symbol");
     return json;
 }
+
+static cJSON *impl_SIUnitCopyJSONTyped(const void *obj) {
+    return SIUnitCreateJSONTyped((SIUnitRef)obj);
+}
+
 static struct impl_SIUnit *SIUnitAllocate() {
     return OCTypeAlloc(struct impl_SIUnit,
                        SIUnitGetTypeID(),
@@ -239,6 +244,7 @@ static struct impl_SIUnit *SIUnitAllocate() {
                        impl_SIUnitEqual,
                        impl_SIUnitCopyFormattingDescription,
                        impl_SIUnitCopyJSON,
+                       impl_SIUnitCopyJSONTyped,
                        impl_SIUnitDeepCopy,
                        impl_SIUnitDeepCopyMutable);
 }
@@ -408,6 +414,45 @@ cJSON *SIUnitCreateJSON(SIUnitRef unit) {
     else
         cJSON_AddNullToObject(json, "symbol");
     return json;
+}
+
+cJSON *SIUnitCreateJSONTyped(SIUnitRef unit) {
+    if (!unit) return cJSON_CreateNull();
+
+    cJSON *entry = cJSON_CreateObject();
+    cJSON_AddStringToObject(entry, "type", "SIUnit");
+
+    if (unit->symbol) {
+        const char *s = OCStringGetCString(unit->symbol);
+        cJSON_AddStringToObject(entry, "value", s ? s : "");
+    } else {
+        cJSON_AddStringToObject(entry, "value", "");
+    }
+
+    return entry;
+}
+
+SIUnitRef SIUnitFromJSONTyped(cJSON *json) {
+    if (!json || !cJSON_IsObject(json)) return NULL;
+
+    cJSON *type = cJSON_GetObjectItem(json, "type");
+    cJSON *value = cJSON_GetObjectItem(json, "value");
+
+    if (!cJSON_IsString(type) || !cJSON_IsString(value)) return NULL;
+
+    const char *typeName = cJSON_GetStringValue(type);
+    if (!typeName || strcmp(typeName, "SIUnit") != 0) return NULL;
+
+    const char *symbol = cJSON_GetStringValue(value);
+    if (!symbol) return NULL;
+
+    OCStringRef str = OCStringCreateWithCString(symbol);
+    if (!str) return NULL;
+
+    SIUnitRef unit = SIUnitWithSymbol(str);
+    OCRelease(str);
+
+    return unit;
 }
 //
 static OCMutableArrayRef unitsArrayLibrary = NULL;
