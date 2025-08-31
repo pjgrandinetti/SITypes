@@ -27,7 +27,7 @@ typedef const struct impl_SIScalar *SIScalarRef;
 typedef struct impl_SIScalar *SIMutableScalarRef;
 /** @endcond */
 // Include OCTypes base framework
-#include <OCTypes/OCTypes.h>
+#include <OCTypes.h>
 // Public SITypes API headers
 #include "SIDimensionality.h"
 #include "SIDimensionalityParser.h"
