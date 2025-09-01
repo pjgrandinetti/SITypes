@@ -419,7 +419,27 @@ SIUnitRef SIUnitFromJSON(cJSON *json, OCStringRef *outError) {
         // In a full implementation, you'd need to parse dimensionality, scale factor, etc.
         return NULL;
     }
+    // Handle untyped format - simple string
+    else if (cJSON_IsString(json)) {
+        const char *symbol = json->valuestring;
+        if (!symbol) {
+            if (outError) *outError = STR("JSON string value is NULL");
+            return NULL;
+        }
+        
+        OCStringRef str = OCStringCreateWithCString(symbol);
+        if (!str) {
+            if (outError) *outError = STR("Failed to create OCString from symbol");
+            return NULL;
+        }
+        
+        SIUnitRef unit = SIUnitWithSymbol(str);
+        OCRelease(str);
+        
+        return unit;
+    }
 
+    if (outError) *outError = STR("JSON input is neither an object nor a string");
     return NULL;
 }
 //

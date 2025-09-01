@@ -147,37 +147,55 @@ SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json, OCStringRef *outError)
         cJSON *type = cJSON_GetObjectItem(json, "type");
         cJSON *value = cJSON_GetObjectItem(json, "value");
 
-        if (!cJSON_IsString(type) || !cJSON_IsString(value)) return NULL;
+        if (!cJSON_IsString(type) || !cJSON_IsString(value)) {
+            if (outError) *outError = STR("JSON object missing valid 'type' or 'value' string fields");
+            return NULL;
+        }
 
         const char *typeName = cJSON_GetStringValue(type);
-        if (!typeName || strcmp(typeName, "SIDimensionality") != 0) return NULL;
+        if (!typeName || strcmp(typeName, "SIDimensionality") != 0) {
+            if (outError) *outError = STR("JSON type field is not 'SIDimensionality'");
+            return NULL;
+        }
 
         const char *symbol = cJSON_GetStringValue(value);
-        if (!symbol) return NULL;
+        if (!symbol) {
+            if (outError) *outError = STR("JSON value field is NULL");
+            return NULL;
+        }
 
         OCStringRef str = OCStringCreateWithCString(symbol);
-        if (!str) return NULL;
+        if (!str) {
+            if (outError) *outError = STR("Failed to create OCString from symbol");
+            return NULL;
+        }
 
-        OCStringRef err = NULL;
-        SIDimensionalityRef dim = SIDimensionalityFromExpression(str, &err);
+        SIDimensionalityRef dim = SIDimensionalityFromExpression(str, outError);
         OCRelease(str);
-        OCRelease(err);
-
+        
         return dim;
     }
     // Handle untyped format
     else if (cJSON_IsString(json)) {
         const char *symbol = json->valuestring;
-        if (!symbol) return NULL;
+        if (!symbol) {
+            if (outError) *outError = STR("JSON string value is NULL");
+            return NULL;
+        }
+        
         OCStringRef str = OCStringCreateWithCString(symbol);
-        if (!str) return NULL;
-        OCStringRef err = NULL;
-        SIDimensionalityRef dim = SIDimensionalityFromExpression(str, &err);
+        if (!str) {
+            if (outError) *outError = STR("Failed to create OCString from symbol");
+            return NULL;
+        }
+        
+        SIDimensionalityRef dim = SIDimensionalityFromExpression(str, outError);
         OCRelease(str);
-        OCRelease(err);
+                
         return dim;
     }
 
+    if (outError) *outError = STR("JSON input is neither an object nor a string");
     return NULL;
 }
 
