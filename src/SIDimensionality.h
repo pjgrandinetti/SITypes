@@ -78,7 +78,7 @@ int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDim, SIBase
  * @param typed If true, creates a typed JSON object. If false, creates a plain string.
  * @return A cJSON object or string, or cJSON null on failure.
  */
-cJSON *SIDimensionalityCreateJSON(SIDimensionalityRef dim, bool typed);
+cJSON *SIDimensionalityCopyAsJSON(SIDimensionalityRef dim, bool typed);
 
 /**
  * @brief Create an SIDimensionality object from a JSON representation.

@@ -115,7 +115,7 @@ OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar) {
     return impl_SIScalarCopyFormattingDescription((OCTypeRef)scalar);
 }
 static cJSON *impl_SIScalarCopyJSON(const void *obj, bool typed) {
-    return SIScalarCreateJSON((SIScalarRef)obj, typed);
+    return SIScalarCopyAsJSON((SIScalarRef)obj, typed);
 }
 static struct impl_SIScalar *SIScalarAllocate(void) {
     struct impl_SIScalar *obj = OCTypeAlloc(struct impl_SIScalar,
@@ -160,9 +160,9 @@ SIScalarRef SIScalarCreate(SIUnitRef unit, SINumberType type, void *value) {
 static SIMutableScalarRef SIScalarCreateMutable(SIUnitRef unit, SINumberType elementType, void *value) {
     return (SIMutableScalarRef)SIScalarCreate(unit, elementType, value);
 }
-cJSON *SIScalarCreateJSON(SIScalarRef scalar, bool typed) {
+cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed) {
     if (!scalar) return cJSON_CreateNull();
-    
+
     if (typed) {
         cJSON *entry = cJSON_CreateObject();
         cJSON_AddStringToObject(entry, "type", "SIScalar");
@@ -249,7 +249,7 @@ cJSON *SIScalarCreateJSON(SIScalarRef scalar, bool typed) {
 }
 SIScalarRef SIScalarCreateFromJSON(cJSON *json) {
     if (!json) return NULL;
-    
+
     // Handle typed format
     if (cJSON_IsObject(json)) {
         cJSON *type = cJSON_GetObjectItem(json, "type");
@@ -342,7 +342,7 @@ SIScalarRef SIScalarCreateFromJSON(cJSON *json) {
         OCRelease(err);
         return scalar;
     }
-    
+
     return NULL;
 }
 

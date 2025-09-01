@@ -213,7 +213,7 @@ static void *impl_SIUnitDeepCopyMutable(const void *obj) {
     return impl_SIUnitDeepCopy(obj);
 }
 static cJSON *impl_SIUnitCopyJSON(const void *obj, bool typed) {
-    return SIUnitCreateJSON((SIUnitRef)obj, typed);
+    return SIUnitCopyAsJSON((SIUnitRef)obj, typed);
 }
 
 static struct impl_SIUnit *SIUnitAllocate() {
@@ -361,16 +361,16 @@ static OCStringRef SIUnitCreateSimplifiedSymbol(OCStringRef raw_symbol, bool red
     }
     return simplified_symbol;
 }
-cJSON *SIUnitCreateJSON(SIUnitRef unit, bool typed) {
+cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed) {
     if (!unit) return cJSON_CreateNull();
-    
+
     // Get the symbol string
     const char *symbolStr = "";
     if (unit->symbol) {
         const char *s = OCStringGetCString(unit->symbol);
         symbolStr = s ? s : "";
     }
-    
+
     if (typed) {
         // Typed format: wrap symbol with type information
         cJSON *entry = cJSON_CreateObject();
@@ -387,7 +387,7 @@ cJSON *SIUnitCreateJSON(SIUnitRef unit, bool typed) {
 
 SIUnitRef SIUnitFromJSON(cJSON *json) {
     if (!json) return NULL;
-    
+
     // Handle typed format
     if (cJSON_IsObject(json)) {
         cJSON *type = cJSON_GetObjectItem(json, "type");
@@ -410,13 +410,13 @@ SIUnitRef SIUnitFromJSON(cJSON *json) {
                 return unit;
             }
         }
-        
+
         // This is untyped format - reconstruct from detailed JSON
         // For now, we'll just return NULL since this requires more complex reconstruction
         // In a full implementation, you'd need to parse dimensionality, scale factor, etc.
         return NULL;
     }
-    
+
     return NULL;
 }
 //

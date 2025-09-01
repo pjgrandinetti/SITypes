@@ -62,7 +62,7 @@ impl_SIDimensionalityDeepCopyMutable(const void *obj) {
     return impl_SIDimensionalityDeepCopy(obj);
 }
 static cJSON *impl_SIDimensionalityCopyJSON(const void *obj, bool typed) {
-    return SIDimensionalityCreateJSON((SIDimensionalityRef)obj, typed);
+    return SIDimensionalityCopyAsJSON((SIDimensionalityRef)obj, typed);
 }
 static struct impl_SIDimensionality *SIDimensionalityAllocate() {
     struct impl_SIDimensionality *obj = OCTypeAlloc(
@@ -107,19 +107,19 @@ OCDictionaryRef SIDimensionalityCopyDictionary(SIDimensionalityRef dim) {
     OCRelease(denArr);
     return dict;
 }
-cJSON *SIDimensionalityCreateJSON(SIDimensionalityRef dim, bool typed) {
+cJSON *SIDimensionalityCopyAsJSON(SIDimensionalityRef dim, bool typed) {
     if (!dim) return cJSON_CreateNull();
-    
+
     // Get symbol once for both paths
     OCStringRef symbol = SIDimensionalityCopySymbol(dim);
     if (!symbol) {
         fprintf(stderr, "SIDimensionalityCreateJSON: Failed to get symbol.\n");
         return cJSON_CreateNull();
     }
-    
+
     const char *s = OCStringGetCString(symbol);
     const char *symbolStr = s ? s : "";
-    
+
     // Create the appropriate JSON value
     cJSON *result;
     if (typed) {
@@ -131,14 +131,14 @@ cJSON *SIDimensionalityCreateJSON(SIDimensionalityRef dim, bool typed) {
     } else {
         result = cJSON_CreateString(symbolStr);
     }
-    
+
     OCRelease(symbol);
     return result ? result : cJSON_CreateNull();
 }
 
 SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json) {
     if (!json) return NULL;
-    
+
     // Handle typed format
     if (cJSON_IsObject(json)) {
         cJSON *type = cJSON_GetObjectItem(json, "type");
@@ -174,7 +174,7 @@ SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json) {
         OCRelease(err);
         return dim;
     }
-    
+
     return NULL;
 }
 

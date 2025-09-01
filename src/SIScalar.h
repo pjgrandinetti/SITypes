@@ -71,7 +71,7 @@ SIMutableScalarRef SIScalarCreateMutableCopy(SIScalarRef theScalar);
  * @file SIScalar.h
  * @brief Convert between SIScalarRef and cJSON representations.
  */
-cJSON *SIScalarCreateJSON(SIScalarRef scalar, bool typed);
+cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed);
 
 /**
  * @brief Creates an SIScalar from a cJSON object.
