@@ -82,7 +82,7 @@ cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed);
  * @return An SIScalarRef, or NULL on failure.
  *         The caller is responsible for releasing the returned scalar.
  */
-SIScalarRef SIScalarCreateFromJSON(cJSON *json);
+SIScalarRef SIScalarCreateFromJSON(cJSON *json, OCStringRef *outError);
 /** @brief Creates an immutable SIScalar from a float value and SI unit. */
 SIScalarRef SIScalarCreateWithFloat(float input_value, SIUnitRef unit);
 /** @brief Creates a mutable SIScalar from a float value and SI unit. */

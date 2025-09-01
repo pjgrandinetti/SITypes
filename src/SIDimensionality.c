@@ -13,7 +13,7 @@
 static OCTypeID kSIDimensionalityID = kOCNotATypeID;
 OCTypeID SIDimensionalityGetTypeID(void) {
     if (kSIDimensionalityID == kOCNotATypeID)
-        kSIDimensionalityID = OCRegisterType("SIDimensionality", (OCTypeRef (*)(cJSON *))SIDimensionalityFromJSON);
+        kSIDimensionalityID = OCRegisterType("SIDimensionality", (OCTypeRef (*)(cJSON *, OCStringRef *))SIDimensionalityFromJSON);
     return kSIDimensionalityID;
 }
 static bool impl_SIDimensionalityEqual(const void *theType1, const void *theType2) {
@@ -136,8 +136,11 @@ cJSON *SIDimensionalityCopyAsJSON(SIDimensionalityRef dim, bool typed) {
     return result ? result : cJSON_CreateNull();
 }
 
-SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json) {
-    if (!json) return NULL;
+SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json, OCStringRef *outError) {
+    if (!json) {
+        if (outError) *outError = STR("JSON input is NULL");
+        return NULL;
+    }
 
     // Handle typed format
     if (cJSON_IsObject(json)) {

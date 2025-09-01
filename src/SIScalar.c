@@ -21,7 +21,7 @@ struct impl_SIScalar {
     impl_SINumber value;
 };
 OCTypeID SIScalarGetTypeID(void) {
-    if (kSIScalarID == kOCNotATypeID) kSIScalarID = OCRegisterType("SIScalar", (OCTypeRef (*)(cJSON *))SIScalarCreateFromJSON);
+    if (kSIScalarID == kOCNotATypeID) kSIScalarID = OCRegisterType("SIScalar", (OCTypeRef (*)(cJSON *, OCStringRef *))SIScalarCreateFromJSON);
     return kSIScalarID;
 }
 static bool impl_SIScalarEqual(const void *theType1, const void *theType2) {
@@ -247,8 +247,11 @@ cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed) {
         return node;
     }
 }
-SIScalarRef SIScalarCreateFromJSON(cJSON *json) {
-    if (!json) return NULL;
+SIScalarRef SIScalarCreateFromJSON(cJSON *json, OCStringRef *outError) {
+    if (!json) {
+        if (outError) *outError = STR("JSON input is NULL");
+        return NULL;
+    }
 
     // Handle typed format
     if (cJSON_IsObject(json)) {

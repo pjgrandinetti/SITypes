@@ -139,7 +139,7 @@ static struct impl_SIUnit *SIUnitAllocate();
 static OCTypeID kSIUnitID = kOCNotATypeID;
 OCTypeID SIUnitGetTypeID(void) {
     if (kSIUnitID == kOCNotATypeID)
-        kSIUnitID = OCRegisterType("SIUnit", (OCTypeRef (*)(cJSON *))SIUnitFromJSON);
+        kSIUnitID = OCRegisterType("SIUnit", (OCTypeRef (*)(cJSON *, OCStringRef *))SIUnitFromJSON);
     return kSIUnitID;
 }
 bool impl_SIUnitEqual(const void *theType1, const void *theType2) {
@@ -385,8 +385,11 @@ cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed) {
     }
 }
 
-SIUnitRef SIUnitFromJSON(cJSON *json) {
-    if (!json) return NULL;
+SIUnitRef SIUnitFromJSON(cJSON *json, OCStringRef *outError) {
+    if (!json) {
+        if (outError) *outError = STR("JSON input is NULL");
+        return NULL;
+    }
 
     // Handle typed format
     if (cJSON_IsObject(json)) {

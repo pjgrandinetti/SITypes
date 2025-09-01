@@ -45,7 +45,7 @@ bool test_SIScalar_json_typed_roundtrip_simple(void) {
     }
 
     // Deserialize back from JSONTyped
-    SIScalarRef restored = (SIScalarRef)OCTypeCreateFromJSONTyped(json);
+    SIScalarRef restored = (SIScalarRef)OCTypeCreateFromJSONTyped(json, NULL);
     if (!restored) {
         printf("  Failed to deserialize SIScalar from JSONTyped\n");
         cJSON_Delete(json);
@@ -118,7 +118,7 @@ bool test_SIScalar_json_typed_roundtrip_complex(void) {
     }
 
     // Deserialize back from JSONTyped
-    SIScalarRef restored = (SIScalarRef)OCTypeCreateFromJSONTyped(json);
+    SIScalarRef restored = (SIScalarRef)OCTypeCreateFromJSONTyped(json, NULL);
     if (!restored) {
         printf("  Failed to deserialize complex SIScalar from JSONTyped\n");
         cJSON_Delete(json);
@@ -192,7 +192,7 @@ bool test_SIScalar_json_typed_roundtrip_with_units(void) {
     }
 
     // Deserialize back from JSONTyped
-    SIScalarRef restored = (SIScalarRef)OCTypeCreateFromJSONTyped(json);
+    SIScalarRef restored = (SIScalarRef)OCTypeCreateFromJSONTyped(json, NULL);
     if (!restored) {
         printf("  Failed to deserialize SIScalar with compound units from JSONTyped\n");
         cJSON_Delete(json);
@@ -252,7 +252,7 @@ bool test_SIUnit_json_typed_roundtrip_basic(void) {
     }
 
     // Deserialize back from JSONTyped
-    SIUnitRef restored = (SIUnitRef)OCTypeCreateFromJSONTyped(json);
+    SIUnitRef restored = (SIUnitRef)OCTypeCreateFromJSONTyped(json, NULL);
     if (!restored) {
         printf("  Failed to deserialize SIUnit from JSONTyped\n");
         cJSON_Delete(json);
@@ -303,7 +303,7 @@ bool test_SIUnit_json_typed_roundtrip_compound(void) {
     }
 
     // Deserialize back from JSONTyped
-    SIUnitRef restored = (SIUnitRef)OCTypeCreateFromJSONTyped(json);
+    SIUnitRef restored = (SIUnitRef)OCTypeCreateFromJSONTyped(json, NULL);
     if (!restored) {
         printf("  Failed to deserialize compound SIUnit from JSONTyped\n");
         cJSON_Delete(json);
@@ -353,7 +353,7 @@ bool test_SIDimensionality_json_typed_roundtrip(void) {
     }
 
     // Deserialize back from JSONTyped
-    SIDimensionalityRef restored = (SIDimensionalityRef)OCTypeCreateFromJSONTyped(json);
+    SIDimensionalityRef restored = (SIDimensionalityRef)OCTypeCreateFromJSONTyped(json, NULL);
     if (!restored) {
         printf("  Failed to deserialize SIDimensionality from JSONTyped\n");
         cJSON_Delete(json);
@@ -391,7 +391,7 @@ bool test_json_typed_error_handling(void) {
     cJSON *invalidJson = cJSON_CreateObject();
     cJSON_AddStringToObject(invalidJson, "type", "UnknownType");
     cJSON_AddStringToObject(invalidJson, "value", "some value");
-    OCTypeRef result = OCTypeCreateFromJSONTyped(invalidJson);
+    OCTypeRef result = OCTypeCreateFromJSONTyped(invalidJson, NULL);
     if (result != NULL) {
         printf("  Expected NULL for invalid JSON, but got a result\n");
         cJSON_Delete(invalidJson);
@@ -401,7 +401,7 @@ bool test_json_typed_error_handling(void) {
     cJSON_Delete(invalidJson);
 
     // Test with NULL JSON
-    result = OCTypeCreateFromJSONTyped(NULL);
+    result = OCTypeCreateFromJSONTyped(NULL, NULL);
     if (result != NULL) {
         printf("  Expected NULL for NULL JSON, but got a result\n");
         OCRelease(result);
@@ -413,7 +413,7 @@ bool test_json_typed_error_handling(void) {
     cJSON_AddStringToObject(malformedJson, "type", "SIScalar");
     // Missing subtype and value fields
 
-    result = OCTypeCreateFromJSONTyped(malformedJson);
+    result = OCTypeCreateFromJSONTyped(malformedJson, NULL);
     if (result != NULL) {
         printf("  Expected NULL for malformed JSON, but got a result\n");
         cJSON_Delete(malformedJson);
@@ -469,7 +469,7 @@ bool test_json_typed_comprehensive_coverage(void) {
             continue;
         }
 
-        SIScalarRef restored = (SIScalarRef)OCTypeCreateFromJSONTyped(json);
+        SIScalarRef restored = (SIScalarRef)OCTypeCreateFromJSONTyped(json, NULL);
         if (!restored) {
             printf("  Failed to deserialize case %d (%s)\n", i, testCases[i].description);
             cJSON_Delete(json);

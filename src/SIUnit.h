@@ -159,7 +159,7 @@ cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed);
  * @return An SIUnitRef, or NULL on failure.
  *         The returned object is a singleton and must not be released.
  */
-SIUnitRef SIUnitFromJSON(cJSON *json);
+SIUnitRef SIUnitFromJSON(cJSON *json, OCStringRef *outError);
 
 bool SIUnitEqual(SIUnitRef theUnit1, SIUnitRef theUnit2);
 // Boolean property getters

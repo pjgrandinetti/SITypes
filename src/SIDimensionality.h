@@ -90,7 +90,7 @@ cJSON *SIDimensionalityCopyAsJSON(SIDimensionalityRef dim, bool typed);
  * @param json A cJSON object or string representing the dimensionality.
  * @return An SIDimensionalityRef or NULL on failure.
  */
-SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json);
+SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json, OCStringRef *outError);
 #pragma mark Tests
 /** @brief Returns true if two dimensionalities are strictly equal. */
 bool SIDimensionalityEqual(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2);
