@@ -114,8 +114,8 @@ static void *impl_SIScalarDeepCopyMutable(const void *theType) {
 OCStringRef SIScalarCopyFormattingDescription(SIScalarRef scalar) {
     return impl_SIScalarCopyFormattingDescription((OCTypeRef)scalar);
 }
-static cJSON *impl_SIScalarCopyJSON(const void *obj, bool typed) {
-    return SIScalarCopyAsJSON((SIScalarRef)obj, typed);
+static cJSON *impl_SIScalarCopyJSON(const void *obj, bool typed, OCStringRef *outError) {
+    return SIScalarCopyAsJSON((SIScalarRef)obj, typed, outError);
 }
 static struct impl_SIScalar *SIScalarAllocate(void) {
     struct impl_SIScalar *obj = OCTypeAlloc(struct impl_SIScalar,
@@ -160,14 +160,29 @@ SIScalarRef SIScalarCreate(SIUnitRef unit, SINumberType type, void *value) {
 static SIMutableScalarRef SIScalarCreateMutable(SIUnitRef unit, SINumberType elementType, void *value) {
     return (SIMutableScalarRef)SIScalarCreate(unit, elementType, value);
 }
-cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed) {
-    if (!scalar) return cJSON_CreateNull();
+cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed, OCStringRef *outError) {
+    if (outError) *outError = NULL;
+
+    if (!scalar) {
+        if (outError) *outError = STR("SIScalar input is NULL");
+        return cJSON_CreateNull();
+    }
 
     if (typed) {
         cJSON *entry = cJSON_CreateObject();
+        if (!entry) {
+            if (outError) *outError = STR("Failed to create JSON object");
+            return cJSON_CreateNull();
+        }
+
         cJSON_AddStringToObject(entry, "type", "SIScalar");
 
         cJSON *value = cJSON_CreateObject();
+        if (!value) {
+            cJSON_Delete(entry);
+            if (outError) *outError = STR("Failed to create JSON value object");
+            return cJSON_CreateNull();
+        }
 
         // Add numeric_type
         const char *typeString = NULL;
@@ -202,6 +217,11 @@ cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed) {
             case kSINumberComplex128Type: {
                 // Complex numbers: serialize as object with real/imag parts
                 cJSON *complexObj = cJSON_CreateObject();
+                if (!complexObj) {
+                    cJSON_Delete(entry);
+                    if (outError) *outError = STR("Failed to create complex JSON object");
+                    return cJSON_CreateNull();
+                }
                 if (scalar->type == kSINumberComplex64Type) {
                     float complex val = scalar->value.floatComplexValue;
                     cJSON_AddNumberToObject(complexObj, "real", crealf(val));
@@ -238,12 +258,15 @@ cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed) {
     } else {
         OCStringRef stringValue = SIScalarCreateStringValue(scalar);
         if (!stringValue) {
-            fprintf(stderr, "SIScalarCreateJSON: Failed to get symbol.\n");
+            if (outError) *outError = STR("Failed to get string value from SIScalar");
             return cJSON_CreateNull();
         }
         const char *s = OCStringGetCString(stringValue);
         cJSON *node = cJSON_CreateString(s ? s : "");
         OCRelease(stringValue);
+        if (!node && outError) {
+            *outError = STR("Failed to create JSON string");
+        }
         return node;
     }
 }

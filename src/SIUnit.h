@@ -148,7 +148,7 @@ double SIUnitScaleToCoherentSIUnit(SIUnitRef theUnit);
 OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
 OCStringRef SIUnitCopyName(SIUnitRef theUnit);
 OCStringRef SIUnitCopyPluralName(SIUnitRef theUnit);
-cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed);
+cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed, OCStringRef *outError);
 
 /**
  * @brief Creates an SIUnit from a cJSON object.

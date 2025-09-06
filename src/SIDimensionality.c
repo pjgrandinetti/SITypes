@@ -61,8 +61,8 @@ static void *
 impl_SIDimensionalityDeepCopyMutable(const void *obj) {
     return impl_SIDimensionalityDeepCopy(obj);
 }
-static cJSON *impl_SIDimensionalityCopyJSON(const void *obj, bool typed) {
-    return SIDimensionalityCopyAsJSON((SIDimensionalityRef)obj, typed);
+static cJSON *impl_SIDimensionalityCopyJSON(const void *obj, bool typed, OCStringRef *outError) {
+    return SIDimensionalityCopyAsJSON((SIDimensionalityRef)obj, typed, outError);
 }
 static struct impl_SIDimensionality *SIDimensionalityAllocate() {
     struct impl_SIDimensionality *obj = OCTypeAlloc(
@@ -107,13 +107,18 @@ OCDictionaryRef SIDimensionalityCopyDictionary(SIDimensionalityRef dim) {
     OCRelease(denArr);
     return dict;
 }
-cJSON *SIDimensionalityCopyAsJSON(SIDimensionalityRef dim, bool typed) {
-    if (!dim) return cJSON_CreateNull();
+cJSON *SIDimensionalityCopyAsJSON(SIDimensionalityRef dim, bool typed, OCStringRef *outError) {
+    if (outError) *outError = NULL;
+
+    if (!dim) {
+        if (outError) *outError = STR("SIDimensionality input is NULL");
+        return cJSON_CreateNull();
+    }
 
     // Get symbol once for both paths
     OCStringRef symbol = SIDimensionalityCopySymbol(dim);
     if (!symbol) {
-        fprintf(stderr, "SIDimensionalityCreateJSON: Failed to get symbol.\n");
+        if (outError) *outError = STR("Failed to get symbol from SIDimensionality");
         return cJSON_CreateNull();
     }
 
@@ -127,9 +132,14 @@ cJSON *SIDimensionalityCopyAsJSON(SIDimensionalityRef dim, bool typed) {
         if (result) {
             cJSON_AddStringToObject(result, "type", "SIDimensionality");
             cJSON_AddStringToObject(result, "value", symbolStr);
+        } else {
+            if (outError) *outError = STR("Failed to create JSON object");
         }
     } else {
         result = cJSON_CreateString(symbolStr);
+        if (!result && outError) {
+            *outError = STR("Failed to create JSON string");
+        }
     }
 
     OCRelease(symbol);
@@ -172,7 +182,7 @@ SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json, OCStringRef *outError)
 
         SIDimensionalityRef dim = SIDimensionalityFromExpression(str, outError);
         OCRelease(str);
-        
+
         return dim;
     }
     // Handle untyped format
@@ -182,16 +192,16 @@ SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json, OCStringRef *outError)
             if (outError) *outError = STR("JSON string value is NULL");
             return NULL;
         }
-        
+
         OCStringRef str = OCStringCreateWithCString(symbol);
         if (!str) {
             if (outError) *outError = STR("Failed to create OCString from symbol");
             return NULL;
         }
-        
+
         SIDimensionalityRef dim = SIDimensionalityFromExpression(str, outError);
         OCRelease(str);
-                
+
         return dim;
     }
 

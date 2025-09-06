@@ -212,8 +212,8 @@ static void *impl_SIUnitDeepCopyMutable(const void *obj) {
     // SIUnit is immutable; just return a standard deep copy
     return impl_SIUnitDeepCopy(obj);
 }
-static cJSON *impl_SIUnitCopyJSON(const void *obj, bool typed) {
-    return SIUnitCopyAsJSON((SIUnitRef)obj, typed);
+static cJSON *impl_SIUnitCopyJSON(const void *obj, bool typed, OCStringRef *outError) {
+    return SIUnitCopyAsJSON((SIUnitRef)obj, typed, outError);
 }
 
 static struct impl_SIUnit *SIUnitAllocate() {
@@ -361,8 +361,13 @@ static OCStringRef SIUnitCreateSimplifiedSymbol(OCStringRef raw_symbol, bool red
     }
     return simplified_symbol;
 }
-cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed) {
-    if (!unit) return cJSON_CreateNull();
+cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed, OCStringRef *outError) {
+    if (outError) *outError = NULL;
+
+    if (!unit) {
+        if (outError) *outError = STR("SIUnit input is NULL");
+        return cJSON_CreateNull();
+    }
 
     // Get the symbol string
     const char *symbolStr = "";
@@ -377,11 +382,17 @@ cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed) {
         if (entry) {
             cJSON_AddStringToObject(entry, "type", "SIUnit");
             cJSON_AddStringToObject(entry, "value", symbolStr);
+        } else {
+            if (outError) *outError = STR("Failed to create JSON object");
         }
         return entry ? entry : cJSON_CreateNull();
     } else {
         // Untyped format: just return the symbol string
-        return cJSON_CreateString(symbolStr);
+        cJSON *result = cJSON_CreateString(symbolStr);
+        if (!result && outError) {
+            *outError = STR("Failed to create JSON string");
+        }
+        return result;
     }
 }
 
@@ -426,16 +437,16 @@ SIUnitRef SIUnitFromJSON(cJSON *json, OCStringRef *outError) {
             if (outError) *outError = STR("JSON string value is NULL");
             return NULL;
         }
-        
+
         OCStringRef str = OCStringCreateWithCString(symbol);
         if (!str) {
             if (outError) *outError = STR("Failed to create OCString from symbol");
             return NULL;
         }
-        
+
         SIUnitRef unit = SIUnitWithSymbol(str);
         OCRelease(str);
-        
+
         return unit;
     }
 
