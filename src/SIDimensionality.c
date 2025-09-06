@@ -73,8 +73,7 @@ static struct impl_SIDimensionality *SIDimensionalityAllocate() {
         impl_SIDimensionalityCopyFormattingDescription,
         impl_SIDimensionalityCopyJSON,
         impl_SIDimensionalityDeepCopy,
-        impl_SIDimensionalityDeepCopyMutable
-    );
+        impl_SIDimensionalityDeepCopyMutable);
     if (!obj) {
         fprintf(stderr, "SIDimensionalityAllocate: OCTypeAlloc failed.\n");
         return NULL;
@@ -109,22 +108,18 @@ OCDictionaryRef SIDimensionalityCopyDictionary(SIDimensionalityRef dim) {
 }
 cJSON *SIDimensionalityCopyAsJSON(SIDimensionalityRef dim, bool typed, OCStringRef *outError) {
     if (outError) *outError = NULL;
-
     if (!dim) {
         if (outError) *outError = STR("SIDimensionality input is NULL");
         return cJSON_CreateNull();
     }
-
     // Get symbol once for both paths
     OCStringRef symbol = SIDimensionalityCopySymbol(dim);
     if (!symbol) {
         if (outError) *outError = STR("Failed to get symbol from SIDimensionality");
         return cJSON_CreateNull();
     }
-
     const char *s = OCStringGetCString(symbol);
     const char *symbolStr = s ? s : "";
-
     // Create the appropriate JSON value
     cJSON *result;
     if (typed) {
@@ -141,48 +136,39 @@ cJSON *SIDimensionalityCopyAsJSON(SIDimensionalityRef dim, bool typed, OCStringR
             *outError = STR("Failed to create JSON string");
         }
     }
-
     OCRelease(symbol);
     return result ? result : cJSON_CreateNull();
 }
-
 SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json, OCStringRef *outError) {
     if (!json) {
         if (outError) *outError = STR("JSON input is NULL");
         return NULL;
     }
-
     // Handle typed format
     if (cJSON_IsObject(json)) {
         cJSON *type = cJSON_GetObjectItem(json, "type");
         cJSON *value = cJSON_GetObjectItem(json, "value");
-
         if (!cJSON_IsString(type) || !cJSON_IsString(value)) {
             if (outError) *outError = STR("JSON object missing valid 'type' or 'value' string fields");
             return NULL;
         }
-
         const char *typeName = cJSON_GetStringValue(type);
         if (!typeName || strcmp(typeName, "SIDimensionality") != 0) {
             if (outError) *outError = STR("JSON type field is not 'SIDimensionality'");
             return NULL;
         }
-
         const char *symbol = cJSON_GetStringValue(value);
         if (!symbol) {
             if (outError) *outError = STR("JSON value field is NULL");
             return NULL;
         }
-
         OCStringRef str = OCStringCreateWithCString(symbol);
         if (!str) {
             if (outError) *outError = STR("Failed to create OCString from symbol");
             return NULL;
         }
-
         SIDimensionalityRef dim = SIDimensionalityFromExpression(str, outError);
         OCRelease(str);
-
         return dim;
     }
     // Handle untyped format
@@ -192,23 +178,18 @@ SIDimensionalityRef SIDimensionalityFromJSON(cJSON *json, OCStringRef *outError)
             if (outError) *outError = STR("JSON string value is NULL");
             return NULL;
         }
-
         OCStringRef str = OCStringCreateWithCString(symbol);
         if (!str) {
             if (outError) *outError = STR("Failed to create OCString from symbol");
             return NULL;
         }
-
         SIDimensionalityRef dim = SIDimensionalityFromExpression(str, outError);
         OCRelease(str);
-
         return dim;
     }
-
     if (outError) *outError = STR("JSON input is neither an object nor a string");
     return NULL;
 }
-
 #pragma mark Static Utility Functions
 static OCStringRef baseDimensionSymbol(SIBaseDimensionIndex index) {
     switch (index) {
@@ -490,59 +471,18 @@ bool SIDimensionalityHasSameReducedDimensionality(SIDimensionalityRef theDim1, S
 }
 bool SIDimensionalityCanBeReduced(SIDimensionalityRef theDim) {
     IF_NO_OBJECT_EXISTS_RETURN(theDim, false);
-
     // A dimensionality can be reduced if there are common factors
     // between numerator and denominator exponents for any base dimension
     for (SIBaseDimensionIndex index = 0; index < BASE_DIMENSION_COUNT; index++) {
         uint8_t num_exp = theDim->num_exp[index];
         uint8_t den_exp = theDim->den_exp[index];
-
         // If both numerator and denominator have non-zero exponents,
         // they can be reduced by their common factor
         if (num_exp > 0 && den_exp > 0) {
             return true;
         }
     }
-
     return false;
-}
-static bool SIDimensionalityHasExponents(SIDimensionalityRef theDim,
-                                         uint8_t mass_num_exp, uint8_t mass_den_exp,
-                                         uint8_t length_num_exp, uint8_t length_den_exp,
-                                         uint8_t time_num_exp, uint8_t time_den_exp,
-                                         uint8_t current_num_exp, uint8_t current_den_exp,
-                                         uint8_t temperature_num_exp, uint8_t temperature_den_exp,
-                                         uint8_t amount_num_exp, uint8_t amount_den_exp,
-                                         uint8_t luminous_num_exp, uint8_t luminous_den_exp) {
-    // Treat NULL as the dimensionless case
-    if (!theDim) {
-        theDim = SIDimensionalityDimensionless();
-    }
-    // Pack expected exponents into two arrays
-    uint8_t expected_num[BASE_DIMENSION_COUNT] = {
-        mass_num_exp,
-        length_num_exp,
-        time_num_exp,
-        current_num_exp,
-        temperature_num_exp,
-        amount_num_exp,
-        luminous_num_exp};
-    uint8_t expected_den[BASE_DIMENSION_COUNT] = {
-        mass_den_exp,
-        length_den_exp,
-        time_den_exp,
-        current_den_exp,
-        temperature_den_exp,
-        amount_den_exp,
-        luminous_den_exp};
-    // Compare in one loop
-    for (size_t i = 0; i < BASE_DIMENSION_COUNT; ++i) {
-        if (theDim->num_exp[i] != expected_num[i] ||
-            theDim->den_exp[i] != expected_den[i]) {
-            return false;
-        }
-    }
-    return true;
 }
 bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
                                          int8_t mass_exponent,
@@ -569,23 +509,5 @@ bool SIDimensionalityHasReducedExponents(SIDimensionalityRef theDim,
             return false;
         }
     }
-    return true;
-}
-/*
-  @function SIDimensionalityHasSameDimensionlessAndDerivedDimensionalities
-  @abstract Determines if the two Dimensionalities have the same dimensionless exponents,
-  @param theDim1 The first Dimensionality.
-  @param theDim2 The second Dimensionality.
-  @result true or false.
-  */
-static bool SIDimensionalityHasSameDimensionlessAndDerivedDimensionalities(SIDimensionalityRef theDim1, SIDimensionalityRef theDim2) {
-    IF_NO_OBJECT_EXISTS_RETURN(theDim1, NULL);
-    IF_NO_OBJECT_EXISTS_RETURN(theDim2, NULL);
-    if (!SIDimensionalityIsDimensionlessAndDerived(theDim1))
-        return false;
-    if (!SIDimensionalityIsDimensionlessAndDerived(theDim2))
-        return false;
-    if (!SIDimensionalityEqual(theDim1, theDim2))
-        return false;
     return true;
 }

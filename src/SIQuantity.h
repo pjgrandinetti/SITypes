@@ -48,7 +48,7 @@ typedef enum {  // Anonymous enum
  * @typedef SIMutableQuantityRef
  * @brief Reference to a mutable SIQuantity object.
  */
-typedef struct impl_SIQuantity* SIMutableQuantityRef;
+typedef struct impl_SIQuantity *SIMutableQuantityRef;
 /** @endcond */
 /**
  * @brief Returns the quantity's unit.

@@ -19,7 +19,7 @@
  * @param unitSymbol The symbol of the unit being parsed (for error message)
  * @param failMessage The message to display in the assertion failure
  */
-static inline void assert_unit_parsed(SIUnitRef unit, OCStringRef err, const char* unitSymbol, const char* failMessage) {
+static inline void assert_unit_parsed(SIUnitRef unit, OCStringRef err, const char *unitSymbol, const char *failMessage) {
     if (!unit) {
         if (err) {
             printf("Error parsing %s: %s\n", unitSymbol, OCStringGetCString(err));

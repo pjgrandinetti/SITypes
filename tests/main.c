@@ -8,6 +8,7 @@
 #include "SITypes.h"
 #include "test_dimensionality.h"
 #include "test_duplicate_units.h"
+#include "test_json_typed.h"
 #include "test_octypes.h"
 #include "test_scalar.h"
 #include "test_scalar_parser.h"
@@ -15,7 +16,6 @@
 #include "test_unit_expression.h"
 #include "test_unit_from_expression_robust.h"
 #include "test_unit_power_operations.h"
-#include "test_json_typed.h"
 #ifdef LEAK_SANITIZER
 extern void __lsan_do_leak_check() __attribute__((weak));
 #endif
@@ -27,7 +27,9 @@ int failures = 0;
             failures++;                      \
         }                                    \
     } while (0)
-int main(int argc, const char* argv[]) {
+int main(int argc, const char *argv[]) {
+    (void)argc;  // Unused parameter - standard main signature
+    (void)argv;  // Unused parameter - standard main signature
     printf("=== OCTypes Tests ===\n");
     TRACK(octypesTest1);
     TRACK(octypesTest2);
@@ -193,7 +195,6 @@ int main(int argc, const char* argv[]) {
     TRACK(test_SIScalarCreateArrayFromMixedTypeArray);
     TRACK(test_SIScalarCreateArrayFromNumberArray);
     TRACK(test_SIQuantityValidateMixedArrayForDimensionality);
-
     printf("\n=== JSONTyped Serialization Tests ===\n");
     TRACK(test_SIScalar_json_typed_roundtrip_simple);
     TRACK(test_SIScalar_json_typed_roundtrip_complex);
@@ -203,12 +204,10 @@ int main(int argc, const char* argv[]) {
     TRACK(test_SIDimensionality_json_typed_roundtrip);
     TRACK(test_json_typed_error_handling);
     TRACK(test_json_typed_comprehensive_coverage);
-
     if (failures) {
         fprintf(stderr, "\n%d test(s) failed.\n", failures);
     } else
         printf("\n%d test(s) failed\n", failures);
-
 #ifdef LEAK_SANITIZER
     if (&__lsan_do_leak_check) {
         __lsan_do_leak_check();

@@ -9,7 +9,8 @@
 #include <stdio.h>
 #include "SITypes.h"
 // Test helper to verify unit behavior
-static bool verify_unit_behavior(OCStringRef expression, double expected_multiplier, OCStringRef expected_symbol, const char* test_name) {
+static bool verify_unit_behavior(OCStringRef expression, double expected_multiplier, OCStringRef expected_symbol, const char *test_name) {
+    (void)test_name;  // Unused parameter - reserved for future test reporting enhancements
     double multiplier = 1.0;
     OCStringRef error = NULL;
     SIUnitRef unit = SIUnitFromExpression(expression, &multiplier, &error);
@@ -142,7 +143,7 @@ bool test_unit_from_expression_robust(void) {
     }
     // Test 9: Verify canonical form doesn't break existing behavior
     // These should all resolve to the same canonical form
-    const char* equivalent_expressions[] = {
+    const char *equivalent_expressions[] = {
         "lb*ft^2/s^2",
         "ft^2*lb/s^2",
         "(ft^2*lb)/s^2",

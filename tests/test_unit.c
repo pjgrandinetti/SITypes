@@ -702,7 +702,7 @@ bool test_unit_14(void) {
         // Expected behavior - check if symbol is correctly simplified
         OCStringRef symbol = SIUnitCopySymbol(unit_paren_frac);
         if (symbol) {
-            const char* symbolStr = OCStringGetCString(symbol);
+            const char *symbolStr = OCStringGetCString(symbol);
             if (strcmp(symbolStr, "m") != 0) {
                 printf("  ✗ '(m^2)^0.5' symbol: '%s' (expected 'm')\n", symbolStr);
                 OCRelease(symbol);
@@ -1327,7 +1327,7 @@ bool test_unit_unicode_normalization(void) {
     return success;
 }
 // Helper function to check if a unit is in the library
-bool isUnitInLibrary(const char* expression) {
+bool isUnitInLibrary(const char *expression) {
     OCStringRef expr = OCStringCreateWithCString(expression);
     OCMutableStringRef mutSymbol = OCStringCreateMutableCopy(expr);
     OCStringTrimWhitespace(mutSymbol);
@@ -1345,7 +1345,7 @@ bool test_unit_registration(void) {
     bool success = true;
     OCStringRef error = NULL;
     // Test unit registration behavior - should only show output if something fails
-    const char* testExpr = "ft^2*kg/s";
+    const char *testExpr = "ft^2*kg/s";
     // Test 1: Try to parse it with SIUnitFromExpression
     double multiplier = 1.0;
     OCStringRef exprStr = OCStringCreateWithCString(testExpr);
@@ -1371,7 +1371,7 @@ bool test_unit_registration(void) {
             OCRelease(unit2);
         }
         // Test 3: Try a completely new Imperial combination
-        const char* newExpr = "in*lb";
+        const char *newExpr = "in*lb";
         double multiplier3 = 1.0;
         OCStringRef newExprStr = OCStringCreateWithCString(newExpr);
         SIUnitRef unit3 = SIUnitFromExpression(newExprStr, &multiplier3, &error);
@@ -1428,7 +1428,7 @@ bool test_unit_canonical_expressions(void) {
     OCRelease(result3);
     OCRelease(result4);
     // Test Imperial/SI combinations that caused the original problem
-    const char* test_expressions[] = {
+    const char *test_expressions[] = {
         "lb*ft^2/s^2",
         "ft^2*lb/s^2",
         "(ft^2*lb)/s^2",
@@ -1499,7 +1499,7 @@ bool test_unit_from_expression_equivalence(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test equivalent expressions that should return the same SIUnitRef
-    const char* equivalent_sets[][5] = {
+    const char *equivalent_sets[][5] = {
         // Energy-like units
         {"lb*ft^2/s^2", "ft^2*lb/s^2", "(ft^2*lb)/s^2", "ft*ft*lb/s/s", "lb*ft*ft/(s*s)"},
         // Force-like units

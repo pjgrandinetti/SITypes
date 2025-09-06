@@ -56,7 +56,6 @@ double alphaParticleMassEnergy = kSIAlphaParticleMass * kSISpeedOfLight * kSISpe
 double secondRadiationConstant = kSIPlanckConstant * kSISpeedOfLight / kSIBoltmannConstant;
 double vonKlitzingConstant = kSIPlanckConstant / (kSIElementaryCharge * kSIElementaryCharge);
 OCStringRef error = NULL;
-
 // None of these should generate an error string.  So we will pass NULL instead of &error
 SIUnitRef unit = NULL;
 AddSIToLibPrefixed(kSIQuantityLength, STR("meter"), STR("meters"), STR("m"), 1, NULL);
@@ -224,7 +223,7 @@ AddToLib(kSIQuantityTemperature, STR("fahrenheit"), STR("fahrenheit"), STR("°F"
 AddToLib(kSIQuantityTemperature, STR("celsius"), STR("celsius"), STR("°C"), 1, NULL);
 //
 #pragma mark kSIQuantityCurrent
-AddAtomicUnitToLib(kSIQuantityCurrent, STR("atomic unit of current"), STR("atomic unit of current"), STR("q_e•E_h/ℏ"), kSIElementaryCharge* E_h / hbar, NULL);
+AddAtomicUnitToLib(kSIQuantityCurrent, STR("atomic unit of current"), STR("atomic unit of current"), STR("q_e•E_h/ℏ"), kSIElementaryCharge *E_h / hbar, NULL);
 //
 #pragma mark kSIQuantityInverseCurrent
 AddSIToLib(kSIQuantityInverseCurrent, STR("inverse ampere"), STR("inverse amperes"), STR("(1/A)"), 1., NULL);
@@ -295,10 +294,10 @@ AddSIToLib(kSIQuantityAreaRatio, STR("square meter per square meter"), STR("squa
 //
 #pragma mark kSIQuantityVolume
 AddSIToLibPrefixed(kSIQuantityVolume, STR("liter"), STR("liters"), STR("L"), 1e-3, NULL);
-AddToLib(kSIQuantityVolume, STR("cubic inch"), STR("cubic inches"), STR("in^3"), kSIInch* kSIInch* kSIInch, NULL);
-AddToLib(kSIQuantityVolume, STR("cubic foot"), STR("cubic feet"), STR("ft^3"), kSIFoot* kSIFoot* kSIFoot, NULL);
-AddToLib(kSIQuantityVolume, STR("cubic yard"), STR("cubic yards"), STR("yd^3"), kSIYard* kSIYard* kSIYard, NULL);
-AddToLib(kSIQuantityVolume, STR("acre foot"), STR("acre feet"), STR("ac•ft"), kSIAcre* kSIFoot, NULL);
+AddToLib(kSIQuantityVolume, STR("cubic inch"), STR("cubic inches"), STR("in^3"), kSIInch *kSIInch *kSIInch, NULL);
+AddToLib(kSIQuantityVolume, STR("cubic foot"), STR("cubic feet"), STR("ft^3"), kSIFoot *kSIFoot *kSIFoot, NULL);
+AddToLib(kSIQuantityVolume, STR("cubic yard"), STR("cubic yards"), STR("yd^3"), kSIYard *kSIYard *kSIYard, NULL);
+AddToLib(kSIQuantityVolume, STR("acre foot"), STR("acre feet"), STR("ac•ft"), kSIAcre *kSIFoot, NULL);
 AddToLib(kSIQuantityVolume, STR("oil barrel"), STR("oil barrels"), STR("bbl"), 0.158987295, NULL);
 AddToLib(kSIQuantityVolume, STR("thousand oil barrels"), STR("thousand oil barrels"), STR("Mbbl"), 0.158987295e3, NULL);
 AddToLib(kSIQuantityVolume, STR("million oil barrels"), STR("million oil barrels"), STR("MMbbl"), 0.158987295e6, NULL);
@@ -336,7 +335,7 @@ AddToLib(kSIQuantitySpeed, STR("foot per hour"), STR("feet per hour"), STR("ft/h
 AddToLib(kSIQuantitySpeed, STR("mile per second"), STR("miles per second"), STR("mi/s"), kSIMile, NULL);
 AddToLib(kSIQuantitySpeed, STR("mile per minute"), STR("miles per minute"), STR("mi/min"), kSIMile / kSIMinute, NULL);
 AddToLib(kSIQuantitySpeed, STR("mile per hour"), STR("miles per hour"), STR("mi/h"), kSIMile / kSIHour, NULL);
-AddAtomicUnitToLib(kSIQuantitySpeed, STR("atomic unit of velocity"), STR("atomic units of velocity"), STR("a_0•E_h/ℏ"), a_0* E_h / hbar, NULL);
+AddAtomicUnitToLib(kSIQuantitySpeed, STR("atomic unit of velocity"), STR("atomic units of velocity"), STR("a_0•E_h/ℏ"), a_0 *E_h / hbar, NULL);
 units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantitySpeed);
 OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityVelocity, units);
 //
@@ -464,12 +463,12 @@ AddToLib(kSIQuantityPower, STR("british thermal unit per hour"), STR("british th
 AddToLib(kSIQuantityPower, STR("british thermal unit per minute"), STR("british thermal unit per minute"), STR("Btu/min"), kSIBtu / kSIMinute, NULL);
 AddToLib(kSIQuantityPower, STR("british thermal unit per second"), STR("british thermal unit per second"), STR("Btu/s"), kSIBtu, NULL);
 AddToLibPrefixed(kSIQuantityPower, STR("erg per second"), STR("ergs per second"), STR("erg/s"), 1e-7, NULL);
-AddToLib(kSIQuantityPower, STR("foot pound force per hour"), STR("feet pound force per hour"), STR("ft•lbf/h"), kSIFoot* kSIPoundsForce / kSIHour, NULL);
-AddToLib(kSIQuantityPower, STR("foot pound force per minute"), STR("feet pound force per minute"), STR("ft•lbf/min"), kSIFoot* kSIPoundsForce / kSIMinute, NULL);
-AddToLib(kSIQuantityPower, STR("foot pound force per second"), STR("feet pound force per second"), STR("ft•lbf/s"), kSIFoot* kSIPoundsForce, NULL);
-AddToLib(kSIQuantityPower, STR("inch pound force per hour"), STR("inches pound force per hour"), STR("in•lbf/h"), kSIInch* kSIPoundsForce / kSIHour, NULL);
-AddToLib(kSIQuantityPower, STR("inch pound force per minute"), STR("inches pound force per minute"), STR("in•lbf/min"), kSIInch* kSIPoundsForce / kSIMinute, NULL);
-AddToLib(kSIQuantityPower, STR("inch pound force per second"), STR("inches pound force per second"), STR("in•lbf/s"), kSIInch* kSIPoundsForce, NULL);
+AddToLib(kSIQuantityPower, STR("foot pound force per hour"), STR("feet pound force per hour"), STR("ft•lbf/h"), kSIFoot *kSIPoundsForce / kSIHour, NULL);
+AddToLib(kSIQuantityPower, STR("foot pound force per minute"), STR("feet pound force per minute"), STR("ft•lbf/min"), kSIFoot *kSIPoundsForce / kSIMinute, NULL);
+AddToLib(kSIQuantityPower, STR("foot pound force per second"), STR("feet pound force per second"), STR("ft•lbf/s"), kSIFoot *kSIPoundsForce, NULL);
+AddToLib(kSIQuantityPower, STR("inch pound force per hour"), STR("inches pound force per hour"), STR("in•lbf/h"), kSIInch *kSIPoundsForce / kSIHour, NULL);
+AddToLib(kSIQuantityPower, STR("inch pound force per minute"), STR("inches pound force per minute"), STR("in•lbf/min"), kSIInch *kSIPoundsForce / kSIMinute, NULL);
+AddToLib(kSIQuantityPower, STR("inch pound force per second"), STR("inches pound force per second"), STR("in•lbf/s"), kSIInch *kSIPoundsForce, NULL);
 units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityPower);
 OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityRadiantFlux, units);
 //
@@ -539,7 +538,7 @@ AddConstantToLib(kSIQuantityMagneticDipoleMoment, STR("proton magnetic moment"),
 AddConstantToLib(kSIQuantityMagneticDipoleMoment, STR("neutron magnetic moment"), STR("neutron magnetic moment"), STR("µ_n"), kSINeutronMagneticMoment, NULL);
 AddConstantToLib(kSIQuantityMagneticDipoleMoment, STR("electron magnetic moment"), STR("electron magnetic moment"), STR("µ_e"), kSIElectronMagneticMoment, NULL);
 AddConstantToLib(kSIQuantityMagneticDipoleMoment, STR("muon magnetic moment"), STR("muon magnetic moment"), STR("µ_µ"), kSIMuonMagneticMoment, NULL);
-AddAtomicUnitToLib(kSIQuantityMagneticDipoleMoment, STR("atomic unit of magnetic dipole moment"), STR("atomic units of magnetic dipole moment"), STR("ℏ•q_e/m_e"), hbar* kSIElementaryCharge / kSIElectronMass, NULL);
+AddAtomicUnitToLib(kSIQuantityMagneticDipoleMoment, STR("atomic unit of magnetic dipole moment"), STR("atomic units of magnetic dipole moment"), STR("ℏ•q_e/m_e"), hbar *kSIElementaryCharge / kSIElectronMass, NULL);
 //
 #pragma mark kSIQuantityMagneticDipoleMomentRatio
 AddConstantToLib(kSIQuantityMagneticDipoleMomentRatio, STR("proton g factor"), STR("proton g factor"), STR("g_p"), kSIProtonGFactor, NULL);
@@ -609,25 +608,25 @@ AddSIToLibPrefixed(kSIQuantityRatePerAmountConcentrationPerTime, STR("liter per 
 AddSIToLibPrefixed(kSIQuantityRefractiveIndex, STR("meter second per meter second"), STR("meter seconds per meter second"), STR("m•s/(m•s)"), 1, NULL);
 //
 #pragma mark kSIQuantityElectricQuadrupoleMoment
-AddAtomicUnitToLib(kSIQuantityElectricQuadrupoleMoment, STR("atomic unit of electric quadrupole moment"), STR("atomic units of electric quadrupole moment"), STR("q_e•a_0^2"), kSIElementaryCharge* a_0* a_0, NULL);
+AddAtomicUnitToLib(kSIQuantityElectricQuadrupoleMoment, STR("atomic unit of electric quadrupole moment"), STR("atomic units of electric quadrupole moment"), STR("q_e•a_0^2"), kSIElementaryCharge *a_0 *a_0, NULL);
 //
 #pragma mark kSIQuantityMagnetizability
-AddAtomicUnitToLib(kSIQuantityMagnetizability, STR("atomic unit of magnetizability"), STR("atomic units of magnetizability"), STR("q_e•a_0^2/m_e"), kSIElementaryCharge* a_0* a_0 / kSIElectronMass, NULL);
+AddAtomicUnitToLib(kSIQuantityMagnetizability, STR("atomic unit of magnetizability"), STR("atomic units of magnetizability"), STR("q_e•a_0^2/m_e"), kSIElementaryCharge *a_0 *a_0 / kSIElectronMass, NULL);
 //
 #pragma mark kSIQuantityPermittivity
-AddAtomicUnitToLib(kSIQuantityPermittivity, STR("atomic unit of permittivity"), STR("atomic units of permittivity"), STR("q_e^2/(a_0•E_h)"), kSIElementaryCharge* kSIElementaryCharge / (a_0 * E_h), NULL);
+AddAtomicUnitToLib(kSIQuantityPermittivity, STR("atomic unit of permittivity"), STR("atomic units of permittivity"), STR("q_e^2/(a_0•E_h)"), kSIElementaryCharge *kSIElementaryCharge / (a_0 * E_h), NULL);
 AddSIToLibPrefixed(kSIQuantityPermittivity, STR("farad per meter"), STR("farads per meter"), STR("F/m"), 1, NULL);
 AddSIToLibPrefixed(kSIQuantityPermittivity, STR("coulomb per volt meter"), STR("coulombs per volt meter"), STR("C/(V•m)"), 1, NULL);
 AddConstantToLib(kSIQuantityPermittivity, STR("electric constant"), STR("electric constant"), STR("ε_0"), kSIElectricConstant, NULL);
 //
 #pragma mark kSIQuantityElectricPolarizability
-AddAtomicUnitToLib(kSIQuantityElectricPolarizability, STR("atomic unit of electric polarizability"), STR("atomic units of electric polarizability"), STR("q_e^2•a_0^2/E_h"), kSIElementaryCharge* kSIElementaryCharge* a_0* a_0 / (E_h), NULL);
+AddAtomicUnitToLib(kSIQuantityElectricPolarizability, STR("atomic unit of electric polarizability"), STR("atomic units of electric polarizability"), STR("q_e^2•a_0^2/E_h"), kSIElementaryCharge *kSIElementaryCharge *a_0 *a_0 / (E_h), NULL);
 //
 #pragma mark kSIQuantityFirstHyperPolarizability
-AddAtomicUnitToLib(kSIQuantityFirstHyperPolarizability, STR("atomic unit of 1st polarizability"), STR("atomic units of 1st polarizability"), STR("q_e^3•a_0^3/E_h^2"), kSIElementaryCharge* kSIElementaryCharge* kSIElementaryCharge* a_0* a_0* a_0 / (E_h * E_h), NULL);
+AddAtomicUnitToLib(kSIQuantityFirstHyperPolarizability, STR("atomic unit of 1st polarizability"), STR("atomic units of 1st polarizability"), STR("q_e^3•a_0^3/E_h^2"), kSIElementaryCharge *kSIElementaryCharge *kSIElementaryCharge *a_0 *a_0 *a_0 / (E_h * E_h), NULL);
 //
 #pragma mark kSIQuantitySecondHyperPolarizability
-AddAtomicUnitToLib(kSIQuantitySecondHyperPolarizability, STR("atomic unit of 2nd polarizability"), STR("atomic units of 2nd polarizability"), STR("q_e^4•a_0^4/E_h^3"), kSIElementaryCharge* kSIElementaryCharge* kSIElementaryCharge* kSIElementaryCharge* a_0* a_0* a_0* a_0 / (E_h * E_h * E_h), NULL);
+AddAtomicUnitToLib(kSIQuantitySecondHyperPolarizability, STR("atomic unit of 2nd polarizability"), STR("atomic units of 2nd polarizability"), STR("q_e^4•a_0^4/E_h^3"), kSIElementaryCharge *kSIElementaryCharge *kSIElementaryCharge *kSIElementaryCharge *a_0 *a_0 *a_0 *a_0 / (E_h * E_h * E_h), NULL);
 //
 #pragma mark kSIQuantitySpecificVolume
 AddSIToLib(kSIQuantitySpecificVolume, STR("cubic meter per kilogram"), STR("cubic meters per kilogram"), STR("m^3/kg"), 1., NULL);
@@ -738,7 +737,7 @@ AddSIToLibPrefixed(kSIQuantityEnergyDensity, STR("joule per liter"), STR("joules
 #pragma mark kSIQuantityElectricDipoleMoment
 AddSIToLibPrefixed(kSIQuantityElectricDipoleMoment, STR("coulomb meter"), STR("coulomb meters"), STR("C•m"), 1, NULL);
 AddToLib(kSIQuantityElectricDipoleMoment, STR("debye"), STR("debyes"), STR("D"), 3.335640951816991e-30, NULL);
-AddAtomicUnitToLib(kSIQuantityElectricDipoleMoment, STR("atomic unit of electric dipole moment"), STR("atomic unit of electric dipole moment"), STR("q_e•a_0"), kSIElementaryCharge* a_0, NULL);
+AddAtomicUnitToLib(kSIQuantityElectricDipoleMoment, STR("atomic unit of electric dipole moment"), STR("atomic unit of electric dipole moment"), STR("q_e•a_0"), kSIElementaryCharge *a_0, NULL);
 //
 #pragma mark kSIQuantityElectricFieldStrength
 AddSIToLibPrefixed(kSIQuantityElectricFieldStrength, STR("volt per meter"), STR("volts per meter"), STR("V/m"), 1, NULL);
@@ -769,7 +768,7 @@ AddConstantToLib(kSIQuantityPermeability, STR("magnetic constant"), STR("magneti
 //
 #pragma mark kSIQuantityMolarEntropy, kSIQuantityMolarHeatCapacity
 AddSIToLibPrefixed(kSIQuantityMolarEntropy, STR("joule per mole kelvin"), STR("joules per mole kelvin"), STR("J/(mol•K)"), 1, NULL);
-AddConstantToLib(kSIQuantityMolarEntropy, STR("gas constant"), STR("gas constant"), STR("R"), kSIBoltmannConstant* kSIAvogadroConstant, NULL);
+AddConstantToLib(kSIQuantityMolarEntropy, STR("gas constant"), STR("gas constant"), STR("R"), kSIBoltmannConstant *kSIAvogadroConstant, NULL);
 units = (OCMutableArrayRef)OCDictionaryGetValue(unitsQuantitiesLibrary, kSIQuantityMolarEntropy);
 OCDictionaryAddValue(unitsQuantitiesLibrary, kSIQuantityMolarHeatCapacity, units);
 //
@@ -813,7 +812,7 @@ AddToLib(kSIQuantityHeatTransferCoefficient, STR("Btu per hour per square foot p
 AddToLibPrefixed(kSIQuantityHeatTransferCoefficient, STR("calorie per hour per square meter per kelvin"), STR("calories per hour per square meter per kelvin"), STR("cal/(h•m^2•K)"), 1.163e-3, NULL);
 //
 #pragma mark kSIQuantityChargePerAmount
-AddConstantToLib(kSIQuantityChargePerAmount, STR("faraday constant"), STR("faraday constant"), STR("&F"), kSIElementaryCharge* kSIAvogadroConstant, NULL);
+AddConstantToLib(kSIQuantityChargePerAmount, STR("faraday constant"), STR("faraday constant"), STR("&F"), kSIElementaryCharge *kSIAvogadroConstant, NULL);
 AddSIToLibPrefixed(kSIQuantityChargePerAmount, STR("coulomb per mole"), STR("coulombs per mole"), STR("C/mol"), 1.0, NULL);
 //
 #pragma mark kSIQuantityGravitationalConstant

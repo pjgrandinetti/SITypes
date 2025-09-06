@@ -58,7 +58,7 @@ SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multipli
     if(error) if(*error) return NULL;
 
     // Use the shared normalization function for parsing
-    OCMutableStringRef mutString = SIUnitCreateNormalizedExpression(string, false);
+    OCMutableStringRef mutString = SIUnitCreateNormalizedExpression(string);
     if(OCStringGetLength(string) == 1 && (
     (OCStringCompare(string,STR("1"),0) == kOCCompareEqualTo) ||(OCStringCompare(string,STR(" "),0) == kOCCompareEqualTo)
     )) {
@@ -96,5 +96,6 @@ SIUnitRef SIUnitFromExpressionInternal(OCStringRef string, double *unit_multipli
 
 void yyerror(char *s, ...)
 {
+    (void)s;  // Unused parameter - required by bison parser generator convention
     siu_syntax_error = true;
 }

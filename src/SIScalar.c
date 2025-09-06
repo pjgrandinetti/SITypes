@@ -162,28 +162,23 @@ static SIMutableScalarRef SIScalarCreateMutable(SIUnitRef unit, SINumberType ele
 }
 cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed, OCStringRef *outError) {
     if (outError) *outError = NULL;
-
     if (!scalar) {
         if (outError) *outError = STR("SIScalar input is NULL");
         return cJSON_CreateNull();
     }
-
     if (typed) {
         cJSON *entry = cJSON_CreateObject();
         if (!entry) {
             if (outError) *outError = STR("Failed to create JSON object");
             return cJSON_CreateNull();
         }
-
         cJSON_AddStringToObject(entry, "type", "SIScalar");
-
         cJSON *value = cJSON_CreateObject();
         if (!value) {
             cJSON_Delete(entry);
             if (outError) *outError = STR("Failed to create JSON value object");
             return cJSON_CreateNull();
         }
-
         // Add numeric_type
         const char *typeString = NULL;
         switch (scalar->type) {
@@ -204,7 +199,6 @@ cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed, OCStringRef *outError)
                 break;
         }
         cJSON_AddStringToObject(value, "numeric_type", typeString);
-
         // Add value
         switch (scalar->type) {
             case kSINumberFloat32Type:
@@ -238,7 +232,6 @@ cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed, OCStringRef *outError)
                 cJSON_AddNullToObject(value, "value");
                 break;
         }
-
         // Add unit symbol
         if (scalar->unit) {
             OCStringRef symbol = SIUnitCopySymbol(scalar->unit);
@@ -252,7 +245,6 @@ cJSON *SIScalarCopyAsJSON(SIScalarRef scalar, bool typed, OCStringRef *outError)
         } else {
             cJSON_AddStringToObject(value, "unit", "");
         }
-
         cJSON_AddItemToObject(entry, "value", value);
         return entry;
     } else {
@@ -275,7 +267,6 @@ SIScalarRef SIScalarCreateFromJSON(cJSON *json, OCStringRef *outError) {
         if (outError) *outError = STR("JSON input is NULL");
         return NULL;
     }
-
     // Handle typed format
     if (cJSON_IsObject(json)) {
         cJSON *type = cJSON_GetObjectItem(json, "type");
@@ -285,11 +276,9 @@ SIScalarRef SIScalarCreateFromJSON(cJSON *json, OCStringRef *outError) {
                 // This is typed format
                 cJSON *value = cJSON_GetObjectItem(json, "value");
                 if (!cJSON_IsObject(value)) return NULL;
-
                 // Extract numeric_type
                 cJSON *numericType = cJSON_GetObjectItem(value, "numeric_type");
                 if (!cJSON_IsString(numericType)) return NULL;
-
                 const char *typeStr = cJSON_GetStringValue(numericType);
                 SINumberType siType;
                 if (strcmp(typeStr, "float32") == 0) {
@@ -303,11 +292,9 @@ SIScalarRef SIScalarCreateFromJSON(cJSON *json, OCStringRef *outError) {
                 } else {
                     return NULL;
                 }
-
                 // Extract unit
                 cJSON *unitJson = cJSON_GetObjectItem(value, "unit");
                 if (!cJSON_IsString(unitJson)) return NULL;
-
                 const char *unitSymbol = cJSON_GetStringValue(unitJson);
                 SIUnitRef unit = NULL;
                 if (unitSymbol && strlen(unitSymbol) > 0) {
@@ -318,11 +305,9 @@ SIScalarRef SIScalarCreateFromJSON(cJSON *json, OCStringRef *outError) {
                     }
                     if (!unit) return NULL;
                 }
-
                 // Extract value and create scalar
                 cJSON *valueJson = cJSON_GetObjectItem(value, "value");
                 if (!valueJson) return NULL;
-
                 switch (siType) {
                     case kSINumberFloat32Type: {
                         if (!cJSON_IsNumber(valueJson)) return NULL;
@@ -368,10 +353,8 @@ SIScalarRef SIScalarCreateFromJSON(cJSON *json, OCStringRef *outError) {
         OCRelease(err);
         return scalar;
     }
-
     return NULL;
 }
-
 /*
  @function SIScalarCreateCopy
  @abstract Creates a copy of a scalar
@@ -413,7 +396,6 @@ SIMutableScalarRef SIScalarCreateMutableWithDoubleComplex(double complex input_v
 SIScalarRef SIScalarCreateWithOCNumber(OCNumberRef number, SIUnitRef unit) {
     IF_NO_OBJECT_EXISTS_RETURN(number, NULL);
     OCNumberType type = OCNumberGetType(number);
-
     switch (type) {
         case kOCNumberSInt8Type: {
             int8_t v;
@@ -2511,7 +2493,7 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
             OCRelease(units);
             if (stringValue) {
                 if (OCArrayBSearchValues(result, OCRangeMake(0, OCArrayGetCount(result)), stringValue,
-                                         (OCComparatorFunction)compareOnlyTheStrings, NULL) >= OCArrayGetCount(result)) {
+                                         (OCComparatorFunction)compareOnlyTheStrings, NULL) >= (int64_t)OCArrayGetCount(result)) {
                     OCArrayAppendValue(result, stringValue);
                     OCRelease(stringValue);
                 }
@@ -2541,7 +2523,7 @@ OCArrayRef SIScalarCreateArrayOfConversionQuantitiesScalarsAndStringValues(SISca
             OCRelease(units);
             if (stringValue) {
                 if (OCArrayBSearchValues(result, OCRangeMake(0, OCArrayGetCount(result)), stringValue,
-                                         (OCComparatorFunction)compareOnlyTheStrings, NULL) >= OCArrayGetCount(result)) {
+                                         (OCComparatorFunction)compareOnlyTheStrings, NULL) >= (int64_t)OCArrayGetCount(result)) {
                     OCArrayAppendValue(result, stringValue);
                     OCRelease(stringValue);
                 }
@@ -3216,29 +3198,23 @@ OCComparisonResult SIScalarCompareLooseReduced(SIScalarRef theScalar, SIScalarRe
     OCRelease(theOtherScalarReduced);
     return result;
 }
-
 #pragma mark Array Creation Functions
-
 OCArrayRef SIScalarCreateArrayFromMixedTypeArray(OCArrayRef numbers, OCStringRef *outError) {
     if (outError) *outError = NULL;
-
     if (!numbers) {
         if (outError) *outError = STR("Input array is NULL");
         return NULL;
     }
-
     OCIndex count = OCArrayGetCount(numbers);
     if (count <= 0) {
         if (outError) *outError = STR("Input array is empty");
         return NULL;
     }
-
     OCMutableArrayRef arr = OCArrayCreateMutable(count, &kOCTypeArrayCallBacks);
     if (!arr) {
         if (outError) *outError = STR("Failed to create mutable array");
         return NULL;
     }
-
     for (OCIndex i = 0; i < count; ++i) {
         OCTypeRef obj = OCArrayGetValueAtIndex(numbers, i);
         if (!obj) {
@@ -3246,9 +3222,7 @@ OCArrayRef SIScalarCreateArrayFromMixedTypeArray(OCArrayRef numbers, OCStringRef
             if (outError) *outError = STR("Array contains NULL element");
             return NULL;
         }
-
         OCTypeID objType = OCGetTypeID(obj);
-
         if (objType == OCNumberGetTypeID()) {
             // It's an OCNumber - convert to SIScalar
             OCNumberRef num = (OCNumberRef)obj;
@@ -3258,7 +3232,6 @@ OCArrayRef SIScalarCreateArrayFromMixedTypeArray(OCArrayRef numbers, OCStringRef
                 if (outError) *outError = STR("Failed to create SIScalar from OCNumber");
                 return NULL;
             }
-
             if (!OCArrayAppendValue(arr, s)) {
                 OCRelease(s);
                 OCRelease(arr);
@@ -3283,7 +3256,6 @@ OCArrayRef SIScalarCreateArrayFromMixedTypeArray(OCArrayRef numbers, OCStringRef
                 }
                 return NULL;
             }
-
             if (!OCArrayAppendValue(arr, s)) {
                 OCRelease(s);
                 OCRelease(arr);
@@ -3307,66 +3279,60 @@ OCArrayRef SIScalarCreateArrayFromMixedTypeArray(OCArrayRef numbers, OCStringRef
     }
     return arr;
 }
-
 OCArrayRef SIScalarCreateArrayFromNumberArray(const void *values, OCNumberType type, OCIndex count, OCStringRef *outError) {
     if (outError) *outError = NULL;
-
     if (!values) {
         if (outError) *outError = STR("Input values array is NULL");
         return NULL;
     }
-
     if (count <= 0) {
         if (outError) *outError = STR("Invalid count");
         return NULL;
     }
-
     OCMutableArrayRef arr = OCArrayCreateMutable(count, &kOCTypeArrayCallBacks);
     if (!arr) {
         if (outError) *outError = STR("Failed to create mutable array");
         return NULL;
     }
-
     for (OCIndex i = 0; i < count; ++i) {
         SIScalarRef s = NULL;
-
         // Create SIScalar using the most appropriate function for each type
         switch (type) {
             case kOCNumberSInt8Type:
-                s = SIScalarCreateWithDouble((double)((const int8_t*)values)[i], NULL);
+                s = SIScalarCreateWithDouble((double)((const int8_t *)values)[i], NULL);
                 break;
             case kOCNumberSInt16Type:
-                s = SIScalarCreateWithDouble((double)((const int16_t*)values)[i], NULL);
+                s = SIScalarCreateWithDouble((double)((const int16_t *)values)[i], NULL);
                 break;
             case kOCNumberSInt32Type:
-                s = SIScalarCreateWithDouble((double)((const int32_t*)values)[i], NULL);
+                s = SIScalarCreateWithDouble((double)((const int32_t *)values)[i], NULL);
                 break;
             case kOCNumberSInt64Type:
-                s = SIScalarCreateWithDouble((double)((const int64_t*)values)[i], NULL);
+                s = SIScalarCreateWithDouble((double)((const int64_t *)values)[i], NULL);
                 break;
             case kOCNumberUInt8Type:
-                s = SIScalarCreateWithDouble((double)((const uint8_t*)values)[i], NULL);
+                s = SIScalarCreateWithDouble((double)((const uint8_t *)values)[i], NULL);
                 break;
             case kOCNumberUInt16Type:
-                s = SIScalarCreateWithDouble((double)((const uint16_t*)values)[i], NULL);
+                s = SIScalarCreateWithDouble((double)((const uint16_t *)values)[i], NULL);
                 break;
             case kOCNumberUInt32Type:
-                s = SIScalarCreateWithDouble((double)((const uint32_t*)values)[i], NULL);
+                s = SIScalarCreateWithDouble((double)((const uint32_t *)values)[i], NULL);
                 break;
             case kOCNumberUInt64Type:
-                s = SIScalarCreateWithDouble((double)((const uint64_t*)values)[i], NULL);
+                s = SIScalarCreateWithDouble((double)((const uint64_t *)values)[i], NULL);
                 break;
             case kOCNumberFloat32Type:
-                s = SIScalarCreateWithFloat(((const float*)values)[i], NULL);
+                s = SIScalarCreateWithFloat(((const float *)values)[i], NULL);
                 break;
             case kOCNumberFloat64Type:
-                s = SIScalarCreateWithDouble(((const double*)values)[i], NULL);
+                s = SIScalarCreateWithDouble(((const double *)values)[i], NULL);
                 break;
             case kOCNumberComplex64Type:
-                s = SIScalarCreateWithFloatComplex(((const float complex*)values)[i], NULL);
+                s = SIScalarCreateWithFloatComplex(((const float complex *)values)[i], NULL);
                 break;
             case kOCNumberComplex128Type:
-                s = SIScalarCreateWithDoubleComplex(((const double complex*)values)[i], NULL);
+                s = SIScalarCreateWithDoubleComplex(((const double complex *)values)[i], NULL);
                 break;
             default:
                 // Unsupported type
@@ -3374,13 +3340,11 @@ OCArrayRef SIScalarCreateArrayFromNumberArray(const void *values, OCNumberType t
                 if (outError) *outError = STR("Unsupported OCNumberType");
                 return NULL;
         }
-
         if (!s) {
             OCRelease(arr);
             if (outError) *outError = STR("Failed to create SIScalar from numeric value");
             return NULL;
         }
-
         if (!OCArrayAppendValue(arr, s)) {
             OCRelease(s);
             OCRelease(arr);

@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "SIDimensionality.h"
-#include "SITypes.h"
 #include "SIScalar.h"
 #include "SIScalarParser.h"
+#include "SITypes.h"
 #include "SIUnitParser.h"
 extern bool sis_syntax_error;
 extern ScalarNodeRef sis_root;
@@ -271,6 +271,7 @@ SIScalarRef SIScalarCreateFromExpression(OCStringRef string, OCStringRef *error)
     return out;
 }
 void siserror(char *s, ...) {
+    (void)s;  // Unused parameter - required by parser generator convention
     scalarErrorString = STR("Syntax Error");
     sis_syntax_error = true;
 }

@@ -19,14 +19,14 @@
 #include "SIUnitExpressionParser.tab.h"
 // External lex/yacc parser functions (siue prefix for namespace isolation)
 extern int siueparse(void);
-typedef struct yy_buffer_state* YY_BUFFER_STATE;
-extern YY_BUFFER_STATE siue_scan_string(const char* str);
+typedef struct yy_buffer_state *YY_BUFFER_STATE;
+extern YY_BUFFER_STATE siue_scan_string(const char *str);
 extern void siue_delete_buffer(YY_BUFFER_STATE buffer);
 extern int siuelex_destroy(void);  // Complete lexer state cleanup
 // Forward declarations for power operations and expression processing
 OCArrayRef siueApplyPowerToTermList(OCArrayRef term_list, int power);
-SIUnitExpression* siueApplyPowerToExpression(SIUnitExpression* expression, int power);
-SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* expression, double power);
+SIUnitExpression *siueApplyPowerToExpression(SIUnitExpression *expression, int power);
+SIUnitExpression *siueApplyFractionalPowerToExpression(SIUnitExpression *expression, double power);
 // Global error state for parser communication
 OCStringRef siueError = NULL;
 #pragma mark - Term Management
@@ -34,9 +34,9 @@ OCStringRef siueError = NULL;
  * Creates a new term with unit symbol and power.
  * Used as building block for expression parsing (e.g., "m" with power 2 for "m^2").
  */
-SIUnitTerm* siueCreateTerm(OCStringRef symbol, int power) {
+SIUnitTerm *siueCreateTerm(OCStringRef symbol, int power) {
     if (!symbol) return NULL;
-    SIUnitTerm* term = malloc(sizeof(SIUnitTerm));
+    SIUnitTerm *term = malloc(sizeof(SIUnitTerm));
     if (!term) return NULL;
     term->symbol = OCStringCreateCopy(symbol);
     term->power = power;
@@ -45,14 +45,14 @@ SIUnitTerm* siueCreateTerm(OCStringRef symbol, int power) {
 /**
  * Creates deep copy of a term for array manipulation.
  */
-SIUnitTerm* siueCopyTerm(const SIUnitTerm* term) {
+SIUnitTerm *siueCopyTerm(const SIUnitTerm *term) {
     if (!term) return NULL;
     return siueCreateTerm(term->symbol, term->power);
 }
 /**
  * Releases term memory and symbol reference.
  */
-void siueReleaseTerm(SIUnitTerm* term) {
+void siueReleaseTerm(SIUnitTerm *term) {
     if (!term) return;
     if (term->symbol) {
         OCRelease(term->symbol);
@@ -64,9 +64,9 @@ void siueReleaseTerm(SIUnitTerm* term) {
  * Creates expression with numerator and denominator term arrays.
  * Performs deep copy of all terms to ensure memory safety.
  */
-SIUnitExpression* siueCreateExpression(OCArrayRef numerator, OCArrayRef denominator) {
+SIUnitExpression *siueCreateExpression(OCArrayRef numerator, OCArrayRef denominator) {
     if (!numerator) return NULL;
-    SIUnitExpression* expr = malloc(sizeof(SIUnitExpression));
+    SIUnitExpression *expr = malloc(sizeof(SIUnitExpression));
     if (!expr) return NULL;
     // Deep copy numerator terms
     OCIndex count = OCArrayGetCount(numerator);
@@ -76,8 +76,8 @@ SIUnitExpression* siueCreateExpression(OCArrayRef numerator, OCArrayRef denomina
         return NULL;
     }
     for (OCIndex i = 0; i < count; i++) {
-        SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(numerator, i);
-        SIUnitTerm* termCopy = siueCopyTerm(term);
+        SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(numerator, i);
+        SIUnitTerm *termCopy = siueCopyTerm(term);
         if (termCopy) {
             if (!OCArrayAppendValue(numCopy, termCopy)) {
                 // Append failed - clean up termCopy and abort
@@ -103,8 +103,8 @@ SIUnitExpression* siueCreateExpression(OCArrayRef numerator, OCArrayRef denomina
             return NULL;
         }
         for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(denominator, i);
-            SIUnitTerm* termCopy = siueCopyTerm(term);
+            SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(denominator, i);
+            SIUnitTerm *termCopy = siueCopyTerm(term);
             if (termCopy) {
                 if (!OCArrayAppendValue(denCopy, termCopy)) {
                     // Append failed - clean up termCopy and abort
@@ -129,7 +129,7 @@ SIUnitExpression* siueCreateExpression(OCArrayRef numerator, OCArrayRef denomina
 /**
  * Creates deep copy of entire expression.
  */
-SIUnitExpression* siueCopyExpression(const SIUnitExpression* expr) {
+SIUnitExpression *siueCopyExpression(const SIUnitExpression *expr) {
     if (!expr) return NULL;
     return siueCreateExpression(expr->numerator, expr->denominator);
 }
@@ -137,13 +137,13 @@ SIUnitExpression* siueCopyExpression(const SIUnitExpression* expr) {
  * Releases expression and all contained terms.
  * Ensures complete cleanup to prevent memory leaks.
  */
-void siueRelease(SIUnitExpression* expr) {
+void siueRelease(SIUnitExpression *expr) {
     if (!expr) return;
     // Release all numerator terms
     if (expr->numerator) {
         OCIndex count = OCArrayGetCount(expr->numerator);
         for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expr->numerator, i);
+            SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(expr->numerator, i);
             siueReleaseTerm(term);
         }
         OCRelease(expr->numerator);
@@ -152,7 +152,7 @@ void siueRelease(SIUnitExpression* expr) {
     if (expr->denominator) {
         OCIndex count = OCArrayGetCount(expr->denominator);
         for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expr->denominator, i);
+            SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(expr->denominator, i);
             siueReleaseTerm(term);
         }
         OCRelease(expr->denominator);
@@ -166,7 +166,7 @@ void siueReleaseTermArray(OCArrayRef term_array) {
     if (!term_array) return;
     OCIndex count = OCArrayGetCount(term_array);
     for (OCIndex i = 0; i < count; i++) {
-        SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(term_array, i);
+        SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(term_array, i);
         siueReleaseTerm(term);
     }
     OCRelease(term_array);
@@ -180,7 +180,7 @@ OCArrayRef siueApplyPowerToTermList(OCArrayRef term_list, int power) {
     if (!term_list || power == 0) return term_list;
     OCIndex count = OCArrayGetCount(term_list);
     for (OCIndex i = 0; i < count; i++) {
-        SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(term_list, i);
+        SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(term_list, i);
         if (term) {
             term->power *= power;
         }
@@ -191,7 +191,7 @@ OCArrayRef siueApplyPowerToTermList(OCArrayRef term_list, int power) {
  * Applies integer power to entire expression.
  * Handles negative powers by swapping numerator/denominator: (a/b)^(-n) = (b/a)^n.
  */
-SIUnitExpression* siueApplyPowerToExpression(SIUnitExpression* expression, int power) {
+SIUnitExpression *siueApplyPowerToExpression(SIUnitExpression *expression, int power) {
     if (!expression || power == 0) return expression;
     if (power < 0) {
         // Swap numerator and denominator for negative powers
@@ -215,13 +215,13 @@ SIUnitExpression* siueApplyPowerToExpression(SIUnitExpression* expression, int p
  * Rejects powers that would result in non-integer exponents (per spec: no fractional powers allowed).
  * Returns NULL if any resulting power would be fractional.
  */
-SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* expression, double power) {
+SIUnitExpression *siueApplyFractionalPowerToExpression(SIUnitExpression *expression, double power) {
     if (!expression) return NULL;
     // Validate that fractional power would yield integer results for all terms
     if (expression->numerator) {
         OCIndex count = OCArrayGetCount(expression->numerator);
         for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expression->numerator, i);
+            SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(expression->numerator, i);
             if (term) {
                 double resultPower = term->power * power;
                 if (fabs(resultPower - round(resultPower)) > 1e-10) {
@@ -234,7 +234,7 @@ SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* express
     if (expression->denominator) {
         OCIndex count = OCArrayGetCount(expression->denominator);
         for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expression->denominator, i);
+            SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(expression->denominator, i);
             if (term) {
                 double resultPower = term->power * power;
                 if (fabs(resultPower - round(resultPower)) > 1e-10) {
@@ -247,7 +247,7 @@ SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* express
     if (expression->numerator) {
         OCIndex count = OCArrayGetCount(expression->numerator);
         for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expression->numerator, i);
+            SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(expression->numerator, i);
             if (term) {
                 term->power = (int)round(term->power * power);
             }
@@ -256,7 +256,7 @@ SIUnitExpression* siueApplyFractionalPowerToExpression(SIUnitExpression* express
     if (expression->denominator) {
         OCIndex count = OCArrayGetCount(expression->denominator);
         for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expression->denominator, i);
+            SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(expression->denominator, i);
             if (term) {
                 term->power = (int)round(term->power * power);
             }
@@ -276,10 +276,10 @@ void siueGroupIdenticalTerms(OCMutableArrayRef terms) {
     // Combine powers for identical symbols
     if (count > 1) {
         for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term1 = (SIUnitTerm*)OCArrayGetValueAtIndex(terms, i);
+            SIUnitTerm *term1 = (SIUnitTerm *)OCArrayGetValueAtIndex(terms, i);
             if (!term1) continue;
             for (OCIndex j = i + 1; j < count; j++) {
-                SIUnitTerm* term2 = (SIUnitTerm*)OCArrayGetValueAtIndex(terms, j);
+                SIUnitTerm *term2 = (SIUnitTerm *)OCArrayGetValueAtIndex(terms, j);
                 if (!term2) continue;
                 if (OCStringEqual(term1->symbol, term2->symbol)) {
                     term1->power += term2->power;  // Combine powers
@@ -293,7 +293,7 @@ void siueGroupIdenticalTerms(OCMutableArrayRef terms) {
     }
     // Remove terms with zero power
     for (OCIndex i = count - 1; i >= 0; i--) {
-        SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(terms, i);
+        SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(terms, i);
         if (term && term->power == 0) {
             siueReleaseTerm(term);
             OCArrayRemoveValueAtIndex(terms, i);
@@ -301,9 +301,9 @@ void siueGroupIdenticalTerms(OCMutableArrayRef terms) {
     }
 }
 // Alphabetical comparison function for term sorting
-static int termCompare(const void* a, const void* b) {
-    const SIUnitTerm* term1 = *(const SIUnitTerm**)a;
-    const SIUnitTerm* term2 = *(const SIUnitTerm**)b;
+static int termCompare(const void *a, const void *b) {
+    const SIUnitTerm *term1 = *(const SIUnitTerm **)a;
+    const SIUnitTerm *term2 = *(const SIUnitTerm **)b;
     if (!term1 || !term1->symbol) return 1;
     if (!term2 || !term2->symbol) return -1;
     return OCStringCompare(term1->symbol, term2->symbol, 0);
@@ -317,13 +317,13 @@ void siueSortTermsAlphabetically(OCMutableArrayRef terms) {
     OCIndex count = OCArrayGetCount(terms);
     if (count <= 1) return;
     // Create array of pointers for qsort
-    SIUnitTerm** termArray = malloc(count * sizeof(SIUnitTerm*));
+    SIUnitTerm **termArray = malloc(count * sizeof(SIUnitTerm *));
     if (!termArray) return;
     for (OCIndex i = 0; i < count; i++) {
-        termArray[i] = (SIUnitTerm*)OCArrayGetValueAtIndex(terms, i);
+        termArray[i] = (SIUnitTerm *)OCArrayGetValueAtIndex(terms, i);
     }
     // Sort alphabetically
-    qsort(termArray, count, sizeof(SIUnitTerm*), termCompare);
+    qsort(termArray, count, sizeof(SIUnitTerm *), termCompare);
     // Replace original array content with sorted terms
     while (OCArrayGetCount(terms) > 0) {
         OCArrayRemoveValueAtIndex(terms, 0);
@@ -338,7 +338,7 @@ void siueSortTermsAlphabetically(OCMutableArrayRef terms) {
  * Implements algebraic reduction: kg*m/kg → m, m^3/m^2 → m.
  * Used only by SIUnitCreateCleanedAndReducedExpression.
  */
-void siueCancelTerms(SIUnitExpression* expr) {
+void siueCancelTerms(SIUnitExpression *expr) {
     if (!expr || !expr->numerator || !expr->denominator) return;
     OCMutableArrayRef num = OCArrayCreateMutableCopy(expr->numerator);
     OCMutableArrayRef den = OCArrayCreateMutableCopy(expr->denominator);
@@ -346,10 +346,10 @@ void siueCancelTerms(SIUnitExpression* expr) {
     OCIndex denCount = OCArrayGetCount(den);
     // Cancel matching symbols by subtracting powers
     for (OCIndex i = numCount - 1; i >= 0; i--) {
-        SIUnitTerm* numTerm = (SIUnitTerm*)OCArrayGetValueAtIndex(num, i);
+        SIUnitTerm *numTerm = (SIUnitTerm *)OCArrayGetValueAtIndex(num, i);
         if (!numTerm) continue;
         for (OCIndex j = denCount - 1; j >= 0; j--) {
-            SIUnitTerm* denTerm = (SIUnitTerm*)OCArrayGetValueAtIndex(den, j);
+            SIUnitTerm *denTerm = (SIUnitTerm *)OCArrayGetValueAtIndex(den, j);
             if (!denTerm) continue;
             if (OCStringEqual(numTerm->symbol, denTerm->symbol)) {
                 // Subtract minimum power from both terms
@@ -402,10 +402,10 @@ OCMutableArrayRef siueCreateDenominatorWithNegativePowers(OCMutableArrayRef nume
     // Move negative power terms to denominator
     OCIndex count = OCArrayGetCount(numerator);
     for (OCIndex i = count - 1; i >= 0; i--) {
-        SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(numerator, i);
+        SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(numerator, i);
         if (term && term->power < 0) {
             // Create positive power term for denominator
-            SIUnitTerm* newTerm = siueCreateTerm(term->symbol, -term->power);
+            SIUnitTerm *newTerm = siueCreateTerm(term->symbol, -term->power);
             if (newTerm) {
                 if (OCArrayAppendValue(workingDenominator, newTerm)) {
                     // Successfully added to denominator, now remove from numerator
@@ -426,7 +426,8 @@ OCMutableArrayRef siueCreateDenominatorWithNegativePowers(OCMutableArrayRef nume
  * Uses • for multiplication, / for division, ^ for powers (omitted when power=1).
  * Handles special cases: empty numerator (1/m), dimensionless (space character).
  */
-OCStringRef siueCreateFormattedExpression(const SIUnitExpression* expr, bool reduced) {
+OCStringRef siueCreateFormattedExpression(const SIUnitExpression *expr, bool reduced) {
+    (void)reduced;  // Unused parameter - reserved for future formatting options
     if (!expr) return NULL;
     OCMutableStringRef result = OCStringCreateMutable(256);
     // Check for special formatting cases
@@ -440,7 +441,7 @@ OCStringRef siueCreateFormattedExpression(const SIUnitExpression* expr, bool red
     if (expr->numerator && OCArrayGetCount(expr->numerator) > 0) {
         OCIndex count = OCArrayGetCount(expr->numerator);
         for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expr->numerator, i);
+            SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(expr->numerator, i);
             if (!term) continue;
             if (i > 0) {
                 OCStringAppendCString(result, "•");
@@ -470,7 +471,7 @@ OCStringRef siueCreateFormattedExpression(const SIUnitExpression* expr, bool red
             OCStringAppendCString(result, "(");
         }
         for (OCIndex i = 0; i < count; i++) {
-            SIUnitTerm* term = (SIUnitTerm*)OCArrayGetValueAtIndex(expr->denominator, i);
+            SIUnitTerm *term = (SIUnitTerm *)OCArrayGetValueAtIndex(expr->denominator, i);
             if (!term) continue;
             if (i > 0) {
                 OCStringAppendCString(result, "•");
@@ -504,8 +505,8 @@ static OCStringRef siueCreateByConvertingDimensionlessOutput(OCStringRef formatt
 }
 #pragma mark - Global Variables for Parser
 // Parser state management for lex/yacc communication
-static SIUnitExpression* g_parsed_expression = NULL;
-SIUnitExpression* siueGetParsedExpression(void) {
+static SIUnitExpression *g_parsed_expression = NULL;
+SIUnitExpression *siueGetParsedExpression(void) {
     return g_parsed_expression;
 }
 void siueClearParsedExpression(void) {
@@ -521,13 +522,11 @@ void siueClearParsedExpression(void) {
     // Note: We don't call siuelex_destroy() here because this function gets called
     // frequently during parsing operations and would cause double-free errors
 }
-void siueSetParsedExpression(SIUnitExpression* expr) {
+void siueSetParsedExpression(SIUnitExpression *expr) {
     siueClearParsedExpression();
     g_parsed_expression = expr;
 }
-
 #pragma mark - Parser State Management
-
 /**
  * Comprehensive cleanup of all parser state and internal buffers.
  * This function performs a complete reset of the parser system, including:
@@ -541,15 +540,12 @@ void siueSetParsedExpression(SIUnitExpression* expr) {
 void siueCleanupParserState(void) {
     // Clear parsed expression and error state
     siueClearParsedExpression();
-
     // Complete lexer state cleanup - only call this at the end of all parsing
     // operations to avoid double-free errors
     siuelex_destroy();
-
     // Additional cleanup could be added here for other parsers if needed
     // This function serves as a comprehensive cleanup point for the entire parser system
 }
-
 #pragma mark - Validation Functions
 /**
  * Validates symbol against ~951 allowed token unit symbols.
@@ -570,7 +566,7 @@ bool siueValidateSymbol(OCStringRef symbol) {
 }
 // Parses normalized expressions using lex/yacc parser with siue prefix
 // Returns parsed SIUnitExpression or NULL on failure/invalid symbols
-SIUnitExpression* siueCreateParsedExpression(OCStringRef normalized_expr) {
+SIUnitExpression *siueCreateParsedExpression(OCStringRef normalized_expr) {
     if (!normalized_expr) return NULL;
     // Clear previous state
     if (siueError) {
@@ -579,7 +575,7 @@ SIUnitExpression* siueCreateParsedExpression(OCStringRef normalized_expr) {
     }
     siueClearParsedExpression();
     // Convert to C string for lex/yacc
-    const char* exprStr = OCStringGetCString(normalized_expr);
+    const char *exprStr = OCStringGetCString(normalized_expr);
     if (!exprStr) return NULL;
     // Parse using lex/yacc with siue prefix
     YY_BUFFER_STATE buffer = siue_scan_string(exprStr);
@@ -592,7 +588,7 @@ SIUnitExpression* siueCreateParsedExpression(OCStringRef normalized_expr) {
         return NULL;
     }
     // Transfer ownership from global parser state
-    SIUnitExpression* result = siueGetParsedExpression();
+    SIUnitExpression *result = siueGetParsedExpression();
     if (result) {
         g_parsed_expression = NULL;  // Clear without freeing
         return result;
@@ -620,7 +616,7 @@ static OCStringRef siueCreateByConvertingAsterisksToBullets(OCStringRef expressi
 // Unicode normalization: converts operators to standard forms (×→*, ÷→/, μ→µ, superscripts→^n)
 // Handles empty strings, spaces→"1", cleans whitespace around operators
 // TODO: Integrate with existing SIUnitCreateNormalizedExpression when available
-OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool something) {
+OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression) {
     if (!expression) return NULL;
     // Handle empty and dimensionless cases
     if (OCStringGetLength(expression) == 0) {
@@ -707,14 +703,14 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
         return OCStringCreateCopy(expression);
     }
     // Step 1: Normalize Unicode characters first
-    OCMutableStringRef normalized = SIUnitCreateNormalizedExpression(expression, false);
+    OCMutableStringRef normalized = SIUnitCreateNormalizedExpression(expression);
     if (!normalized) return NULL;
     // Step 2: Convert bullet characters to asterisks for parsing
     OCStringRef preprocessed = siueCreateByConvertingBulletsToAsterisks(normalized);
     OCRelease(normalized);
     if (!preprocessed) return NULL;
     // Step 3: Parse the preprocessed expression
-    SIUnitExpression* parsed = siueCreateParsedExpression(preprocessed);
+    SIUnitExpression *parsed = siueCreateParsedExpression(preprocessed);
     OCRelease(preprocessed);
     if (!parsed) return NULL;
     // Step 4: Process the expression (group and sort)
@@ -761,14 +757,14 @@ OCStringRef SIUnitCreateCleanedExpression(OCStringRef expression) {
 OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
     if (!expression) return NULL;
     // Step 1: Normalize Unicode characters first
-    OCMutableStringRef normalized = SIUnitCreateNormalizedExpression(expression, false);
+    OCMutableStringRef normalized = SIUnitCreateNormalizedExpression(expression);
     if (!normalized) return NULL;
     // Step 2: Convert bullet characters to asterisks for parsing
     OCStringRef preprocessed = siueCreateByConvertingBulletsToAsterisks(normalized);
     OCRelease(normalized);
     if (!preprocessed) return NULL;
     // Step 3: Parse the preprocessed expression
-    SIUnitExpression* parsed = siueCreateParsedExpression(preprocessed);
+    SIUnitExpression *parsed = siueCreateParsedExpression(preprocessed);
     OCRelease(preprocessed);
     if (!parsed) return NULL;
     // Step 4: Process the expression (group, sort, and cancel)
@@ -814,7 +810,6 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
     // Step 7: Convert "1" to space character for dimensionless output
     OCStringRef result = siueCreateByConvertingDimensionlessOutput(bullets);
     OCRelease(bullets);
-
     // Ensure all parser state is completely cleared after each expression processing
     siueClearParsedExpression();
     // Explicitly clear any remaining error state
@@ -822,7 +817,6 @@ OCStringRef SIUnitCreateCleanedAndReducedExpression(OCStringRef expression) {
         OCRelease(siueError);
         siueError = NULL;
     }
-
     return result;
 }
 int SIUnitCountTokenSymbols(OCStringRef cleanedExpression) {
@@ -851,7 +845,7 @@ int SIUnitCountTokenSymbols(OCStringRef cleanedExpression) {
         if (powerRange.location != kOCNotFound) {
             // Find the end of the power value
             OCIndex powerStart = powerRange.location;
-            OCIndex powerEnd = powerStart + 1;  // Start after the '^'
+            uint64_t powerEnd = powerStart + 1;  // Start after the '^'
             // Skip optional minus sign
             if (powerEnd < OCStringGetLength(workingCopy)) {
                 uint32_t ch = OCStringGetCharacterAtIndex(workingCopy, powerEnd);
@@ -890,7 +884,7 @@ int SIUnitCountTokenSymbols(OCStringRef cleanedExpression) {
                 if (symbol && OCStringGetLength(symbol) > 0) {
                     // Check if it's not just whitespace
                     bool hasContent = false;
-                    for (OCIndex j = 0; j < OCStringGetLength(symbol); j++) {
+                    for (uint64_t j = 0; j < OCStringGetLength(symbol); j++) {
                         uint32_t ch = OCStringGetCharacterAtIndex(symbol, j);
                         if (ch != ' ' && ch != '\t' && ch != '\n') {
                             hasContent = true;

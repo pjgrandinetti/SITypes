@@ -80,7 +80,6 @@ int8_t SIDimensionalityReducedExponentAtIndex(SIDimensionalityRef theDim, SIBase
  * @return A cJSON object or string, or cJSON null on failure.
  */
 cJSON *SIDimensionalityCopyAsJSON(SIDimensionalityRef dim, bool typed, OCStringRef *outError);
-
 /**
  * @brief Create an SIDimensionality object from a JSON representation.
  *

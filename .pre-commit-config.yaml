@@ -18,50 +18,64 @@ repos:
       - id: check-shebang-scripts-are-executable
       - id: mixed-line-ending
 
-  # C/C++ specific tools (simplified to prevent stalling)
+  # C/C++ specific tools - production ready configuration
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.3.5
     hooks:
-      # Code formatting with clang-format (basic formatting only)
+      # Code formatting with clang-format (fail if not formatted)
       - id: clang-format
-        args: [--style=file, --fallback-style=LLVM]
+        args: [--style=file, --fallback-style=Google]
         files: \.(c|h)$
         exclude: ^(build/|third_party/|.*\.tab\.(c|h)|.*Scanner\.c)$
-        # Make it fail gracefully if clang-format is not available
-        require_serial: false
 
-      # Note: Disabled potentially problematic static analysis tools:
-      # - clang-tidy (can hang on complex code)
-      # - cppcheck (can be slow and hang)
-
-  # Custom local hooks for SITypes-specific checks (disabled problematic ones)
+  # SITypes-specific checks
   - repo: local
     hooks:
-      # Basic syntax check only (lightweight)
-      - id: basic-syntax-check
-        name: Basic syntax check
+      # Ensure code is properly formatted before commit
+      - id: check-format
+        name: Check code formatting
         entry: sh
         args:
           - -c
           - |
-            # Simple syntax check without full compilation
-            for file in "$@"; do
-              if [[ "$file" =~ \.(c|h)$ ]]; then
-                echo "Checking syntax: $file"
-                # Just check if gcc can parse the file without compiling
-                gcc -fsyntax-only "$file" 2>/dev/null || echo "Warning: syntax issues in $file"
-              fi
-            done
+            echo "Checking code formatting compliance..."
+            make format-check
         language: system
         files: \.(c|h)$
         exclude: ^(build/|third_party/|.*\.tab\.(c|h)|.*Scanner\.c)$
+        pass_filenames: false
 
-      # Note: Disabled heavy checks that were causing stalls:
-      # - build-check (make clean all)
-      # - test-check (make test)
-      # - memory-check (make test-asan)
-      # - generated-files-check (complex shell script)
+      # Build check to ensure code compiles
+      - id: build-check
+        name: Build verification
+        entry: sh
+        args:
+          - -c
+          - |
+            echo "Verifying code builds successfully..."
+            make clean >/dev/null 2>&1
+            make octypes >/dev/null 2>&1
+            make -j4 >/dev/null 2>&1
+        language: system
+        files: \.(c|h|y|l)$
+        exclude: ^(build/|third_party/)$
+        pass_filenames: false
 
-# Global settings
+      # Quick test to ensure basic functionality
+      - id: quick-test
+        name: Quick functionality test
+        entry: sh
+        args:
+          - -c
+          - |
+            echo "Running basic functionality tests..."
+            make test >/dev/null 2>&1 || (echo "❌ Tests failed - commit blocked" && exit 1)
+            echo "✅ All tests pass"
+        language: system
+        files: \.(c|h|y|l)$
+        exclude: ^(build/|third_party/)$
+        pass_filenames: false
+
+# Global settings - fail fast for efficiency
 default_stages: [pre-commit]
-fail_fast: false
+fail_fast: true

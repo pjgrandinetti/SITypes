@@ -21,15 +21,15 @@ bool test_check_for_duplicate_units(void) {
     // Get all keys and values from the dictionary
     uint64_t count = OCDictionaryGetCount(unitsLib);
     printf("Total units in library: %llu\n", count);
-    OCStringRef* keys = malloc(count * sizeof(OCStringRef));
-    SIUnitRef* units = malloc(count * sizeof(SIUnitRef));
+    OCStringRef *keys = malloc(count * sizeof(OCStringRef));
+    SIUnitRef *units = malloc(count * sizeof(SIUnitRef));
     if (!keys || !units) {
         printf("ERROR: Memory allocation failed\n");
         if (keys) free(keys);
         if (units) free(units);
         return false;
     }
-    OCDictionaryGetKeysAndValues(unitsLib, (const void**)keys, (const void**)units);
+    OCDictionaryGetKeysAndValues(unitsLib, (const void **)keys, (const void **)units);
     // Track duplicate pointers and static instance violations
     bool duplicatesFound = false;
     bool staticInstanceViolations = false;
@@ -114,7 +114,7 @@ bool test_check_for_duplicate_units(void) {
 // Test function to create some expressions that might cause duplicates
 bool test_create_potential_duplicates(void) {
     // Test equivalent expressions
-    const char* expressions[] = {
+    const char *expressions[] = {
         "ft*ft*lb/s/s",
         "lb*ft^2/s^2",
         "ft^2*lb/s^2",

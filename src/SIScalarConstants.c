@@ -6,8 +6,8 @@
 //
 #include "SIScalarConstants.h"
 #include <math.h>  // For INFINITY
-#include "SITypes.h"
 #include "SIScalarConstantsData.h"
+#include "SITypes.h"
 #include "SIUnitParser.h"
 OCMutableDictionaryRef molarMassLibrary = NULL;
 OCMutableDictionaryRef isotopeAbundanceLibrary = NULL;
@@ -378,7 +378,7 @@ SIScalarRef SIPeriodicTableCreateIsotopeSpin(OCStringRef isotopeSymbol, OCString
     }
     return SIScalarCreateCopy(spin);
 }
-static bool SIPeriodicTableNuclearGyromagneticRatioLibrary(OCStringRef *errorString) {
+__attribute__((unused)) static bool SIPeriodicTableNuclearGyromagneticRatioLibrary(OCStringRef *errorString) {
     if (errorString)
         if (*errorString) return false;
     nuclearGyromagneticRatioLibrary = OCDictionaryCreateMutable(0);

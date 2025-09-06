@@ -4,7 +4,7 @@
 #include <string.h>
 #include "../src/SITypes.h"
 // Helper function to test cleaned expression creation
-static bool test_unit_expression_cleaner_creation(const char* input, const char* expected, const char* test_name) {
+static bool test_unit_expression_cleaner_creation(const char *input, const char *expected, const char *test_name) {
     OCStringRef input_str = OCStringCreateWithCString(input);
     OCStringRef result = SIUnitCreateCleanedExpression(input_str);
     if (!result) {
@@ -12,7 +12,7 @@ static bool test_unit_expression_cleaner_creation(const char* input, const char*
         OCRelease(input_str);
         return false;
     }
-    const char* result_cstr = OCStringGetCString(result);
+    const char *result_cstr = OCStringGetCString(result);
     bool passed = (strcmp(result_cstr, expected) == 0);
     if (!passed) {
         printf("  ✗ %s: '%s'\n", test_name, input);
@@ -24,7 +24,7 @@ static bool test_unit_expression_cleaner_creation(const char* input, const char*
     return passed;
 }
 // Helper function to test equivalence
-static bool test_equivalence(const char* expr1, const char* expr2, bool should_be_equal, const char* test_name) {
+static bool test_equivalence(const char *expr1, const char *expr2, bool should_be_equal, const char *test_name) {
     OCStringRef str1 = OCStringCreateWithCString(expr1);
     OCStringRef str2 = OCStringCreateWithCString(expr2);
     bool are_equivalent = SIUnitAreExpressionsEquivalent(str1, str2);
@@ -45,8 +45,8 @@ bool test_unit_expression_cleaner_basic_canonicalization(void) {
     bool success = true;
     // Test basic single units - should remain unchanged
     struct {
-        const char* input;
-        const char* expected;
+        const char *input;
+        const char *expected;
     } tests[] = {
         {"m", "m"},
         {"kg", "kg"},
@@ -62,17 +62,9 @@ bool test_unit_expression_cleaner_basic_canonicalization(void) {
         {"Hz", "Hz"}};
     int num_tests = sizeof(tests) / sizeof(tests[0]);
     for (int i = 0; i < num_tests; i++) {
-        OCStringRef input = OCStringCreateWithCString(tests[i].input);
-        OCStringRef result = SIUnitCreateCleanedExpression(input);
-        OCStringRef expected = OCStringCreateWithCString(tests[i].expected);
-        if (OCStringCompare(result, expected, 0) != kOCCompareEqualTo) {
-            printf("FAILED: '%s' should canonicalize to '%s', got '%s'\n",
-                   tests[i].input, tests[i].expected, OCStringGetCString(result));
+        if (!test_unit_expression_cleaner_creation(tests[i].input, tests[i].expected, "basic_canonicalization")) {
             success = false;
         }
-        OCRelease(input);
-        OCRelease(expected);
-        OCRelease(result);
     }
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
@@ -200,8 +192,8 @@ bool test_unit_expression_cleaner_complex_expressions(void) {
     bool success = true;
     // Test complex expressions with multiple operations
     struct {
-        const char* input;
-        const char* expected;
+        const char *input;
+        const char *expected;
     } tests[] = {
         {"kg*m^2/s^2", "kg•m^2/s^2"},
         {"kg*m^2/(s^2)", "kg•m^2/s^2"},
@@ -238,8 +230,8 @@ bool test_unit_expression_cleaner_unicode_operators(void) {
     bool success = true;
     // Test Unicode multiplication and division operators
     struct {
-        const char* input;
-        const char* expected;
+        const char *input;
+        const char *expected;
     } tests[] = {
         {"m×s", "m•s"},
         {"m•s", "m•s"},
@@ -275,9 +267,9 @@ bool test_unit_expression_cleaner_unicode_normalization(void) {
     bool success = true;
     // Test Unicode normalization (Greek mu vs micro sign)
     struct {
-        const char* input1;
-        const char* input2;
-        const char* description;
+        const char *input1;
+        const char *input2;
+        const char *description;
     } tests[] = {
         {"μm", "µm", "Greek mu vs micro sign"},
         {"μΩ×cm", "µΩ•cm", "Greek mu in complex expression"},
@@ -308,7 +300,7 @@ bool test_unit_expression_cleaner_expression_equivalence(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test that equivalent expressions produce identical library keys
-    const char* equivalent_groups[][6] = {
+    const char *equivalent_groups[][6] = {
         // Imperial/SI energy expressions
         {"lb*ft^2/s^2", "ft^2*lb/s^2", "(ft^2*lb)/s^2", "ft*ft*lb/s/s", "lb*ft*ft/(s*s)", NULL},
         // Force expressions
@@ -327,25 +319,14 @@ bool test_unit_expression_cleaner_expression_equivalence(void) {
         {"s^2/s^2", "s^2÷s^2", NULL, NULL, NULL, NULL}};
     int num_groups = sizeof(equivalent_groups) / sizeof(equivalent_groups[0]);
     for (int group = 0; group < num_groups; group++) {
-        // Get canonical form of first expression
-        OCStringRef first_expr = OCStringCreateWithCString(equivalent_groups[group][0]);
-        OCStringRef first_canonical = SIUnitCreateCleanedExpression(first_expr);
-        // Test all other expressions in the group
+        // Test all other expressions in the group against the first one
         for (int i = 1; i < 6 && equivalent_groups[group][i] != NULL; i++) {
-            OCStringRef expr = OCStringCreateWithCString(equivalent_groups[group][i]);
-            OCStringRef canonical = SIUnitCreateCleanedExpression(expr);
-            if (OCStringCompare(first_canonical, canonical, 0) != kOCCompareEqualTo) {
-                printf("  ✗ Equivalence group %d failure:\n", group + 1);
-                printf("    '%s' -> '%s'\n", equivalent_groups[group][0], OCStringGetCString(first_canonical));
-                printf("    '%s' -> '%s'\n", equivalent_groups[group][i], OCStringGetCString(canonical));
-                printf("    Should be equivalent but are different\n");
+            char test_name[128];
+            snprintf(test_name, sizeof(test_name), "equivalence group %d", group + 1);
+            if (!test_equivalence(equivalent_groups[group][0], equivalent_groups[group][i], true, test_name)) {
                 success = false;
             }
-            OCRelease(expr);
-            OCRelease(canonical);
         }
-        OCRelease(first_expr);
-        OCRelease(first_canonical);
     }
     printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
@@ -355,9 +336,9 @@ bool test_unit_expression_cleaner_edge_cases(void) {
     bool success = true;
     // Test edge cases and special behaviors (including no-cancellation)
     struct {
-        const char* input;
-        const char* expected;
-        const char* description;
+        const char *input;
+        const char *expected;
+        const char *description;
     } tests[] = {
         {"1", " ", "dimensionless unity"},
         {"m/m", "m/m", "no cancellation - plane angle"},
@@ -398,7 +379,7 @@ bool test_unit_expression_cleaner_consistency(void) {
     printf("Running %s...\n", __func__);
     bool success = true;
     // Test that repeated calls produce identical results
-    const char* test_expressions[] = {
+    const char *test_expressions[] = {
         "m",
         "kg*m/s^2",
         "μΩ•cm",
@@ -437,9 +418,9 @@ bool test_unit_expression_cleaner_parenthetical_powers(void) {
     bool success = true;
     // Test parenthetical power expansion
     struct {
-        const char* input;
-        const char* expected;
-        const char* description;
+        const char *input;
+        const char *expected;
+        const char *description;
     } tests[] = {
         {"(m•kg)^2", "kg^2•m^2", "simple parenthetical power"},
         {"(m^2•kg/s)^4", "kg^4•m^8/s^4", "complex parenthetical power"},
@@ -472,9 +453,9 @@ bool test_unit_expression_cleaner_reciprocal_expressions(void) {
     bool success = true;
     // Test reciprocal expressions (1/unit) - these were the critical bug cases
     struct {
-        const char* input;
-        const char* expected;
-        const char* description;
+        const char *input;
+        const char *expected;
+        const char *description;
     } tests[] = {
         {"1/m", "(1/m)", "reciprocal meter"},
         {"1/s", "(1/s)", "reciprocal second (frequency)"},
@@ -511,7 +492,7 @@ bool test_unit_expression_cleaner_reciprocal_expressions(void) {
         if (result) OCRelease(result);
     }
     // Test that invalid numeric coefficients return NULL
-    const char* invalid_tests[] = {
+    const char *invalid_tests[] = {
         "2/m",
         "3/s",
         "0/kg",

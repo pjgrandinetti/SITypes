@@ -460,7 +460,7 @@ bool test_dimensionality_deep_copy(void) {
     if (copy != original) {
         fprintf(stderr,
                 "  ✗ OCTypeDeepCopy returned a new instance (copy=%p) but expected the singleton original=%p\n",
-                (void*)copy, (void*)original);
+                (void *)copy, (void *)original);
         success = false;
         goto cleanup;
     }
@@ -474,7 +474,7 @@ bool test_dimensionality_deep_copy(void) {
     if (mcopy != original) {
         fprintf(stderr,
                 "  ✗ OCTypeDeepCopyMutable returned a new instance (mcopy=%p) but expected the singleton original=%p\n",
-                (void*)mcopy, (void*)original);
+                (void *)mcopy, (void *)original);
         success = false;
         goto cleanup;
     }
@@ -493,7 +493,7 @@ bool test_dimensionality_parser_strictness(void) {
     OCStringRef err = NULL;
     // These expressions should be REJECTED by the parser
     // Addition and subtraction are not valid in dimensional analysis
-    const char* forbidden_expressions[] = {
+    const char *forbidden_expressions[] = {
         "L+T",      // Length + Time is physically meaningless
         "M-L",      // Mass - Length is physically meaningless
         "L + T",    // With spaces
@@ -506,14 +506,14 @@ bool test_dimensionality_parser_strictness(void) {
         "L-T+M",    // Mixed subtraction and addition
         NULL};
     for (int i = 0; forbidden_expressions[i] != NULL; i++) {
-        const char* expr = forbidden_expressions[i];
+        const char *expr = forbidden_expressions[i];
         err = NULL;
         OCStringRef expr_str = OCStringCreateWithCString(expr);
         SIDimensionalityRef result = SIDimensionalityFromExpression(expr_str, &err);
         if (result != NULL) {
             // Parser incorrectly accepted the expression - this is a failure
             OCStringRef symbol = SIDimensionalityCopySymbol(result);
-            const char* symbol_str = symbol ? OCStringGetCString(symbol) : "NULL";
+            const char *symbol_str = symbol ? OCStringGetCString(symbol) : "NULL";
             printf("  ✗ Expression '%s' was incorrectly accepted -> '%s'\n",
                    expr, symbol_str);
             printf("    This violates dimensional analysis principles!\n");

@@ -58,14 +58,6 @@ static int cross_platform_mkstemp(char *template) {
 #else
 #define TEMP_DIR "/tmp"
 #endif
-static SIUnitRef mps_unit(void) {
-    double mult = 1.0;
-    SIUnitRef u = SIUnitFromExpression(STR("m/s"), &mult, NULL);
-    if (!u) {
-        printf("mps_unit failed: SIUnitFromExpression(\"m/s\") returned NULL\n");
-    }
-    return u;
-}
 bool test_SIScalarGetTypeID(void) {
     if (SIScalarGetTypeID() == 0) {
         printf("test_SIScalarGetTypeID failed: TypeID is 0\n");
@@ -3550,44 +3542,36 @@ cleanup:
     if (success) printf("%s passed\n", __func__);
     return success;
 }
-
 bool test_SIScalarCreateArrayFromMixedTypeArray(void) {
     printf("Testing SIScalarCreateArrayFromMixedTypeArray...\n");
     bool success = true;
     OCStringRef error = NULL;
     OCMutableArrayRef input = NULL;
     OCArrayRef result = NULL;
-    
     // Create test input array with mixed OCNumbers, SIScalars, and OCStrings
     input = OCArrayCreateMutable(7, &kOCTypeArrayCallBacks);
     if (!input) {
         printf("%s failed: Could not create input array\n", __func__);
         return false;
     }
-    
     // Add OCNumbers of different types
     OCNumberRef num1 = OCNumberCreateWithSInt32(42);
     OCNumberRef num2 = OCNumberCreateWithFloat(3.14f);
-    OCNumberRef num3 = OCNumberCreateWithDoubleComplex(2.0 + 3.0*I);
-    
+    OCNumberRef num3 = OCNumberCreateWithDoubleComplex(2.0 + 3.0 * I);
     // Add existing SIScalar
     SIUnitRef meter = SIUnitWithSymbol(STR("m"));
     SIScalarRef scalar1 = SIScalarCreateWithDouble(100.0, meter);
-    
     // Add OCStrings that can be parsed as SIScalars
     OCStringRef str1 = STR("5.0 kg");
     OCStringRef str2 = STR("3.0 m/s");
-    
     OCArrayAppendValue(input, num1);
     OCArrayAppendValue(input, num2);
     OCArrayAppendValue(input, num3);
     OCArrayAppendValue(input, scalar1);
     OCArrayAppendValue(input, str1);
     OCArrayAppendValue(input, str2);
-    
     // Test function
     result = SIScalarCreateArrayFromMixedTypeArray(input, &error);
-    
     if (!result) {
         printf("%s failed: Function returned NULL", __func__);
         if (error) {
@@ -3598,7 +3582,6 @@ bool test_SIScalarCreateArrayFromMixedTypeArray(void) {
         success = false;
         goto cleanup;
     }
-    
     // Verify result array has correct count
     OCIndex count = OCArrayGetCount(result);
     if (count != 6) {
@@ -3606,7 +3589,6 @@ bool test_SIScalarCreateArrayFromMixedTypeArray(void) {
         success = false;
         goto cleanup;
     }
-    
     // Verify all elements are SIScalars
     for (OCIndex i = 0; i < count; i++) {
         OCTypeRef obj = OCArrayGetValueAtIndex(result, i);
@@ -3616,7 +3598,6 @@ bool test_SIScalarCreateArrayFromMixedTypeArray(void) {
             goto cleanup;
         }
     }
-    
     // Test with NULL input
     OCArrayRef null_result = SIScalarCreateArrayFromMixedTypeArray(NULL, &error);
     if (null_result != NULL) {
@@ -3625,7 +3606,6 @@ bool test_SIScalarCreateArrayFromMixedTypeArray(void) {
         OCRelease(null_result);
         goto cleanup;
     }
-    
     // Test with empty array
     OCMutableArrayRef empty = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     OCArrayRef empty_result = SIScalarCreateArrayFromMixedTypeArray(empty, &error);
@@ -3635,12 +3615,10 @@ bool test_SIScalarCreateArrayFromMixedTypeArray(void) {
         OCRelease(empty_result);
     }
     OCRelease(empty);
-    
     // Test with invalid OCString
     OCMutableArrayRef invalid_input = OCArrayCreateMutable(1, &kOCTypeArrayCallBacks);
     OCStringRef invalid_str = STR("invalid expression xyz");
     OCArrayAppendValue(invalid_input, invalid_str);
-    
     error = NULL;  // Reset error
     OCArrayRef invalid_result = SIScalarCreateArrayFromMixedTypeArray(invalid_input, &error);
     if (invalid_result != NULL) {
@@ -3656,7 +3634,6 @@ bool test_SIScalarCreateArrayFromMixedTypeArray(void) {
         error = NULL;
     }
     OCRelease(invalid_input);
-    
 cleanup:
     if (input) OCRelease(input);
     if (result) OCRelease(result);
@@ -3665,23 +3642,18 @@ cleanup:
     if (num3) OCRelease(num3);
     if (scalar1) OCRelease(scalar1);
     if (error) OCRelease(error);
-    
     if (success) printf("%s passed\n", __func__);
     return success;
 }
-
 bool test_SIScalarCreateArrayFromNumberArray(void) {
     printf("Testing SIScalarCreateArrayFromNumberArray...\n");
     bool success = true;
     OCStringRef error = NULL;
     OCArrayRef result = NULL;
-    
     // Test with double array
     double values[] = {1.0, 2.5, -3.14, 0.0, 42.0};
     OCIndex count = sizeof(values) / sizeof(values[0]);
-    
     result = SIScalarCreateArrayFromNumberArray(values, kOCNumberFloat64Type, count, &error);
-    
     if (!result) {
         printf("%s failed: Function returned NULL for double array", __func__);
         if (error) {
@@ -3692,7 +3664,6 @@ bool test_SIScalarCreateArrayFromNumberArray(void) {
         success = false;
         goto cleanup;
     }
-    
     // Verify result array has correct count
     OCIndex result_count = OCArrayGetCount(result);
     if (result_count != count) {
@@ -3700,7 +3671,6 @@ bool test_SIScalarCreateArrayFromNumberArray(void) {
         success = false;
         goto cleanup;
     }
-    
     // Verify all elements are SIScalars with correct values
     for (OCIndex i = 0; i < count; i++) {
         SIScalarRef scalar = (SIScalarRef)OCArrayGetValueAtIndex(result, i);
@@ -3709,31 +3679,25 @@ bool test_SIScalarCreateArrayFromNumberArray(void) {
             success = false;
             goto cleanup;
         }
-        
         double value = SIScalarDoubleValue(scalar);
         if (fabs(value - values[i]) > 1e-10) {
-            printf("%s failed: Element %ld value mismatch: expected %f, got %f\n", 
+            printf("%s failed: Element %ld value mismatch: expected %f, got %f\n",
                    __func__, i, values[i], value);
             success = false;
             goto cleanup;
         }
     }
-    
     OCRelease(result);
     result = NULL;
-    
     // Test with complex array
-    float complex complex_values[] = {1.0f + 2.0f*I, -3.0f + 4.0f*I, 0.0f + 0.0f*I};
+    float complex complex_values[] = {1.0f + 2.0f * I, -3.0f + 4.0f * I, 0.0f + 0.0f * I};
     OCIndex complex_count = sizeof(complex_values) / sizeof(complex_values[0]);
-    
     result = SIScalarCreateArrayFromNumberArray(complex_values, kOCNumberComplex64Type, complex_count, &error);
-    
     if (!result) {
         printf("%s failed: Function returned NULL for complex array\n", __func__);
         success = false;
         goto cleanup;
     }
-    
     // Verify complex values
     for (OCIndex i = 0; i < complex_count; i++) {
         SIScalarRef scalar = (SIScalarRef)OCArrayGetValueAtIndex(result, i);
@@ -3744,10 +3708,8 @@ bool test_SIScalarCreateArrayFromNumberArray(void) {
             goto cleanup;
         }
     }
-    
     OCRelease(result);
     result = NULL;
-    
     // Test error cases
     OCArrayRef null_result = SIScalarCreateArrayFromNumberArray(NULL, kOCNumberFloat64Type, 1, &error);
     if (null_result != NULL) {
@@ -3756,7 +3718,6 @@ bool test_SIScalarCreateArrayFromNumberArray(void) {
         OCRelease(null_result);
         goto cleanup;
     }
-    
     null_result = SIScalarCreateArrayFromNumberArray(values, kOCNumberFloat64Type, 0, &error);
     if (null_result != NULL) {
         printf("%s failed: Should return NULL for zero count\n", __func__);
@@ -3764,20 +3725,16 @@ bool test_SIScalarCreateArrayFromNumberArray(void) {
         OCRelease(null_result);
         goto cleanup;
     }
-    
 cleanup:
     if (result) OCRelease(result);
     if (error) OCRelease(error);
-    
     if (success) printf("%s passed\n", __func__);
     return success;
 }
-
 bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
     printf("Testing SIQuantityValidateMixedArrayForDimensionality...\n");
     bool success = true;
     OCStringRef error = NULL;
-    
     // Initialize ALL variables used in cleanup to NULL to avoid compiler warnings
     SIUnitRef meter_unit = NULL;
     SIUnitRef kilogram_unit = NULL;
@@ -3798,39 +3755,32 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
     OCMutableArrayRef string_mixed_array = NULL;
     OCMutableArrayRef string_dimensionless_array = NULL;
     OCMutableArrayRef invalid_string_array = NULL;
-    
     // Create test scalars with different dimensionalities
     meter_unit = SIUnitWithSymbol(STR("m"));
     kilogram_unit = SIUnitWithSymbol(STR("kg"));
     dimensionless_unit = SIUnitWithSymbol(STR(""));
-    
     if (!meter_unit || !kilogram_unit || !dimensionless_unit) {
         printf("%s failed: Failed to create units\n", __func__);
         success = false;
         goto cleanup;
     }
-    
     s_meter = SIScalarCreateWithDouble(1.0, meter_unit);
     s_kilogram = SIScalarCreateWithDouble(1.0, kilogram_unit);
     s_dimensionless = SIScalarCreateWithDouble(42.0, dimensionless_unit);
-    
     // Create OCNumbers (which should be treated as dimensionless)
     num1 = OCNumberCreateWithDouble(3.14);
     num2 = OCNumberCreateWithDouble(2.71);
-    
     if (!s_meter || !s_kilogram || !s_dimensionless || !num1 || !num2) {
         printf("%s failed: Failed to create test objects\n", __func__);
         success = false;
         goto cleanup;
     }
-    
     // Test 1: Array with consistent dimensionality (length)
     length_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     OCArrayAppendValue(length_array, s_meter);
     centimeter_unit = SIUnitWithSymbol(STR("cm"));
     s_centimeter = SIScalarCreateWithDouble(100.0, centimeter_unit);
     OCArrayAppendValue(length_array, s_centimeter);
-    
     SIUnitRef meter_unit_ref = SIQuantityGetUnit((SIQuantityRef)s_meter);
     SIDimensionalityRef length_dim = SIUnitGetDimensionality(meter_unit_ref);
     bool result1 = SIQuantityValidateMixedArrayForDimensionality((OCArrayRef)length_array, length_dim, &error);
@@ -3844,12 +3794,10 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
         success = false;
         goto cleanup;
     }
-    
     // Test 2: Array with mixed incompatible dimensionality (should fail)
     mixed_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     OCArrayAppendValue(mixed_array, s_meter);
     OCArrayAppendValue(mixed_array, s_kilogram);
-    
     bool result2 = SIQuantityValidateMixedArrayForDimensionality((OCArrayRef)mixed_array, length_dim, &error);
     if (result2) {
         printf("%s failed: Mixed dimensionality array should not validate\n", __func__);
@@ -3860,13 +3808,11 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
         OCRelease(error);
         error = NULL;
     }
-    
     // Test 3: Array with dimensionless SIScalars and OCNumbers (should work for dimensionless)
     dimensionless_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     OCArrayAppendValue(dimensionless_array, s_dimensionless);
     OCArrayAppendValue(dimensionless_array, num1);
     OCArrayAppendValue(dimensionless_array, num2);
-    
     SIUnitRef dimensionless_unit_ref = SIQuantityGetUnit((SIQuantityRef)s_dimensionless);
     SIDimensionalityRef dimensionless_dim = SIUnitGetDimensionality(dimensionless_unit_ref);
     bool result3 = SIQuantityValidateMixedArrayForDimensionality((OCArrayRef)dimensionless_array, dimensionless_dim, &error);
@@ -3880,12 +3826,10 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
         success = false;
         goto cleanup;
     }
-    
     // Test 4: Array with OCNumbers but non-dimensionless target (should fail)
     number_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     OCArrayAppendValue(number_array, num1);
     OCArrayAppendValue(number_array, num2);
-    
     bool result4 = SIQuantityValidateMixedArrayForDimensionality((OCArrayRef)number_array, length_dim, &error);
     if (result4) {
         printf("%s failed: OCNumber array should not validate for non-dimensionless target\n", __func__);
@@ -3896,7 +3840,6 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
         OCRelease(error);
         error = NULL;
     }
-    
     // Test 5: Invalid input - NULL array
     bool result5 = SIQuantityValidateMixedArrayForDimensionality(NULL, length_dim, &error);
     if (result5) {
@@ -3908,7 +3851,6 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
         OCRelease(error);
         error = NULL;
     }
-    
     // Test 6: Empty array (should validate)
     empty_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     bool result6 = SIQuantityValidateMixedArrayForDimensionality((OCArrayRef)empty_array, length_dim, &error);
@@ -3922,15 +3864,13 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
         success = false;
         goto cleanup;
     }
-    
     // Test 7: Array with OCString expressions - compatible dimensionality (should validate)
     string_length_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     OCStringRef length_str1 = STR("2.5 m");
-    OCStringRef length_str2 = STR("150 cm"); 
+    OCStringRef length_str2 = STR("150 cm");
     OCArrayAppendValue(string_length_array, length_str1);
     OCArrayAppendValue(string_length_array, length_str2);
     OCArrayAppendValue(string_length_array, s_meter);  // Mix with existing SIScalar
-    
     bool result7 = SIQuantityValidateMixedArrayForDimensionality((OCArrayRef)string_length_array, length_dim, &error);
     if (!result7) {
         printf("%s failed: OCString array with compatible length dimensions should validate\n", __func__);
@@ -3942,14 +3882,12 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
         success = false;
         goto cleanup;
     }
-    
     // Test 8: Array with OCString expressions - incompatible dimensionality (should fail)
     string_mixed_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     OCStringRef length_str = STR("1.0 m");
     OCStringRef mass_str = STR("2.5 kg");
     OCArrayAppendValue(string_mixed_array, length_str);
     OCArrayAppendValue(string_mixed_array, mass_str);
-    
     bool result8 = SIQuantityValidateMixedArrayForDimensionality((OCArrayRef)string_mixed_array, length_dim, &error);
     if (result8) {
         printf("%s failed: OCString array with mixed dimensions should not validate\n", __func__);
@@ -3960,7 +3898,6 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
         OCRelease(error);
         error = NULL;
     }
-    
     // Test 9: Array with dimensionless OCString expressions (should validate)
     string_dimensionless_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     OCStringRef dim_str1 = STR("3.14");
@@ -3969,7 +3906,6 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
     OCArrayAppendValue(string_dimensionless_array, dim_str2);
     OCArrayAppendValue(string_dimensionless_array, s_dimensionless);
     OCArrayAppendValue(string_dimensionless_array, num1);
-    
     bool result9 = SIQuantityValidateMixedArrayForDimensionality((OCArrayRef)string_dimensionless_array, dimensionless_dim, &error);
     if (!result9) {
         printf("%s failed: OCString array with dimensionless expressions should validate\n", __func__);
@@ -3981,12 +3917,10 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
         success = false;
         goto cleanup;
     }
-    
     // Test 10: Array with invalid OCString expression (should fail)
     invalid_string_array = OCArrayCreateMutable(0, &kOCTypeArrayCallBacks);
     OCStringRef invalid_str = STR("invalid expression xyz");
     OCArrayAppendValue(invalid_string_array, invalid_str);
-    
     bool result10 = SIQuantityValidateMixedArrayForDimensionality((OCArrayRef)invalid_string_array, length_dim, &error);
     if (result10) {
         printf("%s failed: Invalid OCString expression should not validate\n", __func__);
@@ -3997,7 +3931,6 @@ bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
         OCRelease(error);
         error = NULL;
     }
-    
 cleanup:
     if (meter_unit) OCRelease(meter_unit);
     if (kilogram_unit) OCRelease(kilogram_unit);
@@ -4019,7 +3952,6 @@ cleanup:
     if (string_dimensionless_array) OCRelease(string_dimensionless_array);
     if (invalid_string_array) OCRelease(invalid_string_array);
     if (error) OCRelease(error);
-    
     if (success) printf("%s passed\n", __func__);
     return success;
 }

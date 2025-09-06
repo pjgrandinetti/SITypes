@@ -80,13 +80,11 @@ typedef enum {
     kSIPrefixZetta = 21,
     kSIPrefixYotta = 24
 } SIPrefix;
-
 /** @brief Volume system enumeration for specifying default volume units. */
 typedef enum {
-    kSIVolumeSystemUS = 0,  /**< US customary volume units get plain symbols (gal, qt, tsp, etc.) */
-    kSIVolumeSystemUK = 1   /**< UK imperial volume units get plain symbols (gal, qt, tsp, etc.) */
+    kSIVolumeSystemUS = 0, /**< US customary volume units get plain symbols (gal, qt, tsp, etc.) */
+    kSIVolumeSystemUK = 1  /**< UK imperial volume units get plain symbols (gal, qt, tsp, etc.) */
 } SIVolumeSystem;
-
 #define kSIMinute 60.
 #define kSIHour 3600
 #define kSIDay 86400
@@ -149,7 +147,6 @@ OCStringRef SIUnitCopySymbol(SIUnitRef theUnit);
 OCStringRef SIUnitCopyName(SIUnitRef theUnit);
 OCStringRef SIUnitCopyPluralName(SIUnitRef theUnit);
 cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed, OCStringRef *outError);
-
 /**
  * @brief Creates an SIUnit from a cJSON object.
  *
@@ -160,7 +157,6 @@ cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed, OCStringRef *outError);
  *         The returned object is a singleton and must not be released.
  */
 SIUnitRef SIUnitFromJSON(cJSON *json, OCStringRef *outError);
-
 bool SIUnitEqual(SIUnitRef theUnit1, SIUnitRef theUnit2);
 // Boolean property getters
 bool SIUnitIsSIUnit(SIUnitRef theUnit);
@@ -231,7 +227,7 @@ SIUnitRef SIUnitFromExpression(OCStringRef expression, double *unit_multiplier, 
  * @brief Temporary normalization function for existing parser compatibility.
  * TODO: Implement proper Unicode normalization
  */
-OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression, bool flag);
+OCMutableStringRef SIUnitCreateNormalizedExpression(OCStringRef expression);
 /*!
  * @brief Temporary function for expression equivalence checking.
  * TODO: Implement proper expression equivalence checking

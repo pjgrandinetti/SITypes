@@ -94,5 +94,6 @@ SIDimensionalityRef SIDimensionalityFromExpression(OCStringRef expression, OCStr
 
 void yyerror(char *s, ...)
 {
+    (void)s;  // Unused parameter - required by bison parser generator convention
     sid_syntax_error = true;
 }

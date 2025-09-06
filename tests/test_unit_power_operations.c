@@ -36,7 +36,7 @@ bool test_unit_negative_power_operations(void) {
         OCRelease(m_squared);
         return false;
     }
-    const char* symbol_cstr = OCStringGetCString(symbol);
+    const char *symbol_cstr = OCStringGetCString(symbol);
     bool test_passed = (strcmp(symbol_cstr, "(1/m^2)") == 0);
     if (!test_passed) {
         printf("  ✗ (m^2)^-1 = '%s', expected '(1/m^2)'\n", symbol_cstr);
@@ -71,7 +71,7 @@ bool test_unit_inverse_expression_parsing(void) {
         OCRelease(parsed_inverse);
         return false;
     }
-    const char* symbol_cstr = OCStringGetCString(symbol);
+    const char *symbol_cstr = OCStringGetCString(symbol);
     bool test_passed = (strcmp(symbol_cstr, "(1/m^2)") == 0);
     if (!test_passed) {
         printf("  ✗ '1/m^2' parsed as '%s', expected '(1/m^2)'\n", symbol_cstr);
@@ -104,7 +104,7 @@ bool test_unit_negative_exponent_parsing(void) {
         OCRelease(parsed_negative);
         return false;
     }
-    const char* symbol_cstr = OCStringGetCString(symbol);
+    const char *symbol_cstr = OCStringGetCString(symbol);
     bool test_passed = (strcmp(symbol_cstr, "(1/m^2)") == 0);
     if (!test_passed) {
         printf("  ✗ 'm^-2' parsed as '%s', expected '(1/m^2)'\n", symbol_cstr);

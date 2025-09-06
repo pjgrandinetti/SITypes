@@ -8,8 +8,8 @@
 #include <math.h>    // For floor, isnan, erf, erfc, log
 #include <stdio.h>   // For yyerror, fprintf, stderr
 #include <stdlib.h>  // For malloc, free
-#include "SITypes.h"
 #include "SIScalarConstants.h"
+#include "SITypes.h"
 struct impl_symbol {
     char *name;
     SIScalarRef value;

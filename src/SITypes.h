@@ -36,10 +36,8 @@ typedef struct impl_SIScalar *SIMutableScalarRef;
 #include "SIScalarConstants.h"
 #include "SIUnit.h"
 #include "SIUnitParser.h"
-
 // Library management functions
 void SITypesShutdown(void);
-
 // Arithmetic operations
 /**
  * @brief Perform binary arithmetic operation on SITypes objects.
@@ -52,7 +50,6 @@ void SITypesShutdown(void);
  *       Multiplication and division work for all SITypes.
  */
 OCTypeRef SITypesCreateWithBinaryArithmeticOperation(OCTypeRef a, OCTypeRef b, char op, OCStringRef *outError);
-
 /**
  * @brief Raise SITypes object to an integer power.
  * @param a The base operand (SIScalar, SIUnit, or SIDimensionality).
@@ -62,7 +59,6 @@ OCTypeRef SITypesCreateWithBinaryArithmeticOperation(OCTypeRef a, OCTypeRef b, c
  * @note All SITypes support power operations with integer exponents.
  */
 OCTypeRef SITypesCreateByRaisingToPower(OCTypeRef a, int power, OCStringRef *outError);
-
 /**
  * @brief Take the nth root of an SITypes object.
  * @param a The operand (SIScalar, SIUnit, or SIDimensionality).
@@ -72,7 +68,6 @@ OCTypeRef SITypesCreateByRaisingToPower(OCTypeRef a, int power, OCStringRef *out
  * @note All SITypes support nth root operations with integer roots.
  */
 OCTypeRef SITypesCreateByTakingNthRoot(OCTypeRef a, int root, OCStringRef *outError);
-
 /**
  * @brief Reduce an SITypes object to its simplest form.
  * @param a The operand (SIScalar, SIUnit, or SIDimensionality).
@@ -81,7 +76,6 @@ OCTypeRef SITypesCreateByTakingNthRoot(OCTypeRef a, int root, OCStringRef *outEr
  *       for dimensionalities, reduces exponents to lowest terms.
  */
 OCTypeRef SITypesCreateByReducing(OCTypeRef a);
-
 /**
  * @brief Create a string representation of an SITypes object.
  * @param obj The SITypes object (SIScalar, SIUnit, or SIDimensionality).
@@ -91,6 +85,4 @@ OCTypeRef SITypesCreateByReducing(OCTypeRef a);
  *       The returned string must be released with OCRelease().
  */
 OCStringRef SITypesCreateStringRepresentation(OCTypeRef obj);
-
-
 #endif /* SITypes_h */

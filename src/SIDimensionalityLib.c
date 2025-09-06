@@ -11,6 +11,14 @@ static int OCStringSort(const void *val1, const void *val2, void *context) {
     return OCStringCompare(str1, str2, kOCCompareCaseInsensitive);
 }
 #pragma mark Library
+// Forward declarations for internal functions
+static SIDimensionalityRef SIDimensionalityWithExponents(uint8_t mass_num_exp, uint8_t mass_den_exp,
+                                                         uint8_t length_num_exp, uint8_t length_den_exp,
+                                                         uint8_t time_num_exp, uint8_t time_den_exp,
+                                                         uint8_t current_num_exp, uint8_t current_den_exp,
+                                                         uint8_t temperature_num_exp, uint8_t temperature_den_exp,
+                                                         uint8_t amount_num_exp, uint8_t amount_den_exp,
+                                                         uint8_t luminous_num_exp, uint8_t luminous_den_exp);
 // dimLibrary is a Singleton
 OCMutableDictionaryRef dimLibrary = NULL;
 OCMutableDictionaryRef dimQuantitiesLibrary = NULL;
@@ -333,12 +341,10 @@ OCArrayRef SIDimensionalityCreateArrayOfQuantitiesWithSameReducedDimensionality(
 // }
 //
 OCArrayRef SIDimensionalityCreateArrayOfAllQuantityNames(void) {
-    if (NULL == dimQuantitiesLibrary) 
+    if (NULL == dimQuantitiesLibrary)
         DimensionalityLibraryBuild();
-    
     return OCDictionaryCreateArrayWithAllKeys(dimQuantitiesLibrary);
 }
-
 OCArrayRef SIDimensionalityCreateArrayOfQuantityNames(SIDimensionalityRef dim) {
     if (!dim) return NULL;
     // Lazy initialization of the dimensionality-to-quantity map
@@ -384,7 +390,7 @@ OCArrayRef SIDimensionalityCreateArrayOfQuantityNamesWithSameReducedDimensionali
         OCRelease(equivalents);
         return NULL;
     }
-    for (OCIndex i = 0; i < OCArrayGetCount(equivalents); ++i) {
+    for (uint64_t i = 0; i < OCArrayGetCount(equivalents); ++i) {
         SIDimensionalityRef equivDim = OCArrayGetValueAtIndex(equivalents, i);
         OCArrayRef quantityNames = SIDimensionalityCreateArrayOfQuantityNames(equivDim);
         if (quantityNames && OCArrayGetCount(quantityNames) > 0) {
@@ -475,16 +481,6 @@ SIDimensionalityRef SIDimensionalityForBaseDimensionIndex(SIBaseDimensionIndex i
             return SIDimensionalityWithExponents(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
     }
     return NULL;
-}
-/*
- @function SIDimensionalityCopyDimensionalityLibrary
- @abstract Gets a copy of the dimLibrary of dimensionalities
- @result a CFSet containing the dimensionalities.
- */
-static OCDictionaryRef SIDimensionalityCopyDimensionalityLibrary(void) {
-    if (NULL == dimLibrary)
-        DimensionalityLibraryBuild();
-    return OCDictionaryCreateCopy(dimLibrary);
 }
 // Add a cleanup function for static dictionaries
 void cleanupDimensionalityLibraries(void) {

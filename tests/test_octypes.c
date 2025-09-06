@@ -96,6 +96,7 @@ bool octypesTest5(void) {
 }
 // Adapter remains the same
 static OCComparisonResult OCStringCompareAdapter(const void *a, const void *b, void *context) {
+    (void)context;  // Unused parameter - required by OCTypes sort API
     return OCStringCompare((OCStringRef)a, (OCStringRef)b, 0);
 }
 bool octypesTest6(void) {

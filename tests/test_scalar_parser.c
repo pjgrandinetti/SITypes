@@ -1,9 +1,9 @@
 #include <assert.h>
+#include <math.h>  // For isinf function
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>  // For isinf function
 #include "SITypes.h"
 #include "test_utils.h"  // Include the new test utils header
 bool test_scalar_parser_1(void) {
@@ -904,7 +904,7 @@ bool test_scalar_parser_12(void) {
     // Check that the units are correct (should be g/mol)
     SIUnitRef unit = SIQuantityGetUnit((SIQuantityRef)methane_fw);
     OCStringRef unit_symbol = SIUnitCopySymbol(unit);
-    const char* symbol_str = OCStringGetCString(unit_symbol);
+    const char *symbol_str = OCStringGetCString(unit_symbol);
     if (strcmp(symbol_str, "g/mol") != 0) {
         printf("%s failed: fw[CH4] units are '%s' (expected 'g/mol')\n", __func__, symbol_str);
         OCRelease(unit_symbol);
@@ -1108,7 +1108,7 @@ bool test_scalar_parser_13(void) {
     // Check that π has unit symbol "π"
     SIUnitRef pi_unit = SIQuantityGetUnit((SIQuantityRef)pi_scalar);
     OCStringRef pi_unit_symbol = SIUnitCopySymbol(pi_unit);
-    const char* pi_symbol_str = OCStringGetCString(pi_unit_symbol);
+    const char *pi_symbol_str = OCStringGetCString(pi_unit_symbol);
     if (strcmp(pi_symbol_str, "π") != 0) {
         printf("%s failed: π unit symbol is '%s' (expected 'π')\n", __func__, pi_symbol_str);
         OCRelease(pi_unit_symbol);
@@ -1146,7 +1146,7 @@ bool test_scalar_parser_13(void) {
     // Check that the units are m^3/m (coherent SI for π*m^2)
     SIUnitRef expr_unit = SIQuantityGetUnit((SIQuantityRef)expression);
     OCStringRef expr_unit_symbol = SIUnitCopySymbol(expr_unit);
-    const char* expr_symbol_str = OCStringGetCString(expr_unit_symbol);
+    const char *expr_symbol_str = OCStringGetCString(expr_unit_symbol);
     printf("    π * (5 m)^2 units: %s\n", expr_symbol_str);
     // The units should be m^3/m since π*m^2 is not a named physical quantity
     if (strcmp(expr_symbol_str, "m³/m") != 0 && strcmp(expr_symbol_str, "m^3/m") != 0) {
@@ -1160,11 +1160,9 @@ bool test_scalar_parser_13(void) {
     printf("%s passed\n", __func__);
     return true;
 }
-
 bool test_scalar_parser_infinity(void) {
     printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
-
     // Test 1: Basic infinity parsing - "inf"
     printf("  Testing basic infinity parsing...\n");
     SIScalarRef inf_scalar = SIScalarCreateFromExpression(STR("inf"), &err);
@@ -1180,7 +1178,6 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double inf_value = SIScalarDoubleValue(inf_scalar);
     if (!isinf(inf_value)) {
         printf("%s failed: 'inf' did not produce infinity value: %f\n", __func__, inf_value);
@@ -1189,7 +1186,6 @@ bool test_scalar_parser_infinity(void) {
     }
     printf("    inf = %f (isinf: %d)\n", inf_value, isinf(inf_value));
     OCRelease(inf_scalar);
-
     // Test 2: Unicode infinity symbol - "∞"
     printf("  Testing Unicode infinity symbol...\n");
     SIScalarRef unicode_inf = SIScalarCreateFromExpression(STR("∞"), &err);
@@ -1205,7 +1201,6 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double unicode_inf_value = SIScalarDoubleValue(unicode_inf);
     if (!isinf(unicode_inf_value)) {
         printf("%s failed: '∞' did not produce infinity value: %f\n", __func__, unicode_inf_value);
@@ -1214,7 +1209,6 @@ bool test_scalar_parser_infinity(void) {
     }
     printf("    ∞ = %f (isinf: %d)\n", unicode_inf_value, isinf(unicode_inf_value));
     OCRelease(unicode_inf);
-
     // Test 3: Negative infinity
     printf("  Testing negative infinity...\n");
     SIScalarRef neg_inf = SIScalarCreateFromExpression(STR("-inf"), &err);
@@ -1230,7 +1224,6 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double neg_inf_value = SIScalarDoubleValue(neg_inf);
     if (!isinf(neg_inf_value) || neg_inf_value > 0) {
         printf("%s failed: '-inf' did not produce negative infinity: %f\n", __func__, neg_inf_value);
@@ -1239,7 +1232,6 @@ bool test_scalar_parser_infinity(void) {
     }
     printf("    -inf = %f (isinf: %d, negative: %d)\n", neg_inf_value, isinf(neg_inf_value), neg_inf_value < 0);
     OCRelease(neg_inf);
-
     // Test 4: Infinity with units
     printf("  Testing infinity with units...\n");
     SIScalarRef inf_with_units = SIScalarCreateFromExpression(STR("inf m/s"), &err);
@@ -1255,20 +1247,17 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double inf_units_value = SIScalarDoubleValue(inf_with_units);
     if (!isinf(inf_units_value)) {
         printf("%s failed: 'inf m/s' did not produce infinity: %f\n", __func__, inf_units_value);
         OCRelease(inf_with_units);
         return false;
     }
-
     // Check units are preserved
     SIUnitRef inf_unit = SIQuantityGetUnit((SIQuantityRef)inf_with_units);
     OCStringRef inf_unit_symbol = SIUnitCopySymbol(inf_unit);
-    const char* inf_symbol_str = OCStringGetCString(inf_unit_symbol);
+    const char *inf_symbol_str = OCStringGetCString(inf_unit_symbol);
     printf("    inf m/s = %f %s\n", inf_units_value, inf_symbol_str);
-
     if (strcmp(inf_symbol_str, "m/s") != 0) {
         printf("%s failed: inf m/s units are '%s' (expected 'm/s')\n", __func__, inf_symbol_str);
         OCRelease(inf_unit_symbol);
@@ -1277,7 +1266,6 @@ bool test_scalar_parser_infinity(void) {
     }
     OCRelease(inf_unit_symbol);
     OCRelease(inf_with_units);
-
     // Test 5: Infinity arithmetic - addition
     printf("  Testing infinity arithmetic - addition...\n");
     SIScalarRef inf_plus_5 = SIScalarCreateFromExpression(STR("inf + 5"), &err);
@@ -1293,7 +1281,6 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double inf_plus_value = SIScalarDoubleValue(inf_plus_5);
     if (!isinf(inf_plus_value)) {
         printf("%s failed: 'inf + 5' did not produce infinity: %f\n", __func__, inf_plus_value);
@@ -1302,7 +1289,6 @@ bool test_scalar_parser_infinity(void) {
     }
     printf("    inf + 5 = %f (isinf: %d)\n", inf_plus_value, isinf(inf_plus_value));
     OCRelease(inf_plus_5);
-
     // Test 6: Infinity arithmetic - multiplication
     printf("  Testing infinity arithmetic - multiplication...\n");
     SIScalarRef inf_times_2 = SIScalarCreateFromExpression(STR("2 * inf"), &err);
@@ -1318,7 +1304,6 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double inf_times_value = SIScalarDoubleValue(inf_times_2);
     if (!isinf(inf_times_value)) {
         printf("%s failed: '2 * inf' did not produce infinity: %f\n", __func__, inf_times_value);
@@ -1327,7 +1312,6 @@ bool test_scalar_parser_infinity(void) {
     }
     printf("    2 * inf = %f (isinf: %d)\n", inf_times_value, isinf(inf_times_value));
     OCRelease(inf_times_2);
-
     // Test 7: Division by infinity (should give zero)
     printf("  Testing division by infinity...\n");
     SIScalarRef five_div_inf = SIScalarCreateFromExpression(STR("5 / inf"), &err);
@@ -1343,7 +1327,6 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double div_inf_value = SIScalarDoubleValue(five_div_inf);
     if (div_inf_value != 0.0) {
         printf("%s failed: '5 / inf' did not produce zero: %f\n", __func__, div_inf_value);
@@ -1352,7 +1335,6 @@ bool test_scalar_parser_infinity(void) {
     }
     printf("    5 / inf = %f\n", div_inf_value);
     OCRelease(five_div_inf);
-
     // Test 8: Division by zero (should give infinity)
     printf("  Testing division by zero...\n");
     SIScalarRef five_div_zero = SIScalarCreateFromExpression(STR("5 / 0"), &err);
@@ -1368,7 +1350,6 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double div_zero_value = SIScalarDoubleValue(five_div_zero);
     if (!isinf(div_zero_value)) {
         printf("%s failed: '5 / 0' did not produce infinity: %f\n", __func__, div_zero_value);
@@ -1377,7 +1358,6 @@ bool test_scalar_parser_infinity(void) {
     }
     printf("    5 / 0 = %f (isinf: %d)\n", div_zero_value, isinf(div_zero_value));
     OCRelease(five_div_zero);
-
     // Test 9: Infinity to the power (should remain infinity)
     printf("  Testing infinity to the power...\n");
     SIScalarRef inf_power = SIScalarCreateFromExpression(STR("(inf)^2"), &err);
@@ -1393,7 +1373,6 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double inf_power_value = SIScalarDoubleValue(inf_power);
     if (!isinf(inf_power_value)) {
         printf("%s failed: '(inf)^2' did not produce infinity: %f\n", __func__, inf_power_value);
@@ -1402,7 +1381,6 @@ bool test_scalar_parser_infinity(void) {
     }
     printf("    (inf)^2 = %f (isinf: %d)\n", inf_power_value, isinf(inf_power_value));
     OCRelease(inf_power);
-
     // Test 10: Complex expression with infinity and units
     printf("  Testing complex expression with infinity and units...\n");
     SIScalarRef complex_inf = SIScalarCreateFromExpression(STR("(inf m/s) * (2 s)"), &err);
@@ -1418,20 +1396,17 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double complex_inf_value = SIScalarDoubleValue(complex_inf);
     if (!isinf(complex_inf_value)) {
         printf("%s failed: '(inf m/s) * (2 s)' did not produce infinity: %f\n", __func__, complex_inf_value);
         OCRelease(complex_inf);
         return false;
     }
-
     // Check units are correct (should be m•s/s which equals m)
     SIUnitRef complex_unit = SIQuantityGetUnit((SIQuantityRef)complex_inf);
     OCStringRef complex_unit_symbol = SIUnitCopySymbol(complex_unit);
-    const char* complex_symbol_str = OCStringGetCString(complex_unit_symbol);
+    const char *complex_symbol_str = OCStringGetCString(complex_unit_symbol);
     printf("    (inf m/s) * (2 s) = %f %s\n", complex_inf_value, complex_symbol_str);
-
     // Accept either reduced form "m" or unreduced form "m•s/s"
     if (strcmp(complex_symbol_str, "m") != 0 && strcmp(complex_symbol_str, "m•s/s") != 0) {
         printf("%s failed: (inf m/s) * (2 s) units are '%s' (expected 'm' or 'm•s/s')\n", __func__, complex_symbol_str);
@@ -1441,7 +1416,6 @@ bool test_scalar_parser_infinity(void) {
     }
     OCRelease(complex_unit_symbol);
     OCRelease(complex_inf);
-
     // Test 11: Functions with infinity (sqrt of infinity)
     printf("  Testing functions with infinity...\n");
     SIScalarRef sqrt_inf = SIScalarCreateFromExpression(STR("sqrt(inf)"), &err);
@@ -1457,7 +1431,6 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(err);
         err = NULL;
     }
-
     double sqrt_inf_value = SIScalarDoubleValue(sqrt_inf);
     if (!isinf(sqrt_inf_value)) {
         printf("%s failed: 'sqrt(inf)' did not produce infinity: %f\n", __func__, sqrt_inf_value);
@@ -1466,7 +1439,6 @@ bool test_scalar_parser_infinity(void) {
     }
     printf("    sqrt(inf) = %f (isinf: %d)\n", sqrt_inf_value, isinf(sqrt_inf_value));
     OCRelease(sqrt_inf);
-
     printf("%s passed\n", __func__);
     return true;
 }

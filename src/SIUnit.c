@@ -215,7 +215,6 @@ static void *impl_SIUnitDeepCopyMutable(const void *obj) {
 static cJSON *impl_SIUnitCopyJSON(const void *obj, bool typed, OCStringRef *outError) {
     return SIUnitCopyAsJSON((SIUnitRef)obj, typed, outError);
 }
-
 static struct impl_SIUnit *SIUnitAllocate() {
     return OCTypeAlloc(struct impl_SIUnit,
                        SIUnitGetTypeID(),
@@ -349,6 +348,7 @@ bool SIUnitAreEquivalentUnits(SIUnitRef theUnit1, SIUnitRef theUnit2) {
 }
 // Common helper function for creating and simplifying symbols
 static OCStringRef SIUnitCreateSimplifiedSymbol(OCStringRef raw_symbol, bool reduce, OCStringRef *error) {
+    (void)error;  // Unused parameter - reserved for future error reporting
     OCStringRef simplified_symbol;
     if (reduce) {
         simplified_symbol = SIUnitCreateCleanedAndReducedExpression(raw_symbol);
@@ -363,19 +363,16 @@ static OCStringRef SIUnitCreateSimplifiedSymbol(OCStringRef raw_symbol, bool red
 }
 cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed, OCStringRef *outError) {
     if (outError) *outError = NULL;
-
     if (!unit) {
         if (outError) *outError = STR("SIUnit input is NULL");
         return cJSON_CreateNull();
     }
-
     // Get the symbol string
     const char *symbolStr = "";
     if (unit->symbol) {
         const char *s = OCStringGetCString(unit->symbol);
         symbolStr = s ? s : "";
     }
-
     if (typed) {
         // Typed format: wrap symbol with type information
         cJSON *entry = cJSON_CreateObject();
@@ -395,13 +392,11 @@ cJSON *SIUnitCopyAsJSON(SIUnitRef unit, bool typed, OCStringRef *outError) {
         return result;
     }
 }
-
 SIUnitRef SIUnitFromJSON(cJSON *json, OCStringRef *outError) {
     if (!json) {
         if (outError) *outError = STR("JSON input is NULL");
         return NULL;
     }
-
     // Handle typed format
     if (cJSON_IsObject(json)) {
         cJSON *type = cJSON_GetObjectItem(json, "type");
@@ -411,20 +406,15 @@ SIUnitRef SIUnitFromJSON(cJSON *json, OCStringRef *outError) {
                 // This is typed format
                 cJSON *value = cJSON_GetObjectItem(json, "value");
                 if (!cJSON_IsString(value)) return NULL;
-
                 const char *symbol = cJSON_GetStringValue(value);
                 if (!symbol) return NULL;
-
                 OCStringRef str = OCStringCreateWithCString(symbol);
                 if (!str) return NULL;
-
                 SIUnitRef unit = SIUnitWithSymbol(str);
                 OCRelease(str);
-
                 return unit;
             }
         }
-
         // This is untyped format - reconstruct from detailed JSON
         // For now, we'll just return NULL since this requires more complex reconstruction
         // In a full implementation, you'd need to parse dimensionality, scale factor, etc.
@@ -437,19 +427,15 @@ SIUnitRef SIUnitFromJSON(cJSON *json, OCStringRef *outError) {
             if (outError) *outError = STR("JSON string value is NULL");
             return NULL;
         }
-
         OCStringRef str = OCStringCreateWithCString(symbol);
         if (!str) {
             if (outError) *outError = STR("Failed to create OCString from symbol");
             return NULL;
         }
-
         SIUnitRef unit = SIUnitWithSymbol(str);
         OCRelease(str);
-
         return unit;
     }
-
     if (outError) *outError = STR("JSON input is neither an object nor a string");
     return NULL;
 }
@@ -479,10 +465,6 @@ static OCMutableDictionaryRef SIUnitGetDimensionalitiesLib(void) {
     if (NULL == unitsDimensionalitiesLibrary) SIUnitCreateLibraries();
     return unitsDimensionalitiesLibrary;
 }
-static OCMutableArrayRef SIUnitGetUnitsArrayLib(void) {
-    if (NULL == unitsArrayLibrary) SIUnitCreateLibraries();
-    return unitsArrayLibrary;
-}
 // Helper function to check if a symbol is underived (contains no operators)
 static bool SIUnitSymbolIsUnderived(OCStringRef symbol) {
     if (!symbol) return false;
@@ -510,20 +492,6 @@ static void AddToUnitsDictionaryLibrary(SIUnitRef unit) {
         if (key) {
             OCDictionaryAddValue(unitsDictionaryLibrary, key, unit);
             OCRelease(key);
-        }
-    } else
-        OCDictionaryAddValue(unitsDictionaryLibrary, unit->symbol, unit);
-}
-// Enhanced version that accepts pre-computed key to avoid redundant expression cleaning
-static void AddToUnitsDictionaryLibraryWithKey(SIUnitRef unit, OCStringRef key) {
-    if (!unit) return;  // Guard against NULL pointer
-    if (!OCTypeGetStaticInstance(unit)) {
-        printf("trying to add non-static %s\n", OCStringGetCString(unit->symbol));
-    }
-    if (!SIUnitSymbolIsUnderived(unit->symbol)) {
-        if (key) {
-            OCDictionaryAddValue(unitsDictionaryLibrary, key, unit);
-            OCRelease(key);  // Release the key after dictionary retains it
         }
     } else
         OCDictionaryAddValue(unitsDictionaryLibrary, unit->symbol, unit);
@@ -724,12 +692,6 @@ static SIUnitRef AddPlanckUnitToLib(
 // ——————————————————————————————————————————
 // Numeric tables (descending exponent order)
 // ——————————————————————————————————————————
-static const SIPrefix _prefixValues[] = {
-#define X(pref, exp, sym, name) pref,
-    SIPREFIX_DEFINITIONS
-#undef X
-};
-enum { _PREFIX_COUNT = sizeof(_prefixValues) / sizeof(_prefixValues[0]) };
 static OCStringRef prefixSymbolForSIPrefix(SIPrefix prefix) {
     switch (prefix) {
 #define X(pref, exp, sym, name) \
@@ -791,7 +753,7 @@ static bool AddToLibPrefixedWithUnitSystem(
         0,
         1, 2, 3, 6, 9, 12, 15, 18, 21, 24};
     const size_t kPrefixCount = sizeof(kSIPrefixExponents) / sizeof(kSIPrefixExponents[0]);
-    for (OCIndex index = 0; index < kPrefixCount; ++index) {
+    for (size_t index = 0; index < kPrefixCount; ++index) {
         SIPrefix prefix = (SIPrefix)kSIPrefixExponents[index];
         OCStringRef prefixSymbol = prefixSymbolForSIPrefix(prefix);
         OCStringRef prefixName = prefixNameForSIPrefix(prefix);
@@ -871,6 +833,7 @@ static bool AddCGSToLibPrefixed(
                                           scale_to_coherent_si, SIUnitSetIsCGSUnit, error);
 }
 static OCComparisonResult unitNameLengthSort(const void *val1, const void *val2, void *context) {
+    (void)context;  // Unused parameter - required by OCTypes sort API
     SIUnitRef unit1 = (SIUnitRef)val1;
     SIUnitRef unit2 = (SIUnitRef)val2;
     OCStringRef name1 = unit1->name;
@@ -915,14 +878,14 @@ static bool SIUnitCreateLibraries(void) {
     }
     OCArraySortValues(unitsArrayLibrary, OCRangeMake(0, OCArrayGetCount(unitsArrayLibrary)), unitNameLengthSort, NULL);
     // Add unit to units library dictionary
-    for (OCIndex index = 0; index < OCArrayGetCount(unitsArrayLibrary); index++) {
+    for (uint64_t index = 0; index < OCArrayGetCount(unitsArrayLibrary); index++) {
         SIUnitRef unit = OCArrayGetValueAtIndex(unitsArrayLibrary, index);
         AddToUnitsDictionaryLibrary(unit);
     }
     // Now that the units have been created, let's add all the coherent derived units
     OCArrayRef quantities = OCDictionaryCreateArrayWithAllKeys(unitsQuantitiesLibrary);
     OCDictionaryRef unitsDictionaryLib = SIUnitGetUnitsDictionaryLib();
-    for (OCIndex index = 0; index < OCArrayGetCount(quantities); index++) {
+    for (uint64_t index = 0; index < OCArrayGetCount(quantities); index++) {
         OCStringRef quantity = OCArrayGetValueAtIndex(quantities, index);
         SIDimensionalityRef quantityDim = SIDimensionalityForQuantity(quantity, &error);
         OCMutableStringRef symbol = (OCMutableStringRef)SIDimensionalityCopySymbol(quantityDim);
@@ -971,7 +934,7 @@ void SIUnitLibrariesShutdown(void) {
         unitsDictionaryLibrary = NULL;
     }
     if (unitsArrayLibrary) {
-        for (OCIndex index = 0; index < OCArrayGetCount(unitsArrayLibrary); index++) {
+        for (uint64_t index = 0; index < OCArrayGetCount(unitsArrayLibrary); index++) {
             SIUnitRef unit = (SIUnitRef)OCArrayGetValueAtIndex(unitsArrayLibrary, index);
             OCTypeSetStaticInstance(unit, false);
         }
@@ -1386,6 +1349,7 @@ OCArrayRef SIUnitCreateArrayOfEquivalentUnits(SIUnitRef theUnit) {
     return NULL;
 }
 static OCComparisonResult unit2Sort(const void *val1, const void *val2, void *context) {
+    (void)context;  // Unused parameter - required by OCTypes sort API
     SIUnitRef unit1 = (SIUnitRef)val1;
     SIUnitRef unit2 = (SIUnitRef)val2;
     double scale1 = SIUnitScaleToCoherentSIUnit(unit1);
@@ -1424,7 +1388,7 @@ SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit) {
     }
     SIUnitRef best = theUnit;
     OCStringRef symbol = SIUnitCopySymbol(theUnit);
-    int64_t length = OCStringGetLength(symbol);
+    uint64_t length = OCStringGetLength(symbol);
     OCRelease(symbol);
     for (uint64_t i = 0, cnt = OCArrayGetCount(candidates); i < cnt; i++) {
         SIUnitRef candidate = OCArrayGetValueAtIndex(candidates, i);
@@ -1439,20 +1403,6 @@ SIUnitRef SIUnitFindEquivalentUnitWithShortestSymbol(SIUnitRef theUnit) {
     return best;
 }
 //
-// Helper function to check if a scale is approximately a power of 10 (SI unit)
-static bool is_si_scale(double scale) {
-    if (scale <= 0.0) return false;
-    // Check for common SI prefixes by looking at powers of 1000
-    double log_val = log10(scale);
-    double rounded = round(log_val / 3.0) * 3.0;  // Round to nearest multiple of 3
-    // Check if it's close to a multiple of 3 (1000-based prefixes)
-    if (fabs(log_val - rounded) < 0.01) return true;
-    // Also check for simple powers of 10
-    double simple_rounded = round(log_val);
-    if (fabs(log_val - simple_rounded) < 0.01) return true;
-    return false;
-}
-//
 // Common helper function for finding best matching unit with SI preference
 static SIUnitRef SIUnitFindBestMatchingUnit(SIDimensionalityRef dimensionality, double target_scale) {
     // Always ensure the library has a coherent SI unit with this dimensionality
@@ -1465,7 +1415,7 @@ static SIUnitRef SIUnitFindBestMatchingUnit(SIDimensionalityRef dimensionality, 
     SIUnitRef best_match = NULL;
     double best_scale_diff = 1e100;
     int best_token_count = INT_MAX;
-    for (OCIndex i = 0; i < OCArrayGetCount(candidates); i++) {
+    for (uint64_t i = 0; i < OCArrayGetCount(candidates); i++) {
         SIUnitRef candidate = (SIUnitRef)OCArrayGetValueAtIndex(candidates, i);
         // Only consider SI units as candidates
         if (!SIUnitIsSIUnit(candidate)) {
