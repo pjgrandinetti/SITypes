@@ -132,8 +132,9 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           make install
-          mkdir -p header-pkg
-          cd install && zip -qr ../header-pkg/libSITypes-headers.zip include/
+          mkdir -p header-pkg/include
+          cp install/include/SITypes/*.h header-pkg/include/
+          zip -j header-pkg/libSITypes-headers.zip header-pkg/include/*.h
 
       - name: Upload headers artifact
         if: runner.os == 'Linux'
