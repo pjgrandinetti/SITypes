@@ -1723,9 +1723,7 @@ SIUnitRef SIUnitByTakingNthRoot(SIUnitRef theUnit,
     // First approach: Look for existing units with matching dimensionality
     SIUnitRef best_match = SIUnitFindBestMatchingUnit(dimensionality, scale);
     if (best_match) {
-        if (unit_multiplier) {
-            *unit_multiplier *= scale / best_match->scale_to_coherent_si;
-        }
+        *unit_multiplier *= scale / best_match->scale_to_coherent_si;
         return best_match;
     }
     // Second approach: Create new symbol by wrapping input symbol with "( )^(1/root)"
