@@ -31,13 +31,10 @@ bool test_check_for_duplicate_units(void) {
     // Track duplicate pointers and static instance violations
     bool duplicatesFound = false;
     bool staticInstanceViolations = false;
-    int duplicateCount = 0;
-    int nonStaticCount = 0;
     // First pass: Check that all units are static instances
     for (uint64_t i = 0; i < count; i++) {
         if (!OCTypeGetStaticInstance(units[i])) {
             staticInstanceViolations = true;
-            nonStaticCount++;
         }
     }
     // Second pass: Check for duplicate unit pointers
@@ -45,7 +42,6 @@ bool test_check_for_duplicate_units(void) {
         for (uint64_t j = i + 1; j < count; j++) {
             if (units[i] == units[j]) {
                 duplicatesFound = true;
-                duplicateCount++;
             }
         }
     }

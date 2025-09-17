@@ -1,4 +1,4 @@
-%option noyywrap nodefault
+%option noyywrap
 %option prefix="siue"
 %option nounput
 %option noinput
