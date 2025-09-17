@@ -7,7 +7,6 @@
 #include "SITypes.h"
 #include "test_utils.h"  // Include the new test utils header
 bool test_scalar_parser_1(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Part 1: 4.3 eV parsing
     SIScalarRef scalar = SIScalarCreateFromExpression(STR("4.3 eV"), &err);
@@ -110,11 +109,9 @@ bool test_scalar_parser_1(void) {
     OCRelease(mass);
     OCRelease(force);
     OCRelease(acceleration);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_2(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // force
     SIScalarRef force = SIScalarCreateFromExpression(STR("500 N"), &err);
@@ -197,11 +194,9 @@ bool test_scalar_parser_2(void) {
     OCRelease(accel);
     OCRelease(mass);
     OCRelease(mass2);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_3(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Parse "2^3"
     SIScalarRef res1 = SIScalarCreateFromExpression(STR("2^3"), &err);
@@ -242,11 +237,9 @@ bool test_scalar_parser_3(void) {
     // Cleanup
     OCRelease(res1);
     OCRelease(res2);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_4(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Parse expression with implicit multiplication
     SIScalarRef s = SIScalarCreateFromExpression(STR("(2+3)(4+1)"), &err);
@@ -287,11 +280,9 @@ bool test_scalar_parser_4(void) {
     // Cleanup and success
     OCRelease(s);
     OCRelease(e);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_5(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // √(9) m
     SIScalarRef r1 = SIScalarCreateFromExpression(STR("√(9) m"), &err);
@@ -367,11 +358,9 @@ bool test_scalar_parser_5(void) {
     }
     OCRelease(r3);
     OCRelease(r4);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_6(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Multiplication test
     SIScalarRef d0 = SIScalarCreateFromExpression(STR("π*m^2"), &err);
@@ -510,11 +499,9 @@ bool test_scalar_parser_6(void) {
     OCRelease(d4);
     OCRelease(d5);
     OCRelease(d6);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_7(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Parse "5 µm"
     SIScalarRef m1 = SIScalarCreateFromExpression(STR("5 µm"), &err);
@@ -547,11 +534,9 @@ bool test_scalar_parser_7(void) {
     }
     OCRelease(m1);
     OCRelease(m2);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_8(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Parse "1 quartertsp"
     SIScalarRef q = SIScalarCreateFromExpression(STR("1 quartertsp"), &err);
@@ -585,11 +570,9 @@ bool test_scalar_parser_8(void) {
     // Clean up
     OCRelease(q);
     OCRelease(qExp);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_9(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Try to parse invalid expression
     SIScalarRef bad = SIScalarCreateFromExpression(STR("2+"), &err);
@@ -601,11 +584,9 @@ bool test_scalar_parser_9(void) {
     }
     // Clean up
     OCRelease(err);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_10(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // n
     SIScalarRef n = SIScalarCreateFromExpression(STR("0.078 mol"), &err);
@@ -777,11 +758,9 @@ bool test_scalar_parser_10(void) {
     OCRelease(nRT);
     OCRelease(p);
     OCRelease(expected);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_11(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Test parser recovery after bad expression
     // This test checks if the parser properly recovers after parsing an invalid expression
@@ -874,11 +853,9 @@ bool test_scalar_parser_11(void) {
     OCRelease(expected);
     OCRelease(scalar2);
     OCRelease(scalar3);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_12(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Test formula weight function fw[CH4]
     SIScalarRef methane_fw = SIScalarCreateFromExpression(STR("fw[CH4]"), &err);
@@ -992,14 +969,11 @@ bool test_scalar_parser_12(void) {
     OCRelease(co2_fw);
     OCRelease(water_fw);
     OCRelease(methane_fw);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_nmr_functions(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Test 1: Check that spin[H1] works (baseline test)
-    printf("  Testing spin[H1]...\n");
     SIScalarRef h1_spin = SIScalarCreateFromExpression(STR("spin[H1]"), &err);
     if (!h1_spin) {
         printf("Error parsing 'spin[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
@@ -1011,7 +985,6 @@ bool test_nmr_functions(void) {
         err = NULL;
     }
     double spin_value = SIScalarDoubleValue(h1_spin);
-    printf("    spin[H1] = %f\n", spin_value);
     if (fabs(spin_value - 0.5) > 1e-10) {
         printf("%s failed: Expected spin[H1] = 0.5, got %f\n", __func__, spin_value);
         OCRelease(h1_spin);
@@ -1019,7 +992,6 @@ bool test_nmr_functions(void) {
     }
     OCRelease(h1_spin);
     // Test 2: Check magnetic dipole moment μ_I[H1]
-    printf("  Testing μ_I[H1]...\n");
     SIScalarRef h1_moment = SIScalarCreateFromExpression(STR("μ_I[H1]"), &err);
     if (!h1_moment) {
         printf("Error parsing 'μ_I[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
@@ -1031,7 +1003,6 @@ bool test_nmr_functions(void) {
         err = NULL;
     }
     double moment_value = SIScalarDoubleValue(h1_moment);
-    printf("    μ_I[H1] = %f µ_N\n", moment_value);
     if (fabs(moment_value - 2.79284739) > 1e-6) {
         printf("%s failed: Expected μ_I[H1] ≈ 2.79284739, got %f\n", __func__, moment_value);
         OCRelease(h1_moment);
@@ -1039,7 +1010,6 @@ bool test_nmr_functions(void) {
     }
     OCRelease(h1_moment);
     // Test 3: Check gyromagnetic ratio 𝛾_I[H1]
-    printf("  Testing 𝛾_I[H1]...\n");
     SIScalarRef h1_gamma = SIScalarCreateFromExpression(STR("𝛾_I[H1]"), &err);
     if (!h1_gamma) {
         printf("Error parsing '𝛾_I[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
@@ -1051,7 +1021,6 @@ bool test_nmr_functions(void) {
         err = NULL;
     }
     double gamma_value = SIScalarDoubleValue(h1_gamma);
-    printf("    𝛾_I[H1] = %f rad/(s·T)\n", gamma_value);
     if (fabs(gamma_value - 267522191.787411) > 1e6) {
         printf("%s failed: Expected 𝛾_I[H1] ≈ 267522191.787411, got %f\n", __func__, gamma_value);
         OCRelease(h1_gamma);
@@ -1059,7 +1028,6 @@ bool test_nmr_functions(void) {
     }
     OCRelease(h1_gamma);
     // Test 4: Check NMR frequency nmr[H1]
-    printf("  Testing nmr[H1]...\n");
     SIScalarRef h1_nmr = SIScalarCreateFromExpression(STR("nmr[H1]"), &err);
     if (!h1_nmr) {
         printf("Error parsing 'nmr[H1]': %s\n", err ? OCStringGetCString(err) : "Unknown error");
@@ -1071,18 +1039,15 @@ bool test_nmr_functions(void) {
         err = NULL;
     }
     double nmr_value = SIScalarDoubleValue(h1_nmr);
-    printf("    nmr[H1] = %f MHz/T\n", nmr_value);
     if (fabs(nmr_value - 42.576) > 1.0) {
         printf("%s failed: Expected nmr[H1] ≈ 42.576 MHz/T, got %f\n", __func__, nmr_value);
         OCRelease(h1_nmr);
         return false;
     }
     OCRelease(h1_nmr);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_13(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Test π unit - should return numerical value 1 with unit symbol "π"
     SIScalarRef pi_scalar = SIScalarCreateFromExpression(STR("π"), &err);
@@ -1099,7 +1064,6 @@ bool test_scalar_parser_13(void) {
         err = NULL;
     }
     double pi_value = SIScalarDoubleValue(pi_scalar);
-    printf("    π value: %.15f\n", pi_value);
     if (fabs(pi_value - 1.0) > 1e-14) {
         printf("%s failed: π value incorrect. Expected: 1.0, Got: %.15f\n", __func__, pi_value);
         OCRelease(pi_scalar);
@@ -1134,7 +1098,6 @@ bool test_scalar_parser_13(void) {
         err = NULL;
     }
     double expression_value = SIScalarDoubleValue(expression);
-    printf("    π * (5 m)^2 value: %.15f\n", expression_value);
     // Expected: π-scaling-factor * 25 = 3.141592653589793 * 25 = 78.53981633974483
     double expected_value = 78.53981633974483;
     if (fabs(expression_value - expected_value) > 1e-12) {
@@ -1147,7 +1110,6 @@ bool test_scalar_parser_13(void) {
     SIUnitRef expr_unit = SIQuantityGetUnit((SIQuantityRef)expression);
     OCStringRef expr_unit_symbol = SIUnitCopySymbol(expr_unit);
     const char *expr_symbol_str = OCStringGetCString(expr_unit_symbol);
-    printf("    π * (5 m)^2 units: %s\n", expr_symbol_str);
     // The units should be m^3/m since π*m^2 is not a named physical quantity
     if (strcmp(expr_symbol_str, "m³/m") != 0 && strcmp(expr_symbol_str, "m^3/m") != 0) {
         printf("%s failed: π * (5 m)^2 units are '%s' (expected 'm³/m' or 'm^3/m')\n", __func__, expr_symbol_str);
@@ -1157,14 +1119,11 @@ bool test_scalar_parser_13(void) {
     }
     OCRelease(expr_unit_symbol);
     OCRelease(expression);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_scalar_parser_infinity(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Test 1: Basic infinity parsing - "inf"
-    printf("  Testing basic infinity parsing...\n");
     SIScalarRef inf_scalar = SIScalarCreateFromExpression(STR("inf"), &err);
     if (!inf_scalar) {
         if (err) {
@@ -1184,10 +1143,8 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(inf_scalar);
         return false;
     }
-    printf("    inf = %f (isinf: %d)\n", inf_value, isinf(inf_value));
     OCRelease(inf_scalar);
     // Test 2: Unicode infinity symbol - "∞"
-    printf("  Testing Unicode infinity symbol...\n");
     SIScalarRef unicode_inf = SIScalarCreateFromExpression(STR("∞"), &err);
     if (!unicode_inf) {
         if (err) {
@@ -1207,10 +1164,8 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(unicode_inf);
         return false;
     }
-    printf("    ∞ = %f (isinf: %d)\n", unicode_inf_value, isinf(unicode_inf_value));
     OCRelease(unicode_inf);
     // Test 3: Negative infinity
-    printf("  Testing negative infinity...\n");
     SIScalarRef neg_inf = SIScalarCreateFromExpression(STR("-inf"), &err);
     if (!neg_inf) {
         if (err) {
@@ -1230,10 +1185,8 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(neg_inf);
         return false;
     }
-    printf("    -inf = %f (isinf: %d, negative: %d)\n", neg_inf_value, isinf(neg_inf_value), neg_inf_value < 0);
     OCRelease(neg_inf);
     // Test 4: Infinity with units
-    printf("  Testing infinity with units...\n");
     SIScalarRef inf_with_units = SIScalarCreateFromExpression(STR("inf m/s"), &err);
     if (!inf_with_units) {
         if (err) {
@@ -1257,7 +1210,6 @@ bool test_scalar_parser_infinity(void) {
     SIUnitRef inf_unit = SIQuantityGetUnit((SIQuantityRef)inf_with_units);
     OCStringRef inf_unit_symbol = SIUnitCopySymbol(inf_unit);
     const char *inf_symbol_str = OCStringGetCString(inf_unit_symbol);
-    printf("    inf m/s = %f %s\n", inf_units_value, inf_symbol_str);
     if (strcmp(inf_symbol_str, "m/s") != 0) {
         printf("%s failed: inf m/s units are '%s' (expected 'm/s')\n", __func__, inf_symbol_str);
         OCRelease(inf_unit_symbol);
@@ -1267,7 +1219,6 @@ bool test_scalar_parser_infinity(void) {
     OCRelease(inf_unit_symbol);
     OCRelease(inf_with_units);
     // Test 5: Infinity arithmetic - addition
-    printf("  Testing infinity arithmetic - addition...\n");
     SIScalarRef inf_plus_5 = SIScalarCreateFromExpression(STR("inf + 5"), &err);
     if (!inf_plus_5) {
         if (err) {
@@ -1287,10 +1238,8 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(inf_plus_5);
         return false;
     }
-    printf("    inf + 5 = %f (isinf: %d)\n", inf_plus_value, isinf(inf_plus_value));
     OCRelease(inf_plus_5);
     // Test 6: Infinity arithmetic - multiplication
-    printf("  Testing infinity arithmetic - multiplication...\n");
     SIScalarRef inf_times_2 = SIScalarCreateFromExpression(STR("2 * inf"), &err);
     if (!inf_times_2) {
         if (err) {
@@ -1310,10 +1259,8 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(inf_times_2);
         return false;
     }
-    printf("    2 * inf = %f (isinf: %d)\n", inf_times_value, isinf(inf_times_value));
     OCRelease(inf_times_2);
     // Test 7: Division by infinity (should give zero)
-    printf("  Testing division by infinity...\n");
     SIScalarRef five_div_inf = SIScalarCreateFromExpression(STR("5 / inf"), &err);
     if (!five_div_inf) {
         if (err) {
@@ -1333,10 +1280,8 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(five_div_inf);
         return false;
     }
-    printf("    5 / inf = %f\n", div_inf_value);
     OCRelease(five_div_inf);
     // Test 8: Division by zero (should give infinity)
-    printf("  Testing division by zero...\n");
     SIScalarRef five_div_zero = SIScalarCreateFromExpression(STR("5 / 0"), &err);
     if (!five_div_zero) {
         if (err) {
@@ -1356,10 +1301,8 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(five_div_zero);
         return false;
     }
-    printf("    5 / 0 = %f (isinf: %d)\n", div_zero_value, isinf(div_zero_value));
     OCRelease(five_div_zero);
     // Test 9: Infinity to the power (should remain infinity)
-    printf("  Testing infinity to the power...\n");
     SIScalarRef inf_power = SIScalarCreateFromExpression(STR("(inf)^2"), &err);
     if (!inf_power) {
         if (err) {
@@ -1379,10 +1322,8 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(inf_power);
         return false;
     }
-    printf("    (inf)^2 = %f (isinf: %d)\n", inf_power_value, isinf(inf_power_value));
     OCRelease(inf_power);
     // Test 10: Complex expression with infinity and units
-    printf("  Testing complex expression with infinity and units...\n");
     SIScalarRef complex_inf = SIScalarCreateFromExpression(STR("(inf m/s) * (2 s)"), &err);
     if (!complex_inf) {
         if (err) {
@@ -1406,7 +1347,6 @@ bool test_scalar_parser_infinity(void) {
     SIUnitRef complex_unit = SIQuantityGetUnit((SIQuantityRef)complex_inf);
     OCStringRef complex_unit_symbol = SIUnitCopySymbol(complex_unit);
     const char *complex_symbol_str = OCStringGetCString(complex_unit_symbol);
-    printf("    (inf m/s) * (2 s) = %f %s\n", complex_inf_value, complex_symbol_str);
     // Accept either reduced form "m" or unreduced form "m•s/s"
     if (strcmp(complex_symbol_str, "m") != 0 && strcmp(complex_symbol_str, "m•s/s") != 0) {
         printf("%s failed: (inf m/s) * (2 s) units are '%s' (expected 'm' or 'm•s/s')\n", __func__, complex_symbol_str);
@@ -1417,7 +1357,6 @@ bool test_scalar_parser_infinity(void) {
     OCRelease(complex_unit_symbol);
     OCRelease(complex_inf);
     // Test 11: Functions with infinity (sqrt of infinity)
-    printf("  Testing functions with infinity...\n");
     SIScalarRef sqrt_inf = SIScalarCreateFromExpression(STR("sqrt(inf)"), &err);
     if (!sqrt_inf) {
         if (err) {
@@ -1437,8 +1376,6 @@ bool test_scalar_parser_infinity(void) {
         OCRelease(sqrt_inf);
         return false;
     }
-    printf("    sqrt(inf) = %f (isinf: %d)\n", sqrt_inf_value, isinf(sqrt_inf_value));
     OCRelease(sqrt_inf);
-    printf("%s passed\n", __func__);
     return true;
 }

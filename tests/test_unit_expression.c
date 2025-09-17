@@ -16,7 +16,6 @@ static bool test_unit_expression_cleaner_creation(const char *input, const char 
     bool passed = (strcmp(result_cstr, expected) == 0);
     if (!passed) {
         printf("  ✗ %s: '%s'\n", test_name, input);
-        printf("    Expected: '%s'\n", expected);
         printf("    Actual:   '%s'\n", result_cstr);
     }
     OCRelease(result);
@@ -31,7 +30,6 @@ static bool test_equivalence(const char *expr1, const char *expr2, bool should_b
     bool passed = (are_equivalent == should_be_equal);
     if (!passed) {
         printf("  ✗ %s:\n", test_name);
-        printf("    '%s' vs '%s'\n", expr1, expr2);
         printf("    Equivalent: %s (expected: %s)\n",
                are_equivalent ? "YES" : "NO",
                should_be_equal ? "YES" : "NO");
@@ -41,7 +39,6 @@ static bool test_equivalence(const char *expr1, const char *expr2, bool should_b
     return passed;
 }
 bool test_unit_expression_cleaner_basic_canonicalization(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test basic single units - should remain unchanged
     struct {
@@ -66,11 +63,9 @@ bool test_unit_expression_cleaner_basic_canonicalization(void) {
             success = false;
         }
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_power_notation(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test power notation cleaning
     OCStringRef tests[][2] = {
@@ -95,11 +90,9 @@ bool test_unit_expression_cleaner_power_notation(void) {
         }
         OCRelease(result);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_multiplication_ordering(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test that multiplication expressions are cleaned and grouped
     OCStringRef tests[][2] = {
@@ -124,11 +117,9 @@ bool test_unit_expression_cleaner_multiplication_ordering(void) {
         OCRelease(result1);
         OCRelease(result2);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_power_consolidation(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test power consolidation for repeated units (grouping identical symbols)
     OCStringRef tests[][2] = {
@@ -154,11 +145,9 @@ bool test_unit_expression_cleaner_power_consolidation(void) {
         }
         OCRelease(result);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_division_operations(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test division operations
     OCStringRef tests[][2] = {
@@ -184,11 +173,9 @@ bool test_unit_expression_cleaner_division_operations(void) {
         }
         OCRelease(result);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_complex_expressions(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test complex expressions with multiple operations
     struct {
@@ -222,11 +209,9 @@ bool test_unit_expression_cleaner_complex_expressions(void) {
         OCRelease(expected);
         OCRelease(result);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_unicode_operators(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test Unicode multiplication and division operators
     struct {
@@ -259,11 +244,9 @@ bool test_unit_expression_cleaner_unicode_operators(void) {
         OCRelease(expected);
         OCRelease(result);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_unicode_normalization(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test Unicode normalization (Greek mu vs micro sign)
     struct {
@@ -293,11 +276,9 @@ bool test_unit_expression_cleaner_unicode_normalization(void) {
         OCRelease(result1);
         OCRelease(result2);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_expression_equivalence(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test that equivalent expressions produce identical library keys
     const char *equivalent_groups[][6] = {
@@ -328,11 +309,9 @@ bool test_unit_expression_cleaner_expression_equivalence(void) {
             }
         }
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_edge_cases(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test edge cases and special behaviors (including no-cancellation)
     struct {
@@ -372,11 +351,9 @@ bool test_unit_expression_cleaner_edge_cases(void) {
         OCRelease(expected);
         OCRelease(result);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_consistency(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test that repeated calls produce identical results
     const char *test_expressions[] = {
@@ -410,11 +387,9 @@ bool test_unit_expression_cleaner_consistency(void) {
         OCRelease(result2);
         OCRelease(result3);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_parenthetical_powers(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test parenthetical power expansion
     struct {
@@ -445,11 +420,9 @@ bool test_unit_expression_cleaner_parenthetical_powers(void) {
         OCRelease(expected);
         if (result) OCRelease(result);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_reciprocal_expressions(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test reciprocal expressions (1/unit) - these were the critical bug cases
     struct {
@@ -483,7 +456,6 @@ bool test_unit_expression_cleaner_reciprocal_expressions(void) {
             success = false;
         } else if (OCStringCompare(result, expected, 0) != kOCCompareEqualTo) {
             printf("  ✗ %s: '%s'\n", tests[i].description, tests[i].input);
-            printf("    Expected: '%s'\n", tests[i].expected);
             printf("    Actual:   '%s'\n", OCStringGetCString(result));
             success = false;
         }
@@ -513,11 +485,9 @@ bool test_unit_expression_cleaner_reciprocal_expressions(void) {
         }
         OCRelease(input);
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_expression_cleaner_comprehensive(void) {
-    printf("Running comprehensive SIUnitCreateCleanedExpression test suite...\n\n");
     bool overall_success = true;
     overall_success &= test_unit_expression_cleaner_basic_canonicalization();
     overall_success &= test_unit_expression_cleaner_power_notation();
@@ -532,7 +502,5 @@ bool test_unit_expression_cleaner_comprehensive(void) {
     overall_success &= test_unit_expression_cleaner_parenthetical_powers();
     overall_success &= test_unit_expression_cleaner_consistency();
     overall_success &= test_unit_expression_cleaner_reciprocal_expressions();
-    printf("\n=== SIUnitCreateCleanedExpression Comprehensive Test Results ===\n");
-    printf("Overall result: %s\n", overall_success ? "ALL TESTS PASSED" : "SOME TESTS FAILED");
     return overall_success;
 }

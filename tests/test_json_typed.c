@@ -14,7 +14,6 @@ static bool complex_equal(double complex a, double complex b, double tolerance) 
            float_equal(cimag(a), cimag(b), tolerance);
 }
 bool test_SIScalar_json_typed_roundtrip_simple(void) {
-    printf("Running test_SIScalar_json_typed_roundtrip_simple...\n");
     // Test with a simple scalar value
     double unit_multiplier = 1.0;
     OCStringRef unit_error = NULL;
@@ -70,12 +69,10 @@ bool test_SIScalar_json_typed_roundtrip_simple(void) {
     OCRelease(originalUnit);
     OCRelease(restoredUnit);
     if (unitsMatch) {
-        printf("test_SIScalar_json_typed_roundtrip_simple passed\n");
     }
     return unitsMatch;
 }
 bool test_SIScalar_json_typed_roundtrip_complex(void) {
-    printf("Running test_SIScalar_json_typed_roundtrip_complex...\n");
     // Test with a complex scalar value
     double complex complexValue = 3.0 + 4.0 * I;
     double unit_multiplier = 1.0;
@@ -134,12 +131,10 @@ bool test_SIScalar_json_typed_roundtrip_complex(void) {
     OCRelease(originalUnit);
     OCRelease(restoredUnit);
     if (unitsMatch) {
-        printf("test_SIScalar_json_typed_roundtrip_complex passed\n");
     }
     return unitsMatch;
 }
 bool test_SIScalar_json_typed_roundtrip_with_units(void) {
-    printf("Running test_SIScalar_json_typed_roundtrip_with_units...\n");
     // Test with compound units
     double unit_multiplier = 1.0;
     OCStringRef unit_error = NULL;
@@ -191,12 +186,10 @@ bool test_SIScalar_json_typed_roundtrip_with_units(void) {
     OCRelease(restoredUnit);
     bool success = valuesMatch && unitsMatch;
     if (success) {
-        printf("test_SIScalar_json_typed_roundtrip_with_units passed\n");
     }
     return success;
 }
 bool test_SIUnit_json_typed_roundtrip_basic(void) {
-    printf("Running test_SIUnit_json_typed_roundtrip_basic...\n");
     // Test with a basic unit
     double unit_multiplier = 1.0;
     OCStringRef unit_error = NULL;
@@ -234,12 +227,10 @@ bool test_SIUnit_json_typed_roundtrip_basic(void) {
     OCRelease(restoredSymbol);
     // Note: SIUnit objects from SIUnitFromExpression are typically static/cached, so we don't OCRelease them
     if (symbolsMatch) {
-        printf("test_SIUnit_json_typed_roundtrip_basic passed\n");
     }
     return symbolsMatch;
 }
 bool test_SIUnit_json_typed_roundtrip_compound(void) {
-    printf("Running test_SIUnit_json_typed_roundtrip_compound...\n");
     // Test with a compound unit
     double unit_multiplier = 1.0;
     OCStringRef unit_error = NULL;
@@ -276,12 +267,10 @@ bool test_SIUnit_json_typed_roundtrip_compound(void) {
     OCRelease(originalSymbol);
     OCRelease(restoredSymbol);
     if (exprsMatch) {
-        printf("test_SIUnit_json_typed_roundtrip_compound passed\n");
     }
     return exprsMatch;
 }
 bool test_SIDimensionality_json_typed_roundtrip(void) {
-    printf("Running test_SIDimensionality_json_typed_roundtrip...\n");
     // Test with a dimensionality
     OCStringRef dim_error = NULL;
     SIDimensionalityRef original = SIDimensionalityFromExpression(STR("L/T^2"), &dim_error);
@@ -321,12 +310,10 @@ bool test_SIDimensionality_json_typed_roundtrip(void) {
     OCRelease(originalSymbol);
     OCRelease(restoredSymbol);
     if (symbolsMatch) {
-        printf("test_SIDimensionality_json_typed_roundtrip passed\n");
     }
     return symbolsMatch;
 }
 bool test_json_typed_error_handling(void) {
-    printf("Running test_json_typed_error_handling...\n");
     // Test with invalid typed JSON (object with unknown type)
     cJSON *invalidJson = cJSON_CreateObject();
     cJSON_AddStringToObject(invalidJson, "type", "UnknownType");
@@ -358,11 +345,9 @@ bool test_json_typed_error_handling(void) {
         return false;
     }
     cJSON_Delete(malformedJson);
-    printf("test_json_typed_error_handling passed\n");
     return true;
 }
 bool test_json_typed_comprehensive_coverage(void) {
-    printf("Running test_json_typed_comprehensive_coverage...\n");
     // Test multiple scalar types in sequence
     struct {
         const char *expression;
@@ -407,7 +392,6 @@ bool test_json_typed_comprehensive_coverage(void) {
         // Basic comparison - at minimum they should both be valid scalars
         if (SIScalarGetTypeID() == OCGetTypeID(restored)) {
             successCount++;
-            printf("  Case %d (%s): SUCCESS\n", i, testCases[i].description);
         } else {
             printf("  Case %d (%s): Type mismatch after roundtrip\n", i, testCases[i].description);
         }
@@ -417,7 +401,6 @@ bool test_json_typed_comprehensive_coverage(void) {
     }
     bool success = (successCount == numCases);
     if (success) {
-        printf("test_json_typed_comprehensive_coverage passed (%d/%d cases)\n", successCount, numCases);
     } else {
         printf("test_json_typed_comprehensive_coverage failed (%d/%d cases)\n", successCount, numCases);
     }

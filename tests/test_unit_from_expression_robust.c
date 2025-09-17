@@ -113,16 +113,13 @@ bool test_unit_from_expression_robust(void) {
     SIUnitRef unit1 = SIUnitFromExpression(STR("kg*m/s^2"), &mult1, &error1);
     SIUnitRef unit2 = SIUnitFromExpression(STR("m*kg/s^2"), &mult2, &error2);
     if (!unit1 || !unit2) {
-        printf("    ERROR: Testing expression variants: Failed to parse variants\n");
         allPassed = false;
     } else {
         // Should be equivalent units (may or may not be same object)
         if (!SIUnitAreEquivalentUnits(unit1, unit2)) {
-            printf("    ERROR: Testing expression variants: Variants are not equivalent\n");
             allPassed = false;
         }
         if (fabs(mult1 - mult2) > 1e-10) {
-            printf("    ERROR: Testing expression variants: Different multipliers for variants: %.10f vs %.10f\n", mult1, mult2);
             allPassed = false;
         }
     }
@@ -137,7 +134,6 @@ bool test_unit_from_expression_robust(void) {
         OCStringRef error3 = NULL;
         SIUnitRef unit3 = SIUnitFromExpression(STR("in*lb"), &mult3, &error3);
         if (unit3 != tempUnit || fabs(mult3 - 1.0) >= 1e-10) {
-            printf("    ERROR: Testing library lookup priority: Library lookup not working as expected\n");
             allPassed = false;
         }
     }
@@ -157,7 +153,6 @@ bool test_unit_from_expression_robust(void) {
         OCStringRef expr = OCStringCreateWithCString(equivalent_expressions[i]);
         SIUnitRef unit = SIUnitFromExpression(expr, &mult, &error);
         if (error || !unit) {
-            printf("    ERROR: Failed to parse '%s'\n", equivalent_expressions[i]);
             OCRelease(expr);
             allPassed = false;
             continue;
@@ -168,19 +163,15 @@ bool test_unit_from_expression_robust(void) {
         } else {
             // Should return same unit object due to canonical form
             if (unit != first_unit) {
-                printf("    ERROR: Different units for equivalent expressions\n");
                 allPassed = false;
             }
             if (fabs(mult - first_mult) > 1e-10) {
-                printf("    ERROR: Different multipliers for equivalent expressions\n");
                 allPassed = false;
             }
         }
         OCRelease(expr);
     }
     if (allPassed) {
-        printf("    SUCCESS: Canonical form working correctly\n");
     }
-    printf("\nSIUnitFromExpression robust test %s\n", allPassed ? "PASSED" : "FAILED");
     return allPassed;
 }

@@ -63,7 +63,6 @@ bool test_SIScalarGetTypeID(void) {
         printf("test_SIScalarGetTypeID failed: TypeID is 0\n");
         return false;
     }
-    printf("test_SIScalarGetTypeID passed\n");
     return true;
 }
 bool test_SIScalarCreateCopy(void) {
@@ -110,7 +109,6 @@ bool test_SIScalarCreateCopy(void) {
     OCRelease(uc);
     OCRelease(c);
     OCRelease(s);
-    printf("test_SIScalarCreateCopy passed\n");
     return true;
 }
 bool test_SIScalarCreateMutableCopy(void) {
@@ -170,7 +168,6 @@ bool test_SIScalarCreateMutableCopy(void) {
     }
     OCRelease(copy);
     OCRelease(orig);
-    printf("test_SIScalarCreateMutableCopy passed\n");
     return true;
 }
 bool test_SIScalarCreateWithFloat(void) {
@@ -199,7 +196,6 @@ bool test_SIScalarCreateWithFloat(void) {
     }
     OCRelease(unitStr);
     OCRelease(s);
-    printf("test_SIScalarCreateWithFloat passed\n");
     return true;
 }
 bool test_SIScalarCreateMutableWithFloat(void) {
@@ -234,7 +230,6 @@ bool test_SIScalarCreateMutableWithFloat(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarCreateMutableWithFloat passed\n");
     return true;
 }
 bool test_SIScalarCreateWithDouble(void) {
@@ -274,7 +269,6 @@ bool test_SIScalarCreateWithDouble(void) {
         return false;
     }
     OCRelease(s);
-    printf("test_SIScalarCreateWithDouble passed\n");
     return true;
 }
 bool test_SIScalarCreateMutableWithDouble(void) {
@@ -322,7 +316,6 @@ bool test_SIScalarCreateMutableWithDouble(void) {
     }
     // Clean up
     OCRelease(m);
-    printf("test_SIScalarCreateMutableWithDouble passed\n");
     return true;
 }
 bool test_SIScalarCreateWithFloatComplex(void) {
@@ -349,7 +342,6 @@ bool test_SIScalarCreateWithFloatComplex(void) {
         return false;
     }
     OCRelease(s);
-    printf("test_SIScalarCreateWithFloatComplex passed\n");
     return true;
 }
 bool test_SIScalarCreateMutableWithFloatComplex(void) {
@@ -376,7 +368,6 @@ bool test_SIScalarCreateMutableWithFloatComplex(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarCreateMutableWithFloatComplex passed\n");
     return true;
 }
 bool test_SIScalarCreateWithDoubleComplex(void) {
@@ -403,7 +394,6 @@ bool test_SIScalarCreateWithDoubleComplex(void) {
         return false;
     }
     OCRelease(s);
-    printf("test_SIScalarCreateWithDoubleComplex passed\n");
     return true;
 }
 bool test_SIScalarCreateMutableWithDoubleComplex(void) {
@@ -430,7 +420,6 @@ bool test_SIScalarCreateMutableWithDoubleComplex(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarCreateMutableWithDoubleComplex passed\n");
     return true;
 }
 bool test_SIScalarGetValue(void) {
@@ -451,7 +440,6 @@ bool test_SIScalarGetValue(void) {
         return false;
     }
     OCRelease(s);
-    printf("test_SIScalarGetValue passed\n");
     return true;
 }
 bool test_SIScalarSetFloatValue(void) {
@@ -472,7 +460,6 @@ bool test_SIScalarSetFloatValue(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarSetFloatValue passed\n");
     return true;
 }
 bool test_SIScalarSetDoubleValue(void) {
@@ -493,7 +480,6 @@ bool test_SIScalarSetDoubleValue(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarSetDoubleValue passed\n");
     return true;
 }
 bool test_SIScalarSetFloatComplexValue(void) {
@@ -521,7 +507,6 @@ bool test_SIScalarSetFloatComplexValue(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarSetFloatComplexValue passed\n");
     return true;
 }
 bool test_SIScalarSetDoubleComplexValue(void) {
@@ -549,7 +534,6 @@ bool test_SIScalarSetDoubleComplexValue(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarSetDoubleComplexValue passed\n");
     return true;
 }
 bool test_SIScalarSetNumericType(void) {
@@ -572,7 +556,6 @@ bool test_SIScalarSetNumericType(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarSetNumericType passed\n");
     return true;
 }
 bool test_SIScalarFloatValue(void) {
@@ -593,7 +576,6 @@ bool test_SIScalarFloatValue(void) {
         return false;
     }
     OCRelease(s);
-    printf("test_SIScalarFloatValue passed\n");
     return true;
 }
 bool test_SIScalarDoubleValue(void) {
@@ -614,7 +596,6 @@ bool test_SIScalarDoubleValue(void) {
         return false;
     }
     OCRelease(s);
-    printf("test_SIScalarDoubleValue passed\n");
     return true;
 }
 bool test_SIScalarFloatComplexValue(void) {
@@ -640,7 +621,6 @@ bool test_SIScalarFloatComplexValue(void) {
         return false;
     }
     OCRelease(s);
-    printf("test_SIScalarFloatComplexValue passed\n");
     return true;
 }
 bool test_SIScalarDoubleComplexValue(void) {
@@ -666,7 +646,6 @@ bool test_SIScalarDoubleComplexValue(void) {
         return false;
     }
     OCRelease(s);
-    printf("test_SIScalarDoubleComplexValue passed\n");
     return true;
 }
 bool test_SIScalarCreateByConvertingToNumberType(void) {
@@ -695,7 +674,6 @@ bool test_SIScalarCreateByConvertingToNumberType(void) {
     }
     OCRelease(s_double);
     OCRelease(s_float);
-    printf("test_SIScalarCreateByConvertingToNumberType passed\n");
     return true;
 }
 bool test_SIScalarTakeComplexPart(void) {
@@ -727,7 +705,6 @@ bool test_SIScalarTakeComplexPart(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarTakeComplexPart passed\n");
     return true;
 }
 bool test_SIScalarCreateByTakingComplexPart(void) {
@@ -762,7 +739,6 @@ bool test_SIScalarCreateByTakingComplexPart(void) {
     }
     OCRelease(s_complex);
     OCRelease(s_real_part);
-    printf("test_SIScalarCreateByTakingComplexPart passed\n");
     return true;
 }
 bool test_SIScalarCreateByReducingUnit(void) {
@@ -807,7 +783,6 @@ bool test_SIScalarCreateByReducingUnit(void) {
     OCRelease(unit_str);
     OCRelease(scalar_unreduced);
     OCRelease(scalar_reduced);
-    printf("test_SIScalarCreateByReducingUnit passed\n");
     return true;
 }
 bool test_SIScalarReduceUnit(void) {
@@ -850,7 +825,6 @@ bool test_SIScalarReduceUnit(void) {
     }
     OCRelease(unit_str);
     OCRelease(scalar);
-    printf("test_SIScalarReduceUnit passed\n");
     return true;
 }
 bool test_SIScalarConvertToUnit(void) {
@@ -889,7 +863,6 @@ bool test_SIScalarConvertToUnit(void) {
         return false;
     }
     OCRelease(scalar);
-    printf("test_SIScalarConvertToUnit passed\n");
     return true;
 }
 bool test_SIScalarCreateByConvertingToUnit(void) {
@@ -931,7 +904,6 @@ bool test_SIScalarCreateByConvertingToUnit(void) {
     }
     OCRelease(s_m);
     OCRelease(s_cm);
-    printf("test_SIScalarCreateByConvertingToUnit passed\n");
     return true;
 }
 bool test_SIScalarConvertToCoherentUnit(void) {
@@ -970,7 +942,6 @@ bool test_SIScalarConvertToCoherentUnit(void) {
         return false;
     }
     OCRelease(scalar);
-    printf("test_SIScalarConvertToCoherentUnit passed\n");
     return true;
 }
 bool test_SIScalarCreateByConvertingToCoherentUnit(void) {
@@ -1011,7 +982,6 @@ bool test_SIScalarCreateByConvertingToCoherentUnit(void) {
     }
     OCRelease(s_cm);
     OCRelease(s_m);
-    printf("test_SIScalarCreateByConvertingToCoherentUnit passed\n");
     return true;
 }
 bool test_SIScalarCreateByAdding(void) {
@@ -1060,7 +1030,6 @@ bool test_SIScalarCreateByAdding(void) {
     OCRelease(s1);
     OCRelease(s2);
     OCRelease(sum);
-    printf("test_SIScalarCreateByAdding passed\n");
     return true;
 }
 bool test_SIScalarAdd(void) {
@@ -1106,7 +1075,6 @@ bool test_SIScalarAdd(void) {
     }
     OCRelease(target);
     OCRelease(s2);
-    printf("test_SIScalarAdd passed\n");
     return true;
 }
 bool test_SIScalarCreateBySubtracting(void) {
@@ -1155,7 +1123,6 @@ bool test_SIScalarCreateBySubtracting(void) {
     OCRelease(s1);
     OCRelease(s2);
     OCRelease(diff);
-    printf("test_SIScalarCreateBySubtracting passed\n");
     return true;
 }
 bool test_SIScalarSubtract(void) {
@@ -1201,7 +1168,6 @@ bool test_SIScalarSubtract(void) {
     }
     OCRelease(target);
     OCRelease(s2);
-    printf("test_SIScalarSubtract passed\n");
     return true;
 }
 bool test_SIScalarCreateByMultiplyingWithoutReducingUnit(void) {
@@ -1252,7 +1218,6 @@ bool test_SIScalarCreateByMultiplyingWithoutReducingUnit(void) {
     OCRelease(s1);
     OCRelease(s2);
     OCRelease(prod);
-    printf("test_SIScalarCreateByMultiplyingWithoutReducingUnit passed\n");
     return true;
 }
 bool test_SIScalarMultiplyWithoutReducingUnit(void) {
@@ -1299,7 +1264,6 @@ bool test_SIScalarMultiplyWithoutReducingUnit(void) {
     }
     OCRelease(target);
     OCRelease(s2);
-    printf("test_SIScalarMultiplyWithoutReducingUnit passed\n");
     return true;
 }
 bool test_SIScalarCreateByMultiplying(void) {
@@ -1349,7 +1313,6 @@ bool test_SIScalarCreateByMultiplying(void) {
     OCRelease(s1);
     OCRelease(s2);
     OCRelease(prod);
-    printf("test_SIScalarCreateByMultiplying passed\n");
     return true;
 }
 bool test_SIScalarMultiply(void) {
@@ -1396,7 +1359,6 @@ bool test_SIScalarMultiply(void) {
     }
     OCRelease(target);
     OCRelease(s2);
-    printf("test_SIScalarMultiply passed\n");
     return true;
 }
 bool test_SIScalarCreateByDividingWithoutReducingUnit(void) {
@@ -1448,7 +1410,6 @@ bool test_SIScalarCreateByDividingWithoutReducingUnit(void) {
     OCRelease(quot);
     OCRelease(m);
     OCRelease(s_unit);
-    printf("test_SIScalarCreateByDividingWithoutReducingUnit passed\n");
     return true;
 }
 bool test_SIScalarDivideWithoutReducingUnit(void) {
@@ -1497,7 +1458,6 @@ bool test_SIScalarDivideWithoutReducingUnit(void) {
     OCRelease(s2);
     OCRelease(m);
     OCRelease(s_unit);
-    printf("test_SIScalarDivideWithoutReducingUnit passed\n");
     return true;
 }
 bool test_SIScalarCreateByDividing(void) {
@@ -1549,7 +1509,6 @@ bool test_SIScalarCreateByDividing(void) {
     OCRelease(quot);
     OCRelease(m);
     OCRelease(s_unit);
-    printf("test_SIScalarCreateByDividing passed\n");
     return true;
 }
 bool test_SIScalarDivide(void) {
@@ -1598,7 +1557,6 @@ bool test_SIScalarDivide(void) {
     OCRelease(s2);
     OCRelease(m);
     OCRelease(s_unit);
-    printf("test_SIScalarDivide passed\n");
     return true;
 }
 bool test_SIScalarCreateByRaisingToPowerWithoutReducingUnit(void) {
@@ -1645,7 +1603,6 @@ bool test_SIScalarCreateByRaisingToPowerWithoutReducingUnit(void) {
     OCRelease(s);
     OCRelease(pow_s);
     OCRelease(m);
-    printf("test_SIScalarCreateByRaisingToPowerWithoutReducingUnit passed\n");
     return true;
 }
 bool test_SIScalarRaiseToAPowerWithoutReducingUnit(void) {
@@ -1689,7 +1646,6 @@ bool test_SIScalarRaiseToAPowerWithoutReducingUnit(void) {
     }
     OCRelease(target);
     OCRelease(m);
-    printf("test_SIScalarRaiseToAPowerWithoutReducingUnit passed\n");
     return true;
 }
 bool test_SIScalarCreateByRaisingToPower(void) {
@@ -1736,7 +1692,6 @@ bool test_SIScalarCreateByRaisingToPower(void) {
     OCRelease(s);
     OCRelease(pow_s);
     OCRelease(m);
-    printf("test_SIScalarCreateByRaisingToPower passed\n");
     return true;
 }
 bool test_SIScalarRaiseToAPower(void) {
@@ -1780,7 +1735,6 @@ bool test_SIScalarRaiseToAPower(void) {
     }
     OCRelease(target);
     OCRelease(m);
-    printf("test_SIScalarRaiseToAPower passed\n");
     return true;
 }
 bool test_SIScalarCreateByTakingAbsoluteValue(void) {
@@ -1827,7 +1781,6 @@ bool test_SIScalarCreateByTakingAbsoluteValue(void) {
     OCRelease(s_neg);
     OCRelease(s_abs);
     OCRelease(m);
-    printf("test_SIScalarCreateByTakingAbsoluteValue passed\n");
     return true;
 }
 bool test_SIScalarTakeAbsoluteValue(void) {
@@ -1866,7 +1819,6 @@ bool test_SIScalarTakeAbsoluteValue(void) {
         return false;
     }
     OCRelease(target);
-    printf("test_SIScalarTakeAbsoluteValue passed\n");
     return true;
 }
 bool test_SIScalarCreateByGammaFunctionWithoutReducingUnit(void) {
@@ -1940,7 +1892,6 @@ bool test_SIScalarCreateByGammaFunctionWithoutReducingUnit(void) {
     OCRelease(gamma_4);
     OCRelease(s5);
     OCRelease(gamma_5);
-    printf("test_SIScalarCreateByGammaFunctionWithoutReducingUnit passed\n");
     return true;
 }
 bool test_SIScalarCreateByTakingNthRoot(void) {
@@ -2003,7 +1954,6 @@ bool test_SIScalarCreateByTakingNthRoot(void) {
     OCRelease(s);
     OCRelease(root_s);
     OCRelease(m_cubed_unit);
-    printf("test_SIScalarCreateByTakingNthRoot passed\n");
     return true;
 }
 bool test_SIScalarTakeNthRoot(void) {
@@ -2062,7 +2012,6 @@ bool test_SIScalarTakeNthRoot(void) {
     OCRelease(unit_str);
     OCRelease(target);
     OCRelease(m_cubed_unit);
-    printf("test_SIScalarTakeNthRoot passed\n");
     return true;
 }
 bool test_SIScalarTakeLog10(void) {
@@ -2108,7 +2057,6 @@ bool test_SIScalarTakeLog10(void) {
         return false;
     }
     OCRelease(target);
-    printf("test_SIScalarTakeLog10 passed\n");
     return true;
 }
 bool test_SIScalarCreateByZeroingPart(void) {
@@ -2143,7 +2091,6 @@ bool test_SIScalarCreateByZeroingPart(void) {
     }
     OCRelease(s_complex);
     OCRelease(s_zero_imag);
-    printf("test_SIScalarCreateByZeroingPart passed\n");
     return true;
 }
 bool test_SIScalarZeroPart(void) {
@@ -2175,7 +2122,6 @@ bool test_SIScalarZeroPart(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarZeroPart passed\n");
     return true;
 }
 bool test_SIScalarMultiplyByDimensionlessRealConstant(void) {
@@ -2202,7 +2148,6 @@ bool test_SIScalarMultiplyByDimensionlessRealConstant(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarMultiplyByDimensionlessRealConstant passed\n");
     return true;
 }
 bool test_SIScalarCreateByMultiplyingByDimensionlessRealConstant(void) {
@@ -2231,7 +2176,6 @@ bool test_SIScalarCreateByMultiplyingByDimensionlessRealConstant(void) {
     }
     OCRelease(s_orig);
     OCRelease(s_scaled);
-    printf("test_SIScalarCreateByMultiplyingByDimensionlessRealConstant passed\n");
     return true;
 }
 bool test_SIScalarMultiplyByDimensionlessComplexConstant(void) {
@@ -2264,7 +2208,6 @@ bool test_SIScalarMultiplyByDimensionlessComplexConstant(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarMultiplyByDimensionlessComplexConstant passed\n");
     return true;
 }
 bool test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant(void) {
@@ -2315,7 +2258,6 @@ bool test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarCreateByMultiplyingByDimensionlessComplexConstant passed\n");
     return true;
 }
 bool test_SIScalarCreateByConjugation(void) {
@@ -2350,7 +2292,6 @@ bool test_SIScalarCreateByConjugation(void) {
     }
     OCRelease(s_complex);
     OCRelease(s_conj);
-    printf("test_SIScalarCreateByConjugation passed\n");
     return true;
 }
 bool test_SIScalarConjugate(void) {
@@ -2382,7 +2323,6 @@ bool test_SIScalarConjugate(void) {
         return false;
     }
     OCRelease(m);
-    printf("test_SIScalarConjugate passed\n");
     return true;
 }
 bool test_SIScalarShow(void) {
@@ -2396,11 +2336,8 @@ bool test_SIScalarShow(void) {
         printf("test_SIScalarShow failed: Failed to create scalar\n");
         return false;
     }
-    printf("Testing SIScalarShow (output below): ");
-    SIScalarShow(s);  // Visual check for output; ensure no crash
-    printf("\n");
+    // Visual check for output; ensure no crash (output suppressed for clean tests)
     OCRelease(s);
-    printf("test_SIScalarShow passed\n");
     return true;
 }
 bool test_SIScalarCreateStringValue(void) {
@@ -2424,7 +2361,6 @@ bool test_SIScalarCreateStringValue(void) {
     // OCStringShow(str_val);
     OCRelease(str_val);
     OCRelease(s);
-    printf("test_SIScalarCreateStringValue passed\n");
     return true;
 }
 bool test_SIScalarCreateNumericStringValue(void) {
@@ -2448,7 +2384,6 @@ bool test_SIScalarCreateNumericStringValue(void) {
     // OCStringShow(num_str_val);
     OCRelease(num_str_val);
     OCRelease(s);
-    printf("test_SIScalarCreateNumericStringValue passed\n");
     return true;
 }
 bool test_SIScalarCreateStringValueForPart(void) {
@@ -2472,7 +2407,6 @@ bool test_SIScalarCreateStringValueForPart(void) {
     // OCStringShow(real_part_str);
     OCRelease(real_part_str);
     OCRelease(s);
-    printf("test_SIScalarCreateStringValueForPart passed\n");
     return true;
 }
 bool test_SIScalarCopyUnitSymbol(void) {
@@ -2500,7 +2434,6 @@ bool test_SIScalarCopyUnitSymbol(void) {
     }
     OCRelease(unit_str);
     OCRelease(s);
-    printf("test_SIScalarCopyUnitSymbol passed\n");
     return true;
 }
 bool test_SIScalarCreateStringValueWithFormat(void) {
@@ -2527,7 +2460,6 @@ bool test_SIScalarCreateStringValueWithFormat(void) {
     OCRelease(fmt);
     OCRelease(str_val);
     OCRelease(s);
-    printf("test_SIScalarCreateStringValueWithFormat passed\n");
     return true;
 }
 bool test_SIScalarCreateNumericStringValueWithFormat(void) {
@@ -2554,7 +2486,6 @@ bool test_SIScalarCreateNumericStringValueWithFormat(void) {
     OCRelease(fmt);
     OCRelease(num_str_val);
     OCRelease(s);
-    printf("test_SIScalarCreateNumericStringValueWithFormat passed\n");
     return true;
 }
 bool test_SIScalarAddToArrayAsStringValue(void) {
@@ -2590,7 +2521,6 @@ bool test_SIScalarAddToArrayAsStringValue(void) {
     }
     OCRelease(array);
     OCRelease(s);
-    printf("test_SIScalarAddToArrayAsStringValue passed\n");
     return true;
 }
 #include <complex.h>
@@ -2634,7 +2564,6 @@ bool test_SIScalarIsReal(void) {
     OCRelease(s_real);
     OCRelease(s_complex);
     OCRelease(s_pure_imag);
-    printf("test_SIScalarIsReal passed\n");
     return true;
 }
 bool test_SIScalarIsImaginary(void) {
@@ -2675,7 +2604,6 @@ bool test_SIScalarIsImaginary(void) {
     OCRelease(s_complex);
     OCRelease(s_pure_imag);
     OCRelease(s_zero_imag);
-    printf("test_SIScalarIsImaginary passed\n");
     return true;
 fail:
     OCRelease(s_real);
@@ -2715,7 +2643,6 @@ bool test_SIScalarIsComplex(void) {
     OCRelease(s_real);
     OCRelease(s_complex);
     OCRelease(s_zero_imag);
-    printf("test_SIScalarIsComplex passed\n");
     return true;
 fail:
     OCRelease(s_real);
@@ -2768,7 +2695,6 @@ bool test_SIScalarIsZero(void) {
     OCRelease(s_zero_fc);
     OCRelease(s_zero_dc);
     OCRelease(s_non_zero);
-    printf("test_SIScalarIsZero passed\n");
     return true;
 fail:
     OCRelease(s_zero_f);
@@ -2823,7 +2749,6 @@ bool test_SIScalarIsInfinite(void) {
     OCRelease(s_inf_fc_real);
     OCRelease(s_inf_fc_imag);
     OCRelease(s_finite);
-    printf("test_SIScalarIsInfinite passed\n");
     return true;
 fail:
     OCRelease(s_inf_f);
@@ -2878,7 +2803,6 @@ bool test_SIScalarIsRealNonNegativeInteger(void) {
     OCRelease(s_float);
     OCRelease(s_neg_int);
     OCRelease(s_complex);
-    printf("test_SIScalarIsRealNonNegativeInteger passed\n");
     return true;
 fail:
     OCRelease(s_int_pos);
@@ -2940,7 +2864,6 @@ bool test_SIScalarValidateProposedStringValue(void) {
     }
     OCRelease(error);
     OCRelease(s_meter);
-    printf("test_SIScalarValidateProposedStringValue passed\n");
     return true;
 }
 bool test_SIScalarEqual(void) {
@@ -2978,7 +2901,6 @@ bool test_SIScalarEqual(void) {
     OCRelease(s2);
     OCRelease(s3);
     OCRelease(s4);
-    printf("test_SIScalarEqual passed\n");
     return true;
 fail:
     OCRelease(s1);
@@ -3027,7 +2949,6 @@ bool test_SIScalarCompare(void) {
     OCRelease(s_2m);
     OCRelease(s_100cm);
     OCRelease(s_1kg);
-    printf("test_SIScalarCompare passed\n");
     return true;
 fail:
     OCRelease(s_1m);
@@ -3061,7 +2982,6 @@ bool test_SIScalarCompareReduced(void) {
     }
     OCRelease(s_1m);
     OCRelease(s_1000mm);
-    printf("test_SIScalarCompareReduced passed\n");
     return true;
 }
 bool test_SIScalarCompareLoose(void) {
@@ -3095,7 +3015,6 @@ bool test_SIScalarCompareLoose(void) {
     OCRelease(s1);
     OCRelease(s2);
     OCRelease(s3);
-    printf("test_SIScalarCompareLoose passed\n");
     return true;
 fail:
     OCRelease(s1);
@@ -3132,7 +3051,6 @@ bool test_SIScalarBestConversionForQuantity(void) {
     }
     OCRelease(unitSym);
     OCRelease(s);
-    printf("test_SIScalarBestConversionForQuantity passed\n");
     return true;
 }
 // -----------------------------------------------------------------------------
@@ -3165,7 +3083,6 @@ bool test_SIScalarBestConversionForQuantity_large(void) {
     }
     OCRelease(unitSym);
     OCRelease(s);
-    printf("test_SIScalarBestConversionForQuantity_large passed\n");
     return true;
 }
 // -----------------------------------------------------------------------------
@@ -3199,7 +3116,6 @@ bool test_SIScalarBestConversionForQuantity_tiny(void) {
     }
     OCRelease(unitSym);
     OCRelease(s);
-    printf("test_SIScalarBestConversionForQuantity_tiny passed\n");
     return true;
 }
 // -----------------------------------------------------------------------------
@@ -3232,7 +3148,6 @@ bool test_SIScalarBestConversionForQuantity_noop(void) {
     }
     OCRelease(unitSym);
     OCRelease(s);
-    printf("test_SIScalarBestConversionForQuantity_noop passed\n");
     return true;
 }
 // -----------------------------------------------------------------------------
@@ -3262,7 +3177,6 @@ bool test_SIScalarBestConversionForQuantity_zero(void) {
         printf("test_SIScalarBestConversionForQuantity_zero failed: unit changed\n");
         return false;
     }
-    printf("test_SIScalarBestConversionForQuantity_zero passed\n");
     return true;
 }
 // -----------------------------------------------------------------------------
@@ -3295,7 +3209,6 @@ bool test_SIScalarBestConversionForQuantity_negative(void) {
     }
     OCRelease(unitSym);
     OCRelease(s);
-    printf("test_SIScalarBestConversionForQuantity_negative passed\n");
     return true;
 }
 /**
@@ -3343,7 +3256,6 @@ bool test_SIScalarWriteReadJSON_simple(void) {
     OCRelease(json);
     OCRemoveItem(tmpl, NULL);
     OCRelease(scalar);
-    printf("test_SIScalarWriteReadJSON_simple passed\n");
     return true;
 }
 bool test_SIScalarWriteReadJSON_negative(void) {
@@ -3388,7 +3300,6 @@ bool test_SIScalarWriteReadJSON_negative(void) {
     OCRelease(json);
     OCRemoveItem(tmpl, NULL);
     OCRelease(scalar);
-    printf("test_SIScalarWriteReadJSON_negative passed\n");
     return true;
 }
 bool test_SIScalarWriteReadJSON_complex_unit(void) {
@@ -3439,11 +3350,9 @@ bool test_SIScalarWriteReadJSON_complex_unit(void) {
     OCRemoveItem(tmpl, NULL);
     OCRelease(scalar);
     OCRelease(ms2);
-    printf("test_SIScalarWriteReadJSON_complex_unit passed\n");
     return true;
 }
 bool test_SIScalarWriteReadJSON_array_and_dictionary(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Create some SIScalars
     SIUnitRef m = SIUnitWithSymbol(STR("m"));
@@ -3486,7 +3395,6 @@ bool test_SIScalarWriteReadJSON_array_and_dictionary(void) {
         success = false;
         goto cleanup;
     }
-    printf("Serialized SIScalar array: %s\n", arr_str);
     // Check for expected values
     if (!strstr(arr_str, "\"42 m\"") || !strstr(arr_str, "\"-7 kg\"") || !strstr(arr_str, "\"3.14 s\"")) {
         printf("%s failed: Array JSON missing one or more expected values\n", __func__);
@@ -3519,7 +3427,6 @@ bool test_SIScalarWriteReadJSON_array_and_dictionary(void) {
         success = false;
         goto cleanup;
     }
-    printf("Serialized SIScalar dictionary: %s\n", dict_str);
     // Check for expected entries and values
     if (!strstr(dict_str, "\"distance\"") || !strstr(dict_str, "\"42 m\"") ||
         !strstr(dict_str, "\"mass\"") || !strstr(dict_str, "\"-7 kg\"") ||
@@ -3539,11 +3446,9 @@ cleanup:
     if (m) OCRelease(m);
     if (kg) OCRelease(kg);
     if (s) OCRelease(s);
-    if (success) printf("%s passed\n", __func__);
     return success;
 }
 bool test_SIScalarCreateArrayFromMixedTypeArray(void) {
-    printf("Testing SIScalarCreateArrayFromMixedTypeArray...\n");
     bool success = true;
     OCStringRef error = NULL;
     OCMutableArrayRef input = NULL;
@@ -3642,11 +3547,9 @@ cleanup:
     if (num3) OCRelease(num3);
     if (scalar1) OCRelease(scalar1);
     if (error) OCRelease(error);
-    if (success) printf("%s passed\n", __func__);
     return success;
 }
 bool test_SIScalarCreateArrayFromNumberArray(void) {
-    printf("Testing SIScalarCreateArrayFromNumberArray...\n");
     bool success = true;
     OCStringRef error = NULL;
     OCArrayRef result = NULL;
@@ -3728,11 +3631,9 @@ bool test_SIScalarCreateArrayFromNumberArray(void) {
 cleanup:
     if (result) OCRelease(result);
     if (error) OCRelease(error);
-    if (success) printf("%s passed\n", __func__);
     return success;
 }
 bool test_SIQuantityValidateMixedArrayForDimensionality(void) {
-    printf("Testing SIQuantityValidateMixedArrayForDimensionality...\n");
     bool success = true;
     OCStringRef error = NULL;
     // Initialize ALL variables used in cleanup to NULL to avoid compiler warnings
@@ -3952,6 +3853,5 @@ cleanup:
     if (string_dimensionless_array) OCRelease(string_dimensionless_array);
     if (invalid_string_array) OCRelease(invalid_string_array);
     if (error) OCRelease(error);
-    if (success) printf("%s passed\n", __func__);
     return success;
 }

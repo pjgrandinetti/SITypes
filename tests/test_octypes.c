@@ -5,7 +5,6 @@
 #include <string.h>
 #include "SITypes.h"
 bool octypesTest1(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef string1 = STR("Test String");
     OCStringRef string2 = STR("Test String");
@@ -28,22 +27,18 @@ bool octypesTest1(void) {
     }
 cleanup:
     if (array) OCRelease(array);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool octypesTest2(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef string1 = STR("Test String");
     OCStringRef string2 = STR("Test String");
     if (OCStringCompare(string1, string2, 0) != kOCCompareEqualTo) {
         success = false;
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool octypesTest3(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCMutableArrayRef array = OCArrayCreateMutable(0, NULL);
     if (!array) return false;
@@ -64,11 +59,9 @@ bool octypesTest3(void) {
     }
 cleanup:
     OCRelease(array);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool octypesTest4(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCMutableStringRef mutableString = OCStringCreateMutable(0);
     if (!mutableString) return false;
@@ -77,11 +70,9 @@ bool octypesTest4(void) {
         success = false;
     }
     OCRelease(mutableString);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool octypesTest5(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCNumberRef num1 = OCNumberCreateWithSInt32(10);
     OCNumberRef num2 = OCNumberCreateWithSInt32(20);
@@ -91,7 +82,6 @@ bool octypesTest5(void) {
     OCRelease(num1);
     OCRelease(num2);
     OCRelease(num3);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 // Adapter remains the same
@@ -100,7 +90,6 @@ static OCComparisonResult OCStringCompareAdapter(const void *a, const void *b, v
     return OCStringCompare((OCStringRef)a, (OCStringRef)b, 0);
 }
 bool octypesTest6(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCMutableArrayRef array = OCArrayCreateMutable(0, NULL);
     OCStringRef str1 = STR("c");
@@ -114,6 +103,5 @@ bool octypesTest6(void) {
     if (OCStringCompare(OCArrayGetValueAtIndex(array, 1), str3, 0) != kOCCompareEqualTo) success = false;
     if (OCStringCompare(OCArrayGetValueAtIndex(array, 2), str1, 0) != kOCCompareEqualTo) success = false;
     OCRelease(array);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }

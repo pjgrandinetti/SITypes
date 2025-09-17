@@ -9,7 +9,6 @@
 #include "test_utils.h"  // Include the test utilities header
 extern OCMutableDictionaryRef SIUnitGetUnitsDictionaryLib(void);
 bool test_unit_0(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
     // First try with asterisk (which we know works) to test the logic
     SIUnitRef unit_asterisk = SIUnitFromExpression(STR("m*kg^2*s^3*A^4*K^5*mol^6*cd^7/(m^2*kg^3*s^4*A^5*K^6*mol^7*cd^8)"), NULL, &errorString);
@@ -71,11 +70,9 @@ bool test_unit_0(void) {
     OCRelease(unit2);
     OCRelease(plist);
     if (errorString) OCRelease(errorString);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_unit_1(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
     SIDimensionalityRef dimensionality = SIDimensionalityFromExpression(STR("M/(L*T^2)"), &errorString);
     if (!dimensionality) {
@@ -95,11 +92,9 @@ bool test_unit_1(void) {
     }
     if (errorString) OCRelease(errorString);
     OCRelease(dimensionality);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_unit_3(void) {
-    printf("Running %s...\n", __func__);
     SIUnitRef unit = SIUnitWithSymbol(STR("N"));
     if (!unit) {
         printf("test_unit_3 failed: Failed to retrieve unit 'N'\n");
@@ -117,11 +112,9 @@ bool test_unit_3(void) {
         return false;
     }
     OCRelease(symbol);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_unit_4(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
     double multiplier = 1.0;
     SIUnitRef unit = SIUnitFromExpression(STR("km"), &multiplier, &errorString);
@@ -153,11 +146,9 @@ bool test_unit_4(void) {
     OCRelease(name);
     OCRelease(unit);
     if (errorString) OCRelease(errorString);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_unit_5(void) {
-    printf("Running %s...\n", __func__);
     SIUnitRef unit = SIUnitWithSymbol(STR("g"));
     if (!unit) {
         printf("test_unit_5 failed: Failed to retrieve unit 'g'\n");
@@ -174,11 +165,9 @@ bool test_unit_5(void) {
         return false;
     }
     OCRelease(plural);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_unit_6(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef errorString = NULL;
     double multiplier = 1.0;
     SIUnitRef unit = SIUnitWithSymbol(STR("N"));
@@ -214,12 +203,10 @@ bool test_unit_6(void) {
     OCRelease(symbol);
     OCRelease(unit);
     if (errorString) OCRelease(errorString);
-    printf("%s passed\n", __func__);
     return true;
 }
 // New test for parsing "kg" without multiplier pointer
 bool test_unit_7(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     SIUnitRef unit = SIUnitFromExpression(STR("kg"), NULL, &err);
     if (!unit) {
@@ -236,12 +223,10 @@ bool test_unit_7(void) {
         err = NULL;
     }
     OCRelease(unit);
-    printf("%s passed\n", __func__);
     return true;
 }
 // New test for coherent derived unit "kg*m/s^2" and equivalence to N
 bool test_unit_8(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     double multiplier = 1.0;
     SIUnitRef unit = SIUnitFromExpression(STR("kg*m/s^2"), &multiplier, &err);
@@ -277,12 +262,10 @@ bool test_unit_8(void) {
     }
     OCRelease(unit);
     OCRelease(N);
-    printf("%s passed\n", __func__);
     return true;
 }
 // Test parsing special SI unit with prefix: kilo-newton
 bool test_unit_9(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     double multiplier = 1.0;
     SIUnitRef unit = SIUnitFromExpression(STR("kN"), &multiplier, &err);
@@ -339,12 +322,10 @@ bool test_unit_9(void) {
     }
     OCRelease(unit);
     OCRelease(baseN);
-    printf("%s passed\n", __func__);
     return true;
 }
 // Test parsing special SI unit: pascal (Pa)
 bool test_unit_10(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     SIUnitRef unit = SIUnitFromExpression(STR("Pa"), NULL, &err);
     if (!unit) {
@@ -374,12 +355,10 @@ bool test_unit_10(void) {
     }
     OCRelease(sym);
     OCRelease(unit);
-    printf("%s passed\n", __func__);
     return true;
 }
 // Test parsing non-SI unit: inch per second (in/s)
 bool test_unit_11(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     double multiplier = 1.0;
     // parse "in/s"
@@ -434,12 +413,10 @@ bool test_unit_11(void) {
     // all good!
     OCRelease(unit);
     OCRelease(ms);
-    printf("%s passed\n\n", __func__);
     return true;
 }
 // Test PSI unit (pound-force per square inch)
 bool test_unit_12(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     double multiplier = 1.0;
     SIUnitRef unit = SIUnitFromExpression(STR("lbf/in^2"), &multiplier, &err);
@@ -474,12 +451,10 @@ bool test_unit_12(void) {
     }
     OCRelease(unit);
     OCRelease(pa);
-    printf("%s passed\n", __func__);
     return true;
 }
 // Test to distinguish between lb (mass) and lbf (force)
 bool test_unit_13(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Part 1: Test pound-mass (lb)
     double multiplier1 = 1.0;
@@ -650,11 +625,9 @@ bool test_unit_13(void) {
     OCRelease(kg);
     OCRelease(unit_lbf);
     OCRelease(N);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_unit_14(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     // Test parsing fractional power expressions
     // Expressions with fractional powers that result in integer powers are allowed
@@ -681,7 +654,6 @@ bool test_unit_14(void) {
         // Check if this returned dimensionless unit (m^0)
         SIUnitRef dimensionless = SIUnitDimensionlessAndUnderived();
         if (unit_simple_frac == dimensionless) {
-            printf("    Note: Parser treated this as m^0 (dimensionless)\n");
         }
         OCRelease(unit_simple_frac);
         return false;
@@ -871,11 +843,9 @@ bool test_unit_14(void) {
     // Don't release meter - SIUnitWithSymbol doesn't transfer ownership
     OCRelease(volume_unit);
     OCRelease(cbrt_volume);
-    printf("%s passed\n", __func__);
     return true;
 }
 bool test_unit_by_multiplying_without_reducing(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef err = NULL;
     double multiplier = 1.0;
@@ -971,11 +941,9 @@ cleanup:
     if (err) OCRelease(err);
     if (m) OCRelease(m);
     if (s) OCRelease(s);
-    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_by_dividing_without_reducing(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     bool success = true;
     double mult = 1.0;
@@ -1035,12 +1003,10 @@ cleanup:
     if (m_per_s) OCRelease(m_per_s);
     if (s) OCRelease(s);
     if (m) OCRelease(m);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 // Test nth-root operation on SI units (SIUnitByTakingNthRoot)
 bool test_unit_by_taking_nth_root(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef err = NULL;
     // Test 1: Take square root of "m^2" -> should yield "m"
@@ -1131,12 +1097,10 @@ cleanup_m:
     if (m) OCRelease(m);
 cleanup:
     if (err) OCRelease(err);
-    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
     return success;
 }
 // Test SIUnitByRaisingToPowerWithoutReducing
 bool test_unit_by_raising_to_power_without_reducing(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef err = NULL;
     // 1. Test squaring a unit: m^2
@@ -1226,11 +1190,9 @@ cleanup_m:
     if (m) OCRelease(m);
 cleanup:
     if (err) OCRelease(err);
-    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_unicode_normalization(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef errorString = NULL;
     // Test Unicode normalization: Greek letter mu (μ, U+03BC) should be normalized to micro sign (µ, U+00B5)
@@ -1323,7 +1285,6 @@ bool test_unit_unicode_normalization(void) {
         success = false;
     }
     if (errorString) OCRelease(errorString);
-    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
     return success;
 }
 // Helper function to check if a unit is in the library
@@ -1340,8 +1301,6 @@ bool isUnitInLibrary(const char *expression) {
 }
 // Test unit registration behavior in SITypes library
 bool test_unit_registration(void) {
-    printf("Running %s...\n", __func__);
-    printf("Testing unit registration behavior\n");
     bool success = true;
     OCStringRef error = NULL;
     // Test unit registration behavior - should only show output if something fails
@@ -1397,11 +1356,9 @@ bool test_unit_registration(void) {
         success = false;
     }
     OCRelease(exprStr);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_canonical_expressions(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test basic expression cleaning (grouping identical symbols)
     OCStringRef result1 = SIUnitCreateCleanedExpression(STR("m"));
@@ -1492,11 +1449,9 @@ bool test_unit_canonical_expressions(void) {
     }
     OCRelease(expr2a);
     OCRelease(expr2b);
-    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_from_expression_equivalence(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test equivalent expressions that should return the same SIUnitRef
     const char *equivalent_sets[][5] = {
@@ -1572,11 +1527,9 @@ bool test_unit_from_expression_equivalence(void) {
         printf("  ✗ Could not parse basic units 'm' or 's'\n");
         success = false;
     }
-    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_unit_count_token_symbols(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     // Test NULL input
     int count = SIUnitCountTokenSymbols(NULL);
@@ -1715,6 +1668,5 @@ bool test_unit_count_token_symbols(void) {
         printf("  ✗ Large powers 'm^100•kg^-50' should return 2, got %d\n", count);
         success = false;
     }
-    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
     return success;
 }

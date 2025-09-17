@@ -22,22 +22,24 @@ extern void __lsan_do_leak_check() __attribute__((weak));
 int failures = 0;
 #define TRACK(test_fn)                       \
     do {                                     \
-        if (!test_fn()) {                    \
-            printf("[FAIL] %s\n", #test_fn); \
+        printf("%s begin... ", #test_fn);    \
+        fflush(stdout);                      \
+        if (test_fn()) {                     \
+            printf("passed\n");              \
+        } else {                             \
+            printf("FAILED\n");              \
             failures++;                      \
         }                                    \
     } while (0)
 int main(int argc, const char *argv[]) {
     (void)argc;  // Unused parameter - standard main signature
     (void)argv;  // Unused parameter - standard main signature
-    printf("=== OCTypes Tests ===\n");
     TRACK(octypesTest1);
     TRACK(octypesTest2);
     TRACK(octypesTest3);
     TRACK(octypesTest4);
     TRACK(octypesTest5);
     TRACK(octypesTest6);
-    printf("\n=== Dimensionality Tests ===\n");
     TRACK(test_dimensionality_0);
     TRACK(test_dimensionality_1);
     TRACK(test_dimensionality_2);
@@ -50,7 +52,6 @@ int main(int argc, const char *argv[]) {
     TRACK(test_dimensionality_reduction_behavior);
     TRACK(test_dimensionality_deep_copy);
     TRACK(test_dimensionality_parser_strictness);
-    printf("\n=== SIUnit Tests ===\n");
     TRACK(test_unit_0);
     TRACK(test_unit_1);
     TRACK(test_unit_3);
@@ -74,18 +75,26 @@ int main(int argc, const char *argv[]) {
     TRACK(test_unit_canonical_expressions);
     TRACK(test_unit_from_expression_equivalence);
     TRACK(test_unit_count_token_symbols);
-    printf("\n=== SIUnitCreateCleanedExpression Comprehensive Tests ===\n");
+    TRACK(test_unit_expression_cleaner_basic_canonicalization);
+    TRACK(test_unit_expression_cleaner_power_notation);
+    TRACK(test_unit_expression_cleaner_multiplication_ordering);
+    TRACK(test_unit_expression_cleaner_power_consolidation);
+    TRACK(test_unit_expression_cleaner_division_operations);
+    TRACK(test_unit_expression_cleaner_complex_expressions);
+    TRACK(test_unit_expression_cleaner_unicode_operators);
+    TRACK(test_unit_expression_cleaner_unicode_normalization);
+    TRACK(test_unit_expression_cleaner_expression_equivalence);
+    TRACK(test_unit_expression_cleaner_edge_cases);
+    TRACK(test_unit_expression_cleaner_consistency);
+    TRACK(test_unit_expression_cleaner_parenthetical_powers);
+    TRACK(test_unit_expression_cleaner_reciprocal_expressions);
     TRACK(test_unit_expression_cleaner_comprehensive);
-    printf("\n=== Duplicate Units Tests ===\n");
     TRACK(test_create_potential_duplicates);
     TRACK(test_check_for_duplicate_units);
-    printf("\n=== Unit Power Operations Tests ===\n");
     TRACK(test_unit_negative_power_operations);
     TRACK(test_unit_inverse_expression_parsing);
     TRACK(test_unit_negative_exponent_parsing);
-    printf("\n=== SIUnitFromExpression Robust Tests ===\n");
     TRACK(test_unit_from_expression_robust);
-    printf("\n=== SIScalar Parser Tests ===\n");
     TRACK(test_scalar_parser_1);
     TRACK(test_scalar_parser_2);
     TRACK(test_scalar_parser_3);
@@ -100,9 +109,7 @@ int main(int argc, const char *argv[]) {
     TRACK(test_scalar_parser_12);
     TRACK(test_scalar_parser_13);
     TRACK(test_scalar_parser_infinity);
-    printf("\n=== NMR Function Tests ===\n");
     TRACK(test_nmr_functions);
-    printf("\n=== SIScalar Tests ===\n");
     TRACK(test_SIScalarGetTypeID);
     TRACK(test_SIScalarCreateCopy);
     TRACK(test_SIScalarCreateMutableCopy);
@@ -195,7 +202,6 @@ int main(int argc, const char *argv[]) {
     TRACK(test_SIScalarCreateArrayFromMixedTypeArray);
     TRACK(test_SIScalarCreateArrayFromNumberArray);
     TRACK(test_SIQuantityValidateMixedArrayForDimensionality);
-    printf("\n=== JSONTyped Serialization Tests ===\n");
     TRACK(test_SIScalar_json_typed_roundtrip_simple);
     TRACK(test_SIScalar_json_typed_roundtrip_complex);
     TRACK(test_SIScalar_json_typed_roundtrip_with_units);

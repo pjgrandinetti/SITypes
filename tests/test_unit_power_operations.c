@@ -4,7 +4,6 @@
 #include <string.h>
 #include "SITypes.h"
 bool test_unit_negative_power_operations(void) {
-    printf("Running test_unit_negative_power_operations...\n");
     // Test: Unit raised to negative power should produce inverse
     OCStringRef error = NULL;
     double multiplier = 1.0;
@@ -47,12 +46,10 @@ bool test_unit_negative_power_operations(void) {
     if (error) OCRelease(error);
     if (power_error) OCRelease(power_error);
     if (test_passed) {
-        printf("test_unit_negative_power_operations passed\n");
     }
     return test_passed;
 }
 bool test_unit_inverse_expression_parsing(void) {
-    printf("Running test_unit_inverse_expression_parsing...\n");
     // Test: parsing '1/m^2' should produce inverse square meter
     double multiplier = 1.0;
     OCStringRef error = NULL;
@@ -80,12 +77,10 @@ bool test_unit_inverse_expression_parsing(void) {
     OCRelease(parsed_inverse);
     if (error) OCRelease(error);
     if (test_passed) {
-        printf("test_unit_inverse_expression_parsing passed\n");
     }
     return test_passed;
 }
 bool test_unit_negative_exponent_parsing(void) {
-    printf("Running test_unit_negative_exponent_parsing...\n");
     // Test: parsing 'm^-2' should produce inverse square meter
     double multiplier = 1.0;
     OCStringRef error = NULL;
@@ -113,7 +108,6 @@ bool test_unit_negative_exponent_parsing(void) {
     OCRelease(parsed_negative);
     if (error) OCRelease(error);
     if (test_passed) {
-        printf("test_unit_negative_exponent_parsing passed\n");
     }
     return test_passed;
 }

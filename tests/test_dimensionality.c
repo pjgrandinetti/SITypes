@@ -5,7 +5,6 @@
 #include <string.h>
 #include "SITypes.h"
 bool test_dimensionality_0(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef err = NULL;
     SIDimensionalityRef dimensionality1 = SIDimensionalityFromExpression(STR("L"), &err);
@@ -54,7 +53,6 @@ bool test_dimensionality_0(void) {
         printf("  ✗ Mass exponent check failed: expected 0, got %d\n", SIDimensionalityGetNumExpAtIndex(dimensionality1, kSIMassIndex));
         success = false;
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     OCRelease(dimSym1);
     OCRelease(dimSym2);
     OCRelease(dimensionality1);
@@ -62,7 +60,6 @@ bool test_dimensionality_0(void) {
     return success;
 }
 bool test_dimensionality_1(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef err = NULL;
     OCStringRef symbol = STR("L•M^2•T^3•I^4•ϴ^5•N^6•J^7/(L^2•M^3•T^4•I^5•ϴ^6•N^7•J^8)");
@@ -87,12 +84,10 @@ bool test_dimensionality_1(void) {
         printf("  ✗ Length reduced exponent check failed: expected -1, got %d\n", SIDimensionalityReducedExponentAtIndex(dimensionality, kSILengthIndex));
         success = false;
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     OCRelease(dimensionality);
     return success;
 }
 bool test_dimensionality_2(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     SIDimensionalityRef force = SIDimensionalityForQuantity(kSIQuantityForce, &err);
     if (!force) {
@@ -136,7 +131,6 @@ bool test_dimensionality_2(void) {
     if (!success) {
         printf("Error: dimensionality of force/acceleration does not equal mass.\n");
     } else {
-        printf("%s passed\n", __func__);
     }
     OCRelease(force);
     OCRelease(acceleration);
@@ -145,7 +139,6 @@ bool test_dimensionality_2(void) {
     return success;
 }
 bool test_dimensionality_3(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef err = NULL;
     SIDimensionalityRef dim1 = NULL, dim2 = NULL, dim3 = NULL, dless = NULL;
@@ -196,11 +189,9 @@ cleanup:
     if (bySym) OCRelease(bySym);
     if (byIdx) OCRelease(byIdx);
     if (err) OCRelease(err);
-    printf("%s %s\n", __func__, success ? "passed" : "failed ***");
     return success;
 }
 bool test_dimensionality_show(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     bool success = true;
     // Get dimensionality for force
@@ -224,11 +215,9 @@ bool test_dimensionality_show(void) {
     }
     OCRelease(sym);
     OCRelease(force);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_dimensionality_symbol_acceleration(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     bool success = true;
     SIDimensionalityRef accel = SIDimensionalityFromExpression(STR("L/T^2"), &err);
@@ -250,11 +239,9 @@ bool test_dimensionality_symbol_acceleration(void) {
     }
     OCRelease(symAccel);
     OCRelease(accel);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_dimensionality_divide_mass(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     bool success = true;
     SIDimensionalityRef force = SIDimensionalityForQuantity(kSIQuantityForce, &err);
@@ -284,11 +271,9 @@ bool test_dimensionality_divide_mass(void) {
     OCRelease(force);
     OCRelease(accel);
     OCRelease(mass);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_dimensionality_multiply_work(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     bool success = true;
     // work = force * distance
@@ -324,11 +309,9 @@ bool test_dimensionality_multiply_work(void) {
     OCRelease(force);
     OCRelease(dist);
     OCRelease(work);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_dimensionality_power_area(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     bool success = true;
     // area = distance^2
@@ -353,11 +336,9 @@ bool test_dimensionality_power_area(void) {
     OCRelease(symArea);
     OCRelease(dist);
     OCRelease(area);
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_dimensionality_reduction_behavior(void) {
-    printf("Running %s...\n", __func__);
     OCStringRef err = NULL;
     bool success = true;
     SIDimensionalityRef dist = SIDimensionalityForQuantity(kSIQuantityLength, &err);
@@ -424,7 +405,6 @@ bool test_dimensionality_reduction_behavior(void) {
         printf("  ✗ Angle derived should be dimensionless\n");
         success = false;
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     OCRelease(dist);
     OCRelease(angle);
     OCRelease(area);
@@ -434,7 +414,6 @@ bool test_dimensionality_reduction_behavior(void) {
     return success;
 }
 bool test_dimensionality_deep_copy(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef err = NULL;
     /* initialize everything to NULL */
@@ -484,11 +463,9 @@ cleanup:
     if (original) OCRelease(original);
     if (copy) OCRelease(copy);
     if (mcopy) OCRelease(mcopy);
-    printf("%s %s\n\n", __func__, success ? "passed" : "failed");
     return success;
 }
 bool test_dimensionality_parser_strictness(void) {
-    printf("Running %s...\n", __func__);
     bool success = true;
     OCStringRef err = NULL;
     // These expressions should be REJECTED by the parser
@@ -516,7 +493,6 @@ bool test_dimensionality_parser_strictness(void) {
             const char *symbol_str = symbol ? OCStringGetCString(symbol) : "NULL";
             printf("  ✗ Expression '%s' was incorrectly accepted -> '%s'\n",
                    expr, symbol_str);
-            printf("    This violates dimensional analysis principles!\n");
             OCRelease(result);
             OCRelease(symbol);
             success = false;
@@ -532,8 +508,6 @@ bool test_dimensionality_parser_strictness(void) {
     }
     if (!success) {
         printf("  ✗ CRITICAL FAILURE: Parser accepts invalid dimensional operations\n");
-        printf("    Addition and subtraction MUST be rejected in dimensional analysis!\n");
     }
-    printf("%s %s\n", __func__, success ? "passed" : "failed");
     return success;
 }
