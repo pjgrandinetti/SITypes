@@ -211,9 +211,10 @@ int main(int argc, const char *argv[]) {
     TRACK(test_json_typed_error_handling);
     TRACK(test_json_typed_comprehensive_coverage);
     if (failures) {
-        fprintf(stderr, "\n%d test(s) failed.\n", failures);
-    } else
         printf("\n%d test(s) failed\n", failures);
+    } else {
+        printf("\nAll tests passed successfully!\n");
+    }
 #ifdef LEAK_SANITIZER
     if (&__lsan_do_leak_check) {
         __lsan_do_leak_check();
