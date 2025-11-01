@@ -121,7 +121,7 @@ jobs:
           ls -la install/lib/
 
       - name: Upload library artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: libSITypes-${{ matrix.label }}
           path: install/lib/*
@@ -138,7 +138,7 @@ jobs:
 
       - name: Upload headers artifact
         if: runner.os == 'Linux'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: libSITypes-headers
           path: header-pkg/libSITypes-headers.zip
@@ -207,7 +207,7 @@ jobs:
               ls -la install/lib/"
 
       - name: Upload library artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: libSITypes-ubuntu-latest.arm64
           path: install/lib/*
