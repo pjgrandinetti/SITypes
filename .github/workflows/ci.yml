@@ -79,7 +79,7 @@ jobs:
 
       # ---------- Build cache (ccache) ----------
       - name: Cache ccache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.ccache
           key: ccache-${{ runner.os }}-${{ matrix.label }}-${{ github.sha }}
@@ -160,7 +160,7 @@ jobs:
           sudo apt-get install -y clang make flex bison unzip \
             ccache libomp-dev
       - name: Cache ccache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.ccache
           key: ccache-asan-${{ github.sha }}
